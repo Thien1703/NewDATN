@@ -1,0 +1,572 @@
+[33mcommit 92395fee74c02295cfa201ff4fa36f6028aee023[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mhdtoan[m[33m)[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Sat Mar 8 19:24:14 2025 +0700
+
+    commit
+
+[33mcommit 7e0b55baf3e2151770c08956294fac0ca9f3d335[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Wed Mar 5 19:23:08 2025 +0700
+
+    commit
+
+[33mcommit 47b548e65266a2de751ac32514197e32aa7fa447[m[33m ([m[1;31morigin/hdtoan[m[33m)[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Tue Mar 4 17:57:19 2025 +0700
+
+    validate login, register
+
+[33mcommit 7daaf8b7055d5cacfdde6d832f603a2622c71908[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Tue Mar 4 11:42:01 2025 +0700
+
+    update profile done
+
+[33mcommit 8f790856847c60e406678f6b4291f859fba08c2d[m
+Merge: cfa520e d612b40
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Sun Mar 2 11:48:12 2025 +0700
+
+    merge branch thamkham
+
+[33mcommit d612b40fc32c09707be61397545f783ea26d8ae6[m
+Merge: 3c59687 22159a4
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Sun Mar 2 11:24:32 2025 +0700
+
+    pull new thamkham
+
+[33mcommit cfa520e75a7f1bef23f4cd75f45513f67b68a5b4[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Sun Mar 2 11:23:18 2025 +0700
+
+    commit
+
+[33mcommit 22159a491ef6b74cea18e3dc7a41c40d6d43c2f5[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Fri Feb 28 23:45:28 2025 +0700
+
+    new: update login,register and api serve
+
+[33mcommit 3c596875fa2f70c67ced603bb7c9ccc6af93b4ee[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Fri Feb 28 21:28:14 2025 +0700
+
+    commit
+
+[33mcommit a624daad867353d189d9329d218122a703c718f5[m
+Merge: 0c3bf67 8ceecc4
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Fri Feb 28 18:13:47 2025 +0700
+
+    pull new thamkham
+
+[33mcommit 82d57a9e658f532497a07b4fc5f13a931a570b04[m
+Merge: 7d5ac0d 0c3bf67
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Fri Feb 28 17:59:31 2025 +0700
+
+    merge new thamkham
+
+[33mcommit 7d5ac0d615aa53eaef7a81be40a26bea3519aecb[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Fri Feb 28 17:45:40 2025 +0700
+
+    commit
+
+[33mcommit 8ceecc44a2d57b6a6c9216ad094f425ccbab61a3[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Fri Feb 28 15:36:41 2025 +0700
+
+    new: done api service
+
+[33mcommit 2984295ab24a49e02fbfd9fe5fb539e73335726c[m
+Merge: 1672d5a ec26e0f
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Fri Feb 28 00:19:53 2025 +0700
+
+    commit
+
+[33mcommit 1672d5a156a115d7511a3b350872ea024ad981a5[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Fri Feb 28 00:17:52 2025 +0700
+
+    connect api edit profile
+
+[33mcommit ef2647500bd14174e0cbe53de4cba790b27d7b36[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Thu Feb 27 22:43:43 2025 +0700
+
+    new: done call API specialty and clinic
+
+[33mcommit a1cafc183d311e876b8247617e24a4d8d50a027a[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Thu Feb 27 14:52:21 2025 +0700
+
+    new: update home first
+
+[33mcommit b1937f1403acf541527de24f30401f30ab27f19f[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Wed Feb 26 08:09:53 2025 +0700
+
+    commit
+
+[33mcommit ec26e0f2a30e7829c6051995b230205086170de0[m
+Author: dnkkhan18 <dngkhanh3210@gmail.com>
+Date:   Tue Feb 25 20:32:25 2025 +0700
+
+    luu chuyen nhanh
+
+[33mcommit 2f7768602a22bb16752bf29eab144a4eadf30d0c[m
+Author: dnkkhan18 <dngkhanh3210@gmail.com>
+Date:   Tue Feb 25 19:56:16 2025 +0700
+
+    luu
+
+[33mcommit f83df8bf83ef5383d8ad6680edda94ee4d5dff61[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Tue Feb 25 19:35:21 2025 +0700
+
+    new: thamkham
+
+[33mcommit 9b504b6a8bc64920ea341d54a9540e1e8545d437[m
+Merge: 37a6e66 49e53a6
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Tue Feb 25 18:52:54 2025 +0700
+
+    Merge branch 'hdtoan' of https://github.com/Thien1703/HealthCare into thamkham
+
+[33mcommit 37a6e66786a2a92523c110fc50c30bfd521ad9b4[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Tue Feb 25 18:49:00 2025 +0700
+
+    new:upate datjkham
+
+[33mcommit 49e53a6bb274628e072c21fb2d574669d2c5d312[m
+Merge: 8efa82a 7988580
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Tue Feb 25 18:26:26 2025 +0700
+
+    pull code
+
+[33mcommit 8efa82a91eaa40d977bc001736e77578bc064ab8[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Tue Feb 25 18:24:17 2025 +0700
+
+    connect api login, register to UI
+
+[33mcommit fe49591e2b5dda08421c59e305e037a9300ed9f7[m
+Merge: c7a639d 1d3fd10
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Mon Feb 24 11:11:56 2025 +0700
+
+    Merge branch 'main' of https://github.com/Thien1703/HealthCare into thamkham
+
+[33mcommit c7a639dd6bc597d7a9368392939144ccd306963f[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Mon Feb 24 10:36:38 2025 +0700
+
+    update
+
+[33mcommit 7988580741c33026ca2c173285b315f2e7bcb214[m[33m ([m[1;32mmain[m[33m)[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Sat Feb 22 10:08:32 2025 +0700
+
+    commit
+
+[33mcommit d1dfa2b3f0d0890ce55df256da655bc158eb5392[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Sat Feb 22 08:21:43 2025 +0700
+
+    connect api login, register
+
+[33mcommit 1d3fd1072c1454555fdc1a3086e532bffc596c5d[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: d416d6f 090653f
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Sat Feb 22 07:42:04 2025 +0700
+
+    Merge branch 'thamkham'
+
+[33mcommit d416d6f8b6a24780928d316969f28ade2073d325[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Sat Feb 22 07:41:35 2025 +0700
+
+    Update: pubspec.lock
+
+[33mcommit 090653f0672244045bbf3714191893c120055b25[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Sat Feb 22 07:38:32 2025 +0700
+
+    fix: lỗi select_service
+
+[33mcommit f5ff726c048e32c4823292bfddbc0366656222c9[m
+Merge: 230c31d c5c4f36
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Thu Feb 20 20:23:56 2025 +0700
+
+    Merge branch 'main' of https://github.com/Thien1703/HealthCare into thamkham
+
+[33mcommit 230c31de03518622d3d7f6e448618739903c7236[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Thu Feb 20 20:16:22 2025 +0700
+
+    new: update datkham
+
+[33mcommit c5c4f36da49dfdc2e24e07949d75232ad32fb0e3[m
+Merge: 7b56d91 c8ff262
+Author: Đắc Toàn <89795666+ViperTricks@users.noreply.github.com>
+Date:   Thu Feb 20 18:00:15 2025 +0700
+
+    Merge pull request #26 from Thien1703/feature/add-profile
+    
+    Feature/add profile
+
+[33mcommit c8ff2624c00df6b40a44ac0d199acd3b7c82ba21[m[33m ([m[1;31morigin/feature/add-profile[m[33m, [m[1;32mfeature/add-profile[m[33m)[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Thu Feb 20 17:58:41 2025 +0700
+
+    Fix layout Edit Profile
+
+[33mcommit 9c971e99b548c11e1669e8b405daf0b995aef1d0[m
+Merge: 1645d7a 7b56d91
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Thu Feb 20 10:59:05 2025 +0700
+
+    merge new main
+
+[33mcommit 7b56d91699602c0dfe80d0be39cfd46e2a1ab7f6[m
+Merge: 0996605 f3aeaa1
+Author: Đắc Toàn <89795666+ViperTricks@users.noreply.github.com>
+Date:   Thu Feb 20 01:38:39 2025 +0700
+
+    Merge pull request #25 from Thien1703/feature/add-medical-examination-record
+    
+    Feature/add medical examination record
+
+[33mcommit f3aeaa184642caba05031b0987bc37b168951745[m[33m ([m[1;31morigin/feature/add-medical-examination-record[m[33m, [m[1;32mfeature/add-medical-examination-record[m[33m)[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Thu Feb 20 01:36:44 2025 +0700
+
+    add medical examination record
+
+[33mcommit a4290c15a275cbb61be4be78db2dd8135dc7a852[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Wed Feb 19 09:38:45 2025 +0700
+
+    new:merge main
+
+[33mcommit 51632d0a6ac2e91cdb92046faf5fc5b3c3564a9c[m
+Merge: 5b5947e 0996605
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Wed Feb 19 09:38:31 2025 +0700
+
+    Merge remote-tracking branch 'origin' into thamkham
+
+[33mcommit 5b5947ec5ef8cfeaad7457c2a602db3d471baa61[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Wed Feb 19 09:34:51 2025 +0700
+
+    new: selectedTime
+
+[33mcommit 9c3cb2e31416278a4fc2021ad890576e486a5fb4[m
+Merge: 303455a 0996605
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Tue Feb 18 15:44:23 2025 +0700
+
+    commit
+
+[33mcommit 0996605967d8f8ef3b2680dcb56ca46de312fd7d[m
+Merge: bc10108 ef66ca0
+Author: Đắc Toàn <89795666+ViperTricks@users.noreply.github.com>
+Date:   Tue Feb 18 15:41:49 2025 +0700
+
+    Merge pull request #24 from Thien1703/hdtoan
+    
+    Hdtoan
+
+[33mcommit 1645d7a4c554f7b0a8cffd032b7712ce58e24bd8[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Tue Feb 18 15:35:10 2025 +0700
+
+    change jdk 17
+
+[33mcommit 303455a8d630c5c35eea511e84a8ef724eba1477[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Tue Feb 18 15:28:00 2025 +0700
+
+    commit
+
+[33mcommit ef66ca0d8654829b808f182d08269fb67b374299[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Tue Feb 18 14:27:14 2025 +0700
+
+    commit
+
+[33mcommit c547a2ec8bd04de9817b0f59a386f98b0bfcaebd[m
+Merge: b425874 bc10108
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Tue Feb 18 13:09:25 2025 +0700
+
+    Merge remote-tracking branch 'origin/main' into thamkham
+
+[33mcommit b425874a125b9e60f3e1414807da50d415e2dce7[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Mon Feb 17 07:06:53 2025 +0700
+
+    new: model ảo cho paid detail
+
+[33mcommit 3bce643c3e0d4da621a7479f9df8d9bf2127a78b[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Mon Feb 17 06:16:02 2025 +0700
+
+    new: unpaid detail
+
+[33mcommit 3628063481f993f0fbe39204bc58769033019d78[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Sun Feb 16 15:46:42 2025 +0700
+
+    new: add model tham kham
+
+[33mcommit e489a81f79e6db51172e9ef043db2cd63cf0a2bc[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Sun Feb 16 00:09:02 2025 +0700
+
+    commit
+
+[33mcommit bc1010806abf3b438fb02880070403ee567638ec[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Sat Feb 15 01:04:25 2025 +0700
+
+    update: service
+
+[33mcommit 2c9303ab526023c913b85b45f4d0e08b486b3b52[m
+Merge: bd3c536 cf8bba5
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Sat Feb 15 01:02:34 2025 +0700
+
+    Merge branch 'main' of https://github.com/Thien1703/HealthCare
+
+[33mcommit bd3c536353f71579189663a8495590b7d8b628e6[m
+Merge: 4298af6 c996675
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Sat Feb 15 01:02:14 2025 +0700
+
+    fix examination and profile
+
+[33mcommit cf8bba51be7cf2d4a7946e7290c0024d955d2bf6[m
+Merge: c996675 7ec7eca
+Author: Đắc Toàn <89795666+ViperTricks@users.noreply.github.com>
+Date:   Sat Feb 15 00:56:44 2025 +0700
+
+    Merge pull request #23 from Thien1703/hdtoan
+    
+    Add Google Sign In
+
+[33mcommit 4298af621ddb9a83029bc7aefe10cc7255b62490[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Sat Feb 15 00:47:55 2025 +0700
+
+    additional examination
+
+[33mcommit 687609b70113f62db1bbf9e2fbddb600c43af800[m
+Merge: 08bfabe 2a71468
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Sat Feb 15 00:46:13 2025 +0700
+
+    Merge branch 'thamkham'
+
+[33mcommit 08bfabec68daab9133932c682309e46065f30dc0[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Sat Feb 15 00:41:47 2025 +0700
+
+    fix: jdk17
+
+[33mcommit 7ec7eca63ad50d5870c512c0d2701a60fe52d140[m
+Merge: 2a39399 c996675
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Fri Feb 14 23:36:29 2025 +0700
+
+    pull code
+
+[33mcommit 2a39399cee7d985df8e6ae75ea8c28c157af61bc[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Fri Feb 14 23:35:22 2025 +0700
+
+    Add login with Google Sign In
+
+[33mcommit c9966759c29eaa95738fad10a9009bae73699ee2[m
+Merge: 0accdaa c493366
+Author: Đắc Toàn <89795666+ViperTricks@users.noreply.github.com>
+Date:   Fri Feb 14 21:46:49 2025 +0700
+
+    Merge pull request #22 from Thien1703/feature/add-profile
+    
+    Feature/add profile
+
+[33mcommit c493366491ccd2b043e31c2083d4882c957240df[m
+Merge: cf99af9 0accdaa
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Fri Feb 14 21:37:33 2025 +0700
+
+    pull code
+
+[33mcommit cf99af9ae4f658c9d442243ddc63958814101844[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Fri Feb 14 21:18:16 2025 +0700
+
+    add profile branch
+
+[33mcommit 2a71468e46f91fa6f063fc75a93315b274ecb985[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Fri Feb 14 15:20:17 2025 +0700
+
+    fix: done examination
+
+[33mcommit e33c7559b5cb56f767e31db70a1fec8c3a656542[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Fri Feb 14 15:05:44 2025 +0700
+
+    update: cập nhật nút bấm chi tiết
+
+[33mcommit 4013c99fb356f3fadee219509c81c000d28868ea[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Fri Feb 14 14:28:40 2025 +0700
+
+    new: sửa lạii
+
+[33mcommit f3075fc29e2b9cb65b81b938376e5f0455c6d569[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Fri Feb 14 14:28:24 2025 +0700
+
+    new: sửa lại
+
+[33mcommit ec51579130691e0da91a111c2613368dccf32e61[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Fri Feb 14 14:28:04 2025 +0700
+
+    new: code thêm giao diện
+
+[33mcommit 0accdaa088dfc6930858750487c713f257b44973[m
+Merge: b0181b5 1f4de19
+Author: thien1703 <huuthien4052@gmail.com>
+Date:   Fri Feb 14 09:29:15 2025 +0700
+
+    Merge branch 'main' of https://github.com/Thien1703/HealthCare
+
+[33mcommit b0181b5c62e45e79af9caaba2447babeef3268e5[m
+Author: thien1703 <huuthien4052@gmail.com>
+Date:   Fri Feb 14 09:24:52 2025 +0700
+
+    fix vai loi UI
+
+[33mcommit 5258a849fc2643203523acc80766c864869a463d[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Thu Feb 13 15:51:42 2025 +0700
+
+    new: update examination
+
+[33mcommit 0c3bf6764540981c6bacb7a8304c1cbd78611844[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Wed Feb 12 16:58:30 2025 +0700
+
+    create widget chon loc
+
+[33mcommit 55ad3328fefdea4174fe5aa83c2ccfeb4921c817[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Wed Feb 12 15:44:15 2025 +0700
+
+    new: code Card Item
+
+[33mcommit d34ddd69151a4d4eb2bbea1bddb56090e82d033f[m
+Merge: d271871 1f4de19
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Tue Feb 11 16:30:19 2025 +0700
+
+    commit
+
+[33mcommit 1f4de19469a2bf815b1089f6c047e1a245be6693[m
+Merge: 46f1d31 2db5521
+Author: Đắc Toàn <89795666+ViperTricks@users.noreply.github.com>
+Date:   Tue Feb 11 12:34:08 2025 +0700
+
+    Merge pull request #21 from Thien1703/feature/health-check
+    
+    Feature/health check
+
+[33mcommit 2db5521ce28f3d0281a11de763450c43b39e450e[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Tue Feb 11 12:33:18 2025 +0700
+
+    fix Health Check Form
+
+[33mcommit ef3527044720b2e382c822c1f79294201796c1e1[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Mon Feb 10 21:50:10 2025 +0700
+
+    new: add screen
+
+[33mcommit de9af8e00ff7697f6f346b4f88de1a37a22c087e[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Mon Feb 10 21:08:30 2025 +0700
+
+    fix:titleExamination
+
+[33mcommit d27187195d9f2db6271cec2db415cc1fb828326c[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Mon Feb 10 16:13:34 2025 +0700
+
+    commit
+
+[33mcommit afbfc86bffb4e7b8557ba510b4029bb9e6b0e632[m
+Merge: 5a3819b 8acd656
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Mon Feb 10 15:48:17 2025 +0700
+
+    merge main
+
+[33mcommit 8ac97c45be9cd11d3f39848804641152ae51e565[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Mon Feb 10 12:18:05 2025 +0700
+
+    fix conflict
+
+[33mcommit 5b5eb129b2e63e58c8e2a9d67950eaf4acd6211c[m
+Merge: 06a0d1f 8acd656
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Mon Feb 10 10:56:17 2025 +0700
+
+    fix conflict
+
+[33mcommit 8acd656fb70a78a899341d74b269bb84e417b854[m
+Author: Vipertricks <hodactoan181905@gmail.com>
+Date:   Mon Feb 10 10:34:06 2025 +0700
+
+    commit
+
+[33mcommit 06a0d1faff708b95259cdf5789aab5137782e337[m
+Author: dnkkhan18 <dngkhanh3210@gmail.com>
+Date:   Sun Feb 9 21:21:30 2025 +0700
+
+    danh sach phieu kham
+
+[33mcommit 36d3597f504d158b667466bdc0a32580d93956f4[m
+Merge: 748670c 46f1d31
+Author: thien1703 <huuthien4052@gmail.com>
+Date:   Sun Feb 9 14:57:50 2025 +0700
+
+    m
+
+[33mcommit 5a3819b501e5ea9e8d341029ea4ddb4f57066544[m
+Author: gnudnav <Dunglvlt0507@gmail.com>
+Date:   Thu Feb 6 22:01:10 2025 +0700
+
+    new:thamKham
+
+[33mcommit 46f1d3191ad01aed016841122a28b08f360880ec[m
+Merge: 709413d e685312
+Author: Đắc Toàn <89795666+ViperTricks@users.noreply.github.com>
+Date:   Tue Feb 4 22:56:10 2025 +0700
+
+    Merge pull request #20 from Thien1703/feature/add-forgot-password
+    
+    Add forgot password screen

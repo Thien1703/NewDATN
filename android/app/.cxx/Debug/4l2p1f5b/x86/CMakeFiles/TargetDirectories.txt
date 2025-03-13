@@ -1,0 +1,2 @@
+D:/Learn/Flutter/HealthCare/android/app/.cxx/Debug/4l2p1f5b/x86/CMakeFiles/edit_cache.dir
+D:/Learn/Flutter/HealthCare/android/app/.cxx/Debug/4l2p1f5b/x86/CMakeFiles/rebuild_cache.dir
