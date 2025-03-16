@@ -167,18 +167,18 @@ class StepIndicator extends StatelessWidget {
             image: AppIcons.checkmark,
             color: isSelected[2] ? AppColors.accent : AppColors.neutralGrey2,
           ),
-          StepLine(),
-          StepItem(
-            onTap: currentIndex <= 2
-                ? null
-                : () => onNavigateToScreen(3, 'Thông tin thanh toán'),
-            border: isSelected[3]
-                ? Border.all(color: AppColors.primary, width: 1)
-                : null,
-            background: isSelected[3] ? Colors.white : AppColors.accent,
-            image: AppIcons.payment,
-            color: isSelected[3] ? AppColors.accent : AppColors.neutralGrey2,
-          ),
+          // StepLine(),
+          // StepItem(
+          //   onTap: currentIndex <= 2
+          //       ? null
+          //       : () => onNavigateToScreen(3, 'Thông tin thanh toán'),
+          //   border: isSelected[3]
+          //       ? Border.all(color: AppColors.primary, width: 1)
+          //       : null,
+          //   background: isSelected[3] ? Colors.white : AppColors.accent,
+          //   image: AppIcons.payment,
+          //   color: isSelected[3] ? AppColors.accent : AppColors.neutralGrey2,
+          // ),
         ],
       ),
     );

@@ -80,8 +80,7 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
             child: ListView(
               children: [
                 HospitalInfoWidget(
-                  nameHospital: clinices?.name ?? 'Đang tải',
-                  addressHospital: clinices?.address ?? "Đang tải",
+                  clinicId: widget.clinicId,
                 ),
                 SectionTitle(title: 'Dịch vụ'),
                 ServiceSelector(onServicesSelected: updateSelectedServices),
@@ -208,6 +207,7 @@ class _DateSelectorState extends State<DateSelector> {
   void _showDatePicker(BuildContext context) async {
     final DateTime? pickedDate = await showModalBottomSheet<DateTime>(
       context: context,
+      isScrollControlled: true, // Quan trọng để tự động co giãn
       builder: (context) => SelectDayWidget(),
     );
 
