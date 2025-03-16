@@ -4,13 +4,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:health_care/views/screens/auth/login/login_screen.dart';
 import '../services/local_storage_service.dart';
 import '../views/screens/home/home_screens.dart';
-import 'api/api_service.dart';
+import '../config/app_config.dart';
 
 class AuthViewModel with ChangeNotifier {
   /// Đăng nhập
   Future<void> login(
       BuildContext context, String phone, String password) async {
-    String? errorMessage = await ApiService.login(phone, password);
+    String? errorMessage = await AppConfig.login(phone, password);
 
     if (!context.mounted) return; // 🔹 Kiểm tra State còn tồn tại không
 
@@ -47,7 +47,7 @@ class AuthViewModel with ChangeNotifier {
   Future<void> register(BuildContext context, String fullName,
       String phoneNumber, String password) async {
     String? errorMessage =
-        await ApiService.register(fullName, phoneNumber, password);
+        await AppConfig.register(fullName, phoneNumber, password);
 
     if (!context.mounted) return; // 🔹 Kiểm tra State còn tồn tại không
 
@@ -81,14 +81,14 @@ class AuthViewModel with ChangeNotifier {
   }
 
   /// Cập nhật hồ sơ
-  Future<void> updateProfile(
-      BuildContext context, Map<String, dynamic> profileData, File? avatar) async {
+  Future<void> updateProfile(BuildContext context,
+      Map<String, dynamic> profileData, File? avatar) async {
     // 🔹 Lấy userId từ local storage
     int? userId = await LocalStorageService.getUserId();
 
     // 🔹 Nếu chưa có, gọi API lấy userId
     if (userId == null) {
-      userId = await ApiService.getMyUserId();
+      userId = await AppConfig.getMyUserId();
       if (userId != null) {
         await LocalStorageService.saveUserId(userId); // Lưu lại để dùng sau
       }
@@ -109,7 +109,7 @@ class AuthViewModel with ChangeNotifier {
     // 🔹 Đảm bảo `profileData` có chứa `id`
     profileData['id'] = userId;
 
-    String? errorMessage = await ApiService.updateProfile(profileData);
+    String? errorMessage = await AppConfig.updateProfile(profileData);
 
     if (!context.mounted) return;
 
@@ -133,10 +133,9 @@ class AuthViewModel with ChangeNotifier {
     }
   }
 
-
   /// Đăng xuất
   Future<void> signOut(BuildContext context) async {
-    String? errorMessage = await ApiService.logout();
+    String? errorMessage = await AppConfig.logout();
 
     if (!context.mounted) return; // 🔹 Kiểm tra State còn tồn tại không
 
@@ -154,7 +153,7 @@ class AuthViewModel with ChangeNotifier {
 
       // Chuyển về màn hình Splash
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        MaterialPageRoute(builder: (context) =>  LoginScreen()),
         (route) => false,
       );
     } else {

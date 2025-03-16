@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
-import 'package:health_care/viewmodels/api/api_service.dart';
+import 'package:health_care/viewmodels/api/service_api.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/models/service.dart';
 import 'package:health_care/views/screens/clinic/clinic_screen.dart';
@@ -23,7 +23,7 @@ class _ServiceScreen extends State<ServiceScreen> {
   }
 
   void fetchServicesById() async {
-    List<Service>? data = await ApiService.getAllServeById(widget.specialtyId);
+    List<Service>? data = await ServiceApi.getAllServeById(widget.specialtyId);
     if (mounted) {
       setState(() {
         services = data;
@@ -88,30 +88,6 @@ class _ServiceScreen extends State<ServiceScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Kiểm tra service.image null
-                                service.image != null &&
-                                        service.image!.isNotEmpty
-                                    ? Image.network(
-                                        service.image!,
-                                        height: 120,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return Image.asset(
-                                            'assets/images/avt.png',
-                                            height: 120,
-                                            width: double.infinity,
-                                            fit: BoxFit.cover,
-                                          );
-                                        },
-                                      )
-                                    : Image.asset(
-                                        'assets/images/avt.png',
-                                        height: 120,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                      ),
                                 SizedBox(height: 5),
                                 Text(
                                   service.name,
@@ -126,12 +102,6 @@ class _ServiceScreen extends State<ServiceScreen> {
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(fontSize: 12),
-                                ),
-                                Text(
-                                  service.formattedPrice,
-                                  style: TextStyle(
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),

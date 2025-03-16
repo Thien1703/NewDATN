@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:health_care/viewmodels/api/api_service.dart';
+import 'package:health_care/config/app_config.dart';
 import 'package:health_care/views/screens/medical_examination_record/medical_record.dart';
 import 'package:health_care/views/screens/profile/inforProfile_screen.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _fetchUserProfile() async {
     try {
-      final data = await ApiService.getUserProfile();
+      final data = await AppConfig.getUserProfile();
       setState(() {
         _userData = data;
         _isLoading = false;

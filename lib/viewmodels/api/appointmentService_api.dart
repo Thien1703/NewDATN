@@ -1,13 +1,13 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:health_care/viewmodels/api/api_service.dart';
+import 'package:health_care/config/app_config.dart';
 import 'package:health_care/services/local_storage_service.dart';
 import 'package:health_care/models/appointment/appointment_service.dart';
 import 'package:health_care/models/appointment/appointmentCreate.dart';
 
 class AppointmentserviceApi {
   static Future<List<AppointmentService>?> getAllAppointmentService() async {
-    final url = Uri.parse('${ApiService.baseUrl}/appointment-service/get-all');
+    final url = Uri.parse('${AppConfig.baseUrl}/appointment-service/get-all');
     String? token = await LocalStorageService.getToken();
 
     if (token == null) {
@@ -56,7 +56,7 @@ class AppointmentserviceApi {
   static Future<bool> addServicesToAppointment(
       int appointmentId, List<int> serviceIds) async {
     final url =
-        Uri.parse('${ApiService.baseUrl}/appointment-service/create-multiple');
+        Uri.parse('${AppConfig.baseUrl}/appointment-service/create-multiple');
     String? token = await LocalStorageService.getToken();
 
     if (token == null) {

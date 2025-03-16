@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_icons.dart';
-import 'package:health_care/viewmodels/api/api_service.dart';
+import 'package:health_care/config/app_config.dart';
 import 'package:intl/intl.dart';
 
 class WidgetUserprofileCard extends StatefulWidget {
@@ -23,7 +23,7 @@ class _WidgetUserprofileCardState extends State<WidgetUserprofileCard> {
   }
 
   Future<void> _fetchUserProfile() async {
-    final data = await ApiService.getUserProfile();
+    final data = await AppConfig.getUserProfile();
     if (mounted) {
       setState(() {
         userInfo = data;

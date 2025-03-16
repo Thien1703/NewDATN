@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_icons.dart';
-import 'package:health_care/viewmodels/api/api_service.dart';
+import 'package:health_care/config/app_config.dart';
 import 'package:health_care/views/widgets/appointment/widget_hospital_info_card.dart';
 import 'package:health_care/views/widgets/widget_select_item.dart';
 import 'package:health_care/views/widgets/appointment/widget_customButton.dart';
@@ -43,7 +43,7 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
   }
 
   void fetchClinics() async {
-    Clinic? data = await ApiService.getClinicById(widget.clinicId);
+    Clinic? data = await AppConfig.getClinicById(widget.clinicId);
     if (data != null) {
       setState(() {
         clinices = data;
@@ -160,7 +160,8 @@ class _ServiceSelectorState extends State<ServiceSelector> {
           onTap: () async {
             final result = await Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ServicecartScreen()),
+              MaterialPageRoute(
+                  builder: (context) => const ServiceCartScreen()),
             );
 
             if (result != null && result is Map<String, dynamic>) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
-import 'package:health_care/viewmodels/api/api_service.dart';
+import 'package:health_care/config/app_config.dart';
 import 'package:health_care/views/screens/profile/editProfile_screen.dart';
 import 'package:intl/intl.dart';
 
@@ -22,7 +22,7 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
   }
 
   Future<void> fetchUserData() async {
-    final data = await ApiService.getUserProfile();
+    final data = await AppConfig.getUserProfile();
     if (mounted) {
       setState(() {
         userData = data;
@@ -100,8 +100,7 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
                         const SizedBox(height: 10),
                         _buildInfoRow('Họ và tên',
                             userData?['fullName'] ?? 'Chưa cập nhật'),
-                        _buildInfoRow(
-                            'Ngày sinh',
+                        _buildInfoRow('Ngày sinh',
                             formatBirthDate(userData?['birthDate'])),
                         _buildInfoRow('Giới tính',
                             userData?['gender'] ?? 'Chưa cập nhật'),

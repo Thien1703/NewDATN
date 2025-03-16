@@ -6,7 +6,6 @@ import 'package:health_care/viewmodels/auth_viewmodel.dart';
 import 'package:health_care/views/screens/welcome/splash_screen.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
 import 'package:vietnam_provinces/vietnam_provinces.dart';
-
 import 'views/screens/auth/login/login_screen.dart';
 
 void main() async {
@@ -38,7 +37,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/', // Route mặc định khi mở ứng dụng
         routes: {
           '/': (context) => SplashScreen(),
-          '/login': (context) => const LoginScreen(),
+          '/login': (context) => LoginScreen(),
           '/home': (context) => const HomeScreens(),
         },
         localizationsDelegates: const [

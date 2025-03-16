@@ -11,6 +11,8 @@ class AppColors {
 
   // Accent Color
   static const Color accent = Color(0xFF64B5F6);
+  static const Color softBlue = Color(0xFF64B5F6);
+  static const Color deepBlue = Color(0xFF1565C0);
 
   // Neutral Colors
   static const Color neutralWhite = Color(0xFFFFFFFF);
