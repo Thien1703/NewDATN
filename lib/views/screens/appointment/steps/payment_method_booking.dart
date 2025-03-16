@@ -25,11 +25,6 @@ class _PaymentMethodBooking extends State<PaymentMethodBooking> {
             margin: const EdgeInsets.symmetric(horizontal: 20),
             child: ListView(
               children: const [
-                HospitalInfoWidget(
-                  nameHospital: 'Bệnh viện nhân dân Gia Định',
-                  addressHospital:
-                      'Số 1 Nơ Trang Long, Phường 7, Quận Bình Thạnh, TpHCM',
-                ),
                 SectionTitle(title: 'Thông tin bệnh nhân'),
                 WidgetUserprofileCard(),
                 SectionTitle(title: 'Thông tin đặt khám'),

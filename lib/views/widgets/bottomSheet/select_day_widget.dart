@@ -1,177 +1,125 @@
 import 'package:flutter/material.dart';
+import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/views/widgets/bottomSheet/header_bottomSheet.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 
 class SelectDayWidget extends StatefulWidget {
   const SelectDayWidget({super.key});
+
   @override
-  State<SelectDayWidget> createState() => _SelectDayWidget();
+  State<SelectDayWidget> createState() => _SelectDayWidgetState();
 }
 
-class _SelectDayWidget extends State<SelectDayWidget> {
+class _SelectDayWidgetState extends State<SelectDayWidget> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
-  final DateTime _firstDay = DateTime.now().subtract(Duration(days: 30));
+  final DateTime _firstDay = DateTime.now(); // Không cho chọn ngày trước đó
   final DateTime _lastDay = DateTime.now().add(Duration(days: 365));
-  final Set<DateTime> _kinLichDays = {};
+
   @override
   Widget build(BuildContext context) {
     return HeaderBottomSheet(
       title: 'Chọn ngày khám',
-      body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.only(top: 10),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TableCalendar(
-                firstDay: _firstDay,
-                lastDay: _lastDay,
-                focusedDay: _focusedDay,
-                locale: 'vi',
-                selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
-                onDaySelected: (selectedDay, focusedDay) {
-                  setState(() {
-                    _selectedDay = selectedDay;
-                    _focusedDay = focusedDay;
-                  });
-                  Navigator.pop(context,
-                      _selectedDay); // Trả ngày đã chọn về DateSelector
-                  print(_selectedDay);
-                },
-                onPageChanged: (focusedDay) {
-                  setState(() {
-                    _focusedDay = focusedDay;
-                  });
-                },
-                calendarStyle: CalendarStyle(
-                  todayDecoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 213, 234, 213),
-                    border: Border.all(
-                        color: const Color.fromARGB(255, 95, 130, 91),
-                        width: 1.5),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  todayTextStyle: TextStyle(color: Colors.black),
-                  selectedDecoration: BoxDecoration(
-                    color: const Color.fromARGB(
-                        255, 179, 178, 180), // Change to "kín lịch" color
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  defaultDecoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 213, 234, 213),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  weekendDecoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 213, 234, 213),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  disabledDecoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 213, 234, 213),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  markerDecoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 179, 178, 180),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  outsideDecoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 213, 234, 213),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  disabledTextStyle: TextStyle(
-                      color: const Color.fromARGB(255, 206, 205, 205)),
-                  defaultTextStyle: TextStyle(color: Colors.black),
-                  weekendTextStyle: TextStyle(color: Colors.black),
-                  cellMargin: EdgeInsets.all(2),
-                  // CHỌN NGÀY
-                  rangeEndDecoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 179, 178, 180),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                headerStyle: HeaderStyle(
-                  formatButtonVisible: false,
-                  titleCentered: true,
-                  titleTextFormatter: (date, locale) {
-                    return DateFormat.yMMMM(locale).format(date);
-                  },
-                  titleTextStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: 17,
+      body: Column(
+        mainAxisSize: MainAxisSize.min, // Giúp co giãn
+        children: [
+          TableCalendar(
+            firstDay: _firstDay, // Giới hạn ngày đầu tiên trong tháng
+            lastDay: _lastDay, // Giới hạn ngày cuối cùng trong tháng
+            focusedDay: _focusedDay,
+            locale: 'vi',
+
+            selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
+            onDaySelected: (selectedDay, focusedDay) {
+              if (selectedDay.isBefore(DateTime.now())) return;
+
+              setState(() {
+                _selectedDay = selectedDay;
+                _focusedDay = focusedDay;
+              });
+              Navigator.pop(context, _selectedDay);
+            },
+            calendarStyle: CalendarStyle(
+              outsideDaysVisible: false, // Ẩn ngày ngoài tháng
+              cellMargin: EdgeInsets.all(2),
+              defaultTextStyle: TextStyle(fontSize: 15),
+              weekendTextStyle: TextStyle(fontSize: 15),
+              todayTextStyle:
+                  TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              selectedDecoration: BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+              ),
+              weekendDecoration: BoxDecoration(
+                color: AppColors.softBlue,
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(8),
+              ),
+
+              defaultDecoration: BoxDecoration(
+                color: AppColors.softBlue,
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              disabledTextStyle:
+                  TextStyle(color: const Color.fromARGB(255, 179, 179, 179)),
+              disabledDecoration: BoxDecoration(
+                color: const Color.fromARGB(255, 228, 227, 227),
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            headerStyle: HeaderStyle(
+                headerPadding: EdgeInsets.symmetric(vertical: 5),
+                formatButtonVisible: false,
+                titleCentered: true,
+                titleTextStyle: TextStyle(
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
-                  ),
-                  //ngaythang
-                  leftChevronIcon: Icon(
-                    Icons.chevron_left,
-                    color: Colors.white,
-                  ),
-                  rightChevronIcon:
-                      Icon(Icons.chevron_right, color: Colors.white),
-                  decoration: BoxDecoration(
-                    color: Colors.green,
+                    color: Colors.white),
+                leftChevronIcon:
+                    Icon(Icons.chevron_left, size: 20, color: Colors.white),
+                rightChevronIcon:
+                    Icon(Icons.chevron_right, size: 20, color: Colors.white),
+                decoration: BoxDecoration(
+                    color: AppColors.deepBlue,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16),
-                    ),
-                  ),
-                ),
-                daysOfWeekStyle: DaysOfWeekStyle(
-                  weekdayStyle: TextStyle(color: Colors.black),
-                  weekendStyle: TextStyle(color: Colors.black),
-                  dowTextFormatter: (day, locale) {
-                    return DateFormat.E(locale).format(day).toUpperCase();
-                  },
-                ),
-              ),
-              SizedBox(height: 6),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 16,
-                        height: 16,
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 213, 234, 213),
-                          border: Border.all(
-                              color: const Color.fromARGB(255, 95, 130, 91),
-                              width: 1.5),
-                        ),
-                      ),
-                      SizedBox(width: 8),
-                      Text('Hôm nay'),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        width: 16,
-                        height: 16,
-                        color: const Color.fromARGB(255, 213, 234, 213),
-                      ),
-                      SizedBox(width: 8),
-                      Text('Còn trống'),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        width: 16,
-                        height: 16,
-                        color: const Color.fromARGB(255, 179, 178, 180),
-                      ),
-                      SizedBox(width: 8),
-                      Text('Kín lịch'),
-                    ],
-                  ),
-                ],
-              ),
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)))),
+            daysOfWeekStyle: DaysOfWeekStyle(
+              weekdayStyle:
+                  TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+              weekendStyle:
+                  TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+            ),
+          ),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildLegendIndicator(AppColors.deepBlue, 'Hôm nay'),
+              _buildLegendIndicator(AppColors.softBlue, 'Còn trống'),
+              _buildLegendIndicator(Colors.grey, 'Kín lịch'),
             ],
           ),
-        ),
+          SizedBox(height: 10),
+        ],
       ),
+    );
+  }
+
+  Widget _buildLegendIndicator(Color color, String text) {
+    return Row(
+      children: [
+        Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
+        SizedBox(width: 5),
+        Text(text, style: TextStyle(fontSize: 14)),
+      ],
     );
   }
 }

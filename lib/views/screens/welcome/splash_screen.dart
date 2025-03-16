@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _navigate() async {
-    await Future.delayed(Duration(seconds: 10));
+    await Future.delayed(Duration(seconds: 5));
 
     if (!mounted) return;
 
@@ -48,10 +48,13 @@ class _SplashScreenState extends State<SplashScreen> {
         body: Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          //
-          //
-          colors: [Color(0xFF1565C0), Color(0xFFECEFF1)],
-          begin: Alignment.topCenter,
+          colors: [
+            Color(0xFF1565C0),
+            Colors.white,
+            Color(0xFF64B5F6),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
       ),
       child: Center(

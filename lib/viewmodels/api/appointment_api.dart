@@ -1,13 +1,13 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:health_care/viewmodels/api/api_service.dart';
+import 'package:health_care/config/app_config.dart';
 import 'package:health_care/models/appointment/appointment.dart';
 import 'package:health_care/services/local_storage_service.dart';
 
 class AppointmentApi {
   //Lấy tất cả đặt lịch
   static Future<List<Appointment>?> getAllAppointment() async {
-    final url = Uri.parse('${ApiService.baseUrl}/appointment/get-all');
+    final url = Uri.parse('${AppConfig.baseUrl}/appointment/get-all');
     String? token = await LocalStorageService.getToken();
     if (token == null) {
       return null;
@@ -39,7 +39,7 @@ class AppointmentApi {
 
   //Xem đặt lịch theo id
   static Future<Appointment?> getAppointmentById(int appointmentId) async {
-    final url = Uri.parse('${ApiService.baseUrl}/appointment/get-by-id');
+    final url = Uri.parse('${AppConfig.baseUrl}/appointment/get-by-id');
     String? token = await LocalStorageService.getToken();
     if (token == null) {
       return null;
@@ -71,7 +71,7 @@ class AppointmentApi {
 
   // Đặt lịch
   static Future<int?> createAppointment(Appointment appointment) async {
-    final url = Uri.parse('${ApiService.baseUrl}/appointment/create');
+    final url = Uri.parse('${AppConfig.baseUrl}/appointment/create');
     String? token = await LocalStorageService.getToken();
 
     if (token == null) {

@@ -56,11 +56,11 @@ class _ProfileBooking extends State<ProfileBooking> {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       child: ListView(
         children: [
-          Text("Clinic ID: ${widget.clinicId}"),
-          Text("Danh sách dịch vụ đã chọn:${widget.selectedServiceId}"),
-          Text("Ngày khám: ${widget.date}"), // Hiển thị ngày khám
-          Text("Giờ khám: ${widget.time}"), // Hiển thị giờ khám
-          Text("Thanh toán: ${widget.paymentId}"),
+          // Text("Clinic ID: ${widget.clinicId}"),
+          // Text("Danh sách dịch vụ đã chọn:${widget.selectedServiceId}"),
+          // Text("Ngày khám: ${widget.date}"), // Hiển thị ngày khám
+          // Text("Giờ khám: ${widget.time}"), // Hiển thị giờ khám
+          // Text("Thanh toán: ${widget.paymentId}"),
 
           WidgetUserprofileCard(onTap: _handleProfileTap),
           const SizedBox(height: 20),

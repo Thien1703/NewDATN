@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_icons.dart';
-import 'package:health_care/viewmodels/api/api_service.dart';
+import 'package:health_care/config/app_config.dart';
 import 'package:health_care/views/widgets/appointment/widget_hospital_info_card.dart';
 import 'package:health_care/views/widgets/widget_select_item.dart';
 import 'package:health_care/views/widgets/appointment/widget_customButton.dart';
@@ -43,7 +43,7 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
   }
 
   void fetchClinics() async {
-    Clinic? data = await ApiService.getClinicById(widget.clinicId);
+    Clinic? data = await AppConfig.getClinicById(widget.clinicId);
     if (data != null) {
       setState(() {
         clinices = data;
@@ -80,8 +80,7 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
             child: ListView(
               children: [
                 HospitalInfoWidget(
-                  nameHospital: clinices?.name ?? 'Đang tải',
-                  addressHospital: clinices?.address ?? "Đang tải",
+                  clinicId: widget.clinicId,
                 ),
                 SectionTitle(title: 'Dịch vụ'),
                 ServiceSelector(onServicesSelected: updateSelectedServices),
@@ -160,7 +159,8 @@ class _ServiceSelectorState extends State<ServiceSelector> {
           onTap: () async {
             final result = await Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ServicecartScreen()),
+              MaterialPageRoute(
+                  builder: (context) => const ServiceCartScreen()),
             );
 
             if (result != null && result is Map<String, dynamic>) {
@@ -207,6 +207,7 @@ class _DateSelectorState extends State<DateSelector> {
   void _showDatePicker(BuildContext context) async {
     final DateTime? pickedDate = await showModalBottomSheet<DateTime>(
       context: context,
+      isScrollControlled: true, // Quan trọng để tự động co giãn
       builder: (context) => SelectDayWidget(),
     );
 

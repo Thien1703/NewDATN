@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_icons.dart';
+import 'package:health_care/config/app_config.dart';
+import 'package:health_care/models/clinic.dart';
 import 'package:health_care/views/widgets/appointment/widget_hospital_info_card.dart';
 import 'package:health_care/views/widgets/appointment/widget_customPricePayment.dart';
 import 'package:health_care/views/widgets/appointment/widget_customButton.dart';
@@ -37,6 +39,22 @@ class ConfirmBooking extends StatefulWidget {
 
 class _ConfirmBookingState extends State<ConfirmBooking> {
   bool isLoading = false;
+  Clinic? clinices;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchClinics();
+  }
+
+  void fetchClinics() async {
+    Clinic? data = await AppConfig.getClinicById(widget.clinicId);
+    if (data != null) {
+      setState(() {
+        clinices = data;
+      });
+    }
+  }
 
   Future<void> _bookAppointment() async {
     setState(() => isLoading = true);
@@ -96,10 +114,8 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                 Text("Ngày khám: ${widget.date}"),
                 Text("Giờ khám: ${widget.time}"),
                 Text("Thanh toán: ${widget.paymentId}"),
-                const HospitalInfoWidget(
-                  nameHospital: 'Bệnh viện nhân dân Gia Định',
-                  addressHospital:
-                      'Số 1 Nơ Trang Long, P.7, Q.Bình Thạnh, Tp.HCM',
+                HospitalInfoWidget(
+                  clinicId: widget.clinicId,
                 ),
                 const SectionTitle(title: 'Thông tin bệnh nhân'),
                 const WidgetUserprofileCard(),

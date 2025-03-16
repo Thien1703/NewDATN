@@ -1,25 +1,26 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/views/screens/auth/login/login_screen.dart';
-import 'package:health_care/views/screens/auth/register/register_screen.dart';
 
 final List<Map<String, String>> items = [
   {
-    "image": "assets/images/Picture1.png",
-    "text1": "Tiện Ích",
-    "text2": "Tối ưu hóa trải nghiệm người dùng với các công cụ hiện đại",
+    "image": "assets/images/Imagepage1.png",
+    "text1": "Dễ dàng tra cứu thông tin",
+    "text2":
+        "Quản lý dữ liệu hồ sơ sức khỏe cho mỗi cá nhân và người thân hoàn toàn bảo mật và khoa học. Dễ dàng tìm kiếm và tra cứu thông tin",
   },
   {
-    "image": "assets/images/Picture2.png",
-    "text1": "Thuận Lợi",
-    "text2": "Dễ dàng tiếp cận và sử dụng mọi lúc, mọi nơi",
+    "image": "assets/images/Imagepage3.png",
+    "text1": "Đặt khám dễ dàng",
+    "text2":
+        "Ứng dụng đặt khám bệnh tại hơn 10 phòng khám đa khoa, chuyên khoa và đa dạng các tiện ích khác giúp đặt khám dễ dàng và tiết kiệm thời gian",
   },
   {
-    "image": "assets/images/Picture3.png",
-    "text1": "Chủ Động",
-    "text2": "Kiểm soát thời gian và lịch trình của bạn hiệu quả hơn",
+    "image": "assets/images/Imagepage2.png",
+    "text1": "Tiết kiệm thời gian",
+    "text2":
+        "Đặt hẹn nhanh chóng, dễ dàng ngay trên ứng dụng điện thoại chỉ với vài thao tác đơn giản giúp khách hàng chủ động lịch trình khám chữa bệnh",
   },
 ];
 
@@ -73,10 +74,32 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: AppColors.primary,
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
+            Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: EdgeInsets.only(right: 15, top: 20),
+                child: IntrinsicWidth(
+                  child: InkWell(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                    ),
+                    child: Text(
+                      'Bỏ qua',
+                      style: TextStyle(
+                        color: AppColors.deepBlue,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
             SizedBox(
               height: screenHeight * 0.65,
               child: PageView.builder(
@@ -95,33 +118,42 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(16.0),
-                          child: AspectRatio(
-                            aspectRatio: 16 / 9, // Tỷ lệ khung hình cố định
-                            child: Image.asset(
-                              item["image"]!,
-                              fit: BoxFit.contain, // Hiển thị toàn bộ hình ảnh
+                        AspectRatio(
+                          aspectRatio: 11 / 9,
+                          child: Image.asset(
+                            item["image"]!,
+                            width: 300,
+                            // fit: BoxFit.cover,
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                        ShaderMask(
+                          shaderCallback: (bounds) => const LinearGradient(
+                            colors: [
+                              AppColors.deepBlue,
+                              AppColors.softBlue,
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ).createShader(bounds),
+                          child: Text(
+                            item["text1"]!,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20),
-                        Text(
-                          item["text1"]!,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.accent,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 10),
                         Text(
                           item["text2"]!,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 18,
-                            color: AppColors.neutralDarkGreen2,
+                            fontSize: 14,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
@@ -130,89 +162,81 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 },
               ),
             ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                items.length,
-                (index) => AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
+            const SizedBox(height: 50),
+            Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [AppColors.deepBlue, AppColors.softBlue],
+                  ),
+                  borderRadius: BorderRadius.circular(15)),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(330, 50),
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+                onPressed: () {
+                  if (isLastSlide) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginScreen(),
+                      ),
+                    );
+                  } else {
+                    _pageController.nextPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                },
+                child: Text(
+                  isLastSlide ? "Bắt đầu" : "Tiếp",
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20, bottom: 10),
+              child: Text(
+                '${currentIndex + 1}/${items.length}',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.deepBlue,
+                ),
+              ),
+            ),
+            Stack(
+              children: [
+                Container(
+                  width: 150,
                   height: 8,
-                  width: currentIndex == index ? 24 : 8,
                   decoration: BoxDecoration(
-                    color: currentIndex == index
-                        ? Colors.green
-                        : Colors.green.shade200,
+                    color: Colors.grey[300],
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              onPressed: () {
-                if (isLastSlide) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const RegisterScreen(),
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  width: (currentIndex + 1) / items.length * 150,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [AppColors.deepBlue, AppColors.softBlue],
                     ),
-                  );
-                } else {
-                  _pageController.nextPage(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                  );
-                }
-              },
-              child: Text(
-                isLastSlide ? "ĐĂNG KÝ" : "TIẾP",
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            if (isLastSlide)
-              RichText(
-                text: TextSpan(
-                  text: 'Bạn đã có tài khoản? ',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.neutralGrey3,
+                    borderRadius: BorderRadius.circular(4),
                   ),
-                  children: [
-                    TextSpan(
-                      text: 'Đăng nhập',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF2F6D46),
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginScreen(),
-                            ),
-                          );
-                        },
-                    ),
-                  ],
                 ),
-              ),
+              ],
+            ),
           ],
         ),
       ),

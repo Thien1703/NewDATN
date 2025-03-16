@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
-import 'package:health_care/viewmodels/api/api_service.dart';
+import 'package:health_care/config/app_config.dart';
 import 'package:health_care/models/specialty.dart';
 import 'package:health_care/views/screens/BMI/measureBMI_Screen.dart';
 import 'package:health_care/views/screens/home/service_screen.dart';

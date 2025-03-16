@@ -1,13 +1,13 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:health_care/viewmodels/api/api_service.dart';
+import 'package:health_care/config/app_config.dart';
 import 'package:health_care/models/specialty.dart';
 import 'package:health_care/services/local_storage_service.dart';
 
 class SpecialtyApi {
   //Lấy api của chuyên khoa
   static Future<List<Specialty>?> getAllSpecialty() async {
-    final url = Uri.parse('${ApiService.baseUrl}/specialty/get-all');
+    final url = Uri.parse('${AppConfig.baseUrl}/specialty/get-all');
 
     String? token = await LocalStorageService.getToken();
     if (token == null) {
@@ -42,7 +42,7 @@ class SpecialtyApi {
 
   //Lấy api của chuyên khoa theo id
   static Future<Specialty?> getSpecialtyById(int specialtyId) async {
-    final url = Uri.parse('${ApiService.baseUrl}/specialty/get-by_id');
+    final url = Uri.parse('${AppConfig.baseUrl}/specialty/get-by_id');
 
     String? token = await LocalStorageService.getToken();
     if (token == null) {
