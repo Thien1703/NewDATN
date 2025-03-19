@@ -36,6 +36,13 @@ class ProfileBooking extends StatefulWidget {
 }
 
 class _ProfileBooking extends State<ProfileBooking> {
+   final GlobalKey<WidgetUserprofileCardState> _profileCardKey = GlobalKey();
+
+  /// Hàm cập nhật thông tin user
+  void _fetchUserProfile() {
+    _profileCardKey.currentState?.fetchUserProfile();
+  }
+
   void _handleProfileTap(int customerId) {
     print("ID khách hàng: $customerId");
     print(
@@ -82,10 +89,18 @@ class _ProfileBooking extends State<ProfileBooking> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => EditProfileScreen()),
+                        builder: (context) => EditProfileScreen(
+                          onProfileUpdated:
+                              _fetchUserProfile, // Gọi lại hàm này để cập nhật UI
+                        ),
+                      ),
                     );
                   },
-                  icon: Icon(Icons.edit, size: 18, color: Colors.white,),
+                  icon: Icon(
+                    Icons.edit,
+                    size: 18,
+                    color: Colors.white,
+                  ),
                   label: Text("Chỉnh sửa"),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.accent, // Màu nút
@@ -98,7 +113,10 @@ class _ProfileBooking extends State<ProfileBooking> {
               ],
             ),
           ),
-          WidgetUserprofileCard(onTap: _handleProfileTap),
+          WidgetUserprofileCard(
+            key: _profileCardKey, // ✅ Thêm key để truy cập state
+            onTap: _handleProfileTap,
+          ),
           const SizedBox(height: 20),
         ],
       ),

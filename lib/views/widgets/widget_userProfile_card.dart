@@ -2,31 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_icons.dart';
 import 'package:health_care/config/app_config.dart';
-import 'package:health_care/views/screens/profile/editProfile_screen.dart';
 import 'package:intl/intl.dart';
 
 class WidgetUserprofileCard extends StatefulWidget {
   final Function(int)? onTap;
-  final Function()? onEdit; // Thêm callback chỉnh sửa
+  // final Function(Function refreshProfile)? onEdit; // Gửi hàm để cập nhật dữ liệu sau khi chỉnh sửa
 
-  const WidgetUserprofileCard({super.key, this.onTap, this.onEdit});
+  const WidgetUserprofileCard({super.key, this.onTap});
 
   @override
-  _WidgetUserprofileCardState createState() => _WidgetUserprofileCardState();
+  WidgetUserprofileCardState createState() => WidgetUserprofileCardState();
 }
 
-class _WidgetUserprofileCardState extends State<WidgetUserprofileCard> {
+class WidgetUserprofileCardState extends State<WidgetUserprofileCard> {
   Map<String, dynamic>? userInfo;
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _fetchUserProfile();
+    fetchUserProfile();
   }
 
-  Future<void> _fetchUserProfile() async {
-    final data = await AppConfig.getUserProfile();
+  Future<void> fetchUserProfile() async {
+    setState(() => isLoading = true); // Hiển thị loading khi lấy dữ liệu
+    final data = await AppConfig.getUserProfile(); // Lấy dữ liệu mới
     if (mounted) {
       setState(() {
         userInfo = data;
@@ -55,7 +55,6 @@ class _WidgetUserprofileCardState extends State<WidgetUserprofileCard> {
           onTap: () {
             if (userInfo != null && userInfo!['id'] != null) {
               int customerId = userInfo!['id'];
-              print("ID khách hàng: $customerId");
               if (widget.onTap != null) {
                 widget.onTap!(customerId);
               }
@@ -75,19 +74,19 @@ class _WidgetUserprofileCardState extends State<WidgetUserprofileCard> {
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _customeRow(
+                            _customRow(
                                 image: AppIcons.user1,
                                 titleOfImage:
                                     userInfo!['fullName'] ?? 'Chưa có tên'),
-                            _customeRow(
+                            _customRow(
                                 image: AppIcons.call,
                                 titleOfImage:
                                     userInfo!['phoneNumber'] ?? 'Chưa có SĐT'),
-                            _customeRow(
+                            _customRow(
                                 image: AppIcons.calendar,
                                 titleOfImage:
                                     formatBirthDate(userInfo!['birthDate'])),
-                            _customeRow(
+                            _customRow(
                                 image: AppIcons.location,
                                 titleOfImage:
                                     userInfo!['address'] ?? 'Chưa có địa chỉ'),
@@ -101,7 +100,7 @@ class _WidgetUserprofileCardState extends State<WidgetUserprofileCard> {
   }
 }
 
-Widget _customeRow({required String image, required String titleOfImage}) {
+Widget _customRow({required String image, required String titleOfImage}) {
   return Container(
     margin: EdgeInsets.only(bottom: 5),
     child: Row(
