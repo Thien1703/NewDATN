@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:health_care/common/app_colors.dart';
+import 'package:health_care/views/screens/profile/editProfile_screen.dart';
 import 'package:health_care/views/widgets/widget_userProfile_card.dart';
 
 class ProfileBooking extends StatefulWidget {
@@ -61,7 +63,41 @@ class _ProfileBooking extends State<ProfileBooking> {
           // Text("Ngày khám: ${widget.date}"), // Hiển thị ngày khám
           // Text("Giờ khám: ${widget.time}"), // Hiển thị giờ khám
           // Text("Thanh toán: ${widget.paymentId}"),
-
+          /// Tiêu đề và nút chỉnh sửa
+          /// Tiêu đề và nút chỉnh sửa
+          Padding(
+            padding: const EdgeInsets.all(10), // Padding giống với Card
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Hồ sơ đặt khám",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditProfileScreen()),
+                    );
+                  },
+                  icon: Icon(Icons.edit, size: 18, color: Colors.white,),
+                  label: Text("Chỉnh sửa"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.accent, // Màu nút
+                    foregroundColor: Colors.white, // Màu chữ
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
           WidgetUserprofileCard(onTap: _handleProfileTap),
           const SizedBox(height: 20),
         ],

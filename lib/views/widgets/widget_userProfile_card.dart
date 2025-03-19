@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_icons.dart';
 import 'package:health_care/config/app_config.dart';
+import 'package:health_care/views/screens/profile/editProfile_screen.dart';
 import 'package:intl/intl.dart';
 
 class WidgetUserprofileCard extends StatefulWidget {
   final Function(int)? onTap;
-  const WidgetUserprofileCard({super.key, this.onTap});
+  final Function()? onEdit; // Thêm callback chỉnh sửa
+
+  const WidgetUserprofileCard({super.key, this.onTap, this.onEdit});
 
   @override
   _WidgetUserprofileCardState createState() => _WidgetUserprofileCardState();
@@ -44,35 +47,32 @@ class _WidgetUserprofileCardState extends State<WidgetUserprofileCard> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        if (userInfo != null && userInfo!['id'] != null) {
-          int customerId = userInfo!['id']; // Lấy ID từ API
-          print("ID khách hàng: $customerId"); // In ra console
-          if (widget.onTap != null) {
-            widget.onTap!(customerId); // Truyền ID qua callback
-          }
-        }
-      },
-      child: Card(
-        child: Container(
-          // margin: EdgeInsets.only(top: 8),
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: isLoading
-              ? Center(
-                  child:
-                      CircularProgressIndicator()) // Hiển thị khi tải dữ liệu
-              : userInfo == null
-                  ? Center(child: Text("Không có dữ liệu"))
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        /// Thẻ Card chứa thông tin người dùng
+        InkWell(
+          onTap: () {
+            if (userInfo != null && userInfo!['id'] != null) {
+              int customerId = userInfo!['id'];
+              print("ID khách hàng: $customerId");
+              if (widget.onTap != null) {
+                widget.onTap!(customerId);
+              }
+            }
+          },
+          child: Card(
+            child: Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : userInfo == null
+                      ? Center(child: Text("Không có dữ liệu"))
+                      : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _customeRow(
@@ -93,10 +93,10 @@ class _WidgetUserprofileCardState extends State<WidgetUserprofileCard> {
                                     userInfo!['address'] ?? 'Chưa có địa chỉ'),
                           ],
                         ),
-                      ],
-                    ),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }
