@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:health_care/views/screens/auth/login/login_screen.dart';
+import 'package:health_care/views/screens/auth/Login/newLogin.dart';
+// import 'package:health_care/views/screens/auth/login/login_screen.dart';
 import '../services/local_storage_service.dart';
 import '../views/screens/home/home_screens.dart';
 import '../config/app_config.dart';

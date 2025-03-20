@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
-import 'package:flutter/services.dart';
-import 'package:health_care/views/screens/home/homePage.dart';
+import 'package:health_care/viewmodels/auth_viewmodel.dart';
+import 'package:health_care/views/screens/auth/Login/newRes.dart';
+import 'package:provider/provider.dart';
 
-class loginScreen extends StatefulWidget {
-  const loginScreen({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<loginScreen> createState() => _loginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _loginScreenState extends State<loginScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailOrPhoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -45,17 +46,24 @@ class _loginScreenState extends State<loginScreen> {
     });
   }
 
+  /// Hàm đăng nhập sử dụng AuthViewModel
   void _signIn() {
     if (_formKey.currentState!.validate()) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Đăng nhập thành công!')),
-      );
+      final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+      String phoneOrEmail = _emailOrPhoneController.text.trim();
+      String password = _passwordController.text.trim();
+
+      authViewModel.login(context, phoneOrEmail, password);
     }
   }
+
+  void _signUp() {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => RegisterScreen()), // Thay thế bằng màn hình đăng ký của bạn
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +119,7 @@ class _loginScreenState extends State<loginScreen> {
                               'Gmail/Phone',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.accent,
+                                color: Colors.grey,
                               ),
                             ),
                           ),
@@ -142,7 +150,7 @@ class _loginScreenState extends State<loginScreen> {
                         ),
                         const SizedBox(height: 40),
                         const Align(
-                          alignment: Alignment.centerRight,
+                          alignment: Alignment.bottomLeft,
                           child: Text(
                             'Forgot Password?',
                             style: TextStyle(
@@ -177,23 +185,27 @@ class _loginScreenState extends State<loginScreen> {
                           ),
                         ),
                         const SizedBox(height: 50),
-                        const Align(
-                          alignment: Alignment.bottomRight,
+                        Align(
+                          alignment: Alignment.bottomCenter,
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                            // crossAxisAlignment: CrossAxisAlignment.center,
+                            // mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
+                              const Text(
                                 "Don't have account?",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.grey),
                               ),
-                              Text(
-                                "Sign up",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 17,
-                                    color: Colors.black),
+                              GestureDetector(
+                                onTap: _signUp,
+                                child: Text(
+                                  "Sign up",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17,
+                                      color: Colors.black),
+                                ),
                               ),
                             ],
                           ),

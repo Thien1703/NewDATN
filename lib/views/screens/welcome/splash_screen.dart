@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/views/screens/auth/Login/choose.dart';
-import 'package:health_care/views/screens/auth/Login/newLogin.dart';
 import 'package:health_care/views/screens/welcome/welcome_screen.dart';
 import '../../../services/local_storage_service.dart';
-import '../auth/login/login_screen.dart';
 import '../home/home_screens.dart';
 
 class SplashScreen extends StatefulWidget {
