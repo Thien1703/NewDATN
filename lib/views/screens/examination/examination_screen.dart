@@ -48,11 +48,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                           border: Border.all(color: Colors.black, width: 1),
                         ),
                         child: Column(
-                          children: [
-                            Text(appointmentService.appointmentId.toString()),
-                            Text(appointmentService.serviceId.toString()),
-                            Text(appointmentService.serviceName),
-                          ],
+                          children: [Text(appointmentService.id.toString())],
                         ),
                       );
                     },

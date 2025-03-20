@@ -9,7 +9,8 @@ import 'package:provider/provider.dart';
 import 'package:vietnam_provinces/vietnam_provinces.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+  final Function onProfileUpdated; // Callback để cập nhật UI
+  const EditProfileScreen({super.key, required this.onProfileUpdated});
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -59,7 +60,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   /// Cập nhật hồ sơ người dùng
-  void _updateUserProfile(BuildContext context) {
+  void _updateUserProfile(BuildContext context) async {
     final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
 
     Map<String, dynamic> profileData = {
@@ -69,8 +70,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       "address": _addressController.text.trim(),
       "gender": selectedGender,
     };
+    await authViewModel.updateProfile(context, profileData, _avatarFile);
 
-    authViewModel.updateProfile(context, profileData, _avatarFile);
+    // ✅ Gọi lại hàm cập nhật UI sau khi cập nhật xong
+    widget.onProfileUpdated();
+
+    // authViewModel.updateProfile(context, profileData, _avatarFile);
   }
 
   @override

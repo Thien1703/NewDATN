@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/config/app_config.dart';
 import 'package:health_care/views/screens/medical_examination_record/medical_record.dart';
 import 'package:health_care/views/screens/profile/inforProfile_screen.dart';
@@ -52,7 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             height: screenHeight / 3,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.green,
+              color: AppColors.accent,
               borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(25),
                 bottomRight: Radius.circular(25),

@@ -1,43 +1,38 @@
 import 'dart:convert';
+import 'dart:developer';
+
+import 'package:health_care/models/appointment/appointment.dart';
+import 'package:health_care/models/employee.dart';
+import 'package:health_care/models/service.dart';
 
 class AppointmentService {
   final int id;
-  final int appointmentId;
-  final int serviceId;
-  final String serviceName;
-  final int? employeeId;
-  final String doctorName;
+  final Appointment appointment;
+  final Service? service;
+  final Employee? employee;
 
   AppointmentService({
     required this.id,
-    required this.appointmentId,
-    required this.serviceId,
-    required this.serviceName,
-    required this.employeeId,
-    required this.doctorName,
+    required this.appointment,
+    required this.service,
+    required this.employee,
   });
 
-  // Chuyển đổi từ JSON sang Model
   factory AppointmentService.fromJson(Map<String, dynamic> json) {
     return AppointmentService(
       id: json['id'],
-      appointmentId: json['appointmentId'],
-      serviceId: json['serviceId'],
-      serviceName: utf8.decode(json['serviceName'].runes.toList()),
-      employeeId: json['employeeId'],
-      doctorName: json['doctorName'],
+      appointment: Appointment.fromJson(json['appointment']),
+      service: Service.fromJson(json['service']),
+      employee: Employee.fromJson(json['employee']),
     );
   }
 
-  // Chuyển đổi từ Model sang JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'appointmentId': appointmentId,
-      'serviceId': serviceId, // Mảng được giữ nguyên
-      'serviceName': serviceName,
-      'employeeId': employeeId,
-      'doctorName': doctorName,
+      'appointment': appointment.toJson(),
+      'service': service,
+      'employee': employee,
     };
   }
 }
