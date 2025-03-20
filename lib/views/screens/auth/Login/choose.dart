@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
+import 'package:health_care/views/screens/auth/Login/login_screen.dart';
 import 'package:health_care/views/screens/auth/Login/newLogin.dart';
 import 'package:health_care/views/screens/auth/Login/newRes.dart';
+import 'package:health_care/views/screens/auth/register/register_screen.dart';
 
 class chooseSigninRes extends StatelessWidget {
   const chooseSigninRes({Key? key}) : super(key: key);
@@ -39,7 +41,7 @@ class chooseSigninRes extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const loginScreen()));
+                  MaterialPageRoute(builder: (context) => const LoginScreen()));
             },
             child: Container(
               height: 53,
@@ -65,7 +67,7 @@ class chooseSigninRes extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const RegScreen()));
+                  MaterialPageRoute(builder: (context) => const RegisterScreen()));
             },
             child: Container(
               height: 53,

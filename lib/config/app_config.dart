@@ -4,11 +4,7 @@ import 'package:health_care/models/clinic.dart';
 import 'package:http/http.dart' as http;
 
 class AppConfig {
-<<<<<<< HEAD
-  static const String baseUrl = 'http://192.168.3.100:8080';
-=======
-  static const String baseUrl = 'http://192.168.1.8:8080';
->>>>>>> 3e40bf392ff40f730edd6ba3b97d84ad44f96173
+  static const String baseUrl = 'http://192.168.3.101:8080';
 
   // Đăng nhập
   static Future<String?> login(String phoneNumber, String password) async {
