@@ -44,21 +44,42 @@ class _HospitalInfoWidgetState extends State<HospitalInfoWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            clinices?.name ?? 'Không xác định',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: AppColors.neutralDarkGreen1,
-            ),
+          Row(
+            children: [
+              Icon(
+                Icons.local_hospital,
+                size: 23,
+                color: Colors.blue,
+              ),
+              SizedBox(width: 10), 
+              Text(
+                clinices?.name ?? 'Không xác định',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.neutralDarkGreen1,
+                ),
+              ),
+            ],
           ),
-          Text(
-            clinices?.address ?? 'Không xác định',
-            style: TextStyle(
-              fontSize: 11.5,
-              fontWeight: FontWeight.w500,
-              color: AppColors.neutralGrey3,
-            ),
+          SizedBox(height: 5),
+          Row(
+            children: [
+              Icon(
+                Icons.location_on,
+                size: 20,
+                color: const Color.fromARGB(255, 255, 58, 58),
+              ),
+              SizedBox(width: 10), 
+              Text(
+                clinices?.address ?? 'Không xác định',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.neutralGrey3,
+                ),
+              ),
+            ],
           ),
         ],
       ),

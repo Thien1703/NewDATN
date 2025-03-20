@@ -69,16 +69,355 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
     });
   }
 
-  @override
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       margin: const EdgeInsets.symmetric(horizontal: 25),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Expanded(
+//             child: ListView(
+//               children: [
+//                 HospitalInfoWidget(
+//                   clinicId: widget.clinicId,
+//                 ),
+//                 SectionTitle(title: 'Dịch vụ'),
+//                 ServiceSelector(onServicesSelected: updateSelectedServices),
+//                 SectionTitle(title: 'Ngày khám'),
+//                 DateSelector(onDateSelected: updateSelectedDate),
+//                 SectionTitle(title: 'Giờ khám'),
+//                 TimeSelector(onTimeSelected: updateSelectedTime),
+//               ],
+//             ),
+//           ),
+//           WidgetCustombutton(
+//             onTap: () {
+//               print(
+//                 "Dữ liệu gửi sang ProfileBooking: clinicId = ${widget.clinicId}, dịch vụ: $selectedServiceId, ngày: $selectedDate, giờ: $selectedTime",
+//               );
+//               widget.onNavigateToScreen(
+//                 1,
+//                 'Chọn hồ sơ',
+//                 clinicId: widget.clinicId,
+//                 serviceIds: selectedServiceId,
+//                 date: DateFormat('yyyy-MM-dd').format(selectedDate!),
+//                 time: selectedTime!,
+//               );
+//             },
+//             text: 'Tiếp tục',
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+// class SectionTitle extends StatelessWidget {
+//   final String title;
+//   const SectionTitle({super.key, required this.title});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.only(top: 10),
+//       child: Text(
+//         title,
+//         style: TextStyle(
+//           fontSize: 18,
+//           fontWeight: FontWeight.bold,
+//           color: AppColors.neutralDarkGreen1,
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// class ServiceSelector extends StatefulWidget {
+//   final Function(List<int>)
+//       onServicesSelected; // Nhận callback để truyền lên ExamInfoBooking
+//   const ServiceSelector({super.key, required this.onServicesSelected});
+
+//   @override
+//   State<ServiceSelector> createState() => _ServiceSelectorState();
+// }
+
+// class _ServiceSelectorState extends State<ServiceSelector> {
+//   List<Service> selectedServices = [];
+//   List<int> selectedServiceId = [];
+
+// //   @override
+// //   Widget build(BuildContext context) {
+// //     return Column(
+// //       crossAxisAlignment: CrossAxisAlignment.start,
+// //       children: [
+// //         SelectItemWidget(
+// //           image: AppIcons.service2,
+// //           text: selectedServices.isEmpty
+// //               ? 'Chọn dịch vụ'
+// //               : 'Đã chọn ${selectedServices.length} dịch vụ',
+// //           onTap: () async {
+// //             final result = await Navigator.push(
+// //               context,
+// //               MaterialPageRoute(
+// //                   builder: (context) => const ServiceCartScreen()),
+// //             );
+
+// //             if (result != null && result is Map<String, dynamic>) {
+// //               setState(() {
+// //                 selectedServices =
+// //                     List<Service>.from(result['selectedServiceList']);
+// //                 selectedServiceId = List<int>.from(result['selectedServiceId']);
+// //               });
+
+// //               // Gọi callback để truyền dữ liệu lên ExamInfoBooking
+// //               widget.onServicesSelected(selectedServiceId);
+// //             }
+// //           },
+// //         ),
+// //         if (selectedServices.isNotEmpty)
+// //           Padding(
+// //             padding: const EdgeInsets.only(top: 10),
+// //             child: Column(
+// //               crossAxisAlignment: CrossAxisAlignment.start,
+// //               children: [
+// //                 ...selectedServices.map((service) => Text(
+// //                       "${service.name}",
+// //                       style: TextStyle(fontSize: 14, color: Colors.black),
+// //                     )),
+// //               ],
+// //             ),
+// //           ),
+// //       ],
+// //     );
+// //   }
+// // }
+
+// // class DateSelector extends StatefulWidget {
+// //   final Function(DateTime) onDateSelected;
+// //   const DateSelector({super.key, required this.onDateSelected});
+
+// //   @override
+// //   State<DateSelector> createState() => _DateSelectorState();
+// // }
+
+// // class _DateSelectorState extends State<DateSelector> {
+// //   DateTime? _selectedDate;
+
+// //   void _showDatePicker(BuildContext context) async {
+// //     final DateTime? pickedDate = await showModalBottomSheet<DateTime>(
+// //       context: context,
+// //       isScrollControlled: true, // Quan trọng để tự động co giãn
+// //       builder: (context) => SelectDayWidget(),
+// //     );
+
+// //     if (pickedDate != null) {
+// //       setState(() {
+// //         _selectedDate = pickedDate;
+// //       });
+// //       widget.onDateSelected(pickedDate); // Truyền ngày lên ExamInfoBooking
+// //     }
+// //   }
+
+// //   @override
+// //   Widget build(BuildContext context) {
+// //     return SelectItemWidget(
+// //       image: AppIcons.calendar,
+// //       text: _selectedDate != null
+// //           ? DateFormat('dd/MM/yyyy').format(_selectedDate!)
+// //           : 'Chọn ngày khám',
+// //       onTap: () => _showDatePicker(context),
+// //     );
+// //   }
+// // }
+
+// // class TimeSelector extends StatefulWidget {
+// //   final Function(String) onTimeSelected;
+// //   const TimeSelector({super.key, required this.onTimeSelected});
+
+// //   @override
+// //   State<TimeSelector> createState() => _TimeSelectorState();
+// // }
+
+// // class _TimeSelectorState extends State<TimeSelector> {
+// //   String selectedTime = 'Chọn giờ khám';
+
+// //   void updateSelectedTime(String time) {
+// //     setState(() {
+// //       selectedTime = time;
+// //     });
+// //     widget.onTimeSelected(time); // Truyền giờ lên ExamInfoBooking
+// //   }
+
+// //   @override
+// //   Widget build(BuildContext context) {
+// //     return Padding(
+// //       padding: EdgeInsets.only(bottom: 20),
+// //       child: SelectItemWidget(
+// //         image: AppIcons.clock,
+// //         text: selectedTime,
+// //         bottomSheet: SelectTimeWidget(onTimeSelected: updateSelectedTime),
+// //       ),
+// //     );
+// //   }
+// // }
+
+// @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         SelectItemWidget(
+//           image: AppIcons.service2,
+//           text: selectedServices.isEmpty
+//               ? 'Chọn dịch vụ'
+//               : 'Đã chọn ${selectedServices.length} dịch vụ',
+//           onTap: () async {
+//             final result = await Navigator.push(
+//               context,
+//               MaterialPageRoute(builder: (context) => const ServiceCartScreen()),
+//             );
+
+//             if (result != null && result is Map<String, dynamic>) {
+//               setState(() {
+//                 selectedServices =
+//                     List<Service>.from(result['selectedServiceList']);
+//                 selectedServiceId = List<int>.from(result['selectedServiceId']);
+//               });
+
+//               // Gọi callback để truyền dữ liệu lên ExamInfoBooking
+//               widget.onServicesSelected(selectedServiceId);
+//             }
+//           },
+//         ),
+//         if (selectedServices.isNotEmpty)
+//           Padding(
+//             padding: const EdgeInsets.only(top: 10),
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 ...selectedServices.map((service) => Row(
+//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                       children: [
+//                         Text(
+//                           "${service.name}",
+//                           style: TextStyle(fontSize: 14, color: Colors.black),
+//                         ),
+//                         SizedBox(width: 10),
+//                         Row(
+//                           mainAxisSize: MainAxisSize.min,
+//                           children: [
+//                             Icon(Icons.monetization_on,
+//                                 size: 20, color: Colors.yellow),
+//                             Text(
+//                               " ${service.formattedPrice}",
+//                               style:
+//                                   TextStyle(fontSize: 14, color: Colors.black),
+//                             ),
+//                           ],
+//                         ),
+//                       ],
+//                     ))
+//               ],
+//             ),
+//           ),
+//       ],
+//     );
+//   }
+// }
+
+// class DateSelector extends StatefulWidget {
+//   final Function(DateTime) onDateSelected;
+//   const DateSelector({super.key, required this.onDateSelected});
+
+//   @override
+//   State<DateSelector> createState() => _DateSelectorState();
+// }
+
+// class _DateSelectorState extends State<DateSelector> {
+//   DateTime? _selectedDate;
+
+//   void _showDatePicker(BuildContext context) async {
+//     final DateTime? pickedDate = await showModalBottomSheet<DateTime>(
+//       context: context,
+//       builder: (context) => SelectDayWidget(),
+//     );
+
+//     if (pickedDate != null) {
+//       setState(() {
+//         _selectedDate = pickedDate;
+//       });
+//       widget.onDateSelected(pickedDate); // Truyền ngày lên ExamInfoBooking
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return SelectItemWidget(
+//       image: AppIcons.calendar,
+//       text: _selectedDate != null
+//           ? DateFormat('dd/MM/yyyy').format(_selectedDate!)
+//           : 'Chọn ngày khám',
+//       onTap: () => _showDatePicker(context),
+//     );
+//   }
+// }
+
+// class TimeSelector extends StatefulWidget {
+//   final Function(String) onTimeSelected;
+//   const TimeSelector({super.key, required this.onTimeSelected});
+
+//   @override
+//   State<TimeSelector> createState() => _TimeSelectorState();
+// }
+
+// class _TimeSelectorState extends State<TimeSelector> {
+//   String selectedTime = 'Chọn giờ khám';
+
+//   void updateSelectedTime(String time) {
+//     setState(() {
+//       selectedTime = time;
+//     });
+//     widget.onTimeSelected(time); // Truyền giờ lên ExamInfoBooking
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: EdgeInsets.only(bottom: 20),
+//       child: SelectItemWidget(
+//         image: AppIcons.clock,
+//         text: selectedTime,
+//         bottomSheet: SelectTimeWidget(onTimeSelected: updateSelectedTime),
+//       ),
+//     );
+//   }
+// }
+
+@override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 25),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ListView(
-              children: [
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient( 
+          colors: [
+            AppColors.accent,
+            Colors.white,
+            // AppColors.accent,
+            // Colors.white,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 25),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: ListView(
+                children: [
                 HospitalInfoWidget(
                   clinicId: widget.clinicId,
                 ),
@@ -89,25 +428,26 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
                 SectionTitle(title: 'Giờ khám'),
                 TimeSelector(onTimeSelected: updateSelectedTime),
               ],
+              ),
             ),
-          ),
-          WidgetCustombutton(
-            onTap: () {
-              print(
-                "Dữ liệu gửi sang ProfileBooking: clinicId = ${widget.clinicId}, dịch vụ: $selectedServiceId, ngày: $selectedDate, giờ: $selectedTime",
-              );
-              widget.onNavigateToScreen(
-                1,
-                'Chọn hồ sơ',
-                clinicId: widget.clinicId,
-                serviceIds: selectedServiceId,
-                date: DateFormat('yyyy-MM-dd').format(selectedDate!),
-                time: selectedTime!,
-              );
-            },
-            text: 'Tiếp tục',
-          ),
-        ],
+            WidgetCustombutton(
+              onTap: () {
+                print(
+                  "Dữ liệu gửi sang ProfileBooking: clinicId = ${widget.clinicId}, dịch vụ: $selectedServiceId, ngày: $selectedDate, giờ: $selectedTime",
+                );
+                widget.onNavigateToScreen(
+                  1,
+                  'Chọn hồ sơ',
+                  clinicId: widget.clinicId,
+                  serviceIds: selectedServiceId,
+                  date: DateFormat('yyyy-MM-dd').format(selectedDate!),
+                  time: selectedTime!,
+                );
+              },
+              text: ('TIẾP TỤC'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -124,9 +464,9 @@ class SectionTitle extends StatelessWidget {
       child: Text(
         title,
         style: TextStyle(
-          fontSize: 18,
+          fontSize: 23,
           fontWeight: FontWeight.bold,
-          color: AppColors.neutralDarkGreen1,
+          color: const Color.fromARGB(255, 26, 27, 26),
         ),
       ),
     );
@@ -145,7 +485,7 @@ class ServiceSelector extends StatefulWidget {
 class _ServiceSelectorState extends State<ServiceSelector> {
   List<Service> selectedServices = [];
   List<int> selectedServiceId = [];
-
+  
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -159,8 +499,7 @@ class _ServiceSelectorState extends State<ServiceSelector> {
           onTap: () async {
             final result = await Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => const ServiceCartScreen()),
+              MaterialPageRoute(builder: (context) => const ServiceCartScreen()),
             );
 
             if (result != null && result is Map<String, dynamic>) {
@@ -181,10 +520,28 @@ class _ServiceSelectorState extends State<ServiceSelector> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ...selectedServices.map((service) => Text(
-                      "- ${service.name}",
-                      style: TextStyle(fontSize: 14, color: Colors.black),
-                    )),
+                ...selectedServices.map((service) => Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "${service.name}",
+                          style: TextStyle(fontSize: 14, color: Colors.black),
+                        ),
+                        SizedBox(width: 10),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.monetization_on,
+                                size: 20, color: Colors.yellow),
+                            Text(
+                              " ${service.formattedPrice}",
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ))
               ],
             ),
           ),
@@ -207,7 +564,6 @@ class _DateSelectorState extends State<DateSelector> {
   void _showDatePicker(BuildContext context) async {
     final DateTime? pickedDate = await showModalBottomSheet<DateTime>(
       context: context,
-      isScrollControlled: true, // Quan trọng để tự động co giãn
       builder: (context) => SelectDayWidget(),
     );
 
@@ -261,3 +617,4 @@ class _TimeSelectorState extends State<TimeSelector> {
     );
   }
 }
+

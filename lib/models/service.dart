@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:intl/intl.dart'; 
 import 'specialty.dart';
 
 class Service {
@@ -6,7 +7,7 @@ class Service {
   final Specialty specialty;
   final String name;
   final String description;
-  final double price;
+  final int price;
 
   Service({
     required this.id,
@@ -22,7 +23,7 @@ class Service {
       specialty: Specialty.fromJson(json['specialty']),
       name: utf8.decode(json['name'].runes.toList()),
       description: utf8.decode(json['description'].runes.toList()),
-      price: (json['price'] as num).toDouble(),
+      price: (json['price'] as num).toInt(),
     );
   }
 
@@ -34,5 +35,11 @@ class Service {
       'description': description,
       'price': price,
     };
+  }
+
+  // Hàm này sẽ trả về giá đã được định dạng
+  String get formattedPrice {
+    final numberFormat = NumberFormat('#,##0', 'vi_VN');
+    return '${numberFormat.format(price)}đ';
   }
 }
