@@ -127,10 +127,10 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              backgroundColor: Colors.green,
+                              backgroundColor: AppColors.accent,
                               foregroundColor: Colors.white,
                             ),
-                            child: const Text('Chỉnh sửa'),
+                            child: const Text('Chỉnh sửa',style: TextStyle(fontSize: 17),),
                           ),
                         ),
                       ],
@@ -148,11 +148,11 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(color: AppColors.neutralDarkGreen2)),
+          Text(label, style: TextStyle(color: Colors.black)),
           Text(
             value,
             style: TextStyle(
-              color: AppColors.neutralDarkGreen2,
+              color: Colors.black,
               fontWeight: FontWeight.bold,
             ),
           ),

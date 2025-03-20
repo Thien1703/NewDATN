@@ -14,7 +14,7 @@ class WidgetHeaderBodyScoller extends StatelessWidget {
     required this.iconBack,
     required this.title,
     required this.body,
-    this.headerHeight = 0.12,
+    this.headerHeight = 0.15,
     this.onBackPressed,
     this.selectedIcon,
   });

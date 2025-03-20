@@ -72,7 +72,7 @@ class WidgetUserCard extends StatelessWidget {
                     // Xử lý sự kiện chọn
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: AppColors.accent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -81,7 +81,7 @@ class WidgetUserCard extends StatelessWidget {
                   ),
                   child: const Text(
                     'Chọn',
-                    style: TextStyle(color: Colors.white, fontSize: 14),
+                    style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),
               ],

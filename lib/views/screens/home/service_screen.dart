@@ -110,7 +110,6 @@ import 'package:health_care/views/screens/clinic/clinic_screen.dart';
 //                                       fontSize: 14),
 //                                   softWrap: true,
 
-                            
 //                                 )
 //                               ],
 //                             ),
@@ -166,146 +165,158 @@ class _ServiceScreen extends State<ServiceScreen> {
     }
   }
 
- @override
+  @override
   Widget build(BuildContext context) {
     return WidgetHeaderBody(
       iconBack: true,
-      title: '',
-      
+      title: 'Dịch vụ',
       body: SingleChildScrollView(
         child: Container(
           width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [AppColors.accent, Colors.white],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
+          // decoration: BoxDecoration(
+          //   gradient: LinearGradient(
+          //     colors: [AppColors.accent, Colors.white],
+          //     begin: Alignment.topCenter,
+          //     end: Alignment.bottomCenter,
+          //   ),
+          // ),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-            child: Column(
-              children: [
-                Text('Bảng giá dịch vụ',style: TextStyle(fontSize: 30,color: Colors.white,fontWeight: FontWeight.bold),),
-                SizedBox(height: 10,),
-                // Hiển thị danh sách dịch vụ
-                services.isEmpty
-                    ? Center(child: Text('Chưa có dịch vụ này'))
-                    : GridView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.zero,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 6,
-                          mainAxisSpacing: 6,
-                          childAspectRatio: 1.2,
+  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+  child: Column(
+    children: [
+      Text(
+        'Bảng giá dịch vụ',
+        style: TextStyle(
+            fontSize: 30,
+            color: Color(0xFF3A62B8),
+            fontWeight: FontWeight.bold),
+      ),
+      SizedBox(
+        height: 10,
+      ),
+      // Hiển thị danh sách dịch vụ
+      services.isEmpty
+          ? Center(child: Text('Chưa có dịch vụ này'))
+          : GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.zero,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 6,
+                mainAxisSpacing: 6,
+                childAspectRatio: 1.1,
+              ),
+              itemCount: services.length,
+              itemBuilder: (context, index) {
+                final service = services[index];
+                return Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: BorderSide(
+                      color: Color(0xFF3A62B8), // Màu xanh cho border
+                      width: 2,
+                    ),
+                  ),
+                  color: Colors.white,
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 5),
+                        Text(
+                          service.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.black87,
+                          ),
+                          softWrap: true,
                         ),
-                        itemCount: services.length,
-                        itemBuilder: (context, index) {
-                          final service = services[index];
-                          return Card(
-                            elevation: 5,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
+                        SizedBox(height: 5),
+                        Text(
+                          service.description,
+                          softWrap: true,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 12, color: Colors.black54),
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.monetization_on,
+                              size: 23,
+                              color: Colors.yellow,
                             ),
-                            color: Colors.white,
-                            child: Padding(
-                              padding: EdgeInsets.all(8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 5),
-                                  Text(
-                                    service.name,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      color: Colors.black87,
-                                    ),
-                                    softWrap: true,
-                                  ),
-                                  SizedBox(height: 5),
-                                  Text(
-                                    service.description,
-                                    softWrap: true,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(fontSize: 12, color: Colors.black54),
-                                  ),
-                                  SizedBox(height: 10),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Icon(
-                                        Icons.monetization_on,
-                                        size: 20,
-                                        color: Colors.yellow,
-                                      ),
-                                      SizedBox(width: 2),
-                                      Text(
-                                        service.formattedPrice,
-                                        style: TextStyle(
-                                          color: Color.fromARGB(255, 77, 181, 246),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                            SizedBox(width: 2),
+                            Text(
+                              service.formattedPrice,
+                              style: TextStyle(
+                                color: Color(0xFF3A62B8),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 19,
                               ),
                             ),
-                          );
-                        },
-                      ),
-
-                SizedBox(height: 20),
-                if (services.isNotEmpty)
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ClinicScreen(
-                            iconBack: true,
-                          ),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        side: BorderSide(
-                          color: Color(0xFF062A49),
-                          width: 1.3,
-                        ),
-                      ),
-                      minimumSize: Size(double.minPositive, 50),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.calendar_today,
-                          color: Color(0xFF3A62B8),
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          'ĐẶT LỊCH NGAY',
-                          style: TextStyle(
-                            color: Color(0xFF3A62B8),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                          ],
                         ),
                       ],
                     ),
                   ),
-              ],
+                );
+              },
             ),
+      SizedBox(height: 20),
+      if (services.isNotEmpty)
+        ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ClinicScreen(
+                  iconBack: true,
+                ),
+              ),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.accent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+              side: BorderSide(
+                color: AppColors.accent, // Màu xanh cho border của ElevatedButton
+                width: 1.3,
+              ),
+            ),
+            minimumSize: Size(double.minPositive, 50),
           ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.calendar_today,
+                color: Colors.white, // Màu xanh cho icon
+              ),
+              SizedBox(width: 8),
+              Text(
+                'ĐẶT LỊCH NGAY',
+                style: TextStyle(
+                  color: Colors.white, // Màu xanh cho chữ
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+        ),
+    ],
+  ),
+),
+
         ),
       ),
     );

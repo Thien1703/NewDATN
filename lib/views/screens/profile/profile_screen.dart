@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/config/app_config.dart';
 import 'package:health_care/views/screens/medical_examination_record/medical_record.dart';
 import 'package:health_care/views/screens/profile/inforProfile_screen.dart';
@@ -38,6 +39,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
     }
   }
+  Future<void> _showSignOutDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // Người dùng không thể đóng bằng cách nhấn ngoài
+      builder: (BuildContext context) {
+        return AlertDialog(
+       
+          content: Text('Đăng xuất khỏi tài khoản của bạn?',style: TextStyle(color: Colors.black, fontSize: 16),),
+          actions: <Widget>[
+            TextButton(
+              child: Text('HỦY',style: TextStyle(color:  Colors.black,)),
+              onPressed: () {
+                Navigator.of(context).pop(); 
+              },
+            ),
+            TextButton(
+              child: Text('ĐĂNG XUẤT',style: TextStyle(color:  Colors.red,)),
+              onPressed: () async {
+                final authViewModel = Provider.of<AuthViewModel>(
+                  context,
+                  listen: false,
+                );
+                await authViewModel.signOut(context);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             height: screenHeight / 3,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.green,
+              color: AppColors.accent,
               borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(25),
                 bottomRight: Radius.circular(25),
@@ -77,38 +109,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const CircleAvatar(
-                              radius: 50,
+                              radius: 70,
                               backgroundImage:
                                   AssetImage('assets/images/avt.png'),
                             ),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 18),
                             Text(
                               _userData?['fullName'] ?? 'Người dùng',
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 20,
+                                fontSize: 25,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(height: 5),
-                            OutlinedButton(
-                              onPressed: () async {
-                                final authViewModel =
-                                    Provider.of<AuthViewModel>(
-                                  context,
-                                  listen: false,
-                                );
-                                await authViewModel.signOut(context);
-                              },
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                side: const BorderSide(color: Colors.white),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                              child: const Text('Đăng xuất'),
-                            ),
+                            // OutlinedButton(
+                            //   onPressed: () async {
+                            //     final authViewModel =
+                            //         Provider.of<AuthViewModel>(
+                            //       context,
+                            //       listen: false,
+                            //     );
+                            //     await authViewModel.signOut(context);
+                            //   },
+                            //   style: OutlinedButton.styleFrom(
+                            //     foregroundColor: Colors.white,
+                            //     backgroundColor: Colors.white,
+                            //     side: const BorderSide(color: Colors.white),
+                            //     shape: RoundedRectangleBorder(
+                            //       borderRadius: BorderRadius.circular(20),
+                            //     ),
+                            //   ),
+                            //   child: const Text(
+                            //     'Đăng xuất',
+                            //     style: TextStyle(color: AppColors.accent),
+                            //   ),
+                            // ),
                           ],
                         ),
             ),
@@ -153,6 +189,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   'Đánh giá',
                   () {},
                 ),
+                _buildMenuItem(
+                  Icons.exit_to_app,
+                  'Đăng xuất',
+                   _showSignOutDialog,
+                )
               ],
             ),
           ),
@@ -165,8 +206,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: ListTile(
-        leading: Icon(icon, color: Colors.green),
-        title: Text(text),
+        leading: Icon(
+          icon,
+          color: AppColors.accent,
+          size: 23,
+        ),
+        title: Text(text,style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),),
         onTap: onTap,
       ),
     );

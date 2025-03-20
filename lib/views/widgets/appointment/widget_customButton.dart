@@ -42,7 +42,7 @@ class WidgetCustombutton extends StatelessWidget {
                 text,
                 style: const TextStyle(
                   fontSize: 17,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),

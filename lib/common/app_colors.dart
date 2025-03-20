@@ -10,7 +10,7 @@ class AppColors {
   static const Color secondary2 = Color(0xFFB9FBC0);
 
   // Accent Color
-  static const Color accent = Color.fromARGB(255, 135, 182, 232);
+  static const Color accent = Color(0xFF3A62B8);
   static const Color softBlue = Color(0xFF64B5F6);
   static const Color deepBlue = Color(0xFF1565C0);
 

@@ -241,7 +241,7 @@ class _HomePage extends State<HomePage> {
   void initState() {
     super.initState();
     fetchSpecialties();
-    _fetchUserProfile(); // Ensure this is called here
+    _fetchUserProfile();
   }
 
   void fetchSpecialties() async {
@@ -254,14 +254,14 @@ class _HomePage extends State<HomePage> {
   Future<void> _fetchUserProfile() async {
     try {
       final data = await AppConfig.getUserProfile();
-      print(data); // Check the returned data to verify it contains fullName
+      print(data);
       setState(() {
         _userData = data;
       });
     } catch (e) {
       print("Error fetching user profile: $e");
       setState(() {
-        _userData = {}; // Empty object or handle the error more gracefully
+        _userData = {};
       });
     }
   }
@@ -281,10 +281,9 @@ class _HomePage extends State<HomePage> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                AppColors.accent,
+                Color(0xFF1565C0),
                 Colors.white,
-                // AppColors.accent,
-                // Colors.white,
+                Color(0xFF64B5F6),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -298,17 +297,11 @@ class _HomePage extends State<HomePage> {
                 Row(
                   children: [
                     CircleAvatar(
-                      radius: 25,
-                      child: ColorFiltered(
-                        colorFilter: ColorFilter.mode(
-                          Colors.blue,
-                          BlendMode.srcATop,
-                        ),
-                        child: Image.asset(
-                          'assets/images/healthcaregreen.png',
-                          width: 180,
-                        height: 100,
-                        ),
+                      radius: 30,
+                      child: Image.asset(
+                        'assets/images/logoApp.png',
+                        width: 120,
+                        height: 120,
                       ),
                     ),
                     SizedBox(width: 10),
@@ -325,7 +318,9 @@ class _HomePage extends State<HomePage> {
                               color: Colors.black,
                             ),
                           ),
-                          SizedBox(width: 6,),
+                          SizedBox(
+                            width: 6,
+                          ),
                           Text(
                             _userData?['fullName'] ?? 'Người dùng',
                             style: TextStyle(
@@ -414,7 +409,7 @@ class _HomePage extends State<HomePage> {
                 Text(
                   'Chuyên khoa',
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 25,
                     fontWeight: FontWeight.w600,
                     color: const Color.fromARGB(255, 75, 75, 75),
                   ),
@@ -429,8 +424,8 @@ class _HomePage extends State<HomePage> {
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
+                            crossAxisSpacing: 7,
+                            mainAxisSpacing: 7,
                           ),
                           itemCount: specialties!.length,
                           itemBuilder: (context, index) {
@@ -456,16 +451,16 @@ class _HomePage extends State<HomePage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Container(
-                                      width: 90,
-                                      height: 90,
+                                      width: 80,
+                                      height: 80,
                                       color: Colors.white,
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(10),
                                         child: Image.network(
                                           specialty.image ??
                                               'https://example.com/default-image.png',
-                                          width: 70,
-                                          height: 70,
+                                          width: 60,
+                                          height: 60,
                                           fit: BoxFit.cover,
                                         ),
                                       ),

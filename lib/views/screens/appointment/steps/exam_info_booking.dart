@@ -403,8 +403,7 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
           colors: [
             AppColors.accent,
             Colors.white,
-            // AppColors.accent,
-            // Colors.white,
+            
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,

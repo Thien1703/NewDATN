@@ -49,11 +49,16 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SingleChildScrollView(
         child: Container(
           height: screenHeight, // Đảm bảo nội dung chiếm toàn bộ chiều cao
+
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Image.asset(
+                'assets/images/logoApp.png',
+                width: 110,
+              ),
               _buildTitle(),
               const SizedBox(height: 30),
               _buildInputField('Số điện thoại', phoneController, false),

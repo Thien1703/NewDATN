@@ -51,7 +51,7 @@ class _HospitalInfoWidgetState extends State<HospitalInfoWidget> {
                 size: 23,
                 color: Colors.blue,
               ),
-              SizedBox(width: 10), 
+              SizedBox(width: 10),
               Text(
                 clinices?.name ?? 'Không xác định',
                 style: TextStyle(
@@ -70,17 +70,23 @@ class _HospitalInfoWidgetState extends State<HospitalInfoWidget> {
                 size: 20,
                 color: const Color.fromARGB(255, 255, 58, 58),
               ),
-              SizedBox(width: 10), 
-              Text(
-                clinices?.address ?? 'Không xác định',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.neutralGrey3,
+              SizedBox(width: 10),
+              Expanded(
+                // Sử dụng Expanded để chữ chiếm hết không gian còn lại
+                child: Text(
+                  clinices?.address ?? 'Không xác định',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.neutralGrey3,
+                  ),
+                  maxLines: 1, // Giới hạn chữ chỉ hiển thị 1 dòng
+                  overflow: TextOverflow
+                      .ellipsis, // Cắt chữ khi dài và hiển thị "..."
                 ),
               ),
             ],
-          ),
+          )
         ],
       ),
     );

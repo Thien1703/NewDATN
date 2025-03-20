@@ -49,7 +49,7 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
             ),
             SizedBox(height: 15),
             Text(
-              'Tất cả thời gian theo múi giờ Việt Nam GMT + 7',
+              'Tất cả thời gian theo múi giờ Vciệt Nam GMT + 7',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -89,8 +89,8 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
       child: Card(
         elevation: 5,
         color: selectedTime == valueTime
-            ? AppColors.secondary1
-            : AppColors.primary,
+             ? Colors.blue 
+            :  const Color.fromARGB(255, 151, 190, 223),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 13, vertical: 10),
           child: Text(
@@ -98,7 +98,9 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: AppColors.neutralDarkGreen2,
+              color: selectedTime == valueTime
+            ? const Color.fromARGB(255, 38, 63, 173) 
+            : Colors.white,
             ),
           ),
         ),

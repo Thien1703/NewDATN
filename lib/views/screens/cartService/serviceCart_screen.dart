@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
+import 'package:intl/intl.dart';
 import 'package:health_care/models/service.dart';
 import 'package:health_care/viewmodels/api/service_api.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
@@ -91,6 +92,11 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
         0.0, (sum, service) => sum + (service.price ?? 0.0));
   }
 
+  String formatCurrency(double amount) {
+    final formatter = NumberFormat('#,##0', 'vi_VN');
+    return formatter.format(amount) + 'đ';
+  }
+
   @override
   Widget build(BuildContext context) {
     return WidgetHeaderBody(
@@ -119,7 +125,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                 ? const Center(child: CircularProgressIndicator())
                 : SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 25),
                       child: Column(
                         children: filteredServices.entries.map((entry) {
                           return Column(
@@ -127,11 +133,11 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                             children: [
                               Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
+                                    const EdgeInsets.symmetric(vertical: 0.5),
                                 child: Text(
                                   entry.key,
                                   style: const TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 25,
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.deepBlue,
                                   ),
@@ -143,8 +149,8 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                 gridDelegate:
                                     const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
-                                  crossAxisSpacing: 8,
-                                  mainAxisSpacing: 8,
+                                  crossAxisSpacing: 12,
+                                  mainAxisSpacing: 12,
                                 ),
                                 itemCount: entry.value.length,
                                 itemBuilder: (context, index) {
@@ -154,16 +160,16 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                   return GestureDetector(
                                     onTap: () => _toggleService(service),
                                     child: Card(
-                                      elevation: 3,
+                                      elevation: 6,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         side: isSelected
                                             ? BorderSide(
-                                                color: AppColors.accent,
-                                                width: 2)
+                                                color: Colors.blue, width: 2)
                                             : BorderSide.none,
                                       ),
-                                      child: Padding(
+                                      child: Container(
+                                        height: 200,
                                         padding: const EdgeInsets.all(8.0),
                                         child: Column(
                                           crossAxisAlignment:
@@ -174,21 +180,46 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16,
+                                                color: Colors.black87,
                                               ),
                                             ),
                                             const SizedBox(height: 5),
-                                            Text(
-                                              'Giá: ${service.price}đ',
-                                              style: const TextStyle(
-                                                  color: Colors.black54),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Icon(
+                                                  Icons.monetization_on,
+                                                  size: 23,
+                                                  color: Colors.yellow,
+                                                ),
+                                                SizedBox(width: 2),
+                                                Text(
+                                                  service.formattedPrice,
+                                                  style: TextStyle(
+                                                    color: AppColors.accent,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 19,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                             const Spacer(),
-                                            OutlinedButton(
-                                              onPressed: () =>
-                                                  _toggleService(service),
-                                              child: Text(isSelected
-                                                  ? 'Bỏ chọn'
-                                                  : 'Chọn dịch vụ'),
+                                            Center(
+                                              child: OutlinedButton(
+                                                onPressed: () =>
+                                                    _toggleService(service),
+                                                style: OutlinedButton.styleFrom(
+                                                    backgroundColor:
+                                                        AppColors.accent),
+                                                child: Text(
+                                                  isSelected
+                                                      ? 'Bỏ chọn'
+                                                      : 'Chọn dịch vụ',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
                                             )
                                           ],
                                         ),
@@ -217,17 +248,35 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Đã chọn ${selectedServices.length} dịch vụ',
-                  style: const TextStyle(fontSize: 16),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Đã chọn ${selectedServices.length} dịch vụ',
+                      style: const TextStyle(fontSize: 16,color: AppColors.accent),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      'Tổng thanh toán',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Color(0xFF4C4C4C),
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      formatCurrency(getTotalPrice()),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.accent,
+                      ),
+                    ),
+                  ],
                 ),
                 Column(
                   children: [
-                    Text(
-                      '${getTotalPrice()}đ',
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
                     OutlinedButton(
                       onPressed: selectedServices.isEmpty
                           ? null
@@ -239,10 +288,25 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                     selectedServices.map((s) => s.id).toList(),
                               });
                             },
-                      child: const Text('Xong'),
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: selectedServices.isEmpty
+                            ? Colors.white
+                            : AppColors.accent,
+                        side: BorderSide(
+                          color: selectedServices.isEmpty
+                              ? Colors.white
+                              : AppColors.accent,
+                        ),
+                      ),
+                      child: const Text(
+                        'XONG',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),
