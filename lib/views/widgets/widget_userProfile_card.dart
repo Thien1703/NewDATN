@@ -6,24 +6,27 @@ import 'package:intl/intl.dart';
 
 class WidgetUserprofileCard extends StatefulWidget {
   final Function(int)? onTap;
+  // final Function(Function refreshProfile)? onEdit; // Gửi hàm để cập nhật dữ liệu sau khi chỉnh sửa
+
   const WidgetUserprofileCard({super.key, this.onTap});
 
   @override
-  _WidgetUserprofileCardState createState() => _WidgetUserprofileCardState();
+  WidgetUserprofileCardState createState() => WidgetUserprofileCardState();
 }
 
-class _WidgetUserprofileCardState extends State<WidgetUserprofileCard> {
+class WidgetUserprofileCardState extends State<WidgetUserprofileCard> {
   Map<String, dynamic>? userInfo;
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _fetchUserProfile();
+    fetchUserProfile();
   }
 
-  Future<void> _fetchUserProfile() async {
-    final data = await AppConfig.getUserProfile();
+  Future<void> fetchUserProfile() async {
+    setState(() => isLoading = true); // Hiển thị loading khi lấy dữ liệu
+    final data = await AppConfig.getUserProfile(); // Lấy dữ liệu mới
     if (mounted) {
       setState(() {
         userInfo = data;
@@ -44,64 +47,60 @@ class _WidgetUserprofileCardState extends State<WidgetUserprofileCard> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        if (userInfo != null && userInfo!['id'] != null) {
-          int customerId = userInfo!['id']; // Lấy ID từ API
-          print("ID khách hàng: $customerId"); // In ra console
-          if (widget.onTap != null) {
-            widget.onTap!(customerId); // Truyền ID qua callback
-          }
-        }
-      },
-      child: Card(
-        child: Container(
-          // margin: EdgeInsets.only(top: 8),
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: isLoading
-              ? Center(
-                  child:
-                      CircularProgressIndicator()) // Hiển thị khi tải dữ liệu
-              : userInfo == null
-                  ? Center(child: Text("Không có dữ liệu"))
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        /// Thẻ Card chứa thông tin người dùng
+        InkWell(
+          onTap: () {
+            if (userInfo != null && userInfo!['id'] != null) {
+              int customerId = userInfo!['id'];
+              if (widget.onTap != null) {
+                widget.onTap!(customerId);
+              }
+            }
+          },
+          child: Card(
+            child: Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : userInfo == null
+                      ? Center(child: Text("Không có dữ liệu"))
+                      : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _customeRow(
+                            _customRow(
                                 image: AppIcons.user1,
                                 titleOfImage:
                                     userInfo!['fullName'] ?? 'Chưa có tên'),
-                            _customeRow(
+                            _customRow(
                                 image: AppIcons.call,
                                 titleOfImage:
                                     userInfo!['phoneNumber'] ?? 'Chưa có SĐT'),
-                            _customeRow(
+                            _customRow(
                                 image: AppIcons.calendar,
                                 titleOfImage:
                                     formatBirthDate(userInfo!['birthDate'])),
-                            _customeRow(
+                            _customRow(
                                 image: AppIcons.location,
                                 titleOfImage:
                                     userInfo!['address'] ?? 'Chưa có địa chỉ'),
                           ],
                         ),
-                      ],
-                    ),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }
 
-Widget _customeRow({required String image, required String titleOfImage}) {
+Widget _customRow({required String image, required String titleOfImage}) {
   return Container(
     margin: EdgeInsets.only(bottom: 5),
     child: Row(
