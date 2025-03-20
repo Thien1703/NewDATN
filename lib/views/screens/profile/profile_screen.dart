@@ -3,6 +3,7 @@ import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/config/app_config.dart';
 import 'package:health_care/views/screens/medical_examination_record/medical_record.dart';
 import 'package:health_care/views/screens/profile/inforProfile_screen.dart';
+import 'package:health_care/views/screens/auth/Login/login_screen.dart';
 import 'package:provider/provider.dart';
 import '../../../viewmodels/auth_viewmodel.dart';
 
@@ -62,7 +63,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   listen: false,
                 );
                 await authViewModel.signOut(context);
-                Navigator.of(context).pop();
+                Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => LoginScreen()), // Màn hình đăng nhập
+      (route) => false, // Xóa tất cả các route phía trước màn hình đăng nhập
+    );
               },
             ),
           ],

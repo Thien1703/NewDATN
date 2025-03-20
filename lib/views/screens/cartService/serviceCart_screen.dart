@@ -121,120 +121,116 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
 
           // Danh sách dịch vụ có thể cuộn
           Expanded(
-            child: services == null
-                ? const Center(child: CircularProgressIndicator())
-                : SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Column(
-                        children: filteredServices.entries.map((entry) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 0.5),
-                                child: Text(
-                                  entry.key,
-                                  style: const TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.deepBlue,
-                                  ),
-                                ),
-                              ),
-                              GridView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 12,
-                                  mainAxisSpacing: 12,
-                                ),
-                                itemCount: entry.value.length,
-                                itemBuilder: (context, index) {
-                                  final service = entry.value[index];
-                                  bool isSelected =
-                                      selectedServices.contains(service);
-                                  return GestureDetector(
-                                    onTap: () => _toggleService(service),
-                                    child: Card(
-                                      elevation: 6,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        side: isSelected
-                                            ? BorderSide(
-                                                color: Colors.blue, width: 2)
-                                            : BorderSide.none,
-                                      ),
-                                      child: Container(
-                                        height: 200,
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              service.name,
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                                color: Colors.black87,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 5),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                Icon(
-                                                  Icons.monetization_on,
-                                                  size: 23,
-                                                  color: Colors.yellow,
-                                                ),
-                                                SizedBox(width: 2),
-                                                Text(
-                                                  service.formattedPrice,
-                                                  style: TextStyle(
-                                                    color: AppColors.accent,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 19,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const Spacer(),
-                                            Center(
-                                              child: OutlinedButton(
-                                                onPressed: () =>
-                                                    _toggleService(service),
-                                                style: OutlinedButton.styleFrom(
-                                                    backgroundColor:
-                                                        AppColors.accent),
-                                                child: Text(
-                                                  isSelected
-                                                      ? 'Bỏ chọn'
-                                                      : 'Chọn dịch vụ',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          );
-                        }).toList(),
+  child: services == null
+      ? const Center(child: CircularProgressIndicator())
+      : SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 35),
+            child: Column(
+              children: filteredServices.entries.map((entry) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 0.5),
+                      child: Text(
+                        entry.key,
+                        style: const TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.deepBlue,
+                        ),
                       ),
                     ),
-                  ),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 8,
+                        mainAxisSpacing: 8,
+                        childAspectRatio: 0.9, // Thay đổi tỷ lệ giữa chiều rộng và chiều cao của Card
+                      ),
+                      itemCount: entry.value.length,
+                      itemBuilder: (context, index) {
+                        final service = entry.value[index];
+                        bool isSelected = selectedServices.contains(service);
+                        return GestureDetector(
+                          onTap: () => _toggleService(service),
+                          child: Card(
+                            elevation: 6,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              side: isSelected
+                                  ? BorderSide(color: Colors.blue, width: 2)
+                                  : BorderSide.none,
+                            ),
+                            child: Container(
+                              height: 350, // Tăng chiều cao của Card
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    service.name,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  SizedBox(height: 5),
+                        
+                                  SizedBox(height: 5),
+                                  const SizedBox(height: 5),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Icon(
+                                        Icons.monetization_on,
+                                        size: 23,
+                                        color: Colors.yellow,
+                                      ),
+                                      SizedBox(width: 2),
+                                      Text(
+                                        service.formattedPrice,
+                                        style: TextStyle(
+                                          color: AppColors.accent,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 19,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  Center(
+                                    child: OutlinedButton(
+                                      onPressed: () =>
+                                          _toggleService(service),
+                                      style: OutlinedButton.styleFrom(
+                                          backgroundColor: AppColors.accent),
+                                      child: Text(
+                                        isSelected
+                                            ? 'Bỏ chọn'
+                                            : 'Chọn dịch vụ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
           ),
+        ),
+),
 
           // Thanh tổng hợp dịch vụ đã chọn
           Container(

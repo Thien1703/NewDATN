@@ -55,9 +55,11 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(
-                'assets/images/logoApp.png',
-                width: 110,
+              Center(
+                child: Image.asset(
+                  'assets/images/logoApp.png',
+                  width: 110,
+                ),
               ),
               _buildTitle(),
               const SizedBox(height: 30),
@@ -76,15 +78,19 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  
   Widget _buildTitle() {
-    return const Text(
+  return Center(
+    child: const Text(
       'Đăng nhập',
       style: TextStyle(
-        fontSize: 30,
+        fontSize: 30, 
         fontWeight: FontWeight.bold,
+        
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildInputField(
       String label, TextEditingController controller, bool isPassword) {
