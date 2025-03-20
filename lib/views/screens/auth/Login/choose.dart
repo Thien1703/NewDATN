@@ -1,0 +1,103 @@
+import 'package:flutter/material.dart';
+import 'package:health_care/common/app_colors.dart';
+import 'package:health_care/views/screens/auth/Login/login_screen.dart';
+import 'package:health_care/views/screens/auth/Login/newLogin.dart';
+import 'package:health_care/views/screens/auth/Login/newRes.dart';
+import 'package:health_care/views/screens/auth/register/register_screen.dart';
+
+class chooseSigninRes extends StatelessWidget {
+  const chooseSigninRes({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(colors: [
+          AppColors.accent,
+          AppColors.primary,
+        ])),
+        child: Column(children: [
+          const Padding(
+            padding: EdgeInsets.only(top: 150.0),
+            child: Image(
+              image: AssetImage('assets/images/logoApp.png'),
+              height: 150, // Chiều cao logo
+              fit: BoxFit.contain, // Hiển thị vừa vặn trong chiều cao đã đặt
+            ),
+          ),
+          const SizedBox(
+            height: 70,
+          ),
+          const Text(
+            'Welcome Back',
+            style: TextStyle(fontSize: 30, color: Colors.white),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()));
+            },
+            child: Container(
+              height: 53,
+              width: 320,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(color: Colors.white),
+              ),
+              child: const Center(
+                child: Text(
+                  'SIGN IN',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const RegisterScreen()));
+            },
+            child: Container(
+              height: 53,
+              width: 320,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(color: Colors.white),
+              ),
+              child: const Center(
+                child: Text(
+                  'SIGN UP',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+          const Spacer(),
+          const Text(
+            'Login with Social Media',
+            style: TextStyle(fontSize: 17, color: Colors.white),
+          ), //
+          const SizedBox(
+            height: 12,
+          ),
+          // const Image(image: AssetImage('assets/social.png'))
+        ]),
+      ),
+    );
+  }
+}

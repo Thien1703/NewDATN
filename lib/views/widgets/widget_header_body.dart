@@ -29,7 +29,7 @@ class WidgetHeaderBody extends StatelessWidget {
       Container(
         width: double.infinity,
         height: header,
-        color: AppColors.accent,
+        color: AppColors.deepBlue,
         child: SafeArea(
             child: Column(children: [
           SizedBox(height: 15),
