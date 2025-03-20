@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:health_care/views/screens/auth/Login/choose.dart';
+import 'package:health_care/views/screens/auth/Login/newLogin.dart';
 import 'package:health_care/views/screens/welcome/welcome_screen.dart';
 import '../../../services/local_storage_service.dart';
 import '../auth/login/login_screen.dart';
@@ -37,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => isLoggedIn ? HomeScreens() : LoginScreen(),
+        builder: (context) => isLoggedIn ? HomeScreens() : chooseSigninRes(),
       ),
     );
   }
