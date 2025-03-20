@@ -1,43 +1,47 @@
+import 'dart:convert';
+import 'package:health_care/models/clinic.dart';
+import 'package:health_care/models/customer.dart';
+
 class Appointment {
-  final int? id;
-  final int clinicId;
-  final int customerId;
+  final int id;
+  final Clinic clinic;
+  final Customer customer;
   final String date;
   final String time;
-  final String? status;
-  final int? paymentId;
+  final String status;
+  final int? payment;
 
   Appointment({
-    this.id,
-    required this.clinicId,
-    required this.customerId,
+    required this.id,
+    required this.clinic,
+    required this.customer,
     required this.date,
     required this.time,
-    this.status,
-    this.paymentId,
+    required this.status,
+    this.payment,
   });
 
   factory Appointment.fromJson(Map<String, dynamic> json) {
     return Appointment(
       id: json['id'],
-      clinicId: json['clinicId'],
-      customerId: json['customerId'],
+      clinic: Clinic.fromJson(json['clinic']),
+      customer: Customer.fromJson(json['customer']),
       date: json['date'],
       time: json['time'],
       status: json['status'],
-      paymentId: json['paymentId'],
+      payment: json['payment'],
     );
   }
+
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {
-      'clinicId': clinicId,
-      'customerId': customerId,
+    return {
+      'id': id,
+      'clinic': clinic.toJson(),
+      'customer': customer.toJson(),
       'date': date,
       'time': time,
+      'status': status,
+      'payment': payment,
     };
-    if (paymentId != null) {
-      data['paymentId'] = paymentId;
-    }
-    return data;
   }
 }
