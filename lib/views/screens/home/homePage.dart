@@ -498,14 +498,14 @@ class _HomePage extends State<HomePage> {
         children: [
           CircleAvatar(
             radius: 25,
-            backgroundColor: const Color.fromARGB(255, 37, 135, 162),
-            child: Icon(icon, color: const Color.fromARGB(255, 255, 255, 255)),
+            backgroundColor: AppColors.accent,
+            child: Icon(icon, color: Colors.white),
           ),
           const SizedBox(height: 5),
           Text(
             text,
             style: TextStyle(
-                fontSize: 12, color: const Color.fromARGB(255, 27, 137, 154)),
+                fontSize: 12, color: AppColors.accent),
           ),
         ],
       ),
