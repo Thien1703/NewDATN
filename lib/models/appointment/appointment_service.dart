@@ -22,8 +22,10 @@ class AppointmentService {
     return AppointmentService(
       id: json['id'],
       appointment: Appointment.fromJson(json['appointment']),
-      service: Service.fromJson(json['service']),
-      employee: Employee.fromJson(json['employee']),
+      service:
+          json['service'] != null ? Service.fromJson(json['service']) : null,
+      employee:
+          json['employee'] != null ? Employee.fromJson(json['employee']) : null,
     );
   }
 

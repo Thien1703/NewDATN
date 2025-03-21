@@ -217,10 +217,10 @@ class _HomePage extends State<HomePage> {
                                                 BorderRadius.circular(10),
                                             boxShadow: [
                                               BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.5),
-                                                spreadRadius: 1,
-                                                blurRadius: 1,
+                                                  color: Colors.grey
+                                                      .withOpacity(0.5),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 1,
                                               ),
                                             ]),
                                         child: Row(

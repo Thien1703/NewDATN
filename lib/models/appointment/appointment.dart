@@ -9,7 +9,7 @@ class Appointment {
   final String date;
   final String time;
   final String status;
-  final int? payment;
+  final int? payment; 
 
   Appointment({
     required this.id,
