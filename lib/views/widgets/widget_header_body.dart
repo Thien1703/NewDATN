@@ -14,7 +14,7 @@ class WidgetHeaderBody extends StatelessWidget {
     required this.iconBack,
     required this.title,
     required this.body,
-    this.headerHeight = 0.12,
+    this.headerHeight = 0.13,
     this.onBackPressed,
     this.selectedIcon,
   });
@@ -29,7 +29,7 @@ class WidgetHeaderBody extends StatelessWidget {
       Container(
         width: double.infinity,
         height: header,
-        color: AppColors.accent,
+        color: AppColors.deepBlue,
         child: SafeArea(
             child: Column(children: [
           SizedBox(height: 15),

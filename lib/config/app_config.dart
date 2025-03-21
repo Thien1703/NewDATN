@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:health_care/services/local_storage_service.dart';
 import 'package:health_care/models/clinic.dart';
-import 'package:health_care/models/service.dart';
 import 'package:http/http.dart' as http;
 
 class AppConfig {
@@ -36,7 +35,10 @@ class AppConfig {
 
   // Đăng ký tài khoản mới
   static Future<String?> register(
-      String fullName, String phoneNumber, String password) async {
+    String fullName,
+    String phoneNumber,
+    String password,
+  ) async {
     final url = Uri.parse('$baseUrl/auth/register');
     final response = await http.post(
       url,
@@ -74,7 +76,7 @@ class AppConfig {
       url,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token'
+        'Authorization': 'Bearer $token',
       },
     );
 
@@ -121,7 +123,7 @@ class AppConfig {
         url,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token'
+          'Authorization': 'Bearer $token',
         },
         body: jsonEncode(profileData),
       );
@@ -153,7 +155,7 @@ class AppConfig {
       url,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token'
+        'Authorization': 'Bearer $token',
       },
     );
 
@@ -162,9 +164,11 @@ class AppConfig {
       if (data['status'] == 0) {
         int userId = data['data']['id']; // Lấy ID từ API
         await LocalStorageService.saveUserId(
-            userId); // Lưu ID vào Local Storage
+          userId,
+        ); // Lưu ID vào Local Storage
         await LocalStorageService.saveUserId(
-            userId); // Lưu ID vào Local Storage
+          userId,
+        ); // Lưu ID vào Local Storage
         return data['data']; // Trả về dữ liệu hồ sơ
       }
     }
@@ -210,9 +214,7 @@ class AppConfig {
     }
     final response = await http.post(
       url,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
     print('Giá trị status của API: ${response.statusCode}');
     print('Giá trị API trả về body: ${response.body}');
@@ -245,9 +247,7 @@ class AppConfig {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       },
-      body: jsonEncode({
-        "id": clinicId,
-      }),
+      body: jsonEncode({"id": clinicId}),
     );
 
     print('Giá trị status của API: ${response.statusCode}');

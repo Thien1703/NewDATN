@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:health_care/config/app_config.dart';
 import 'package:health_care/models/appointment/appointment.dart';
 import 'package:health_care/services/local_storage_service.dart';
+import 'package:health_care/models/appointment/appointment_Create.dart';
 
 class AppointmentApi {
   //Lấy tất cả đặt lịch
@@ -70,7 +71,8 @@ class AppointmentApi {
   }
 
   // Đặt lịch
-  static Future<int?> createAppointment(Appointment appointment) async {
+  static Future<int?> createAppointment(
+      AppointmentCreate AppointmentCreate) async {
     final url = Uri.parse('${AppConfig.baseUrl}/appointment/create');
     String? token = await LocalStorageService.getToken();
 
@@ -86,7 +88,7 @@ class AppointmentApi {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
         },
-        body: jsonEncode(appointment.toJson()),
+        body: jsonEncode(AppointmentCreate.toJson()),
       );
 
       print('📩 Phản hồi API (Đặt lịch): ${response.body}');

@@ -1,12 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
-import 'package:health_care/config/app_config.dart';
+import 'package:health_care/common/app_icons.dart';
 import 'package:health_care/models/specialty.dart';
-import 'package:health_care/views/screens/BMI/measureBMI_Screen.dart';
-import 'package:health_care/views/screens/home/service_screen.dart';
+import 'package:health_care/models/customer.dart';
+import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/viewmodels/api/specialty_api.dart';
-import 'package:health_care/views/screens/map/searchMap.dart';
 
 // class HomePage extends StatefulWidget {
 //   const HomePage({super.key});
@@ -235,280 +234,292 @@ class HomePage extends StatefulWidget {
 
 class _HomePage extends State<HomePage> {
   List<Specialty>? specialties;
-  Map<String, dynamic>? _userData;
+  Customer? customers;
+  final List<String> imgList = [
+    'assets/images/anhbia1.jpg',
+    'assets/images/anhbia2.jpg',
+    'assets/images/anhbia4.jpg',
+    'assets/images/anhbia3.jpg',
+    'assets/images/anhbia5.jpg',
+    'assets/images/anhbia6.jpg',
+  ];
 
   @override
   void initState() {
     super.initState();
     fetchSpecialties();
-    _fetchUserProfile();
+    
   }
 
   void fetchSpecialties() async {
     List<Specialty>? data = await SpecialtyApi.getAllSpecialty();
+    Customer? result = await CustomerApi.getCustomerProfile();
     setState(() {
       specialties = data;
+      customers = result;
     });
   }
 
-  Future<void> _fetchUserProfile() async {
-    try {
-      final data = await AppConfig.getUserProfile();
-      print(data);
-      setState(() {
-        _userData = data;
-      });
-    } catch (e) {
-      print("Error fetching user profile: $e");
-      setState(() {
-        _userData = {};
-      });
-    }
-  }
 
-  List<String> imgList = [
-    'assets/images/slide1.jpg',
-    'assets/images/slide2.jpg',
-    'assets/images/slide3.jpg',
-  ];
+  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFF1565C0),
-                Colors.white,
-                Color(0xFF64B5F6),
+        backgroundColor: AppColors.deepBlue,
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              backgroundColor: AppColors.deepBlue,
+              expandedHeight: 130,
+              floating: false,
+              pinned: true,
+              leading: IconButton(
+                onPressed: () => Scaffold.of(context).openDrawer(),
+                icon: Icon(
+                  Icons.menu,
+                  size: 30,
+                  color: Colors.white,
+                ),
+              ),
+              actions: [
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.notifications,
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                )
               ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 35),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 30,
-                      child: Image.asset(
-                        'assets/images/logoApp.png',
-                        width: 120,
-                        height: 120,
+              flexibleSpace: LayoutBuilder(
+                builder: (context, constraints) {
+                  bool isCollapsed = constraints.maxHeight < 100;
+                  return FlexibleSpaceBar(
+                    titlePadding: EdgeInsets.only(
+                        left: isCollapsed ? 50 : 0,
+                        bottom: isCollapsed ? 10 : 20,
+                        right: isCollapsed ? 40 : 0),
+                    title: Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.white, width: 1),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Tìm phòng khám, chuyên khoa...',
+                            style: TextStyle(
+                              fontSize: isCollapsed ? 14 : 10,
+                              color: const Color.fromARGB(255, 141, 141, 141),
+                            ),
+                          ),
+                          Icon(
+                            Icons.mic,
+                            color: AppColors.deepBlue,
+                            size: isCollapsed ? 25 : 15,
+                          )
+                        ],
                       ),
                     ),
-                    SizedBox(width: 10),
-                    Expanded(
+                  );
+                },
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Container(
+                margin: EdgeInsets.only(bottom: 40),
+                decoration: BoxDecoration(
+                  color: Color(0xFFF0F2F5),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 25, bottom: 10, top: 25),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Xin chào, ',
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.normal),
+                          ),
+                          Text(
+                            customers?.fullName ?? 'Chưa cập nhật',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          _buildFeatureButton(
+                              'Tìm phòng khám', AppIcons.mapPlus, () {}),
+                          _buildFeatureButton(
+                              'Chat với AI', AppIcons.robotAI, () {}),
+                          _buildFeatureButton(
+                              'Đo BMI', AppIcons.bmiIcon, () {}),
+                          _buildFeatureButton(
+                              'Kiểm tra sức khỏe', AppIcons.healthCheck, () {}),
+                          _buildFeatureButton(
+                              'Tìm phòng khám', AppIcons.mapPlus, () {}),
+                          SizedBox(width: 10),
+                        ],
+                      ),
+                    ),
+                    CarouselSlider(
+                      items: imgList
+                          .map(
+                            (item) => ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: Image.asset(
+                                item,
+                                width: double.infinity,
+                              ),
+                            ),
+                          )
+                          .toList(),
+                      options: CarouselOptions(
+                        height: 200,
+                        autoPlay: true,
+                        autoPlayInterval: Duration(seconds: 10),
+                        enlargeCenterPage: true,
+                        viewportFraction: 0.8,
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 15),
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Xin chào!',
-                            softWrap: true,
+                            'Danh mục chuyên khoa',
                             style: TextStyle(
-                              fontSize: 21,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
+                                fontSize: 18, fontWeight: FontWeight.bold),
                           ),
-                          SizedBox(
-                            width: 6,
-                          ),
-                          Text(
-                            _userData?['fullName'] ?? 'Người dùng',
-                            style: TextStyle(
-                              fontSize: 21,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                          // Text(
-                          //   'đến với phòng khám FPT',
-                          //   softWrap: true,
-                          //   style: TextStyle(
-                          //     fontSize: 17,
-                          //     fontWeight: FontWeight.bold,
-                          //     color: Colors.black,
-                          //   ),
-                          // ),
+                          specialties == null
+                              ? Center(child: Text('Không có dịch vụ nào'))
+                              : SingleChildScrollView(
+                                  child: GridView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 15,
+                                      mainAxisSpacing: 10,
+                                      childAspectRatio: 2.9,
+                                    ),
+                                    itemCount: specialties!.length,
+                                    itemBuilder: (context, index) {
+                                      final specialty = specialties![index];
+                                      return Container(
+                                        padding: EdgeInsets.only(left: 10),
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(
+                                                color: Colors.white, width: 1),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.5),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 1,
+                                              ),
+                                            ]),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Image.network(
+                                              specialty.image,
+                                              width: 45,
+                                              color: AppColors.deepBlue,
+                                            ),
+                                            SizedBox(width: 10),
+                                            Text(
+                                              specialty.name,
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
                         ],
                       ),
-                    )
+                    ),
+                    Image.asset('assets/images/anhBia.jpg'),
                   ],
                 ),
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 15),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text('Tìm kiếm chuyên khoa/dịch vụ',
-                          style: TextStyle(color: Colors.black54)),
-                      Icon(Icons.search, color: Colors.blue),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildFeatureButton('Xem bản đồ', Icons.map, () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SearchScreen()));
-                      }),
-                      _buildFeatureButton('Chat AI', Icons.chat, () {
-                        print('Chat AI clicked');
-                      }),
-                      _buildFeatureButton('Đo BMI', Icons.fitness_center, () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BmiScreen()));
-                      }),
-                    ],
-                  ),
-                ),
-                CarouselSlider(
-                  options: CarouselOptions(
-                    height: 200.0,
-                    autoPlay: true,
-                    aspectRatio: 14 / 9,
-                    viewportFraction: 1.0,
-                  ),
-                  items: imgList.map((item) {
-                    return Container(
-                      margin: EdgeInsets.symmetric(horizontal: 5),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Image.asset(item, fit: BoxFit.fill),
-                      ),
-                    );
-                  }).toList(),
-                ),
-                Text(
-                  'Chuyên khoa',
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w600,
-                    color: const Color.fromARGB(255, 75, 75, 75),
-                  ),
-                ),
-                specialties != null
-                    ? Container(
-                        height: 300,
-                        child: GridView.builder(
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          physics: const BouncingScrollPhysics(),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 7,
-                            mainAxisSpacing: 7,
-                          ),
-                          itemCount: specialties!.length,
-                          itemBuilder: (context, index) {
-                            final specialty = specialties![index];
-                            return InkWell(
-                              onTap: () {
-                                print(specialty.id);
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ServiceScreen(
-                                        specialtyId: specialty.id),
-                                  ),
-                                );
-                              },
-                              child: Card(
-                                elevation: 3,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 80,
-                                      height: 80,
-                                      color: Colors.white,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: Image.network(
-                                          specialty.image ??
-                                              'https://example.com/default-image.png',
-                                          width: 60,
-                                          height: 60,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      specialty.name,
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.blue.shade800,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      )
-                    : const Center(child: CircularProgressIndicator()),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+              ),
+            )
+          ],
+        ));
   }
+}
 
-  // Widget cho các nút chức năng chính
-  Widget _buildFeatureButton(String text, IconData icon, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
+// Widget cho các nút chức năng chính
+Widget _buildFeatureButton(String text, String icon, VoidCallback onTap) {
+  return InkWell(
+    onTap: onTap,
+    child: Container(
+      margin: EdgeInsets.only(left: 20),
+      width: 70,
+      height: 90,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.15),
+              spreadRadius: 0,
+              blurRadius: 8,
+              offset: Offset(0, 4),
+            ),
+          ]),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          CircleAvatar(
-            radius: 25,
-            backgroundColor: AppColors.accent,
-            child: Icon(icon, color: Colors.white),
+          Image.asset(
+            icon,
+            width: 35,
           ),
           const SizedBox(height: 5),
           Text(
             text,
+            textAlign: TextAlign.center,
             style: TextStyle(
-                fontSize: 12, color: AppColors.accent),
+              fontSize: 12,
+              color: Colors.black,
+            ),
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
 }

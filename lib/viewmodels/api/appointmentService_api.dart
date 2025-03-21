@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:health_care/config/app_config.dart';
 import 'package:health_care/services/local_storage_service.dart';
 import 'package:health_care/models/appointment/appointment_service.dart';
-import 'package:health_care/models/appointment/appointmentCreate.dart';
+import 'package:health_care/models/appointment/appointmentService_Create.dart';
 
 class AppointmentserviceApi {
   static Future<List<AppointmentService>?> getAllAppointmentService() async {

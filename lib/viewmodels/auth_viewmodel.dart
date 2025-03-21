@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:health_care/views/screens/auth/login/login_screen.dart';
+import 'package:health_care/views/screens/auth/Login/newLogin.dart';
+// import 'package:health_care/views/screens/auth/login/login_screen.dart';
 import '../services/local_storage_service.dart';
 import '../views/screens/home/home_screens.dart';
 import '../config/app_config.dart';
@@ -81,7 +82,7 @@ class AuthViewModel with ChangeNotifier {
   }
 
   /// Cập nhật hồ sơ
-  Future<void> updateProfile(BuildContext context,
+  Future<bool> updateProfile(BuildContext context,
       Map<String, dynamic> profileData, File? avatar) async {
     // 🔹 Lấy userId từ local storage
     int? userId = await LocalStorageService.getUserId();
@@ -103,7 +104,7 @@ class AuthViewModel with ChangeNotifier {
         backgroundColor: Colors.red,
         textColor: Colors.white,
       );
-      return;
+      return false; // ❌ Cập nhật thất bại
     }
 
     // 🔹 Đảm bảo `profileData` có chứa `id`
@@ -111,7 +112,7 @@ class AuthViewModel with ChangeNotifier {
 
     String? errorMessage = await AppConfig.updateProfile(profileData);
 
-    if (!context.mounted) return;
+    if (!context.mounted) return false;
 
     if (errorMessage == null) {
       Fluttertoast.showToast(
@@ -122,6 +123,7 @@ class AuthViewModel with ChangeNotifier {
         textColor: Colors.white,
       );
       Navigator.pop(context); // Quay lại màn hình trước đó
+      return true; // ✅ Cập nhật thành công
     } else {
       Fluttertoast.showToast(
         msg: errorMessage,
@@ -130,6 +132,7 @@ class AuthViewModel with ChangeNotifier {
         backgroundColor: Colors.red,
         textColor: Colors.white,
       );
+      return false; // ❌ Cập nhật thất bại
     }
   }
 
@@ -153,7 +156,7 @@ class AuthViewModel with ChangeNotifier {
 
       // Chuyển về màn hình Splash
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) =>  LoginScreen()),
+        MaterialPageRoute(builder: (context) => LoginScreen()),
         (route) => false,
       );
     } else {

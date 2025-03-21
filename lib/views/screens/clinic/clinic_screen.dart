@@ -35,9 +35,10 @@ class _ClinicScreenState extends State<ClinicScreen> {
   @override
   Widget build(BuildContext context) {
     return WidgetHeaderBodyScoller(
-      iconBack: false,
-      title: 'Đặt khám',
-      body: SingleChildScrollView(
+        iconBack: widget.iconBack ?? true,
+        title: "Đặt khám",
+        body: SingleChildScrollView(
+      
         child: Container(
           width: double.infinity,
           // decoration: BoxDecoration(

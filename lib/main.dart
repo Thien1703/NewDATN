@@ -1,12 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:health_care/views/screens/auth/Login/newLogin.dart';
 import 'package:provider/provider.dart';
 import 'package:health_care/viewmodels/auth_viewmodel.dart';
 import 'package:health_care/views/screens/welcome/splash_screen.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
 import 'package:vietnam_provinces/vietnam_provinces.dart';
-import 'views/screens/auth/login/login_screen.dart';
+// import 'views/screens/auth/login/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -48,4 +48,8 @@ class AppIcons {
       'assets/icons/schedule_icon_black.png';
   static const String userIcon = 'assets/icons/user_icon.png';
   static const String userIconBlack = 'assets/icons/user_icon_black.png';
+  static const String mapPlus = 'assets/icons/mapPlus_icon.png';
+  static const String robotAI = 'assets/icons/robotAI_icon.png';
+  static const String bmiIcon = 'assets/icons/bmi_icon.png';
+  static const String healthCheck = 'assets/icons/healthCheck_icon.png';
 }

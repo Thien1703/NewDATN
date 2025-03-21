@@ -8,9 +8,9 @@ import 'package:health_care/views/widgets/appointment/widget_customPricePayment.
 import 'package:health_care/views/widgets/appointment/widget_customButton.dart';
 import 'package:health_care/views/widgets/widget_lineBold.dart';
 import 'package:health_care/views/widgets/widget_userProfile_card.dart';
-import 'package:health_care/models/appointment/appointment.dart';
+import 'package:health_care/models/appointment/appointment_Create.dart';
 import 'package:health_care/viewmodels/api/appointment_api.dart';
-import 'package:health_care/models/appointment/appointmentCreate.dart';
+import 'package:health_care/models/appointment/appointmentService_Create.dart';
 import 'package:health_care/viewmodels/api/appointmentService_api.dart';
 
 class ConfirmBooking extends StatefulWidget {
@@ -60,7 +60,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     setState(() => isLoading = true);
 
     // Gửi yêu cầu tạo lịch hẹn
-    Appointment newBooking = Appointment(
+    AppointmentCreate newBooking = AppointmentCreate(
       id: 0,
       clinicId: widget.clinicId,
       customerId: widget.customerId,

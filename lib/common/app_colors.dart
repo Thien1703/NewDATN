@@ -17,6 +17,7 @@ class AppColors {
   // Neutral Colors
   static const Color neutralWhite = Color(0xFFFFFFFF);
   static const Color neutralLightGreen1 = Color(0xFFECF6ED);
+  static const Color lightgreenshede1 = Color.fromARGB(255, 80, 195, 219);
   static const Color neutralLightGreen2 = Color(0xFFD9ECDA);
   static const Color neutralGrey = Color(0xFFF0F4F0);
   static const Color neutralGrey2 = Color(0xFFC4C4C4);
@@ -33,4 +34,8 @@ class AppColors {
   static const Color grey5 = Color(0xFFE8E8E8);
   static const Color grey = Color(0xFFF0F4F0);
   static const Color blue30 = Color.fromARGB(255, 210, 233, 249);
+  static const Color primarygreen = Color(0xFF1E3A34);
+  static const Color lightgreenshede = Color(0xFFF0FAF6);
 }
+
+const kAnimationDuration = Duration(milliseconds: 200);
