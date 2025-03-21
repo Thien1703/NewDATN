@@ -17,7 +17,7 @@ class _PaidDetailScreen extends State<PaidDetailScreen> {
       body: Stack(
         children: [
           SingleChildScrollView(
-            padding: const EdgeInsets.only(bottom: 100.0, left: 16.0, right: 16.0), // Bottom padding to avoid overlap with button
+            padding: const EdgeInsets.only(bottom: 100.0, left: 16.0, right: 16.0), 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -162,13 +162,13 @@ class _PaidDetailScreen extends State<PaidDetailScreen> {
           ),
           // Fixed Positioned Button
           Positioned(
-            bottom: 0,
+            bottom: 4,
             left: 0,
             right: 0,
             child: Container(
-              width: 200,
-              height: 100,
-              padding: EdgeInsets.symmetric(vertical: 15),
+             
+              height: 60,
+              padding: EdgeInsets.symmetric(horizontal: 30),
               child: ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
@@ -179,7 +179,7 @@ class _PaidDetailScreen extends State<PaidDetailScreen> {
                 ),
                 child: Text(
                   'Đặt lịch khám khác',
-                  style: TextStyle(fontSize: 26, color: Colors.white),
+                  style: TextStyle(fontSize: 22, color: Colors.white),
                 ),
               ),
             ),
