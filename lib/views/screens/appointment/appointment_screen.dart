@@ -3,7 +3,6 @@ import 'package:health_care/common/app_icons.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/views/screens/appointment/steps/confirm_booking.dart';
 import 'package:health_care/views/screens/appointment/steps/exam_info_booking.dart';
-import 'package:health_care/views/screens/appointment/steps/payment_method_booking.dart';
 import 'package:health_care/views/screens/appointment/steps/profile_booking.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 
@@ -48,7 +47,6 @@ class _AppointmentScreen extends State<AppointmentScreen> {
         time: 'Chưa chọn giờ', // Giá trị mặc định
         paymentId: 1,
       ),
-      PaymentMethodBooking(),
     ];
   }
 
@@ -167,18 +165,6 @@ class StepIndicator extends StatelessWidget {
             image: AppIcons.checkmark,
             color: isSelected[2] ? AppColors.accent : AppColors.neutralGrey2,
           ),
-          // StepLine(),
-          // StepItem(
-          //   onTap: currentIndex <= 2
-          //       ? null
-          //       : () => onNavigateToScreen(3, 'Thông tin thanh toán'),
-          //   border: isSelected[3]
-          //       ? Border.all(color: AppColors.primary, width: 1)
-          //       : null,
-          //   background: isSelected[3] ? Colors.white : AppColors.accent,
-          //   image: AppIcons.payment,
-          //   color: isSelected[3] ? AppColors.accent : AppColors.neutralGrey2,
-          // ),
         ],
       ),
     );

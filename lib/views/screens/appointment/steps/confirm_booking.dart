@@ -90,7 +90,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     setState(() => isLoading = false);
 
     if (serviceAdded) {
-      widget.onNavigateToScreen(3, 'Thông tin thanh toán');
+      Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
