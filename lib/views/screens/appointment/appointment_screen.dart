@@ -97,7 +97,7 @@ class _AppointmentScreen extends State<AppointmentScreen> {
     return WidgetHeaderBody(
       iconBack: true,
       title: _showTitleScreen,
-      headerHeight: 0.2,
+      headerHeight: 0.21,
       selectedIcon: StepIndicator(
         currentIndex: _currentIndex,
         isSelected: _isSelected,
@@ -127,8 +127,8 @@ class StepIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.accent,
-      padding: const EdgeInsets.only(bottom: 10),
+      color: AppColors.deepBlue,
+      padding: const EdgeInsets.only(bottom: 10, top: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -139,7 +139,7 @@ class StepIndicator extends StatelessWidget {
                 : null,
             background: isSelected[0] ? Colors.white : AppColors.accent,
             image: AppIcons.specialty,
-            color: isSelected[0] ? AppColors.accent : AppColors.neutralGrey2,
+            color: isSelected[0] ? AppColors.deepBlue : AppColors.neutralGrey2,
           ),
           StepLine(),
           StepItem(
@@ -149,9 +149,9 @@ class StepIndicator extends StatelessWidget {
             border: isSelected[1]
                 ? Border.all(color: AppColors.primary, width: 1)
                 : null,
-            background: isSelected[1] ? Colors.white : AppColors.accent,
+            background: isSelected[1] ? Colors.white : AppColors.deepBlue,
             image: AppIcons.user1,
-            color: isSelected[1] ? AppColors.accent : AppColors.neutralGrey2,
+            color: isSelected[1] ? AppColors.accent : AppColors.grey,
           ),
           StepLine(),
           StepItem(
@@ -161,9 +161,9 @@ class StepIndicator extends StatelessWidget {
             border: isSelected[2]
                 ? Border.all(color: AppColors.primary, width: 1)
                 : null,
-            background: isSelected[2] ? Colors.white : AppColors.accent,
+            background: isSelected[2] ? Colors.white : AppColors.deepBlue,
             image: AppIcons.checkmark,
-            color: isSelected[2] ? AppColors.accent : AppColors.neutralGrey2,
+            color: isSelected[2] ? AppColors.accent : AppColors.grey,
           ),
         ],
       ),
@@ -192,7 +192,7 @@ class StepItem extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: background,
           border: border,
@@ -214,7 +214,7 @@ class StepLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 50,
+      width: 70,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.white, width: 1),
       ),

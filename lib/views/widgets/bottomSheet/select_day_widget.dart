@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/views/widgets/bottomSheet/header_bottomSheet.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:intl/intl.dart';
 
 class SelectDayWidget extends StatefulWidget {
   const SelectDayWidget({super.key});
@@ -29,11 +28,9 @@ class _SelectDayWidgetState extends State<SelectDayWidget> {
             lastDay: _lastDay, // Giới hạn ngày cuối cùng trong tháng
             focusedDay: _focusedDay,
             locale: 'vi',
-
             selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
             onDaySelected: (selectedDay, focusedDay) {
               if (selectedDay.isBefore(DateTime.now())) return;
-
               setState(() {
                 _selectedDay = selectedDay;
                 _focusedDay = focusedDay;
@@ -47,16 +44,23 @@ class _SelectDayWidgetState extends State<SelectDayWidget> {
               weekendTextStyle: TextStyle(fontSize: 15),
               todayTextStyle:
                   TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              // Nếu chọn ngày (selected)
               selectedDecoration: BoxDecoration(
-                color: Colors.red,
-                shape: BoxShape.circle,
+                color: Colors.grey,
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              // Cài đặt cho ngày hôm nay, tránh xung đột với borderRadius khi dùng circle
+              todayDecoration: BoxDecoration(
+                color: AppColors.deepBlue,
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(8),
               ),
               weekendDecoration: BoxDecoration(
                 color: AppColors.softBlue,
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(8),
               ),
-
               defaultDecoration: BoxDecoration(
                 color: AppColors.softBlue,
                 shape: BoxShape.rectangle,
@@ -71,22 +75,26 @@ class _SelectDayWidgetState extends State<SelectDayWidget> {
               ),
             ),
             headerStyle: HeaderStyle(
-                headerPadding: EdgeInsets.symmetric(vertical: 5),
-                formatButtonVisible: false,
-                titleCentered: true,
-                titleTextStyle: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-                leftChevronIcon:
-                    Icon(Icons.chevron_left, size: 20, color: Colors.white),
-                rightChevronIcon:
-                    Icon(Icons.chevron_right, size: 20, color: Colors.white),
-                decoration: BoxDecoration(
-                    color: AppColors.deepBlue,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20)))),
+              headerPadding: EdgeInsets.symmetric(vertical: 5),
+              formatButtonVisible: false,
+              titleCentered: true,
+              titleTextStyle: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+              leftChevronIcon:
+                  Icon(Icons.chevron_left, size: 20, color: Colors.white),
+              rightChevronIcon:
+                  Icon(Icons.chevron_right, size: 20, color: Colors.white),
+              decoration: BoxDecoration(
+                color: AppColors.deepBlue,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+            ),
             daysOfWeekStyle: DaysOfWeekStyle(
               weekdayStyle:
                   TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
@@ -115,7 +123,11 @@ class _SelectDayWidgetState extends State<SelectDayWidget> {
         Container(
           width: 12,
           height: 12,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(8),
+          ),
         ),
         SizedBox(width: 5),
         Text(text, style: TextStyle(fontSize: 14)),
