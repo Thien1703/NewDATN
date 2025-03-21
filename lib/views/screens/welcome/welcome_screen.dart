@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:health_care/common/app_colors.dart';
-import 'package:health_care/views/screens/auth/login/login_screen.dart';
+
+import '../auth/Login/newLogin.dart';
+// import 'package:health_care/views/screens/auth/login/login_screen.dart';
 
 final List<Map<String, String>> items = [
   {

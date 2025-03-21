@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:health_care/services/local_storage_service.dart';
 import 'package:health_care/models/clinic.dart';
-import 'package:health_care/models/service.dart';
 import 'package:http/http.dart' as http;
 
 class AppConfig {

@@ -22,6 +22,7 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
   }
 
   Future<void> fetchUserData() async {
+    setState(() => isLoading = true);
     final data = await AppConfig.getUserProfile();
     if (mounted) {
       setState(() {
@@ -118,8 +119,10 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      const EditProfileScreen(),
+                                  builder: (context) => EditProfileScreen(
+                                    onProfileUpdated:
+                                        fetchUserData, // ✅ Truyền hàm cập nhật UI
+                                  ),
                                 ),
                               );
                             },
