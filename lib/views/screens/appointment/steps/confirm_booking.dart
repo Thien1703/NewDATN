@@ -112,12 +112,12 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
             margin: const EdgeInsets.symmetric(horizontal: 20),
             child: ListView(
               children: [
-                Text('Customer ID: ${widget.customerId}'),
-                Text("Clinic ID: ${widget.clinicId}"),
-                Text("Dịch vụ đã chọn: ${widget.selectedServiceIds}"),
-                Text("Ngày khám: ${widget.date}"),
-                Text("Giờ khám: ${widget.time}"),
-                Text("Thanh toán: ${widget.paymentId}"),
+                // Text('Customer ID: ${widget.customerId}'),
+                // Text("Clinic ID: ${widget.clinicId}"),
+                // Text("Dịch vụ đã chọn: ${widget.selectedServiceIds}"),
+                // Text("Ngày khám: ${widget.date}"),
+                // Text("Giờ khám: ${widget.time}"),
+                // Text("Thanh toán: ${widget.paymentId}"),
                 HospitalInfoWidget(
                   clinicId: widget.clinicId,
                 ),

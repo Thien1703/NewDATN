@@ -8,15 +8,17 @@ class WidgetHeaderBody extends StatelessWidget {
   final VoidCallback? onBackPressed;
   final Widget? selectedIcon;
   final bool iconBack;
+  final Color? color;
 
   const WidgetHeaderBody({
     super.key,
     required this.iconBack,
     required this.title,
     required this.body,
-    this.headerHeight = 0.13,
+    this.headerHeight = 0.12,
     this.onBackPressed,
     this.selectedIcon,
+    this.color,
   });
 
   @override
@@ -25,29 +27,43 @@ class WidgetHeaderBody extends StatelessWidget {
     final header = screenHeight * headerHeight;
 
     return Scaffold(
-        body: Column(children: [
-      Container(
-        width: double.infinity,
-        height: header,
-        color: AppColors.deepBlue,
-        child: SafeArea(
-            child: Column(children: [
-          SizedBox(height: 15),
-          HeaderRow(
-            iconBack: iconBack,
-            title: title,
-            onBackPressed: onBackPressed,
+      body: Column(
+        children: [
+          _buildHeader(header, context),
+          Expanded(
+            child: Container(
+              color: color ?? Colors.white,
+              child: body,
+            ),
           ),
-          if (selectedIcon != null) SizedBox(height: 5),
-          Container(child: selectedIcon)
-        ])),
+        ],
       ),
-      Expanded(
-          child: Container(
-        color: Colors.white,
-        child: body,
-      ))
-    ]));
+    );
+  }
+
+  Widget _buildHeader(double headerHeight, BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: headerHeight,
+      color: AppColors.deepBlue,
+      child: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 15),
+            HeaderRow(
+              iconBack: iconBack,
+              title: title,
+              onBackPressed: onBackPressed,
+            ),
+            if (selectedIcon != null) const SizedBox(height: 5),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: selectedIcon,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -56,38 +72,40 @@ class HeaderRow extends StatelessWidget {
   final VoidCallback? onBackPressed;
   final bool iconBack;
 
-  const HeaderRow(
-      {super.key,
-      required this.title,
-      this.onBackPressed,
-      required this.iconBack});
+  const HeaderRow({
+    super.key,
+    required this.title,
+    this.onBackPressed,
+    required this.iconBack,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        if (iconBack == true)
+        if (iconBack)
           Align(
             alignment: Alignment.centerLeft,
             child: IconButton(
-              icon: Icon(Icons.arrow_back,
+              icon: const Icon(Icons.arrow_back,
                   color: AppColors.neutralWhite, size: 22),
               onPressed: onBackPressed ?? () => Navigator.of(context).pop(),
             ),
           ),
         Padding(
-          padding: EdgeInsets.only(top: 8),
+          padding: const EdgeInsets.only(top: 8),
           child: Align(
             alignment: Alignment.center,
             child: Text(
               title,
               style: const TextStyle(
-                  color: AppColors.neutralWhite,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold),
+                color: AppColors.neutralWhite,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

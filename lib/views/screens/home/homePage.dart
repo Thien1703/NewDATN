@@ -6,6 +6,7 @@ import 'package:health_care/models/specialty.dart';
 import 'package:health_care/models/customer.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/viewmodels/api/specialty_api.dart';
+import 'package:health_care/views/screens/BMI/measureBMI_Screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -151,8 +152,12 @@ class _HomePage extends State<HomePage> {
                               'Tìm phòng khám', AppIcons.mapPlus, () {}),
                           _buildFeatureButton(
                               'Chat với AI', AppIcons.robotAI, () {}),
-                          _buildFeatureButton(
-                              'Đo BMI', AppIcons.bmiIcon, () {}),
+                          _buildFeatureButton('Đo BMI', AppIcons.bmiIcon, () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const BmiScreen()));
+                          }),
                           _buildFeatureButton(
                               'Kiểm tra sức khỏe', AppIcons.healthCheck, () {}),
                           _buildFeatureButton(
@@ -217,10 +222,10 @@ class _HomePage extends State<HomePage> {
                                                 BorderRadius.circular(10),
                                             boxShadow: [
                                               BoxShadow(
-                                                  color: Colors.grey
-                                                      .withOpacity(0.5),
-                                                  spreadRadius: 1,
-                                                  blurRadius: 1,
+                                                color: Colors.grey
+                                                    .withOpacity(0.5),
+                                                spreadRadius: 1,
+                                                blurRadius: 1,
                                               ),
                                             ]),
                                         child: Row(

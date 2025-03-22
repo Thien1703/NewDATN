@@ -115,7 +115,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                                 return Container(
                                   margin: EdgeInsets.only(bottom: 15),
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 15),
+                                      horizontal: 10, vertical: 10),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     border: Border.all(
@@ -147,7 +147,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                                                     appointmentService.id
                                                         .toString(),
                                                     style: TextStyle(
-                                                      fontSize: 16,
+                                                      fontSize: 15,
                                                       color: Colors.black,
                                                       fontWeight:
                                                           FontWeight.w600,
@@ -159,7 +159,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                                                 appointmentService.appointment
                                                     .customer.fullName,
                                                 style: TextStyle(
-                                                  fontSize: 18,
+                                                  fontSize: 17,
                                                   fontWeight: FontWeight.w600,
                                                 ),
                                               ),
@@ -173,14 +173,18 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) =>
-                                                          PaidDetailScreen(),
+                                                          PaidDetailScreen(
+                                                        appointmentServiceId:
+                                                            appointmentService
+                                                                .id,
+                                                      ),
                                                     ),
                                                   );
                                                 },
                                                 child: Text(
                                                   'Xem chi tiết',
                                                   style: TextStyle(
-                                                    fontSize: 16,
+                                                    fontSize: 15,
                                                     color: AppColors.deepBlue,
                                                     fontWeight: FontWeight.w500,
                                                   ),
@@ -200,7 +204,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                                             .appointment.clinic.name,
                                         style: TextStyle(
                                           color: AppColors.deepBlue,
-                                          fontSize: 17,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
@@ -223,7 +227,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                                             Text(
                                               'Trạng thái',
                                               style: TextStyle(
-                                                fontSize: 15,
+                                                fontSize: 14,
                                                 color: Color(0xFF757575),
                                               ),
                                             ),
@@ -287,14 +291,14 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
           Text(
             label,
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 14,
               color: Color(0xFF757575),
             ),
           ),
           Text(
             value,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 15,
               color: Colors.black,
             ),
           ),
@@ -306,10 +310,11 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
   Widget getStatusWidget(String status) {
     String label;
     Color textColor;
+
     switch (status) {
       case "PENDING":
         label = "Đã đặt khám";
-        textColor = Colors.black;
+        textColor = Colors.green;
         break;
       case "CONFIRMED":
         label = "Đã xác nhận";
@@ -327,7 +332,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
       label,
       style: TextStyle(
         color: textColor,
-        fontSize: 16,
+        fontSize: 15,
       ),
     );
   }
