@@ -3,7 +3,6 @@ import 'package:health_care/common/app_icons.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/views/screens/appointment/steps/confirm_booking.dart';
 import 'package:health_care/views/screens/appointment/steps/exam_info_booking.dart';
-import 'package:health_care/views/screens/appointment/steps/payment_method_booking.dart';
 import 'package:health_care/views/screens/appointment/steps/profile_booking.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 
@@ -48,7 +47,6 @@ class _AppointmentScreen extends State<AppointmentScreen> {
         time: 'Chưa chọn giờ', // Giá trị mặc định
         paymentId: 1,
       ),
-      PaymentMethodBooking(),
     ];
   }
 
@@ -99,7 +97,7 @@ class _AppointmentScreen extends State<AppointmentScreen> {
     return WidgetHeaderBody(
       iconBack: true,
       title: _showTitleScreen,
-      headerHeight: 0.2,
+      headerHeight: 0.21,
       selectedIcon: StepIndicator(
         currentIndex: _currentIndex,
         isSelected: _isSelected,
@@ -129,8 +127,8 @@ class StepIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.accent,
-      padding: const EdgeInsets.only(bottom: 10),
+      color: AppColors.deepBlue,
+      padding: const EdgeInsets.only(bottom: 10, top: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -141,7 +139,7 @@ class StepIndicator extends StatelessWidget {
                 : null,
             background: isSelected[0] ? Colors.white : AppColors.accent,
             image: AppIcons.specialty,
-            color: isSelected[0] ? AppColors.accent : AppColors.neutralGrey2,
+            color: isSelected[0] ? AppColors.deepBlue : AppColors.neutralGrey2,
           ),
           StepLine(),
           StepItem(
@@ -151,9 +149,9 @@ class StepIndicator extends StatelessWidget {
             border: isSelected[1]
                 ? Border.all(color: AppColors.primary, width: 1)
                 : null,
-            background: isSelected[1] ? Colors.white : AppColors.accent,
+            background: isSelected[1] ? Colors.white : AppColors.deepBlue,
             image: AppIcons.user1,
-            color: isSelected[1] ? AppColors.accent : AppColors.neutralGrey2,
+            color: isSelected[1] ? AppColors.accent : AppColors.grey,
           ),
           StepLine(),
           StepItem(
@@ -163,22 +161,10 @@ class StepIndicator extends StatelessWidget {
             border: isSelected[2]
                 ? Border.all(color: AppColors.primary, width: 1)
                 : null,
-            background: isSelected[2] ? Colors.white : AppColors.accent,
+            background: isSelected[2] ? Colors.white : AppColors.deepBlue,
             image: AppIcons.checkmark,
-            color: isSelected[2] ? AppColors.accent : AppColors.neutralGrey2,
+            color: isSelected[2] ? AppColors.accent : AppColors.grey,
           ),
-          // StepLine(),
-          // StepItem(
-          //   onTap: currentIndex <= 2
-          //       ? null
-          //       : () => onNavigateToScreen(3, 'Thông tin thanh toán'),
-          //   border: isSelected[3]
-          //       ? Border.all(color: AppColors.primary, width: 1)
-          //       : null,
-          //   background: isSelected[3] ? Colors.white : AppColors.accent,
-          //   image: AppIcons.payment,
-          //   color: isSelected[3] ? AppColors.accent : AppColors.neutralGrey2,
-          // ),
         ],
       ),
     );
@@ -206,7 +192,7 @@ class StepItem extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: background,
           border: border,
@@ -228,7 +214,7 @@ class StepLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 50,
+      width: 70,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.white, width: 1),
       ),

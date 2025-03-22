@@ -66,9 +66,8 @@ class _HomeScreensState extends State<HomeScreens> {
           backgroundColor: AppColors.deepBlue,
           shape: CircleBorder(),
           onPressed: () {
-            setState(() {
-              _selectedIndex = 2;
-            });
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ClinicScreen()));
           },
           child: CircleAvatar(
             radius: 15,

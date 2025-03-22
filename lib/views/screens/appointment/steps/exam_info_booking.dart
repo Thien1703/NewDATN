@@ -33,8 +33,8 @@ class ExamInfoBooking extends StatefulWidget {
 class _ExamInfoBooking extends State<ExamInfoBooking> {
   Clinic? clinices;
   List<int> selectedServiceId = [];
-  DateTime? selectedDate; // Thêm biến lưu ngày
-  String? selectedTime; // Thêm biến lưu giờ
+  DateTime? selectedDate; // Lưu ngày
+  String? selectedTime; // Lưu giờ
 
   @override
   void initState() {
@@ -71,6 +71,11 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
 
   @override
   Widget build(BuildContext context) {
+    // Kiểm tra xem các trường đã đủ thông tin chưa:
+    bool isButtonEnabled = selectedServiceId.isNotEmpty &&
+        selectedDate != null &&
+        selectedTime != null;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 25),
       child: Column(
@@ -92,19 +97,22 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
             ),
           ),
           WidgetCustombutton(
-            onTap: () {
-              print(
-                "Dữ liệu gửi sang ProfileBooking: clinicId = ${widget.clinicId}, dịch vụ: $selectedServiceId, ngày: $selectedDate, giờ: $selectedTime",
-              );
-              widget.onNavigateToScreen(
-                1,
-                'Chọn hồ sơ',
-                clinicId: widget.clinicId,
-                serviceIds: selectedServiceId,
-                date: DateFormat('yyyy-MM-dd').format(selectedDate!),
-                time: selectedTime!,
-              );
-            },
+            // Nếu isButtonEnabled false thì onTap truyền null => nút bị vô hiệu hóa, màu xám
+            onTap: isButtonEnabled
+                ? () {
+                    print(
+                      "Dữ liệu gửi sang ProfileBooking: clinicId = ${widget.clinicId}, dịch vụ: $selectedServiceId, ngày: $selectedDate, giờ: $selectedTime",
+                    );
+                    widget.onNavigateToScreen(
+                      1,
+                      'Chọn hồ sơ',
+                      clinicId: widget.clinicId,
+                      serviceIds: selectedServiceId,
+                      date: DateFormat('yyyy-MM-dd').format(selectedDate!),
+                      time: selectedTime!,
+                    );
+                  }
+                : null,
             text: 'Tiếp tục',
           ),
         ],
