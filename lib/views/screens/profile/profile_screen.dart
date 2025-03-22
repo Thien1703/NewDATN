@@ -166,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: ListTile(
-        leading: Icon(icon, color: Colors.green),
+        leading: Icon(icon, color: AppColors.accent),
         title: Text(text),
         onTap: onTap,
       ),
