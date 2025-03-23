@@ -29,13 +29,13 @@ class Clinic {
   factory Clinic.fromJson(Map<String, dynamic> json) {
     return Clinic(
       id: json['id'] ?? 0,
-      name: utf8.decode(json['name'].toString().codeUnits),
-      image: json['image'] ?? '',
-      description: utf8.decode(json['description'].toString().codeUnits),
+      name: utf8.decode(json['name'].toString().runes.toList()),
+      image: json['image'] ?? "",
+      description: json['description'] ?? "Chưa cập nhật",
       rating: json['rating'] != null ? (json['rating'] as num).toDouble() : 0.0,
       reviewCount: json['reviewCount'] ?? 0,
-      address: utf8.decode(json['address'].toString().codeUnits),
-      facilitie: utf8.decode(json['facilitie'].toString().codeUnits),
+      address: json['address'] ?? "Chưa cập nhật",
+      facilitie: json['facilitie'] ?? "Chưa cập nhật",
       latitude: json['latitude'] != null
           ? (json['latitude'] as num).toDouble()
           : null,

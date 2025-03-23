@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:get/route_manager.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/views/screens/examination/paidDetail_screen.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
@@ -38,7 +36,8 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
       return appointmentServices!;
     } else {
       return appointmentServices!
-          .where((item) => item.appointment.status == _selectedStatus)
+          .where((item) =>
+              item.appointment.status?.toUpperCase() == _selectedStatus)
           .toList();
     }
   }
@@ -74,10 +73,10 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                   ),
                   _buildCustomeButton(
                     label: 'Đã xác nhận',
-                    value: 'CONFIRMED',
+                    value: 'CONFIRM',
                     onTap: () => setState(
                       () {
-                        _selectedStatus = 'CONFIRMED';
+                        _selectedStatus = 'CONFIRM';
                       },
                     ),
                   ),
@@ -155,14 +154,16 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                                                   ),
                                                 ],
                                               ),
-                                              Text(
-                                                appointmentService.appointment
-                                                    .customer.fullName,
-                                                style: TextStyle(
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
+                                              // Text(
+                                              //   appointmentService
+                                              //       .appointment.clinic.name,
+                                              //   style: TextStyle(
+                                              //     color: AppColors.deepBlue,
+                                              //     fontSize: 16,
+                                              //     fontWeight: FontWeight.w500,
+                                              //   ),
+                                              //   softWrap: true,
+                                              // ),
                                             ],
                                           ),
                                           Row(
