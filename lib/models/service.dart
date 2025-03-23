@@ -20,8 +20,8 @@ class Service {
     return Service(
       id: json['id'],
       specialty: Specialty.fromJson(json['specialty']),
-      name: utf8.decode(json['name'].runes.toList()),
-      description: utf8.decode(json['description'].runes.toList()),
+      name: json['name'],
+      description: json['description'],
       price: (json['price'] as num).toDouble(),
     );
   }

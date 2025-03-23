@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:health_care/models/clinic.dart';
 import 'package:health_care/models/customer.dart';
 
@@ -9,7 +8,7 @@ class Appointment {
   final String date;
   final String time;
   final String status;
-  final int? payment; 
+  final int? payment;
 
   Appointment({
     required this.id,

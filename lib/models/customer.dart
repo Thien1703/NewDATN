@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Customer {
   int id;
   String fullName;
@@ -29,7 +31,7 @@ class Customer {
   factory Customer.fromJson(Map<String, dynamic> json) {
     return Customer(
       id: json["id"] ?? 0,
-      fullName: json["fullName"] ?? "Chưa cập nhật",
+      fullName: utf8.decode(json["fullName"].toString().runes.toList()),
       phoneNumber: json["phoneNumber"] ?? "Chưa cập nhật",
       isVerified: json["isVerified"] ?? 0,
       isDeleted: json["isDeleted"] ?? 0,

@@ -10,7 +10,7 @@ class Employee {
   List<Specialty> specialty;
   String gender;
   String birthDate;
-  String? avatar;
+  String avatar;
 
   Employee({
     required this.id,
@@ -21,7 +21,7 @@ class Employee {
     required this.specialty,
     required this.gender,
     required this.birthDate,
-    this.avatar,
+    required this.avatar,
   });
 
   factory Employee.fromJson(Map<String, dynamic> json) {
@@ -30,15 +30,25 @@ class Employee {
       fullName: json['fullName'] ?? "Chưa cập nhật",
       phoneNumber: json['phoneNumber'] ?? "Chưa cập nhật",
       role: json['role'] ?? "Chưa cập nhật",
-      clinic: Clinic.fromJson(json['clinic'] ?? {}),
-      specialty: json['specialty'] != null
-          ? (json['specialty'] as List)
-              .map((item) => Specialty.fromJson(item))
-              .toList()
-          : [],
+      clinic: json['clinic'] != null
+          ? Clinic.fromJson(json['clinic'])
+          : Clinic(
+              id: 0,
+              name: "Chưa cập nhật",
+              image: "",
+              description: "Chưa cập nhật",
+              address: "Chưa cập nhật",
+              facilitie: "Chưa cập nhật",
+              latitude: 0.0,
+              longitude: 0.0),
+      specialty: (json['specialty'] as List?)
+              ?.map((item) => Specialty.fromJson(item))
+              .toList() ??
+          [],
       gender: json['gender'] ?? "Chưa cập nhật",
       birthDate: json['birthDate'] ?? "Chưa cập nhật",
-      avatar: json['avatar'] ?? "Chưa cập nhật",
+      avatar: json['avatar'] ??
+          "https://example.com/default-avatar.jpg", // Ảnh mặc định
     );
   }
 
@@ -49,7 +59,8 @@ class Employee {
       'phoneNumber': phoneNumber,
       'role': role,
       'clinic': clinic.toJson(),
-      'specialty': specialty.map((e) => e.toJson()).toList(),
+      'specialty':
+          specialty.isNotEmpty ? specialty.map((e) => e.toJson()).toList() : [],
       'gender': gender,
       'birthDate': birthDate,
       'avatar': avatar,
