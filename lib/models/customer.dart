@@ -1,9 +1,9 @@
 class Customer {
   int id;
   String fullName;
-  String? phoneNumber;
-  int? isVerified;
-  int? isDeleted;
+  String phoneNumber;
+  int isVerified;
+  int isDeleted;
   String? birthDate;
   String? gender;
   String? cccd;
@@ -14,9 +14,9 @@ class Customer {
   Customer({
     required this.id,
     required this.fullName,
-    this.phoneNumber,
-    required this.isVerified,
-    required this.isDeleted,
+    required this.phoneNumber,
+    this.isVerified = 0,
+    this.isDeleted = 0,
     this.birthDate,
     this.gender,
     this.cccd,
@@ -25,22 +25,24 @@ class Customer {
     this.avatar,
   });
 
+  /// Chuyển JSON thành đối tượng `Customer`
   factory Customer.fromJson(Map<String, dynamic> json) {
     return Customer(
       id: json["id"] ?? 0,
-      fullName: json["fullName"] ?? "Chưa cập nhật", // Xử lý null
-      phoneNumber: json["phoneNumber"], // Không cần `?? ""` vì đã nullable
+      fullName: json["fullName"] ?? "Chưa cập nhật",
+      phoneNumber: json["phoneNumber"] ?? "Chưa cập nhật",
       isVerified: json["isVerified"] ?? 0,
       isDeleted: json["isDeleted"] ?? 0,
-      birthDate: json["birthDate"], // Không cần `?? ""`
+      birthDate: json["birthDate"],
       gender: json["gender"],
       cccd: json["cccd"],
       email: json["email"],
       address: json["address"],
-      avatar: json["avatar"],
+      avatar: json["avatar"] ?? json["avtar"], // Xử lý lỗi key avatar
     );
   }
 
+  /// Chuyển đối tượng `Customer` thành JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
