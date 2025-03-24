@@ -99,4 +99,42 @@ class AppointmentserviceApi {
     }
     return false;
   }
+
+  static Future<List<AppointmentService>?> getAppointmentServiceByCus(
+      int customerId) async {
+    final url =
+        Uri.parse('${AppConfig.baseUrl}/appointment-service/get-by-customer');
+    String? token = await LocalStorageService.getToken();
+    if (token == null) return null;
+
+    try {
+      final response = await http.post(url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: jsonEncode({
+            'customerId': customerId,
+          }));
+
+      print('Status code get-all-appointment-service: ${response.statusCode}');
+      print('Response get-all-appointment-service: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['data'] is List) {
+          return (data['data'] as List)
+              .map((item) => AppointmentService.fromJson(item))
+              .toList();
+        } else {
+          print('⚠ Dữ liệu API không hợp lệ');
+        }
+      } else {
+        print('⚠ Lỗi API: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      print("⚠ Lỗi hệ thống: $e");
+    }
+    return null;
+  }
 }

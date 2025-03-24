@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:health_care/models/clinic.dart';
 import 'package:health_care/models/customer.dart';
 
@@ -20,15 +21,22 @@ class Appointment {
     this.payment,
   });
 
-  factory Appointment.fromJson(Map<String, dynamic> json) {
+  factory Appointment.fromJson(Map<String, dynamic>? json) {
+    if (json == null || json.isEmpty) {
+      return Appointment.defaultAppointment();
+    }
     return Appointment(
-      id: json['id'],
-      clinic: Clinic.fromJson(json['clinic']),
-      customer: Customer.fromJson(json['customer']),
-      date: json['date'],
-      time: json['time'],
-      status: json['status'],
-      payment: json['payment'],
+      id: json['id'] ?? 0,
+      clinic: json['clinic'] != null
+          ? Clinic.fromJson(json['clinic'])
+          : Clinic.defaultClinic(),
+      customer: json['customer'] != null
+          ? Customer.fromJson(json['customer'])
+          : Customer.defaultCustomer(),
+      date: json['date'] ?? "Chưa cập nhật",
+      time: json['time'] ?? "Chưa cập nhật",
+      status: json['status'] ?? "Chưa cập nhật",
+      payment: json['payment'] ?? 0,
     );
   }
 
@@ -42,5 +50,17 @@ class Appointment {
       'status': status,
       'payment': payment,
     };
+  }
+
+  static Appointment defaultAppointment() {
+    return Appointment(
+      id: 0,
+      clinic: Clinic.defaultClinic(),
+      customer: Customer.defaultCustomer(),
+      date: "Chưa cập nhật",
+      time: "Chưa cập nhật",
+      status: "Chưa cập nhật",
+      payment: 0,
+    );
   }
 }

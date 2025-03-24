@@ -1,50 +1,55 @@
 import 'dart:convert';
 
 class Customer {
-  int id;
-  String fullName;
-  String phoneNumber;
-  int isVerified;
-  int isDeleted;
-  String? birthDate;
-  String? gender;
-  String? cccd;
-  String? email;
-  String? address;
-  String? avatar;
+  final int id;
+  final String fullName;
+  final String phoneNumber;
+  final int isVerified;
+  final int isDeleted;
+  final String birthDate;
+  final String gender;
+  final String cccd;
+  final String email;
+  final String address;
+  final String avatar;
 
   Customer({
     required this.id,
     required this.fullName,
     required this.phoneNumber,
-    this.isVerified = 0,
-    this.isDeleted = 0,
-    this.birthDate,
-    this.gender,
-    this.cccd,
-    this.email,
-    this.address,
-    this.avatar,
+    required this.isVerified,
+    required this.isDeleted,
+    required this.birthDate,
+    required this.gender,
+    required this.cccd,
+    required this.email,
+    required this.address,
+    required this.avatar,
   });
 
-  /// Chuyển JSON thành đối tượng `Customer`
-  factory Customer.fromJson(Map<String, dynamic> json) {
+  // Chuyển từ JSON sang Object
+  factory Customer.fromJson(Map<String, dynamic>? json) {
+    if (json == null || json.isEmpty) {
+      return Customer.defaultCustomer();
+    }
     return Customer(
       id: json["id"] ?? 0,
-      fullName: utf8.decode(json["fullName"].toString().runes.toList()),
+      fullName: json["fullName"]?.toString().isNotEmpty == true
+          ? utf8.decode(json["fullName"].toString().runes.toList())
+          : "Chưa cập nhật",
       phoneNumber: json["phoneNumber"] ?? "Chưa cập nhật",
       isVerified: json["isVerified"] ?? 0,
       isDeleted: json["isDeleted"] ?? 0,
-      birthDate: json["birthDate"],
-      gender: json["gender"],
-      cccd: json["cccd"],
-      email: json["email"],
-      address: json["address"],
-      avatar: json["avatar"] ?? json["avtar"], // Xử lý lỗi key avatar
+      birthDate: json["birthDate"] ?? "Chưa cập nhật",
+      gender: json["gender"] ?? "Chưa cập nhật",
+      cccd: json["cccd"] ?? "Chưa cập nhật",
+      email: json["email"] ?? "Chưa cập nhật",
+      address: json["address"] ?? "Chưa cập nhật",
+      avatar: json["avatar"] ?? "assets/images/imageError.png",
     );
   }
 
-  /// Chuyển đối tượng `Customer` thành JSON
+  // Chuyển từ Object sang JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -59,5 +64,22 @@ class Customer {
       'address': address,
       'avatar': avatar,
     };
+  }
+
+  // Giá trị mặc định nếu tất cả đều null
+  static Customer defaultCustomer() {
+    return Customer(
+      id: 0,
+      fullName: "Chưa cập nhật",
+      phoneNumber: "Chưa cập nhật",
+      isVerified: 0,
+      isDeleted: 0,
+      birthDate: "Chưa cập nhật",
+      gender: "Chưa cập nhật",
+      cccd: "Chưa cập nhật",
+      email: "Chưa cập nhật",
+      address: "Chưa cập nhật",
+      avatar: "assets/images/imageError.png",
+    );
   }
 }
