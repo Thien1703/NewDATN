@@ -53,7 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             height: screenHeight / 3,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: AppColors.accent,
+              color: AppColors.deepBlue,
               borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(25),
                 bottomRight: Radius.circular(25),
@@ -166,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: ListTile(
-        leading: Icon(icon, color: Colors.green),
+        leading: Icon(icon, color: AppColors.deepBlue),
         title: Text(text),
         onTap: onTap,
       ),

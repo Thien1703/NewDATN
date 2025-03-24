@@ -55,7 +55,7 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
                 Container(
                   width: double.infinity,
                   height: headerHeight,
-                  color: AppColors.accent,
+                  color: AppColors.deepBlue,
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Padding(
                     padding: const EdgeInsets.only(top: 12.0),
@@ -130,7 +130,7 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              backgroundColor: Colors.green,
+                              backgroundColor: AppColors.deepBlue,
                               foregroundColor: Colors.white,
                             ),
                             child: const Text('Chỉnh sửa'),
