@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
+import 'package:health_care/models/customer.dart';
+import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/views/screens/examination/paidDetail_screen.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/models/appointment/appointment_service.dart';
@@ -15,6 +17,8 @@ class ExaminationScreen extends StatefulWidget {
 
 class _ExaminationScreenState extends State<ExaminationScreen> {
   List<AppointmentService>? appointmentServices;
+  Customer? customers;
+
   String _selectedStatus = 'Tất cả';
   @override
   void initState() {
@@ -23,11 +27,30 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
   }
 
   void fetchAppointment() async {
-    List<AppointmentService>? data =
-        await AppointmentserviceApi.getAllAppointmentService();
-    setState(() {
-      appointmentServices = data;
-    });
+    try {
+      // Lấy thông tin khách hàng trước
+      Customer? result = await CustomerApi.getCustomerProfile();
+
+      if (result != null) {
+        // Gán customers trước khi gọi API lấy danh sách lịch hẹn
+        setState(() {
+          customers = result;
+        });
+
+        // Gọi API lấy danh sách lịch hẹn nếu customers đã có dữ liệu
+        List<AppointmentService>? data =
+            await AppointmentserviceApi.getAppointmentServiceByCus(
+                customers!.id);
+
+        setState(() {
+          appointmentServices = data;
+        });
+      } else {
+        debugPrint("⚠ Không thể lấy thông tin khách hàng.");
+      }
+    } catch (e) {
+      debugPrint("❗ Lỗi hệ thống: $e");
+    }
   }
 
   List<AppointmentService> get filteredAppointments {
@@ -154,16 +177,16 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                                                   ),
                                                 ],
                                               ),
-                                              // Text(
-                                              //   appointmentService
-                                              //       .appointment.clinic.name,
-                                              //   style: TextStyle(
-                                              //     color: AppColors.deepBlue,
-                                              //     fontSize: 16,
-                                              //     fontWeight: FontWeight.w500,
-                                              //   ),
-                                              //   softWrap: true,
-                                              // ),
+                                              Text(
+                                                appointmentService.appointment
+                                                    .customer.fullName,
+                                                style: TextStyle(
+                                                  color: AppColors.deepBlue,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                softWrap: true,
+                                              ),
                                             ],
                                           ),
                                           Row(

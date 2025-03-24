@@ -97,7 +97,6 @@ class _AppointmentScreen extends State<AppointmentScreen> {
     return WidgetHeaderBody(
       iconBack: true,
       title: _showTitleScreen,
-      headerHeight: 0.21,
       selectedIcon: StepIndicator(
         currentIndex: _currentIndex,
         isSelected: _isSelected,
