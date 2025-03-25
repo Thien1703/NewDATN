@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/config/app_config.dart';
+import 'package:health_care/views/screens/profile/change_password.dart';
 import 'package:health_care/views/screens/profile/editProfile_screen.dart';
+import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:intl/intl.dart';
 
 class InforProfileScreen extends StatefulWidget {
@@ -44,103 +46,75 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final headerHeight = screenHeight * 0.12;
-
-    return Scaffold(
+    return WidgetHeaderBody(
+      iconBack: true,
+      title: 'Xác nhận thông tin',
       body: isLoading
           ? const Center(child: CircularProgressIndicator()) // Hiển thị loading
-          : Column(
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: headerHeight,
-                  color: AppColors.deepBlue,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 12.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon:
-                              const Icon(Icons.arrow_back, color: Colors.white),
-                          onPressed: () => Navigator.of(context).pop(),
-                        ),
-                        const Text(
-                          'Xác nhận thông tin',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.white),
-                          onPressed: () {
-                            // Xử lý xóa
-                          },
-                        ),
-                      ],
-                    ),
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Thông tin tài khoản',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                ),
-
-                // Nội dung hiển thị thông tin người dùng
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Thông tin tài khoản',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 10),
-                        _buildInfoRow('Họ và tên',
-                            userData?['fullName'] ?? 'Chưa cập nhật'),
-                        _buildInfoRow('Ngày sinh',
-                            formatBirthDate(userData?['birthDate'])),
-                        _buildInfoRow('Giới tính',
-                            userData?['gender'] ?? 'Chưa cập nhật'),
-                        _buildInfoRow(
-                            'Email', userData?['email'] ?? 'Chưa cập nhật'),
-                        _buildInfoRow('Số điện thoại',
-                            userData?['phoneNumber'] ?? 'Chưa cập nhật'),
-                        _buildInfoRow(
-                            'Địa chỉ', userData?['address'] ?? 'Chưa cập nhật'),
-                        const SizedBox(height: 20),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => EditProfileScreen(
-                                    onProfileUpdated:
-                                        fetchUserData, // ✅ Truyền hàm cập nhật UI
-                                  ),
-                                ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              backgroundColor: AppColors.deepBlue,
-                              foregroundColor: Colors.white,
+                  const SizedBox(height: 10),
+                  _buildInfoRow('Họ và tên', userData?['fullName'] ?? 'Chưa cập nhật'),
+                  _buildInfoRow('Ngày sinh', formatBirthDate(userData?['birthDate'])),
+                  _buildInfoRow('Giới tính', userData?['gender'] ?? 'Chưa cập nhật'),
+                  _buildInfoRow('Email', userData?['email'] ?? 'Chưa cập nhật'),
+                  _buildInfoRow('Số điện thoại', userData?['phoneNumber'] ?? 'Chưa cập nhật'),
+                  _buildInfoRow('Địa chỉ', userData?['address'] ?? 'Chưa cập nhật'),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditProfileScreen(
+                              onProfileUpdated: fetchUserData,
                             ),
-                            child: const Text('Chỉnh sửa'),
                           ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                      ],
+                        backgroundColor: AppColors.deepBlue,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text('Chỉnh sửa'),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ChangePasswordScreen(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        backgroundColor: AppColors.deepBlue,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text('Đổi mật khẩu'),
+                    ),
+                  ),
+                ],
+              ),
             ),
     );
   }
