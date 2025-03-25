@@ -175,6 +175,38 @@ class AppConfig {
     return null; // Lỗi hoặc không lấy được dữ liệu
   }
 
+  // Đổi mật khẩu
+  static Future<String?> changePassword(int customerId, String oldPassword,
+      String newPassword, String confirmNewPassword) async {
+    final url = Uri.parse('$baseUrl/customer/change-password');
+    String? token = await LocalStorageService.getToken();
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        "customerId": customerId,
+        "oldPassword": oldPassword,
+        "newPassword": newPassword,
+        "confirmNewPassword": confirmNewPassword,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['status'] == 0) {
+        return null; // ✅ Đổi mật khẩu thành công
+      } else {
+        return data['message'] ?? "Lỗi không xác định từ server.";
+      }
+    } else {
+      return "Lỗi máy chủ: ${response.statusCode}";
+    }
+  }
+
   // Đăng xuất
   static Future<String?> logout() async {
     final url = Uri.parse('$baseUrl/auth/logout');
@@ -264,7 +296,6 @@ class AppConfig {
     } else {
       print('API lỗi: ${response.statusCode}');
     }
-
     return null;
   }
 }

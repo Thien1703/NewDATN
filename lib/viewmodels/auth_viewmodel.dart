@@ -136,6 +136,50 @@ class AuthViewModel with ChangeNotifier {
     }
   }
 
+  /// Đổi mật khẩu
+  Future<void> changePassword(BuildContext context, String oldPassword,
+      String newPassword, String confirmNewPassword) async {
+    // Lấy token người dùng từ local storage
+    String? token = await LocalStorageService.getToken();
+    int? customerId = await LocalStorageService.getUserId();
+
+    if (token == null || customerId == null) {
+      Fluttertoast.showToast(
+        msg: "Lỗi: Không tìm thấy thông tin đăng nhập, vui lòng đăng nhập lại.",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+
+    // Gọi API đổi mật khẩu
+    String? errorMessage = await AppConfig.changePassword(
+        customerId, oldPassword, newPassword, confirmNewPassword);
+
+    if (!context.mounted) return;
+
+    if (errorMessage == null) {
+      Fluttertoast.showToast(
+        msg: "Đổi mật khẩu thành công!",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+      Navigator.pop(context); // Quay lại màn hình trước đó
+    } else {
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    }
+  }
+
   /// Đăng xuất
   Future<void> signOut(BuildContext context) async {
     String? errorMessage = await AppConfig.logout();
