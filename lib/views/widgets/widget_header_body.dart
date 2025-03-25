@@ -78,23 +78,28 @@ class HeaderRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        if (iconBack)
-          IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
-            onPressed: onBackPressed ?? () => Navigator.of(context).pop(),
-          ),
+        SizedBox(
+          width: 48, // Đảm bảo khoảng trống luôn có
+          child: iconBack
+              ? IconButton(
+                  icon: const Icon(Icons.arrow_back,
+                      color: Colors.white, size: 24),
+                  onPressed: onBackPressed ?? () => Navigator.of(context).pop(),
+                )
+              : const SizedBox.shrink(), // Khi không có icon, giữ khoảng trống
+        ),
         Expanded(
           child: Text(
             title,
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),
-        if (iconBack) const SizedBox(width: 48), // Giữ cân bằng với icon back
+        SizedBox(width: 48), // Giữ cân bằng với icon back bên trái
       ],
     );
   }

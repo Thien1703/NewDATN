@@ -42,7 +42,9 @@ class Clinic {
           : "Chưa cập nhật",
       rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
       reviewCount: json['reviewCount'] ?? 0,
-      address: json['address'] ?? "Chưa cập nhật",
+      address: json['address'] != null && json['address'].toString().isNotEmpty
+          ? utf8.decode(json['address'].toString().runes.toList())
+          : "Chưa cập nhật",
       facilitie: json['facilitie'] ?? "Chưa cập nhật",
       latitude: (json['latitude'] as num?)?.toDouble() ?? 0.0,
       longitude: (json['longitude'] as num?)?.toDouble() ?? 0.0,
