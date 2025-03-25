@@ -4,7 +4,6 @@ import 'package:health_care/common/app_colors.dart';
 class WidgetHeaderBody extends StatelessWidget {
   final String title;
   final Widget body;
-  final double headerHeight;
   final VoidCallback? onBackPressed;
   final Widget? selectedIcon;
   final bool iconBack;
@@ -15,7 +14,6 @@ class WidgetHeaderBody extends StatelessWidget {
     required this.iconBack,
     required this.title,
     required this.body,
-    this.headerHeight = 0.12,
     this.onBackPressed,
     this.selectedIcon,
     this.color,
@@ -23,13 +21,10 @@ class WidgetHeaderBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final header = screenHeight * headerHeight;
-
     return Scaffold(
       body: Column(
         children: [
-          _buildHeader(header, context),
+          _buildHeader(context),
           Expanded(
             child: Container(
               color: color ?? Colors.white,
@@ -41,27 +36,27 @@ class WidgetHeaderBody extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(double headerHeight, BuildContext context) {
+  Widget _buildHeader(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: headerHeight,
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).padding.top + 10, // Padding theo notch
+        bottom: 10,
+      ),
       color: AppColors.deepBlue,
-      child: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 15),
-            HeaderRow(
-              iconBack: iconBack,
-              title: title,
-              onBackPressed: onBackPressed,
-            ),
-            if (selectedIcon != null) const SizedBox(height: 5),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              child: selectedIcon,
-            ),
-          ],
-        ),
+      child: Column(
+        children: [
+          HeaderRow(
+            iconBack: iconBack,
+            title: title,
+            onBackPressed: onBackPressed,
+          ),
+          if (selectedIcon != null) const SizedBox(height: 5),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: selectedIcon,
+          ),
+        ],
       ),
     );
   }
@@ -81,31 +76,30 @@ class HeaderRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Row(
       children: [
-        if (iconBack)
-          Align(
-            alignment: Alignment.centerLeft,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back,
-                  color: AppColors.neutralWhite, size: 22),
-              onPressed: onBackPressed ?? () => Navigator.of(context).pop(),
-            ),
-          ),
-        Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(
-              title,
-              style: const TextStyle(
-                color: AppColors.neutralWhite,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+        SizedBox(
+          width: 48, // Đảm bảo khoảng trống luôn có
+          child: iconBack
+              ? IconButton(
+                  icon: const Icon(Icons.arrow_back,
+                      color: Colors.white, size: 24),
+                  onPressed: onBackPressed ?? () => Navigator.of(context).pop(),
+                )
+              : const SizedBox.shrink(), // Khi không có icon, giữ khoảng trống
+        ),
+        Expanded(
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),
+        SizedBox(width: 48), // Giữ cân bằng với icon back bên trái
       ],
     );
   }

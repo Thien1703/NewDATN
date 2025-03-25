@@ -1,16 +1,17 @@
+import 'dart:convert';
 import 'package:health_care/models/clinic.dart';
 import 'package:health_care/models/specialty.dart';
 
 class Employee {
-  int id;
-  String fullName;
-  String phoneNumber;
-  String role;
-  Clinic clinic;
-  List<Specialty> specialty;
-  String gender;
-  String birthDate;
-  String avatar;
+  final int id;
+  final String fullName;
+  final String phoneNumber;
+  final String role;
+  final Clinic clinic;
+  final List<Specialty> specialty;
+  final String gender;
+  final String birthDate;
+  final String avatar;
 
   Employee({
     required this.id,
@@ -24,34 +25,45 @@ class Employee {
     required this.avatar,
   });
 
-  factory Employee.fromJson(Map<String, dynamic> json) {
+  // Chuyển từ JSON sang Object
+  factory Employee.fromJson(Map<String, dynamic>? json) {
+    if (json == null || json.isEmpty) {
+      return Employee.defaultEmployee();
+    }
     return Employee(
       id: json['id'] ?? 0,
-      fullName: json['fullName'] ?? "Chưa cập nhật",
-      phoneNumber: json['phoneNumber'] ?? "Chưa cập nhật",
-      role: json['role'] ?? "Chưa cập nhật",
+      fullName:
+          json['fullName'] != null && json['fullName'].toString().isNotEmpty
+              ? utf8.decode(json['fullName'].toString().runes.toList())
+              : "Chưa cập nhật",
+      phoneNumber: json['phoneNumber'] != null &&
+              json['phoneNumber'].toString().isNotEmpty
+          ? json['phoneNumber']
+          : "Chưa cập nhật",
+      role: json['role'] != null && json['role'].toString().isNotEmpty
+          ? json['role']
+          : "Chưa cập nhật",
       clinic: json['clinic'] != null
           ? Clinic.fromJson(json['clinic'])
-          : Clinic(
-              id: 0,
-              name: "Chưa cập nhật",
-              image: "",
-              description: "Chưa cập nhật",
-              address: "Chưa cập nhật",
-              facilitie: "Chưa cập nhật",
-              latitude: 0.0,
-              longitude: 0.0),
+          : Clinic.defaultClinic(),
       specialty: (json['specialty'] as List?)
               ?.map((item) => Specialty.fromJson(item))
               .toList() ??
           [],
-      gender: json['gender'] ?? "Chưa cập nhật",
-      birthDate: json['birthDate'] ?? "Chưa cập nhật",
-      avatar: json['avatar'] ??
-          "https://example.com/default-avatar.jpg", // Ảnh mặc định
+      gender: json['gender'] != null && json['gender'].toString().isNotEmpty
+          ? json['gender']
+          : "Chưa cập nhật",
+      birthDate:
+          json['birthDate'] != null && json['birthDate'].toString().isNotEmpty
+              ? json['birthDate']
+              : "Chưa cập nhật",
+      avatar: json['avatar'] != null && json['avatar'].toString().isNotEmpty
+          ? json['avatar']
+          : "assets/images/imageError.png",
     );
   }
 
+  // Chuyển từ Object sang JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -65,5 +77,20 @@ class Employee {
       'birthDate': birthDate,
       'avatar': avatar,
     };
+  }
+
+  // Giá trị mặc định nếu tất cả đều null
+  static Employee defaultEmployee() {
+    return Employee(
+      id: 0,
+      fullName: "Chưa cập nhật",
+      phoneNumber: "Chưa cập nhật",
+      role: "Chưa cập nhật",
+      clinic: Clinic.defaultClinic(),
+      specialty: [],
+      gender: "Chưa cập nhật",
+      birthDate: "Chưa cập nhật",
+      avatar: "assets/images/imageError.png",
+    );
   }
 }

@@ -1,3 +1,5 @@
+import 'package:health_care/models/appointment/appointment_service.dart';
+import 'package:health_care/views/screens/appointment/appointment_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:health_care/config/app_config.dart';
@@ -66,6 +68,46 @@ class AppointmentApi {
       }
     } else {
       print('Api Lỗi: ${response.statusCode}');
+    }
+    return null;
+  }
+
+  //Xem dặt lịch theo customer ID
+  static Future<List<Appointment>?> getAppointmentByCus(int customerId) async {
+    try {
+      final url = Uri.parse('${AppConfig.baseUrl}/appointment/get-by-customer');
+      String? token = await LocalStorageService.getToken();
+      if (token == null) {
+        return null;
+      }
+
+      final response = await http.post(url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: jsonEncode({
+            'customerId': customerId,
+          }));
+
+      print('📢 API Response Status: ${response.statusCode}');
+      print('📢 API Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        if (data['data'] is List) {
+          return (data['data'] as List)
+              .map((item) => Appointment.fromJson(item))
+              .toList();
+        } else {
+          print('⚠ Dữ liệu API không hợp lệ: "data" không phải danh sách');
+        }
+      } else {
+        print('⚠ Dữ liệu API không có key "data"');
+      }
+    } catch (e) {
+      print('🚨 Lỗi khi gọi API: $e');
     }
     return null;
   }
