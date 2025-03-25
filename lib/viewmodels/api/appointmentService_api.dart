@@ -137,4 +137,69 @@ class AppointmentserviceApi {
     }
     return null;
   }
+
+  static Future<AppointmentService?> getAppointmentService(int id) async {
+    final url = Uri.parse('${AppConfig.baseUrl}/appointment-service/get-by-id');
+    String? token = await LocalStorageService.getToken();
+    if (token == null) {
+      return null;
+    }
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(
+        {'id': id},
+      ),
+    );
+    print('Status code get-all-appointment-service: ${response.statusCode}');
+    print('Response get-all-appointment-service: ${response.body}');
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['status'] == 0 && data['data'] != null) {
+        return AppointmentService.fromJson(data['data']);
+      } else {
+        print(' Lỗi từ API: ${data['message']}');
+      }
+    } else {
+      print(' API lỗi: ${response.statusCode}');
+    }
+    return null;
+  }
+
+  static Future<List<AppointmentService>> getByAppointment(
+      int appointmentId) async {
+    try {
+      String? token = await LocalStorageService.getToken();
+      if (token == null) throw Exception("Token không tồn tại");
+
+      final response = await http.post(
+        Uri.parse(
+            "${AppConfig.baseUrl}/appointment-service/get-by-appointment"),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({'appointmentId': appointmentId}),
+      );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = jsonDecode(response.body);
+        if (responseData.containsKey('data') && responseData['data'] is List) {
+          return (responseData['data'] as List)
+              .map((e) => AppointmentService.fromJson(e))
+              .toList();
+        } else {
+          throw Exception("Dữ liệu API không đúng định dạng");
+        }
+      } else {
+        throw Exception("Lỗi lấy dữ liệu: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("❗ Lỗi API: $e");
+      return [];
+    }
+  }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/clinic.dart';
 import 'package:health_care/config/app_config.dart';
-import 'package:health_care/views/widgets/widget_header_body_scoller.dart';
+import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/views/screens/appointment/appointment_screen.dart';
 
 class ClinicScreen extends StatefulWidget {
@@ -33,7 +33,7 @@ class _ClinicScreenState extends State<ClinicScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WidgetHeaderBodyScoller(
+    return WidgetHeaderBody(
         iconBack: widget.iconBack ?? true,
         title: "Đặt khám",
         body: SingleChildScrollView(
