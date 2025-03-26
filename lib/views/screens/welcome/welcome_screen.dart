@@ -94,7 +94,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       'Bỏ qua',
                       style: TextStyle(
                         color: AppColors.deepBlue,
-                        fontSize: 14,
+                        fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -116,7 +116,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 itemBuilder: (context, index) {
                   final item = items[index];
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -124,11 +124,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           aspectRatio: 11 / 9,
                           child: Image.asset(
                             item["image"]!,
-                            width: 300,
+                            width: 290,
                             // fit: BoxFit.cover,
                           ),
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 40),
                         ShaderMask(
                           shaderCallback: (bounds) => const LinearGradient(
                             colors: [
@@ -142,7 +142,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             item["text1"]!,
                             textAlign: TextAlign.center,
                             style: const TextStyle(
-                              fontSize: 25,
+                              fontSize: 24,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -154,7 +154,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.black,
+                            color: const Color.fromARGB(255, 65, 65, 65),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -164,7 +164,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 },
               ),
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 30),
             Container(
               decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -173,7 +173,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   borderRadius: BorderRadius.circular(15)),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  minimumSize: Size(300, 50),
+                  minimumSize: Size(270, 40),
                   backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,
                   shape: RoundedRectangleBorder(
@@ -219,7 +219,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             Stack(
               children: [
                 Container(
-                  width: 150,
+                  width: 100,
                   height: 8,
                   decoration: BoxDecoration(
                     color: Colors.grey[300],
@@ -228,7 +228,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 AnimatedContainer(
                   duration: Duration(milliseconds: 300),
-                  width: (currentIndex + 1) / items.length * 150,
+                  width: (currentIndex + 1) / items.length * 100,
                   height: 8,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(

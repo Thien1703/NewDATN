@@ -150,7 +150,7 @@ class StepIndicator extends StatelessWidget {
                 : null,
             background: isSelected[1] ? Colors.white : AppColors.deepBlue,
             image: AppIcons.user1,
-            color: isSelected[1] ? AppColors.accent : AppColors.grey,
+            color: isSelected[1] ? AppColors.deepBlue : AppColors.grey,
           ),
           StepLine(),
           StepItem(
@@ -162,7 +162,7 @@ class StepIndicator extends StatelessWidget {
                 : null,
             background: isSelected[2] ? Colors.white : AppColors.deepBlue,
             image: AppIcons.checkmark,
-            color: isSelected[2] ? AppColors.accent : AppColors.grey,
+            color: isSelected[2] ? AppColors.deepBlue : AppColors.grey,
           ),
         ],
       ),

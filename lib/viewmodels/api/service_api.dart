@@ -71,4 +71,42 @@ class ServiceApi {
     }
     return null;
   }
+
+  //Lấy api của dịch vụ theo id dịch vụ
+
+  static Future<Service?> getServiceByService(int serviceId) async {
+    final url = Uri.parse('${AppConfig.baseUrl}/service/get-by-id');
+    String? token = await LocalStorageService.getToken();
+
+    if (token == null) {
+      print("Lỗi: Không tìm thấy token");
+      return null;
+    }
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({"id": serviceId}),
+    );
+
+    print('📌 API Response Status: ${response.statusCode}');
+    print('📌 API Response Body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+
+      if (data['status'] == 0 && data['data'] != null) {
+        return Service.fromJson(data['data']); // Trả về một object Service
+      } else {
+        print('⚠️ Lỗi từ API: ${data['message']}');
+      }
+    } else {
+      print('❌ API lỗi: ${response.statusCode}');
+    }
+
+    return null;
+  }
 }

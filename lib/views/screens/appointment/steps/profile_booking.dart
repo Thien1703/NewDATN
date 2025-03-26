@@ -36,7 +36,7 @@ class ProfileBooking extends StatefulWidget {
 }
 
 class _ProfileBooking extends State<ProfileBooking> {
-   final GlobalKey<WidgetUserprofileCardState> _profileCardKey = GlobalKey();
+  final GlobalKey<WidgetUserprofileCardState> _profileCardKey = GlobalKey();
 
   /// Hàm cập nhật thông tin user
   void _fetchUserProfile() {

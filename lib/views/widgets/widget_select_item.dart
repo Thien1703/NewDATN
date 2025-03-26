@@ -9,11 +9,15 @@ class SelectItemWidget extends StatelessWidget {
     required this.text,
     this.bottomSheet,
     this.onTap,
+    this.color,
+    this.colorIcon,
   });
   final String image;
   final String text;
   final Widget? bottomSheet;
   final VoidCallback? onTap;
+  final Color? color;
+  final Color? colorIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +31,9 @@ class SelectItemWidget extends StatelessWidget {
               builder: (BuildContext context) {
                 return Container(
                   color: Colors.white,
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: bottomSheet!,
-                    ),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: bottomSheet!,
                   ),
                 );
               });
@@ -45,7 +46,7 @@ class SelectItemWidget extends StatelessWidget {
           margin: EdgeInsets.only(top: 5),
           decoration: BoxDecoration(
               color: Colors.white,
-              border: Border.all(color: Colors.black, width: 1),
+              border: Border.all(color: color ?? Colors.black, width: 1),
               borderRadius: BorderRadius.all(
                 Radius.circular(15),
               )),
@@ -57,14 +58,18 @@ class SelectItemWidget extends StatelessWidget {
                   Transform(
                     transform: Matrix4.rotationY(math.pi),
                     alignment: Alignment.center,
-                    child: Image.asset(image, width: 20),
+                    child: Image.asset(
+                      image,
+                      width: 20,
+                      color: colorIcon ?? Colors.black,
+                    ),
                   ),
                   SizedBox(width: 10),
                   Text(text,
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w500,
-                        color: AppColors.neutralGrey3,
+                        color: const Color.fromARGB(255, 114, 114, 114),
                       )),
                 ],
               ),

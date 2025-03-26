@@ -132,6 +132,8 @@ class AppointmentApi {
         },
         body: jsonEncode(AppointmentCreate.toJson()),
       );
+      print(
+          "📤 Dữ liệu gửi lên APIz: ${jsonEncode(AppointmentCreate.toJson())}");
 
       print('📩 Phản hồi API (Đặt lịch): ${response.body}');
 
