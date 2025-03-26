@@ -7,6 +7,7 @@ import 'package:health_care/models/customer.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/viewmodels/api/specialty_api.dart';
 import 'package:health_care/views/screens/BMI/measureBMI_Screen.dart';
+import 'package:health_care/views/screens/home/service_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -74,6 +75,10 @@ class _HomePage extends State<HomePage> {
                 builder: (context, constraints) {
                   bool isCollapsed = constraints.maxHeight < 100;
                   return FlexibleSpaceBar(
+                    background: Image.asset(
+                      'assets/images/backLogo.png',
+                      fit: BoxFit.cover,
+                    ),
                     titlePadding: EdgeInsets.only(
                         left: isCollapsed ? 50 : 0,
                         bottom: isCollapsed ? 10 : 20,
@@ -212,40 +217,52 @@ class _HomePage extends State<HomePage> {
                                     itemCount: specialties!.length,
                                     itemBuilder: (context, index) {
                                       final specialty = specialties![index];
-                                      return Container(
-                                        padding: EdgeInsets.only(left: 10),
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                                color: Colors.white, width: 1),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.5),
-                                                spreadRadius: 1,
-                                                blurRadius: 1,
+                                      return InkWell(
+                                        onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ServiceScreen(
+                                                      specialtyId:
+                                                          specialty.id),
+                                            )),
+                                        child: Container(
+                                          padding: EdgeInsets.only(left: 10),
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              border: Border.all(
+                                                  color: Colors.white,
+                                                  width: 1),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.5),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 1,
+                                                ),
+                                              ]),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Image.network(
+                                                specialty.image,
+                                                width: 45,
+                                                color: AppColors.deepBlue,
                                               ),
-                                            ]),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Image.network(
-                                              specialty.image,
-                                              width: 45,
-                                              color: AppColors.deepBlue,
-                                            ),
-                                            SizedBox(width: 10),
-                                            Text(
-                                              specialty.name,
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ],
+                                              SizedBox(width: 10),
+                                              Text(
+                                                specialty.name,
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       );
                                     },

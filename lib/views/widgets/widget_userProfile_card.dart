@@ -107,7 +107,7 @@ Widget _customRow({required String image, required String titleOfImage}) {
       children: [
         Image.asset(
           image,
-          color: AppColors.accent,
+          color: AppColors.deepBlue,
           width: 25,
         ),
         SizedBox(width: 10),
@@ -116,7 +116,7 @@ Widget _customRow({required String image, required String titleOfImage}) {
           style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: AppColors.accent),
+              color: AppColors.deepBlue),
         ),
       ],
     ),

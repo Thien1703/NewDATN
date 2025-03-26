@@ -15,7 +15,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailOrPhoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
@@ -53,7 +54,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (value == null || value.trim().isEmpty) {
       return 'Vui lòng nhập số điện thoại hoặc email';
     }
-    if (!RegExp(r'^[0-9]+$').hasMatch(value) && !RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(value)) {
+    if (!RegExp(r'^[0-9]+$').hasMatch(value) &&
+        !RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+            .hasMatch(value)) {
       return 'Số điện thoại hoặc email không hợp lệ';
     }
     return null;
@@ -67,14 +70,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   String? _validateConfirmPassword(String? value) {
-  if (value == null || value.trim().isEmpty) {
-    return 'Vui lòng nhập lại mật khẩu';
+    if (value == null || value.trim().isEmpty) {
+      return 'Vui lòng nhập lại mật khẩu';
+    }
+    if (value != _passwordController.text) {
+      return 'Mật khẩu xác nhận không khớp';
+    }
+    return null;
   }
-  if (value != _passwordController.text) {
-    return 'Mật khẩu xác nhận không khớp';
-  }
-  return null;
-}
 
   @override
   Widget build(BuildContext context) {
@@ -85,37 +88,49 @@ class _RegisterScreenState extends State<RegisterScreen> {
             height: double.infinity,
             width: double.infinity,
             decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [
-                AppColors.accent,
-                AppColors.primary,
-              ]),
+              color: AppColors.deepBlue,
             ),
-            child: const Padding(
-              padding: EdgeInsets.only(top: 60.0, left: 22),
-              child: Text(
-                'Create Your\nAccount',
-                style: TextStyle(
-                  fontSize: 30,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            child: Padding(
+                padding: EdgeInsets.only(top: 60.0, left: 22),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white,
+                        size: 40,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Đăng nhập',
+                      style: TextStyle(
+                          fontSize: 30,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                )),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 250.0),
             child: Container(
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40),
-                  topRight: Radius.circular(40),
+                  topLeft: Radius.circular(50),
+                  topRight: Radius.circular(50),
                 ),
                 color: Colors.white,
               ),
               height: double.infinity,
               width: double.infinity,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 40),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 40),
                 child: SingleChildScrollView(
                   child: Form(
                     key: _formKey,
@@ -125,7 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         TextFormField(
                           controller: _fullNameController,
                           decoration: const InputDecoration(
-                            labelText: 'Full Name',
+                            labelText: 'Nhập họ và tên',
                             labelStyle: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.grey,
@@ -137,7 +152,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         TextFormField(
                           controller: _emailOrPhoneController,
                           decoration: const InputDecoration(
-                            labelText: 'Phone or Gmail',
+                            labelText: 'Nhập email hoặc số điện thoại',
                             labelStyle: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.grey,
@@ -152,12 +167,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           decoration: InputDecoration(
                             suffixIcon: IconButton(
                               icon: Icon(
-                                _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                                _obscurePassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
                                 color: Colors.grey,
                               ),
                               onPressed: _togglePasswordVisibility,
                             ),
-                            labelText: 'Password',
+                            labelText: 'Nhập mật khẩu',
                             labelStyle: const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.grey,
@@ -172,12 +189,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           decoration: InputDecoration(
                             suffixIcon: IconButton(
                               icon: Icon(
-                                _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                                _obscureConfirmPassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
                                 color: Colors.grey,
                               ),
                               onPressed: _toggleConfirmPasswordVisibility,
                             ),
-                            labelText: 'Confirm Password',
+                            labelText: 'Nhập lại mật khẩu',
                             labelStyle: const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.grey,
@@ -194,13 +213,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(30),
                               gradient: const LinearGradient(colors: [
-                                AppColors.accent,
-                                AppColors.primary,
+                                AppColors.deepBlue,
+                                AppColors.softBlue,
                               ]),
                             ),
                             child: const Center(
                               child: Text(
-                                'SIGN UP',
+                                'Đăng ký',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20,
@@ -210,28 +229,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 50),
+                        const SizedBox(height: 10),
                         Align(
                           alignment: Alignment.center,
-                          child: Column(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Text(
-                                "Already have an account?",
+                                "Bạn đã có tài khoản rồi?",
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w500,
                                   color: Colors.grey,
                                 ),
                               ),
+                              SizedBox(width: 5),
                               GestureDetector(
                                 onTap: () {
                                   Navigator.pop(context);
                                 },
                                 child: const Text(
-                                  "Sign In",
+                                  "Đăng nhập",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 17,
-                                    color: Colors.black,
+                                    fontSize: 15,
+                                    color: AppColors.deepBlue,
                                   ),
                                 ),
                               ),
