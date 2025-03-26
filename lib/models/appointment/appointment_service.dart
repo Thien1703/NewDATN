@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:health_care/models/appointment/appointment.dart';
 import 'package:health_care/models/employee.dart';
 import 'package:health_care/models/service.dart';
@@ -14,27 +11,37 @@ class AppointmentService {
   AppointmentService({
     required this.id,
     required this.appointment,
-    required this.service,
-    required this.employee,
+    this.service,
+    this.employee,
   });
 
   factory AppointmentService.fromJson(Map<String, dynamic> json) {
-    return AppointmentService(
-      id: json['id'],
-      appointment: Appointment.fromJson(json['appointment']),
-      service:
-          json['service'] != null ? Service.fromJson(json['service']) : null,
-      employee:
-          json['employee'] != null ? Employee.fromJson(json['employee']) : null,
-    );
-  }
+    try {
+      print("Raw JSON: $json"); // In toàn bộ dữ liệu JSON để kiểm tra
 
+      return AppointmentService(
+        id: json['id'] ?? 0,
+        appointment: json['appointment'] != null
+            ? Appointment.fromJson(json['appointment'])
+            : throw Exception("Appointment data is required"),
+        service:
+            json['service'] != null ? Service.fromJson(json['service']) : null,
+        employee: json['employee'] != null
+            ? Employee.fromJson(json['employee'])
+            : null,
+      );
+    } catch (e, stackTrace) {
+      print("Error parsing AppointmentService: $e");
+      print("Stack trace: $stackTrace");
+      throw Exception("Failed to parse AppointmentService: $e");
+    }
+  }
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'appointment': appointment.toJson(),
-      'service': service != null ? service!.toJson() : null,
-      'employee': employee != null ? employee!.toJson() : null,
+      'service': service?.toJson(),
+      'employee': employee?.toJson(),
     };
   }
 }

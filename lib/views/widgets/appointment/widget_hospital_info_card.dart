@@ -38,7 +38,7 @@ class _HospitalInfoWidgetState extends State<HospitalInfoWidget> {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: AppColors.accent, width: 1.5),
+        border: Border.all(color: AppColors.deepBlue, width: 1.5),
         borderRadius: const BorderRadius.all(Radius.circular(15)),
       ),
       child: Column(
@@ -47,17 +47,18 @@ class _HospitalInfoWidgetState extends State<HospitalInfoWidget> {
           Text(
             clinices?.name ?? 'Không xác định',
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
-              color: AppColors.neutralDarkGreen1,
+              color: Colors.black,
             ),
           ),
+          SizedBox(height: 5),
           Text(
             clinices?.address ?? 'Không xác định',
             style: TextStyle(
-              fontSize: 11.5,
+              fontSize: 12.5,
               fontWeight: FontWeight.w500,
-              color: AppColors.neutralGrey3,
+              color: const Color.fromARGB(255, 130, 128, 128),
             ),
           ),
         ],

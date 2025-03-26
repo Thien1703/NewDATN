@@ -58,12 +58,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _signUp() {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => RegisterScreen()), // Thay thế bằng màn hình đăng ký của bạn
-  );
-}
-
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              RegisterScreen()), // Thay thế bằng màn hình đăng ký của bạn
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,36 +75,44 @@ class _LoginScreenState extends State<LoginScreen> {
             height: double.infinity,
             width: double.infinity,
             decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [
-                AppColors.accent,
-                AppColors.primary,
-              ]),
+              color: AppColors.deepBlue,
             ),
             child: const Padding(
-              padding: EdgeInsets.only(top: 60.0, left: 22),
-              child: Text(
-                'Hello\nSign in!',
-                style: TextStyle(
-                    fontSize: 30,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
+                padding: EdgeInsets.only(top: 60.0, left: 22),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Xin chào',
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'Đăng nhập',
+                      style: TextStyle(
+                          fontSize: 30,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                )),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 250.0),
             child: Container(
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40)),
+                    topLeft: Radius.circular(50),
+                    topRight: Radius.circular(50)),
                 color: Colors.white,
               ),
               height: double.infinity,
               width: double.infinity,
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 18, vertical: 40),
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 50),
                 child: SingleChildScrollView(
                   child: Form(
                     key: _formKey,
@@ -116,11 +125,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           decoration: const InputDecoration(
                             suffixIcon: Icon(Icons.check, color: Colors.grey),
                             label: Text(
-                              'Gmail/Phone',
+                              'Nhập email hoặc số điện thoại',
                               style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey,
-                              ),
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey,
+                                  fontSize: 14),
                             ),
                           ),
                         ),
@@ -140,27 +149,27 @@ class _LoginScreenState extends State<LoginScreen> {
                               onPressed: _togglePasswordVisibility,
                             ),
                             label: const Text(
-                              'Password',
+                              'Nhập mật khẩu',
                               style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey,
-                              ),
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey,
+                                  fontSize: 14),
                             ),
                           ),
                         ),
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 10),
                         const Align(
                           alignment: Alignment.bottomLeft,
                           child: Text(
-                            'Forgot Password?',
+                            'Quên mật khẩu',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 17,
+                              fontSize: 13,
                               color: Color(0xff281537),
                             ),
                           ),
                         ),
-                        const SizedBox(height: 50),
+                        const SizedBox(height: 100),
                         GestureDetector(
                           onTap: _signIn,
                           child: Container(
@@ -169,13 +178,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(30),
                               gradient: const LinearGradient(colors: [
-                                AppColors.accent,
-                                AppColors.primary,
+                                AppColors.deepBlue,
+                                AppColors.softBlue,
                               ]),
                             ),
                             child: const Center(
                               child: Text(
-                                'SIGN IN',
+                                'Đăng nhập',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
@@ -184,32 +193,30 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 50),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Column(
-                            // crossAxisAlignment: CrossAxisAlignment.center,
-                            // mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                "Don't have account?",
+                        const SizedBox(height: 10),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Bạn chưa có tài khoản?",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey),
+                            ),
+                            SizedBox(width: 5),
+                            GestureDetector(
+                              onTap: _signUp,
+                              child: Text(
+                                "Đăng ký",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.grey),
+                                    fontSize: 15,
+                                    color: AppColors.deepBlue),
                               ),
-                              GestureDetector(
-                                onTap: _signUp,
-                                child: Text(
-                                  "Sign up",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                      color: Colors.black),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
