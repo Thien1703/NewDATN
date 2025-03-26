@@ -178,6 +178,8 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/config/app_config.dart';
 import 'package:health_care/views/screens/profile/inforProfile_screen.dart';
+import 'package:health_care/viewmodels/auth_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -209,7 +211,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      // backgroundColor: Colors.grey[100],
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -217,6 +219,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _buildOrderSection(),
             _buildAccountSection(),
             _buildPharmacyInfoSection(),
+            _buildLogoutButton(),
           ],
         ),
       ),
@@ -232,7 +235,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       child: Row(
         children: [
-          CircleAvatar(
+          const CircleAvatar(
             radius: 40,
             backgroundImage: AssetImage('assets/images/avt.png'),
           ),
@@ -338,6 +341,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _buildMenuItem(Icons.description, "Giấy phép kinh doanh"),
           _buildMenuItem(Icons.policy, "Quy chế hoạt động"),
         ],
+      ),
+    );
+  }
+
+  Widget _buildLogoutButton() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0, bottom: 40.0),
+      child: OutlinedButton(
+        onPressed: () async {
+          final authViewModel = Provider.of<AuthViewModel>(
+            context,
+            listen: false,
+          );
+          await authViewModel.signOut(context);
+        },
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.deepBlue,
+          side: const BorderSide(color: AppColors.deepBlue),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+        child: const Text(
+          'Đăng xuất',
+          style: TextStyle(color: Colors.black),
+        ),
       ),
     );
   }
