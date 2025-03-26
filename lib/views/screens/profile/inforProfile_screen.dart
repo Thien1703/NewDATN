@@ -125,11 +125,11 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(color: AppColors.neutralDarkGreen2)),
+          Text(label, style: TextStyle(color: const Color(0xFF808080))),
           Text(
             value,
             style: TextStyle(
-              color: AppColors.neutralDarkGreen2,
+              color: Colors.black,
               fontWeight: FontWeight.bold,
             ),
           ),
