@@ -15,7 +15,7 @@ class HeaderBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -41,7 +41,7 @@ class HeaderBottomSheet extends StatelessWidget {
               Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 22,
+                  fontSize: 18,
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),

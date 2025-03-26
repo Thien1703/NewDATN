@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
-import 'package:health_care/views/screens/auth/register/register_screen.dart';
-import 'package:health_care/views/screens/welcome/onboard.dart';
 import 'package:health_care/views/screens/welcome/welcome_screen.dart';
 import 'package:provider/provider.dart';
 import '../../../../viewmodels/auth_viewmodel.dart';

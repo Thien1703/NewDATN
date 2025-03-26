@@ -21,40 +21,47 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _customLabel(label: 'Buổi sáng'),
             Wrap(
-              spacing: 8.0,
-              runSpacing: 8.0,
+              spacing: 13.0,
+              runSpacing: 13.0,
               children: [
-                _customValueTime('07:00:00'),
-                _customValueTime('08:00:00'),
-                _customValueTime('09:00:00'),
-                _customValueTime('10:00:00'),
-                _customValueTime('11:00:00'),
+                _customValueTime('07:00'),
+                _customValueTime('08:00'),
+                _customValueTime('09:00'),
+                _customValueTime('10:00'),
+                _customValueTime('11:00'),
               ],
             ),
             _customLabel(label: 'Buổi chiều'),
             Wrap(
-              spacing: 8.0,
-              runSpacing: 8.0,
+              spacing: 13.0,
+              runSpacing: 13.0,
               children: [
-                _customValueTime('13:00:00'),
-                _customValueTime('14:00:00'),
-                _customValueTime('15:00:00'),
-                _customValueTime('16:00:00'),
-                _customValueTime('17:00:00'),
+                _customValueTime('13:00'),
+                _customValueTime('14:00'),
+                _customValueTime('15:00'),
+                _customValueTime('16:00'),
               ],
             ),
-            SizedBox(height: 15),
-            Text(
-              'Tất cả thời gian theo múi giờ Việt Nam GMT + 7',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Color(0xFFFEAD6D),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Text(
+                'Tất cả thời gian theo múi giờ Việt Nam GMT + 7',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFFFEAD6D),
+                ),
               ),
+            ),
+            Image.asset(
+              'assets/images/pageTime.jpg',
+              width: double.infinity,
+              height: 100,
             )
           ],
         ),
@@ -86,19 +93,19 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
         widget.onTimeSelected(valueTime);
         Navigator.pop(context);
       },
-      child: Card(
-        elevation: 5,
-        color: selectedTime == valueTime
-            ? AppColors.secondary1
-            : AppColors.primary,
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 184, 221, 253),
+          borderRadius: BorderRadius.circular(15),
+        ),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 13, vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Text(
             valueTime,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 13,
               fontWeight: FontWeight.w500,
-              color: AppColors.neutralDarkGreen2,
+              color: AppColors.deepBlue,
             ),
           ),
         ),

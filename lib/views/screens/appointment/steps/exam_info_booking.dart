@@ -71,38 +71,45 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
 
   @override
   Widget build(BuildContext context) {
-    // Kiểm tra xem các trường đã đủ thông tin chưa:
-    bool isButtonEnabled = selectedServiceId.isNotEmpty &&
-        selectedDate != null &&
-        selectedTime != null;
+    bool isServiceSelected = selectedServiceId.isNotEmpty;
+    bool isDateSelected = selectedDate != null;
+    bool isTimeSelected = selectedTime != null;
+    bool isButtonEnabled =
+        isServiceSelected && isDateSelected && isTimeSelected;
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 25),
+      margin: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: ListView(
               children: [
-                HospitalInfoWidget(
-                  clinicId: widget.clinicId,
-                ),
+                HospitalInfoWidget(clinicId: widget.clinicId),
                 SectionTitle(title: 'Dịch vụ'),
                 ServiceSelector(onServicesSelected: updateSelectedServices),
                 SectionTitle(title: 'Ngày khám'),
-                DateSelector(onDateSelected: updateSelectedDate),
+                IgnorePointer(
+                  ignoring: !isServiceSelected,
+                  child: Opacity(
+                    opacity: isServiceSelected ? 1 : 0.5,
+                    child: DateSelector(onDateSelected: updateSelectedDate),
+                  ),
+                ),
                 SectionTitle(title: 'Giờ khám'),
-                TimeSelector(onTimeSelected: updateSelectedTime),
+                IgnorePointer(
+                  ignoring: !isDateSelected,
+                  child: Opacity(
+                    opacity: isDateSelected ? 1 : 0.5,
+                    child: TimeSelector(onTimeSelected: updateSelectedTime),
+                  ),
+                ),
               ],
             ),
           ),
           WidgetCustombutton(
-            // Nếu isButtonEnabled false thì onTap truyền null => nút bị vô hiệu hóa, màu xám
             onTap: isButtonEnabled
                 ? () {
-                    print(
-                      "Dữ liệu gửi sang ProfileBooking: clinicId = ${widget.clinicId}, dịch vụ: $selectedServiceId, ngày: $selectedDate, giờ: $selectedTime",
-                    );
                     widget.onNavigateToScreen(
                       1,
                       'Chọn hồ sơ',
@@ -112,7 +119,7 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
                       time: selectedTime!,
                     );
                   }
-                : null,
+                : null, // Vô hiệu hóa nút nếu chưa chọn đủ
             text: 'Tiếp tục',
           ),
         ],
@@ -182,18 +189,34 @@ class _ServiceSelectorState extends State<ServiceSelector> {
               widget.onServicesSelected(selectedServiceId);
             }
           },
+          color: selectedServices.isNotEmpty
+              ? AppColors.deepBlue
+              : Color(0xFF484848),
+          colorIcon: selectedServices.isNotEmpty
+              ? AppColors.deepBlue
+              : Color(0xFF484848),
         ),
         if (selectedServices.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ...selectedServices.map((service) => Text(
-                      "- ${service.name}",
-                      style: TextStyle(fontSize: 14, color: Colors.black),
-                    )),
-              ],
+            child: Wrap(
+              spacing: 10, // Khoảng cách giữa các phần tử ngang
+              runSpacing: 5, // Khoảng cách giữa các dòng
+              children: selectedServices
+                  .map((service) => Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200], // Màu nền nhẹ
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          '- ${service.name}',
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.black),
+                        ),
+                      ))
+                  .toList(),
             ),
           ),
       ],
@@ -235,6 +258,10 @@ class _DateSelectorState extends State<DateSelector> {
           ? DateFormat('dd/MM/yyyy').format(_selectedDate!)
           : 'Chọn ngày khám',
       onTap: () => _showDatePicker(context),
+      color:
+          _selectedDate != null ? AppColors.deepBlue : const Color(0xFF484848),
+      colorIcon:
+          _selectedDate != null ? AppColors.deepBlue : const Color(0xFF484848),
     );
   }
 }
@@ -265,6 +292,12 @@ class _TimeSelectorState extends State<TimeSelector> {
         image: AppIcons.clock,
         text: selectedTime,
         bottomSheet: SelectTimeWidget(onTimeSelected: updateSelectedTime),
+        color: selectedTime != 'Chọn giờ khám'
+            ? AppColors.deepBlue
+            : Color(0xFF484848),
+        colorIcon: selectedTime != 'Chọn giờ khám'
+            ? AppColors.deepBlue
+            : Color(0xFF484848),
       ),
     );
   }

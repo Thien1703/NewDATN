@@ -4,8 +4,7 @@ import 'package:health_care/models/clinic.dart';
 import 'package:http/http.dart' as http;
 
 class AppConfig {
-  static const String baseUrl = 'http://192.168.1.4:8080';
-
+  static const String baseUrl = 'http://192.168.2.65:8080';
   // Đăng nhập
   static Future<String?> login(String phoneNumber, String password) async {
     final url = Uri.parse('$baseUrl/auth/login');
@@ -154,21 +153,19 @@ class AppConfig {
     final response = await http.post(
       url,
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8', // Đảm bảo UTF-8
         'Authorization': 'Bearer $token',
       },
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final utf8Body = utf8.decode(response.bodyBytes); // Giải mã UTF-8
+      final data = jsonDecode(utf8Body);
+
       if (data['status'] == 0) {
-        int userId = data['data']['id']; // Lấy ID từ API
+        int userId = data['data']['id'];
         await LocalStorageService.saveUserId(
-          userId,
-        ); // Lưu ID vào Local Storage
-        await LocalStorageService.saveUserId(
-          userId,
-        ); // Lưu ID vào Local Storage
+            userId); // Lưu ID vào local storage
         return data['data']; // Trả về dữ liệu hồ sơ
       }
     }

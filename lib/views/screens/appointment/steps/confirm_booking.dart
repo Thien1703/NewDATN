@@ -93,7 +93,9 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => NotiSucefully(),
+            builder: (context) => NotiSucefully(
+              appointmentId: appointmentId,
+            ),
           ));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -301,7 +303,7 @@ class BottomBar extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: WidgetCustombutton(
               onTap: onContinue,
-              text: isLoading ? 'Đang xử lý...' : 'Tiếp tục',
+              text: isLoading ? 'Đang xử lý...' : 'Thanh toán',
               isLoading: isLoading,
             ),
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/views/screens/auth/Login/choose.dart';
 import 'package:health_care/views/screens/welcome/welcome_screen.dart';
 import '../../../services/local_storage_service.dart';
@@ -47,34 +48,12 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
         body: Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Color(0xFF1565C0),
-            Colors.white,
-            Color(0xFF64B5F6),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: AppColors.deepBlue,
       ),
       child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/logoApp.png',
-              width: 110,
-            ),
-            SizedBox(height: 20),
-            Text(
-              'HEALTH CARE',
-              style: TextStyle(
-                fontSize: 25,
-                color: Color(0xFF0D47A1),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+        child: Image.asset(
+          'assets/images/logoDATN.png',
+          width: 250,
         ),
       ),
     ));
