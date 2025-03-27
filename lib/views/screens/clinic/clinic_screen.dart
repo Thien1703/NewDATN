@@ -123,9 +123,9 @@ class _ClinicScreenState extends State<ClinicScreen> {
                         padding: EdgeInsets.only(top: 10),
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: clinics!.length,
+                        itemCount: filteredClinics!.length,
                         itemBuilder: (context, index) {
-                          final clinic = clinics![index];
+                          final clinic = filteredClinics![index];
                           return Card(
                             margin: EdgeInsets.symmetric(vertical: 5),
                             elevation: 5,

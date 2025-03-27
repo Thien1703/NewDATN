@@ -1,5 +1,3 @@
-import 'package:health_care/models/appointment/appointment_service.dart';
-import 'package:health_care/views/screens/appointment/appointment_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:health_care/config/app_config.dart';

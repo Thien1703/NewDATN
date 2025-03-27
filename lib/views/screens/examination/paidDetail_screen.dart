@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/appointment/appointment_service.dart';
 import 'package:health_care/viewmodels/api/appointmentService_api.dart';
