@@ -4,7 +4,7 @@ import 'package:health_care/models/clinic.dart';
 import 'package:http/http.dart' as http;
 
 class AppConfig {
-  static const String baseUrl = 'http://192.168.1.13:8080';
+  static const String baseUrl = 'https://backend-healthcare-up0d.onrender.com';
   // Đăng nhập
   static Future<String?> login(String phoneNumber, String password) async {
     final url = Uri.parse('$baseUrl/auth/login');

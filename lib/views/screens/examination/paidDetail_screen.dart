@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/appointment/appointment_service.dart';
 import 'package:health_care/viewmodels/api/appointmentService_api.dart';
+import 'package:health_care/views/screens/clinic/clinic_screen.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/views/widgets/widget_lineBold.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -268,23 +269,34 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
   }
 
   Widget _buildSelectedSelected() {
-    return Container(
-      margin: EdgeInsets.only(bottom: 10),
-      width: double.infinity,
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ClinicScreen(
+                iconBack: true,
+              ),
+            ));
+      },
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10),
-        alignment: Alignment.center,
-        margin: EdgeInsets.symmetric(horizontal: 20),
-        decoration: BoxDecoration(
-            color: AppColors.deepBlue,
-            border: Border.all(color: AppColors.deepBlue, width: 1),
-            borderRadius: BorderRadius.circular(10)),
-        child: Text(
-          'Đạt lịch khám khác',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.white,
+        margin: EdgeInsets.only(bottom: 10),
+        width: double.infinity,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          alignment: Alignment.center,
+          margin: EdgeInsets.symmetric(horizontal: 20),
+          decoration: BoxDecoration(
+              color: AppColors.deepBlue,
+              border: Border.all(color: AppColors.deepBlue, width: 1),
+              borderRadius: BorderRadius.circular(10)),
+          child: Text(
+            'Đạt lịch khám khác',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+            ),
           ),
         ),
       ),

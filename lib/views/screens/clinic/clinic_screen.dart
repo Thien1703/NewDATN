@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/clinic.dart';
 import 'package:health_care/config/app_config.dart';
+import 'package:health_care/views/screens/clinic/clinic_detail_screen.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/views/screens/appointment/appointment_screen.dart';
 
@@ -138,6 +139,26 @@ class _ClinicScreenState extends State<ClinicScreen> {
                               padding: EdgeInsets.all(15),
                               child: Column(
                                 children: [
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ClinicDetailScreen(
+                                                    clinicId: clinic.id),
+                                          ),
+                                        );
+                                      },
+                                      child: Icon(
+                                        Icons.info_outlined,
+                                        color: AppColors.deepBlue,
+                                        size: 30,
+                                      ),
+                                    ),
+                                  ),
                                   Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
