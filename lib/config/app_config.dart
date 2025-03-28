@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:health_care/env.dart';
 import 'package:health_care/services/local_storage_service.dart';
 import 'package:health_care/models/clinic.dart';
 import 'package:http/http.dart' as http;
 
+
 class AppConfig {
-  static const String baseUrl = 'https://backend-healthcare-up0d.onrender.com';
+static const String baseUrl = AppEnv.baseUrl;
   // Đăng nhập
   static Future<String?> login(String phoneNumber, String password) async {
     final url = Uri.parse('$baseUrl/auth/login');

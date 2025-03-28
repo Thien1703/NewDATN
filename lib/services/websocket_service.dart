@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:health_care/env.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 
 // Định nghĩa kiểu callback cho các sự kiện nhận tin nhắn và thay đổi trạng thái kết nối
@@ -27,8 +28,7 @@ class WebSocketService {
   void connect() {
     stompClient = StompClient(
       config: StompConfig(
-        url:
-            'ws://backend-healthcare-up0d.onrender.com/notifications/websocket', // URL WebSocket của server
+         url: '${AppEnv.baseUrl.replaceFirst("http", "ws")}/notifications/websocket',
         onConnect: _onConnect, // Gọi khi kết nối thành công
         beforeConnect: () async {
           print('Waiting to connect...');
