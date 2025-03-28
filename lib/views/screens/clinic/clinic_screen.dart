@@ -119,146 +119,158 @@ class _ClinicScreenState extends State<ClinicScreen> {
                     ),
                   ],
                 ),
-                clinics != null
-                    ? ListView.builder(
-                        padding: EdgeInsets.only(top: 10),
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: filteredClinics!.length,
-                        itemBuilder: (context, index) {
-                          final clinic = filteredClinics![index];
-                          return Card(
-                            margin: EdgeInsets.symmetric(vertical: 5),
-                            elevation: 5,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            color: Colors.white,
-                            shadowColor: Colors.black.withOpacity(0.3),
-                            child: Padding(
-                              padding: EdgeInsets.all(15),
-                              child: Column(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.topRight,
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                ClinicDetailScreen(
-                                                    clinicId: clinic.id),
-                                          ),
-                                        );
-                                      },
-                                      child: Icon(
-                                        Icons.info_outlined,
-                                        color: AppColors.deepBlue,
-                                        size: 30,
-                                      ),
-                                    ),
-                                  ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: Image.network(
-                                          clinic.image,
-                                          width: 100,
-                                          height: 80,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      SizedBox(width: 12),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              clinic.name,
-                                              style: TextStyle(
-                                                fontSize: 17,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.location_on_sharp,
-                                          size: 23,
-                                          color: const Color.fromARGB(
-                                              255, 73, 73, 73)),
-                                      Expanded(
-                                        child: Text(
-                                          clinic.address,
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: const Color.fromARGB(
-                                                  255, 73, 73, 73),
-                                              fontWeight: FontWeight.w500),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Align(
-                                    alignment: Alignment.topRight,
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: AppColors.deepBlue,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 40, vertical: 10),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                AppointmentScreen(
-                                              clinicId: clinic.id,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: Text('Đặt lịch ngay',
-                                          style: TextStyle(
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.white)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    : Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(20),
-                          child: Text(
-                            'Không có phòng khám nào',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey[600]),
-                          ),
+                clinics == null
+                    ? Container(
+                        width: double.infinity,
+                        height: 700,
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: CircularProgressIndicator(strokeWidth: 3),
                         ),
                       )
+                    : clinics != null
+                        ? ListView.builder(
+                            padding: EdgeInsets.only(top: 10),
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: filteredClinics!.length,
+                            itemBuilder: (context, index) {
+                              final clinic = filteredClinics![index];
+                              return Card(
+                                margin: EdgeInsets.symmetric(vertical: 5),
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                color: Colors.white,
+                                shadowColor: Colors.black.withOpacity(0.3),
+                                child: Padding(
+                                  padding: EdgeInsets.all(15),
+                                  child: Column(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.topRight,
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ClinicDetailScreen(
+                                                        clinicId: clinic.id),
+                                              ),
+                                            );
+                                          },
+                                          child: Icon(
+                                            Icons.info_outlined,
+                                            color: AppColors.deepBlue,
+                                            size: 30,
+                                          ),
+                                        ),
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            child: Image.network(
+                                              clinic.image,
+                                              width: 100,
+                                              height: 80,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          SizedBox(width: 12),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  clinic.name,
+                                                  style: TextStyle(
+                                                    fontSize: 17,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.location_on_sharp,
+                                              size: 23,
+                                              color: const Color.fromARGB(
+                                                  255, 73, 73, 73)),
+                                          Expanded(
+                                            child: Text(
+                                              clinic.address,
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: const Color.fromARGB(
+                                                      255, 73, 73, 73),
+                                                  fontWeight: FontWeight.w500),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Align(
+                                        alignment: Alignment.topRight,
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: AppColors.deepBlue,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 40, vertical: 10),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AppointmentScreen(
+                                                  clinicId: clinic.id,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Text('Đặt lịch ngay',
+                                              style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.white)),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Text(
+                                'Không có phòng khám nào',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey[600]),
+                              ),
+                            ),
+                          )
               ],
             ),
           ),

@@ -153,4 +153,28 @@ class AppointmentApi {
     }
     return null; // Nếu có lỗi, trả về null
   }
+
+  //Hủy đặt lịch
+  static Future<bool?> getCancelAppointment(int appointmentId) async {
+    final url = Uri.parse('${AppConfig.baseUrl}/appointment/cancel');
+    String? token = await LocalStorageService.getToken();
+    if (token == null) return null;
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'id': appointmentId,
+      }),
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['status'] == 0;
+    } else {
+      print("Lỗi hủy đặt lịch: ${response.body}");
+    }
+    return null;
+  }
 }
