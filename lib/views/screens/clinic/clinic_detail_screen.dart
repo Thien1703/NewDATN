@@ -8,6 +8,9 @@ class ClinicDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WidgetHeaderBody(
-        iconBack: true, title: 'Chi tiết bệnh viện', body: Text('data'));
+      iconBack: true,
+      title: 'Chi tiết bệnh viện',
+      body: Text('data'),
+    );
   }
 }
