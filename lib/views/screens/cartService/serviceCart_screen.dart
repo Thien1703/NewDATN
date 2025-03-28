@@ -111,11 +111,30 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WidgetHeaderBody(
-      iconBack: true,
-      title: 'Chọn dịch vụ',
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: AppColors.deepBlue,
+        centerTitle: true,
+        elevation: 0,
+        title: const Text(
+          'Chọn dịch vụ',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: Column(
         children: [
+          // Thanh tìm kiếm
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Container(
@@ -164,6 +183,8 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
               ),
             ),
           ),
+
+          // Danh sách dịch vụ
           Expanded(
             child: filteredServices.isEmpty
                 ? const Center(child: CircularProgressIndicator())
@@ -188,13 +209,13 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                             GridView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
-                              padding: EdgeInsets.zero, // Xóa khoảng trắng thừa
+                              padding: EdgeInsets.zero,
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 5,
                                 mainAxisSpacing: 5,
-                                childAspectRatio: 0.75,
+                                childAspectRatio: 0.7,
                               ),
                               itemCount: entry.value.length,
                               itemBuilder: (context, index) {
@@ -247,8 +268,8 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                               fontWeight: FontWeight.bold,
                                               fontSize: 16,
                                             ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                            // maxLines: 1,
+                                            // overflow: TextOverflow.ellipsis,
                                           ),
                                           const SizedBox(height: 4),
                                           Row(
@@ -302,60 +323,60 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                     ),
                   ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(
-                top: BorderSide(color: Colors.grey.shade300, width: 1),
-              ),
+        ],
+      ),
+
+      // thanh toán
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            top: BorderSide(color: Colors.grey.shade300, width: 1),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Đã chọn ${selectedServices.length} dịch vụ',
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
+                const Text(
+                  "Tổng thanh toán",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
                 Text(
-                  'Đã chọn ${selectedServices.length} dịch vụ',
+                  '${formatCurrency(getTotalPrice())}',
                   style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-                Column(
-                  children: [
-                    Text(
-                      "Tổng thanh toán",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                    Text(
-                      '${formatCurrency(getTotalPrice())}',
-                      style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.deepBlue),
-                    ),
-                  ],
-                ),
-                ElevatedButton(
-                  onPressed: selectedServices.isEmpty
-                      ? null
-                      : () {
-                          Navigator.pop(context, {
-                            'selectedServiceList': selectedServices.toList(),
-                            'selectedServiceId':
-                                selectedServices.map((s) => s.id).toList(),
-                          });
-                        },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: selectedServices.isEmpty
-                        ? Colors.grey
-                        : AppColors.accent,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text('XONG'),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.deepBlue),
                 ),
               ],
             ),
-          ),
-        ],
+            ElevatedButton(
+              onPressed: selectedServices.isEmpty
+                  ? null
+                  : () {
+                      Navigator.pop(context, {
+                        'selectedServiceList': selectedServices.toList(),
+                        'selectedServiceId':
+                            selectedServices.map((s) => s.id).toList(),
+                      });
+                    },
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    selectedServices.isEmpty ? Colors.grey : AppColors.accent,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('XONG'),
+            ),
+          ],
+        ),
       ),
     );
   }

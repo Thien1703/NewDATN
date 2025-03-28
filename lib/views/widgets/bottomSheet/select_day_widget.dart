@@ -30,7 +30,10 @@ class _SelectDayWidgetState extends State<SelectDayWidget> {
             locale: 'vi',
             selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
             onDaySelected: (selectedDay, focusedDay) {
-              if (selectedDay.isBefore(DateTime.now())) return;
+              if (!isSameDay(selectedDay, DateTime.now()) &&
+                  selectedDay.isBefore(DateTime.now())) {
+                return;
+              }
               setState(() {
                 _selectedDay = selectedDay;
                 _focusedDay = focusedDay;
@@ -106,9 +109,9 @@ class _SelectDayWidgetState extends State<SelectDayWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildLegendIndicator(AppColors.deepBlue, 'Hôm nay'),
+              _buildLegendIndicator(Colors.grey, 'Hôm nay'),
               _buildLegendIndicator(AppColors.softBlue, 'Còn trống'),
-              _buildLegendIndicator(Colors.grey, 'Kín lịch'),
+              // _buildLegendIndicator(Colors.grey, 'Kín lịch'),
             ],
           ),
           SizedBox(height: 10),
