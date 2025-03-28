@@ -144,6 +144,12 @@ class _ClinicDetailScreenState extends State<ClinicDetailScreen> {
                           ),
                         ),
                         _buildLabel('Giới thiệu'),
+                        _buildIndocue(),
+                        _buildLabel('Chuyên khoa'),
+                        Text(
+                            'Bệnh viện Nhân Dân Gia Định hiên đang triển khai da dạng các chuyên khoa nhằm đáp ứng nhu cầu khám bệnh ngày một tăng cao của người dân, bao gồm:'),
+                        Text('Thông tin các Chuyên Khoa'),
+                        _buildLabel('Một số bác sĩ tiêu biểu tại phòng khám'),
                       ],
                     ),
                   ),
@@ -161,5 +167,10 @@ class _ClinicDetailScreenState extends State<ClinicDetailScreen> {
         style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
       ),
     );
+  }
+
+  Widget _buildIndocue() {
+    return Text(
+        'Chuỗi Phòng khám Đa khoa FPT là hệ thống cơ sở y tế đạt tiêu chuẩn cao, trực thuộc Sở Y tế TP.HCM. Với đội ngũ y bác sĩ giàu kinh nghiệm và trang thiết bị hiện đại, chúng tôi cung cấp dịch vụ khám chữa bệnh chất lượng, đáp ứng nhu cầu chăm sóc sức khỏe trên khắp các địa điểm trong hệ thống. Cam kết mang đến trải nghiệm y tế an toàn, chuyên nghiệp và tận tâm cho mọi khách hàng');
   }
 }
