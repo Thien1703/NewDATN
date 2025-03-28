@@ -215,7 +215,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 5,
                                 mainAxisSpacing: 5,
-                                childAspectRatio: 0.75,
+                                childAspectRatio: 0.7,
                               ),
                               itemCount: entry.value.length,
                               itemBuilder: (context, index) {
@@ -268,8 +268,8 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                               fontWeight: FontWeight.bold,
                                               fontSize: 16,
                                             ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                            // maxLines: 1,
+                                            // overflow: TextOverflow.ellipsis,
                                           ),
                                           const SizedBox(height: 4),
                                           Row(
