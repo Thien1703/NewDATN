@@ -58,6 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         color: AppColors.deepBlue,
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           const CircleAvatar(
             radius: 40,

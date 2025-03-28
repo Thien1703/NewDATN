@@ -26,7 +26,7 @@
     void connect() {
       stompClient = StompClient(
         config: StompConfig(
-          url: 'ws://192.168.3.102:8080/notifications/websocket', // URL WebSocket của server
+          url: 'ws://https://backend-healthcare-up0d.onrender.com/notifications/websocket', // URL WebSocket của server
           onConnect: _onConnect, // Gọi khi kết nối thành công
           beforeConnect: () async {
             print('Waiting to connect...');
