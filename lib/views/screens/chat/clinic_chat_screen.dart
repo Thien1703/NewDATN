@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/config/app_config.dart';
 import 'package:health_care/models/clinic.dart';
+import 'package:health_care/viewmodels/api/clinic_api.dart';
 import 'package:health_care/views/screens/chat/chat_screen.dart';
 
 class ClinicChatScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class _ClinicChatScreenState extends State<ClinicChatScreen> {
   }
 
   Future<void> _fetchClinics() async {
-    final result = await AppConfig.getAllClinic();
+    final result = await ClinicApi.getAllClinic();
     setState(() {
       clinics = result;
       isLoading = false;

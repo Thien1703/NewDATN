@@ -3,6 +3,7 @@ import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_icons.dart';
 import 'package:health_care/config/app_config.dart';
 import 'package:health_care/models/clinic.dart';
+import 'package:health_care/viewmodels/api/clinic_api.dart';
 import 'package:health_care/views/screens/appointment/steps/notiSucefully_screen.dart';
 import 'package:health_care/views/widgets/appointment/widget_hospital_info_card.dart';
 import 'package:health_care/views/widgets/appointment/widget_customPricePayment.dart';
@@ -48,7 +49,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
   }
 
   void fetchClinics() async {
-    Clinic? data = await AppConfig.getClinicById(widget.clinicId);
+    Clinic? data = await ClinicApi.getClinicById(widget.clinicId);
     if (data != null) {
       setState(() {
         clinices = data;

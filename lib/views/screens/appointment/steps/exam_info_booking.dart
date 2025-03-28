@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_icons.dart';
 import 'package:health_care/config/app_config.dart';
+import 'package:health_care/viewmodels/api/clinic_api.dart';
 import 'package:health_care/views/widgets/appointment/widget_hospital_info_card.dart';
 import 'package:health_care/views/widgets/widget_select_item.dart';
 import 'package:health_care/views/widgets/appointment/widget_customButton.dart';
@@ -43,7 +44,7 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
   }
 
   void fetchClinics() async {
-    Clinic? data = await AppConfig.getClinicById(widget.clinicId);
+    Clinic? data = await ClinicApi.getClinicById(widget.clinicId);
     if (data != null) {
       setState(() {
         clinices = data;
