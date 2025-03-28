@@ -7,6 +7,7 @@ import 'package:health_care/models/customer.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/viewmodels/api/specialty_api.dart';
 import 'package:health_care/views/screens/BMI/measureBMI_Screen.dart';
+import 'package:health_care/views/screens/chat/clinic_chat_screen.dart';
 import 'package:health_care/views/screens/home/service_screen.dart';
 
 class HomePage extends StatefulWidget {
@@ -153,6 +154,15 @@ class _HomePage extends State<HomePage> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
+                          _buildFeatureButton(
+                              'Chat phòng khám', AppIcons.chat, () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const ClinicChatScreen()),
+                            );
+                          }),
+                          SizedBox(width: 10),
                           _buildFeatureButton(
                               'Tìm phòng khám', AppIcons.mapPlus, () {}),
                           _buildFeatureButton(
