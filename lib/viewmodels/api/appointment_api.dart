@@ -4,6 +4,7 @@ import 'package:health_care/config/app_config.dart';
 import 'package:health_care/models/appointment/appointment.dart';
 import 'package:health_care/services/local_storage_service.dart';
 import 'package:health_care/models/appointment/appointment_Create.dart';
+import 'package:intl/intl.dart';
 
 class AppointmentApi {
   //Lấy tất cả đặt lịch
@@ -176,5 +177,67 @@ class AppointmentApi {
       print("Lỗi hủy đặt lịch: ${response.body}");
     }
     return null;
+  }
+
+  // Hủy đặt lịch
+  static Future<bool?> cancelAppointment(int appointmentId) async {
+    final url = Uri.parse('${AppConfig.baseUrl}/appointment/cancel');
+    String? token = await LocalStorageService.getToken();
+    if (token == null) return null;
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({'id': appointmentId}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['status'] == 0;
+    }
+    return null;
+  }
+
+  // Kiểm tra slot trống
+  static Future<int> fetchAvailableSlots(DateTime date, String time) async {
+    try {
+      final url =
+          Uri.parse('${AppConfig.baseUrl}/appointment/check-available-slots');
+      String? token = await LocalStorageService.getToken();
+      if (token == null) {
+        print('Error: Token is null');
+        return -1;
+      }
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          "date": DateFormat('yyyy-MM-dd').format(date),
+          "time": time,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['status'] == 0 &&
+            data['data'] != null &&
+            data['data']['availableSlots'] != null) {
+          return data['data']['availableSlots'];
+        }
+      }
+
+      print('API Error: ${response.statusCode} - ${response.body}');
+      return -1; // Trả về -1 nếu có lỗi hoặc slot không khả dụng
+    } catch (e) {
+      print('fetchAvailableSlots Error: $e');
+      return -1;
+    }
   }
 }

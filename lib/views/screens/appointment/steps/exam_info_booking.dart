@@ -101,7 +101,10 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
                   ignoring: !isDateSelected,
                   child: Opacity(
                     opacity: isDateSelected ? 1 : 0.5,
-                    child: TimeSelector(onTimeSelected: updateSelectedTime),
+                    child: TimeSelector(
+                      onTimeSelected: updateSelectedTime,
+                      selectedDate: selectedDate,
+                    ),
                   ),
                 ),
               ],
@@ -246,6 +249,8 @@ class _DateSelectorState extends State<DateSelector> {
       setState(() {
         _selectedDate = pickedDate;
       });
+      print("Ngày được chọn: ${DateFormat('yyyy-MM-dd').format(pickedDate)}");
+
       widget.onDateSelected(pickedDate); // Truyền ngày lên ExamInfoBooking
     }
   }
@@ -268,7 +273,9 @@ class _DateSelectorState extends State<DateSelector> {
 
 class TimeSelector extends StatefulWidget {
   final Function(String) onTimeSelected;
-  const TimeSelector({super.key, required this.onTimeSelected});
+  final DateTime? selectedDate;
+  const TimeSelector(
+      {super.key, required this.onTimeSelected, this.selectedDate});
 
   @override
   State<TimeSelector> createState() => _TimeSelectorState();
@@ -291,7 +298,12 @@ class _TimeSelectorState extends State<TimeSelector> {
       child: SelectItemWidget(
         image: AppIcons.clock,
         text: selectedTime,
-        bottomSheet: SelectTimeWidget(onTimeSelected: updateSelectedTime),
+        bottomSheet: SelectTimeWidget(
+          onTimeSelected: updateSelectedTime,
+          selectedDate: widget.selectedDate != null
+              ? DateFormat('yyyy-MM-dd').format(widget.selectedDate!)
+              : '', // Chuyển DateTime thành String
+        ),
         color: selectedTime != 'Chọn giờ khám'
             ? AppColors.deepBlue
             : Color(0xFF484848),
