@@ -7,6 +7,7 @@ import 'package:health_care/models/customer.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/viewmodels/api/specialty_api.dart';
 import 'package:health_care/views/screens/BMI/measureBMI_Screen.dart';
+import 'package:health_care/views/screens/chat/clinic_chat_screen.dart';
 import 'package:health_care/views/screens/home/service_screen.dart';
 import 'package:health_care/views/screens/notification/notification_screen.dart';
 

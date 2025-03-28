@@ -28,7 +28,7 @@ class WebSocketService {
     stompClient = StompClient(
       config: StompConfig(
         url:
-            'wss://backend-healthcare-up0d.onrender.com/notifications/websocket', // URL WebSocket của server
+            'ws://172.27.192.1:8080/notifications/websocket', // URL WebSocket của server
         onConnect: _onConnect, // Gọi khi kết nối thành công
         beforeConnect: () async {
           print('Waiting to connect...');
@@ -116,5 +116,45 @@ class WebSocketService {
       onConnectionChange(
           status); // Gọi callback để cập nhật UI hoặc xử lý logic
     }
+  }
+
+  void subscribeToClinicChat(String clinicId) {
+    final topic = '/topic/clinic/clinic_$clinicId';
+    print('📥 Subscribing to: $topic');
+
+    stompClient.subscribe(
+      destination: topic,
+      callback: (StompFrame frame) {
+        if (frame.body != null) {
+          try {
+            final Map<String, dynamic> message = jsonDecode(frame.body!);
+            print('📨 Nhận tin nhắn từ clinic: $message');
+            onMessageReceived(message); // Gọi callback giống như đang dùng
+          } catch (e) {
+            print("❌ Lỗi giải mã JSON từ clinic chat: $e");
+          }
+        }
+      },
+    );
+  }
+
+  void sendChatMessage({
+    required String senderId,
+    required String clinicId,
+    required String content,
+  }) {
+    final message = {
+      'senderId': senderId,
+      'recipientId': 'clinic_$clinicId',
+      'content': content,
+      'timestamp': DateTime.now().toIso8601String(),
+    };
+
+    stompClient.send(
+      destination: '/app/chat.send',
+      body: jsonEncode(message),
+    );
+
+    print("📤 Đã gửi tin nhắn đến phòng khám $clinicId: $message");
   }
 }
