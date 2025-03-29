@@ -1,7 +1,64 @@
+
 import 'dart:async';
 import 'dart:convert';
 import 'package:health_care/env.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
+
+  // Định nghĩa kiểu callback cho các sự kiện nhận tin nhắn và thay đổi trạng thái kết nối
+  typedef OnMessageReceived = void Function(Map<String, dynamic> message);
+  typedef OnConnectionChange = void Function(bool isConnected);
+
+  class WebSocketService {
+    late StompClient stompClient; // Đối tượng quản lý kết nối WebSocket
+    final String jwtToken; // JWT Token để xác thực người dùng
+    final String userId; // ID của user đang đăng nhập
+    final OnMessageReceived onMessageReceived; // Callback khi nhận tin nhắn
+    final OnConnectionChange onConnectionChange; // Callback khi trạng thái kết nối thay đổi
+    bool _isConnected = false; // Trạng thái kết nối WebSocket
+
+    // Constructor của class, yêu cầu truyền vào token, userId, và các callback
+    WebSocketService({
+      required this.jwtToken,
+      required this.userId,
+      required this.onMessageReceived,
+      required this.onConnectionChange,
+    });
+
+    // Hàm khởi tạo kết nối WebSocket
+    void connect() {
+      stompClient = StompClient(
+        config: StompConfig(
+          url: 'ws://192.168.3.102:8080/notifications/websocket', // URL WebSocket của server
+          onConnect: _onConnect, // Gọi khi kết nối thành công
+          beforeConnect: () async {
+            print('Waiting to connect...');
+            await Future.delayed(const Duration(milliseconds: 200));
+            print('Connecting...');
+          },
+          stompConnectHeaders: {
+            'Authorization': 'Bearer $jwtToken', // Gửi token trong header để xác thực
+          },
+          webSocketConnectHeaders: {
+            'Authorization': 'Bearer $jwtToken', // Header xác thực cho WebSocket
+          },
+          onWebSocketError: (dynamic error) {
+            print('🔴 WebSocket Error: $error'); // Xử lý lỗi khi kết nối thất bại
+            _setConnectionStatus(false);
+          },
+          onStompError: (StompFrame frame) {
+            print('🔴 Stomp Error: ${frame.body}'); // Xử lý lỗi khi có lỗi từ STOMP server
+            _setConnectionStatus(false);
+          },
+          onDisconnect: (StompFrame frame) {
+            print('🔴 WebSocket Disconnected'); // Xử lý khi WebSocket bị ngắt kết nối
+            _setConnectionStatus(false);
+          },
+          reconnectDelay: const Duration(seconds: 5), // Thử kết nối lại sau 5 giây nếu bị mất kết nối
+        ),
+      );
+
+      stompClient.activate(); // Kích hoạt kết nối WebSocket
+    }
 
 typedef OnMessageReceived = void Function(Map<String, dynamic> message);
 typedef OnConnectionChange = void Function(bool isConnected);
