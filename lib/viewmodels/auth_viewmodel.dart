@@ -135,6 +135,46 @@ class AuthViewModel with ChangeNotifier {
     }
   }
 
+  /// Upload ảnh đại diện
+  Future<void> uploadAvatar(BuildContext context, File imageFile) async {
+    int? userId = await LocalStorageService.getUserId();
+
+    if (userId == null) {
+      Fluttertoast.showToast(
+        msg: "Không tìm thấy ID người dùng, vui lòng đăng nhập lại.",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+
+    // Gọi API upload
+    String? result = await AppConfig.uploadAvatar(imageFile, userId);
+
+    if (!context.mounted) return;
+
+    if (result != null) {
+      Fluttertoast.showToast(
+        msg: "Cập nhật ảnh đại diện thành công!",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+      notifyListeners(); // Cập nhật giao diện
+    } else {
+      Fluttertoast.showToast(
+        msg: "Upload ảnh thất bại!",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    }
+  }
+
   /// Đổi mật khẩu
   Future<void> changePassword(BuildContext context, String oldPassword,
       String newPassword, String confirmNewPassword) async {

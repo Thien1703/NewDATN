@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/config/app_config.dart';
@@ -60,9 +62,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          const CircleAvatar(
+          CircleAvatar(
             radius: 40,
-            backgroundImage: AssetImage('assets/images/avt.png'),
+            backgroundImage: _userData?['avatarPath'] != null
+                ? FileImage(File(_userData!['avatarPath']))
+                : const AssetImage('assets/images/avt.png') as ImageProvider,
           ),
           const SizedBox(width: 10),
           Column(

@@ -46,7 +46,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
-  /// Chọn ảnh từ thư viện
+  /// Chọn ảnh từ thư viện và upload
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? pickedFile =
@@ -55,6 +55,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       setState(() {
         _avatarFile = File(pickedFile.path);
       });
+
+      // Gọi hàm uploadAvatar từ AuthViewModel
+      final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+      await authViewModel.uploadAvatar(context, _avatarFile!);
+
       _updateButtonState();
     }
   }
@@ -172,8 +177,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           color: isButtonEnabled
                               ? AppColors.deepBlue
                               : AppColors.grey4),
-                      backgroundColor:
-                          isButtonEnabled ? AppColors.deepBlue : AppColors.grey4,
+                      backgroundColor: isButtonEnabled
+                          ? AppColors.deepBlue
+                          : AppColors.grey4,
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
