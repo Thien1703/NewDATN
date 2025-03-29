@@ -19,6 +19,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   final List<Map<String, dynamic>> messages = [];
 
   late WebSocketService _webSocketService;
@@ -40,7 +41,8 @@ class _ChatScreenState extends State<ChatScreen> {
         jwtToken: token,
         userId: userId!,
         onMessageReceived: (message) {
-          print("📥 Nhận tin nhắn từ clinic: $message");
+          print("📥 Tin nhắn mới: $message");
+
           setState(() {
             messages.add({
               'content': message['content'],
@@ -48,48 +50,63 @@ class _ChatScreenState extends State<ChatScreen> {
               'time': message['timestamp'],
             });
           });
+
+          _scrollToBottom();
         },
         onConnectionChange: (connected) {
-          print(connected ? '🟢 Chat Connected' : '🔴 Chat Disconnected');
+          print(connected ? '🟢 WebSocket Connected' : '🔴 WebSocket Disconnected');
         },
       );
 
       _webSocketService.connect();
 
-      // Đăng ký lắng nghe kênh chat clinic
+      // ✅ Subscribe nhận tin nhắn từ clinic
       _webSocketService.subscribeToClinicChat(widget.clinicId.toString());
+
+      // ✅ Subscribe nhận phản hồi riêng từ clinic
+      _webSocketService.subscribeToPrivateChat(userId!);
     }
   }
 
   void _sendMessage() {
-  final text = _controller.text.trim();
-  if (text.isEmpty || userId == null) return;
+    final text = _controller.text.trim();
+    if (text.isEmpty || userId == null) return;
 
-  // Gửi qua WebSocket
-  _webSocketService.sendChatMessage(
-    senderId: userId!,
-    clinicId: widget.clinicId.toString(),
-    content: text,
-  );
+    _webSocketService.sendChatMessage(
+      senderId: userId!,
+      clinicId: widget.clinicId.toString(),
+      content: text,
+    );
 
-  // ✅ Log gửi thành công
-  print("✅ Đã gửi tin nhắn tới clinicId: ${widget.clinicId}, nội dung: $text");
+    print("📤 Đã gửi: $text");
 
-  setState(() {
-    messages.add({
-      'content': text,
-      'isMe': true,
-      'time': DateTime.now().toIso8601String(),
+    setState(() {
+      messages.add({
+        'content': text,
+        'isMe': true,
+        'time': DateTime.now().toIso8601String(),
+      });
     });
-  });
 
-  _controller.clear();
-}
+    _controller.clear();
+    _scrollToBottom();
+  }
 
+  void _scrollToBottom() {
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
+  }
 
   @override
   void dispose() {
     _webSocketService.disconnect();
+    _controller.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -101,11 +118,11 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           Expanded(
             child: ListView.builder(
+              controller: _scrollController,
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               itemCount: messages.length,
-              reverse: true,
               itemBuilder: (_, index) {
-                final msg = messages[messages.length - 1 - index];
+                final msg = messages[index];
                 final isMe = msg['isMe'] == true;
                 final time = DateFormat.Hm().format(DateTime.parse(msg['time']));
 
@@ -119,7 +136,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         padding: const EdgeInsets.all(10),
                         margin: const EdgeInsets.symmetric(vertical: 4),
                         constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * 0.7),
+                          maxWidth: MediaQuery.of(context).size.width * 0.7,
+                        ),
                         decoration: BoxDecoration(
                           color: isMe ? Colors.blueAccent : Colors.grey[300],
                           borderRadius: BorderRadius.circular(10),

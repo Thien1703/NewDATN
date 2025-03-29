@@ -14,18 +14,19 @@ class ClinicDetailScreen extends StatefulWidget {
 }
 
 class _ClinicDetailScreenState extends State<ClinicDetailScreen> {
-  Clinic? clinices;
+  Clinic? clinic;
+
   @override
   void initState() {
     super.initState();
-    fetchClinics();
+    fetchClinic();
   }
 
-  void fetchClinics() async {
+  void fetchClinic() async {
     Clinic? data = await ClinicApi.getClinicById(widget.clinicId);
     if (data != null) {
       setState(() {
-        clinices = data;
+        clinic = data;
       });
     }
   }
@@ -33,17 +34,8 @@ class _ClinicDetailScreenState extends State<ClinicDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: clinices == null
-          ? Container(
-              width: double.infinity,
-              height: 700,
-              alignment: Alignment.center,
-              child: SizedBox(
-                width: 30,
-                height: 30,
-                child: CircularProgressIndicator(strokeWidth: 3),
-              ),
-            )
+      body: clinic == null
+          ? Center(child: CircularProgressIndicator())
           : CustomScrollView(
               slivers: [
                 SliverAppBar(
@@ -57,9 +49,9 @@ class _ClinicDetailScreenState extends State<ClinicDetailScreen> {
                   ),
                   flexibleSpace: FlexibleSpaceBar(
                     title: SizedBox(
-                      height: 20, // Đảm bảo không bị cắt chữ
+                      height: 20,
                       child: Marquee(
-                        text: clinices?.name ?? 'Không xác định',
+                        text: clinic?.name ?? 'Không xác định',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                         scrollAxis: Axis.horizontal,
@@ -72,31 +64,26 @@ class _ClinicDetailScreenState extends State<ClinicDetailScreen> {
                       ),
                     ),
                     background: Image.network(
-                      clinices?.image ?? 'Không xác định',
+                      clinic?.image ?? '',
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height: 20,
-                        ),
+                        SizedBox(height: 20),
                         Row(
                           children: [
-                            Icon(
-                              Icons.location_on_rounded,
-                              size: 30,
-                              color: AppColors.deepBlue,
-                            ),
+                            Icon(Icons.location_on_rounded,
+                                size: 30, color: AppColors.deepBlue),
                             SizedBox(width: 5),
                             Expanded(
                               child: Text(
-                                clinices?.address ?? 'Không xác định',
+                                clinic?.address ?? 'Không xác định',
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w500),
                               ),
@@ -104,50 +91,22 @@ class _ClinicDetailScreenState extends State<ClinicDetailScreen> {
                           ],
                         ),
                         SizedBox(height: 10),
-                        Container(
-                          width: double.infinity,
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 20, vertical: 7),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 1),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Text(
-                            'Đặt khám theo chuyên khoa',
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w500),
-                          ),
-                        ),
+                        _buildOption('Đặt khám theo chuyên khoa'),
                         SizedBox(height: 10),
                         InkWell(
                           onTap: () => Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ChatScreen(
-                                  clinicId: clinices!.id,
-                                  clinicName: clinices!.name,
+                                  clinicId: clinic!.id,
+                                  clinicName: clinic!.name,
                                 ),
                               )),
-                          child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 7),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey, width: 1),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Text(
-                              'Nhắn với phòng khám',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w500),
-                            ),
-                          ),
+                          child: _buildOption('Nhắn với phòng khám'),
                         ),
                         _buildLabel('Giới thiệu'),
-                        _buildIndocue(),
+                        _buildIntro(),
                         _buildLabel('Chuyên khoa'),
-                        Text(
-                            'Bệnh viện Nhân Dân Gia Định hiên đang triển khai da dạng các chuyên khoa nhằm đáp ứng nhu cầu khám bệnh ngày một tăng cao của người dân, bao gồm:'),
                         Text('Thông tin các Chuyên Khoa'),
                         _buildLabel('Một số bác sĩ tiêu biểu tại phòng khám'),
                       ],
@@ -169,8 +128,23 @@ class _ClinicDetailScreenState extends State<ClinicDetailScreen> {
     );
   }
 
-  Widget _buildIndocue() {
+  Widget _buildIntro() {
     return Text(
         'Chuỗi Phòng khám Đa khoa FPT là hệ thống cơ sở y tế đạt tiêu chuẩn cao, trực thuộc Sở Y tế TP.HCM. Với đội ngũ y bác sĩ giàu kinh nghiệm và trang thiết bị hiện đại, chúng tôi cung cấp dịch vụ khám chữa bệnh chất lượng, đáp ứng nhu cầu chăm sóc sức khỏe trên khắp các địa điểm trong hệ thống. Cam kết mang đến trải nghiệm y tế an toàn, chuyên nghiệp và tận tâm cho mọi khách hàng');
+  }
+
+  Widget _buildOption(String text) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 7),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 1),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+      ),
+    );
   }
 }

@@ -1,9 +1,11 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_icons.dart';
-import 'package:health_care/config/app_config.dart';
 import 'package:health_care/models/clinic.dart';
+import 'package:health_care/models/service.dart';
 import 'package:health_care/viewmodels/api/clinic_api.dart';
+import 'package:health_care/viewmodels/api/service_api.dart';
 import 'package:health_care/views/screens/appointment/steps/notiSucefully_screen.dart';
 import 'package:health_care/views/widgets/appointment/widget_hospital_info_card.dart';
 import 'package:health_care/views/widgets/appointment/widget_customPricePayment.dart';
@@ -13,6 +15,7 @@ import 'package:health_care/views/widgets/widget_userProfile_card.dart';
 import 'package:health_care/models/appointment/appointment_Create.dart';
 import 'package:health_care/viewmodels/api/appointment_api.dart';
 import 'package:health_care/viewmodels/api/appointmentService_api.dart';
+import 'package:intl/intl.dart';
 
 class ConfirmBooking extends StatefulWidget {
   const ConfirmBooking({
@@ -41,11 +44,24 @@ class ConfirmBooking extends StatefulWidget {
 class _ConfirmBookingState extends State<ConfirmBooking> {
   bool isLoading = false;
   Clinic? clinices;
+  List<Service>? services;
 
   @override
   void initState() {
     super.initState();
     fetchClinics();
+    fetchServices();
+  }
+
+  void fetchServices() async {
+    List<Service>? fetchedServices =
+        await ServiceApi.getServiceByIds(widget.selectedServiceIds);
+
+    if (fetchedServices != null) {
+      setState(() {
+        services = fetchedServices;
+      });
+    }
   }
 
   void fetchClinics() async {
@@ -106,6 +122,12 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     }
   }
 
+  String _calculateTotalPrice() {
+    if (services == null || services!.isEmpty) return '0 VNĐ';
+    double total = services!.fold(0, (sum, item) => sum + (item.price ?? 0));
+    return '${NumberFormat('#,###', 'vi_VN').format(total)} VNĐ';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -126,14 +148,44 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                 ),
                 const SectionTitle(title: 'Thông tin bệnh nhân'),
                 const WidgetUserprofileCard(),
-                const SectionTitle(title: 'Thông tin đặt khám'),
-                BookingInformation(
-                  text1: 'Đông Y',
-                  text2: 'Khám Dịch Vụ Khu Vip',
-                  text3: '${widget.date} (${widget.time})',
-                  text4: '127,000đ',
+                const SectionTitle(title: 'Thông tin dịch vụ'),
+                Card(
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: services == null
+                        ? Text('Chưa có dịch vụ')
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: services!.length,
+                            itemBuilder: (context, index) {
+                              final service = services![index];
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    service.name,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${NumberFormat('#,###', 'vi_VN').format(service.price ?? 0)} VNĐ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                  ),
                 ),
-                const WidgetLineBold(),
+                WidgetLineBold(),
                 const CancellationNotice(),
               ],
             ),
@@ -142,6 +194,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
         BottomBar(
           onContinue: isLoading ? null : _bookAppointment,
           isLoading: isLoading,
+          services: services, // Truyền danh sách dịch vụ xuống
         ),
       ],
     );
@@ -169,41 +222,41 @@ class SectionTitle extends StatelessWidget {
   }
 }
 
-class BookingInformation extends StatelessWidget {
-  final String text1;
-  final String text2;
-  final String text3;
-  final String text4;
+// class BookingInformation extends StatelessWidget {
+//   final String text1;
+//   final String text2;
+//   final String text3;
+//   final String text4;
 
-  const BookingInformation({
-    super.key,
-    required this.text1,
-    required this.text2,
-    required this.text3,
-    required this.text4,
-  });
+//   const BookingInformation({
+//     super.key,
+//     required this.text1,
+//     required this.text2,
+//     required this.text3,
+//     required this.text4,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 10),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        color: Colors.white,
-      ),
-      child: Column(
-        children: [
-          BookingInfoRow(image: AppIcons.specialty, text: text1),
-          BookingInfoRow(image: AppIcons.service2, text: text2),
-          BookingInfoRow(image: AppIcons.calendar, text: text3),
-          BookingInfoRow(
-              image: AppIcons.payment, text: text4, isTextBlack: true),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       margin: const EdgeInsets.only(top: 10),
+//       padding: const EdgeInsets.all(10),
+//       decoration: BoxDecoration(
+//         borderRadius: BorderRadius.circular(15),
+//         color: Colors.white,
+//       ),
+//       child: Column(
+//         children: [
+//           BookingInfoRow(image: AppIcons.specialty, text: text1),
+//           BookingInfoRow(image: AppIcons.service2, text: text2),
+//           BookingInfoRow(image: AppIcons.calendar, text: text3),
+//           BookingInfoRow(
+//               image: AppIcons.payment, text: text4, isTextBlack: true),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class BookingInfoRow extends StatelessWidget {
   final String image;
@@ -279,9 +332,20 @@ class CancellationNotice extends StatelessWidget {
 class BottomBar extends StatelessWidget {
   final VoidCallback? onContinue;
   final bool isLoading;
+  final List<Service>? services;
 
-  const BottomBar(
-      {super.key, required this.onContinue, required this.isLoading});
+  const BottomBar({
+    super.key,
+    required this.onContinue,
+    required this.isLoading,
+    required this.services,
+  });
+
+  String _calculateTotalPrice() {
+    if (services == null || services!.isEmpty) return '0 VNĐ';
+    double total = services!.fold(0, (sum, item) => sum + (item.price ?? 0));
+    return '${NumberFormat('#,###', 'vi_VN').format(total)} VNĐ';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -296,9 +360,22 @@ class BottomBar extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
-            child: WidgetCustompricepayment(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: WidgetCustomPricePayment(
+              priceDetails: [
+                {'title': 'Tiền khám', 'price': '0 VNĐ'},
+                {
+                  'title': 'Dịch vụ khám thêm',
+                  'price': _calculateTotalPrice(),
+                },
+                {
+                  'title': 'Tạm tính',
+                  'price': _calculateTotalPrice(),
+                  'isBold': true,
+                },
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),

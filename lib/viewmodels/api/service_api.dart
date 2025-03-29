@@ -73,38 +73,42 @@ class ServiceApi {
   }
 
   //Lấy api của dịch vụ theo id dịch vụ
-
-  static Future<Service?> getServiceByService(int serviceId) async {
-    final url = Uri.parse('${AppConfig.baseUrl}/service/get-by-id');
+  static Future<List<Service>?> getServiceByIds(List<int> serviceIds) async {
+    final url = Uri.parse('${AppConfig.baseUrl}/service/get-by-ids');
     String? token = await LocalStorageService.getToken();
 
     if (token == null) {
-      print("Lỗi: Không tìm thấy token");
+      print("❌ Lỗi: Không tìm thấy token");
       return null;
     }
 
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({"id": serviceId}),
-    );
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({"id": serviceIds}),
+      );
 
-    print('📌 API Response Status: ${response.statusCode}');
-    print('📌 API Response Body: ${response.body}');
+      print("📌 API Response Status: ${response.statusCode}");
+      print("📌 API Response Headers: ${response.headers}");
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body); // Không ép về UTF-8
 
-      if (data['status'] == 0 && data['data'] != null) {
-        return Service.fromJson(data['data']); // Trả về một object Service
+        if (data is List) {
+          print("✅ API trả về danh sách dịch vụ hợp lệ.");
+          return data.map((item) => Service.fromJson(item)).toList();
+        } else {
+          print("❌ API trả về dữ liệu không hợp lệ: $data");
+        }
       } else {
-        print('⚠️ Lỗi từ API: ${data['message']}');
+        print("❌ Lỗi API: ${response.statusCode} - ${response.body}");
       }
-    } else {
-      print('❌ API lỗi: ${response.statusCode}');
+    } catch (e) {
+      print("❌ Lỗi khi gọi API: $e");
     }
 
     return null;

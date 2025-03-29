@@ -170,10 +170,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(
                           color: isButtonEnabled
-                              ? AppColors.accent
+                              ? AppColors.deepBlue
                               : AppColors.grey4),
                       backgroundColor:
-                          isButtonEnabled ? AppColors.accent : AppColors.grey4,
+                          isButtonEnabled ? AppColors.deepBlue : AppColors.grey4,
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
@@ -205,7 +205,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
-            color: AppColors.neutralDarkGreen1),
+            color: AppColors.deepBlue),
       ),
     );
   }
