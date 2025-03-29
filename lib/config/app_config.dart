@@ -1,45 +1,62 @@
 import 'dart:convert';
+import 'package:health_care/env.dart';
 import 'package:health_care/services/local_storage_service.dart';
 import 'package:health_care/models/clinic.dart';
 import 'package:http/http.dart' as http;
 
+
 class AppConfig {
-  static const String baseUrl = 'http://192.168.3.102:8080';
+static const String baseUrl = AppEnv.baseUrl;
 
   // Đăng nhập
   static Future<String?> login(String phoneNumber, String password) async {
     final url = Uri.parse('$baseUrl/auth/login');
+
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'phoneNumber': phoneNumber, 'password': password}),
     );
 
+    final utf8Body = utf8.decode(response.bodyBytes);
+    final data = jsonDecode(utf8Body);
+
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
       if (data['status'] == 0 && data['data']['authenticated'] == true) {
-        String token = data['data']['token'];
-        await LocalStorageService.saveToken(token); // Lưu token
-        return null; // Đăng nhập thành công
+        final String token = data['data']['token'];
+        await LocalStorageService.saveToken(token);
+        print("✅ Đã lưu token");
+
+        // Gọi API lấy userId
+        final userId = await getMyUserId();
+        if (userId != null) {
+          await LocalStorageService.saveUserId(userId);
+          print("✅ Đã lưu userId: $userId");
+          return null;
+        } else {
+          print("❌ Không lấy được userId");
+          return "Không thể lấy thông tin tài khoản.";
+        }
       } else {
-        return data['message'] ?? "Lỗi không xác định từ server.";
+        return data['message'] ?? "Đăng nhập thất bại.";
       }
     } else if (response.statusCode == 401) {
-      return "Mật khẩu hiện tại không đúng.";
+      return "Mật khẩu không đúng.";
     } else if (response.statusCode == 404) {
       return "Tài khoản không tồn tại.";
     } else {
-      return "Lỗi máy chủ, vui lòng thử lại!";
+      return "Lỗi máy chủ: ${response.statusCode}";
     }
   }
 
-  // Đăng ký tài khoản mới
+  // ========================= ĐĂNG KÝ =========================
   static Future<String?> register(
     String fullName,
     String phoneNumber,
     String password,
   ) async {
     final url = Uri.parse('$baseUrl/auth/register');
+
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -54,69 +71,73 @@ class AppConfig {
 
     if (response.statusCode == 200) {
       if (data['status'] == 0 && data['data']['authenticated'] == true) {
-        String token = data['data']['token'];
-        await LocalStorageService.saveToken(token); // Lưu token
-        return null; // Đăng ký thành công
+        final token = data['data']['token'];
+        await LocalStorageService.saveToken(token);
+
+        // Lưu userId sau khi đăng ký
+        final userId = await getMyUserId();
+        if (userId != null) {
+          await LocalStorageService.saveUserId(userId);
+          print("✅ Đăng ký xong, lưu userId: $userId");
+        }
+
+        return null;
       } else {
-        return data['message']; // Lỗi từ server
+        return data['message'] ?? "Lỗi không xác định từ server.";
       }
     } else if (response.statusCode == 409) {
-      return "Tài khoản đã tồn tại";
+      return "Tài khoản đã tồn tại.";
     } else {
-      return "Lỗi máy chủ, vui lòng thử lại!";
+      return "Lỗi máy chủ: ${response.statusCode}";
     }
   }
 
-  // Lấy id hồ sơ người dùng
+  // ===================== LẤY USER ID =========================
   static Future<int?> getMyUserId() async {
     final url = Uri.parse('$baseUrl/customer/get-my-info');
-    String? token = await LocalStorageService.getToken();
+    final token = await LocalStorageService.getToken();
 
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      if (data['status'] == 0) {
-        int userId = data['data']['id'];
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
+
+      if (response.statusCode == 200 && data['status'] == 0) {
+        final userId = data['data']['id'];
+        print("✅ Lấy userId thành công: $userId");
         return userId;
       } else {
+        print("⚠️ Không lấy được userId: ${data['message']}");
         return null;
       }
-    } else {
+    } catch (e) {
+      print("❌ Lỗi khi gọi API lấy userId: $e");
       return null;
     }
   }
 
-  // Cập nhật hồ sơ
+  // ======================= CẬP NHẬT HỒ SƠ =====================
   static Future<String?> updateProfile(Map<String, dynamic> profileData) async {
     final url = Uri.parse('$baseUrl/customer/update-by-id');
-    String? token = await LocalStorageService.getToken();
-    int? userId =
-        await LocalStorageService.getUserId(); // 🔹 Lấy userId từ local storage
+    final token = await LocalStorageService.getToken();
+    int? userId = await LocalStorageService.getUserId();
 
-    // 🔹 Kiểm tra nếu chưa có userId, lấy từ API
     if (userId == null) {
       userId = await getMyUserId();
-      if (userId != null) {
-        await LocalStorageService.saveUserId(userId); // Lưu lại userId
-      }
+      if (userId != null) await LocalStorageService.saveUserId(userId);
     }
 
-    // 🔹 Nếu vẫn không có ID, báo lỗi
     if (userId == null) {
-      return "Lỗi: Không thể xác định ID người dùng.";
+      return "❌ Không xác định được ID người dùng.";
     }
 
-    // 🔹 Đảm bảo `profileData` có chứa `id`
     profileData['id'] = userId;
-
-    print("📌 Gửi dữ liệu cập nhật: ${jsonEncode(profileData)}");
 
     try {
       final response = await http.post(
@@ -128,51 +149,47 @@ class AppConfig {
         body: jsonEncode(profileData),
       );
 
-      print("📌 Phản hồi từ server: ${response.statusCode} - ${response.body}");
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        if (data['status'] == 0) {
-          return null; // ✅ Cập nhật thành công
-        } else {
-          return data['message'] ?? "Lỗi không xác định từ server.";
-        }
+      if (response.statusCode == 200 && data['status'] == 0) {
+        print("✅ Cập nhật hồ sơ thành công");
+        return null;
       } else {
-        return "Lỗi máy chủ: ${response.body}";
+        return data['message'] ?? "Cập nhật thất bại.";
       }
     } catch (e) {
-      print("❌ Lỗi khi gọi API: $e");
-      return "Lỗi kết nối, vui lòng thử lại!";
+      print("❌ Lỗi cập nhật hồ sơ: $e");
+      return "Lỗi kết nối.";
     }
   }
 
-  // Lấy thông tin người dùng
+  // ====================== LẤY HỒ SƠ NGƯỜI DÙNG ====================
   static Future<Map<String, dynamic>?> getUserProfile() async {
     final url = Uri.parse('$baseUrl/customer/get-my-info');
-    String? token = await LocalStorageService.getToken();
+    final token = await LocalStorageService.getToken();
 
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8', // Đảm bảo UTF-8
-        'Authorization': 'Bearer $token',
-      },
-    );
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Authorization': 'Bearer $token',
+        },
+      );
 
-    if (response.statusCode == 200) {
-      final utf8Body = utf8.decode(response.bodyBytes); // Giải mã UTF-8
-      final data = jsonDecode(utf8Body);
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
 
-      if (data['status'] == 0) {
-        int userId = data['data']['id'];
-        await LocalStorageService.saveUserId(
-            userId); // Lưu ID vào local storage
-        return data['data']; // Trả về dữ liệu hồ sơ
+      if (response.statusCode == 200 && data['status'] == 0) {
+        final userId = data['data']['id'];
+        await LocalStorageService.saveUserId(userId);
+        print("✅ Hồ sơ người dùng đã được lưu: $userId");
+        return data['data'];
       }
+    } catch (e) {
+      print("❌ Lỗi lấy hồ sơ: $e");
     }
-    return null; // Lỗi hoặc không lấy được dữ liệu
+    return null;
   }
-
   // Đổi mật khẩu
   static Future<String?> changePassword(int customerId, String oldPassword,
       String newPassword, String confirmNewPassword) async {
@@ -204,34 +221,32 @@ class AppConfig {
       return "Lỗi máy chủ: ${response.statusCode}";
     }
   }
-
-  // Đăng xuất
+  // ========================== ĐĂNG XUẤT ==========================
   static Future<String?> logout() async {
     final url = Uri.parse('$baseUrl/auth/logout');
+    final token = await LocalStorageService.getToken();
 
-    // Lấy token từ local storage
-    String? token = await LocalStorageService.getToken();
-    if (token == null) {
-      return "Không tìm thấy token, vui lòng đăng nhập lại!";
-    }
+    if (token == null) return "Không tìm thấy token.";
 
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'token': token}),
-    );
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'token': token}),
+      );
 
-    if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      if (data['status'] == 0) {
-        await LocalStorageService
-            .logOut(); // Xóa token sau khi logout thành công
-        return null; // Logout thành công
+
+      if (response.statusCode == 200 && data['status'] == 0) {
+        await LocalStorageService.logOut();
+        print("✅ Đăng xuất thành công");
+        return null;
       } else {
         return data['message'];
       }
-    } else {
-      return "Lỗi máy chủ, vui lòng thử lại!";
+    } catch (e) {
+      print("❌ Lỗi khi đăng xuất: $e");
+      return "Đăng xuất thất bại.";
     }
   }
 

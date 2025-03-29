@@ -66,7 +66,8 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                           padding: EdgeInsets.only(top: 10),
                           itemCount: filteredAppointments.length,
                           itemBuilder: (context, index) {
-                            final appointment = filteredAppointments[index];
+                            final appointment =
+                                filteredAppointments.reversed.toList()[index];
                             return _buildAppointmentCard(appointment);
                           },
                         )

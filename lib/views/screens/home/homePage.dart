@@ -7,7 +7,9 @@ import 'package:health_care/models/customer.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/viewmodels/api/specialty_api.dart';
 import 'package:health_care/views/screens/BMI/measureBMI_Screen.dart';
+import 'package:health_care/views/screens/chat/clinic_chat_screen.dart';
 import 'package:health_care/views/screens/home/service_screen.dart';
+import 'package:health_care/views/screens/notification/notification_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -63,7 +65,12 @@ class _HomePage extends State<HomePage> {
               ),
               actions: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NotificationScreen()));
+                  },
                   icon: Icon(
                     Icons.notifications,
                     size: 30,
@@ -125,155 +132,171 @@ class _HomePage extends State<HomePage> {
                     topRight: Radius.circular(30),
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 25, bottom: 10, top: 25),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Xin chào, ',
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.normal),
-                          ),
-                          Text(
-                            customers?.fullName ?? 'Chưa cập nhật',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          _buildFeatureButton(
-                              'Tìm phòng khám', AppIcons.mapPlus, () {}),
-                          _buildFeatureButton(
-                              'Chat với AI', AppIcons.robotAI, () {}),
-                          _buildFeatureButton('Đo BMI', AppIcons.bmiIcon, () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const BmiScreen()));
-                          }),
-                          _buildFeatureButton(
-                              'Kiểm tra sức khỏe', AppIcons.healthCheck, () {}),
-                          _buildFeatureButton(
-                              'Tìm phòng khám', AppIcons.mapPlus, () {}),
-                          SizedBox(width: 10),
-                        ],
-                      ),
-                    ),
-                    CarouselSlider(
-                      items: imgList
-                          .map(
-                            (item) => ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: Image.asset(
-                                item,
-                                width: double.infinity,
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      options: CarouselOptions(
-                        height: 200,
-                        autoPlay: true,
-                        autoPlayInterval: Duration(seconds: 10),
-                        enlargeCenterPage: true,
-                        viewportFraction: 0.8,
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 15),
-                      child: Column(
+                child: customers == null && specialties == null
+                    ? Container(
+                        width: double.infinity,
+                        height: 700,
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: CircularProgressIndicator(strokeWidth: 3),
+                        ),
+                      )
+                    : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Danh mục chuyên khoa',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(left: 25, bottom: 10, top: 25),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Xin chào, ',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                                Text(
+                                  customers!.fullName,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          specialties == null
-                              ? Center(child: Text('Không có dịch vụ nào'))
-                              : SingleChildScrollView(
-                                  child: GridView.builder(
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      crossAxisSpacing: 15,
-                                      mainAxisSpacing: 10,
-                                      childAspectRatio: 2.9,
+                          SizedBox(height: 10),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                _buildFeatureButton(
+                                    'Tìm phòng khám', AppIcons.mapPlus, () {}),
+                                _buildFeatureButton(
+                                    'Chat với AI', AppIcons.robotAI, () {}),
+                                _buildFeatureButton('Đo BMI', AppIcons.bmiIcon,
+                                    () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const BmiScreen()));
+                                }),
+                                _buildFeatureButton('Kiểm tra sức khỏe',
+                                    AppIcons.healthCheck, () {}),
+                                _buildFeatureButton(
+                                    'Tìm phòng khám', AppIcons.mapPlus, () {}),
+                                SizedBox(width: 10),
+                              ],
+                            ),
+                          ),
+                          CarouselSlider(
+                            items: imgList
+                                .map(
+                                  (item) => ClipRRect(
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: Image.asset(
+                                      item,
+                                      width: double.infinity,
                                     ),
-                                    itemCount: specialties!.length,
-                                    itemBuilder: (context, index) {
-                                      final specialty = specialties![index];
-                                      return InkWell(
-                                        onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ServiceScreen(
-                                                      specialtyId:
-                                                          specialty.id),
-                                            )),
-                                        child: Container(
-                                          padding: EdgeInsets.only(left: 10),
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              border: Border.all(
-                                                  color: Colors.white,
-                                                  width: 1),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.grey
-                                                      .withOpacity(0.5),
-                                                  spreadRadius: 1,
-                                                  blurRadius: 1,
-                                                ),
-                                              ]),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Image.network(
-                                                specialty.image,
-                                                width: 45,
-                                                color: AppColors.deepBlue,
-                                              ),
-                                              SizedBox(width: 10),
-                                              Text(
-                                                specialty.name,
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.black,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    },
                                   ),
                                 )
+                                .toList(),
+                            options: CarouselOptions(
+                              height: 200,
+                              autoPlay: true,
+                              autoPlayInterval: Duration(seconds: 10),
+                              enlargeCenterPage: true,
+                              viewportFraction: 0.8,
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Danh mục chuyên khoa',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                specialties!.isEmpty
+                                    ? Center(
+                                        child: Text('Không có dịch vụ nào'))
+                                    : GridView.builder(
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          crossAxisSpacing: 15,
+                                          mainAxisSpacing: 10,
+                                          childAspectRatio: 2.9,
+                                        ),
+                                        itemCount: specialties!.length,
+                                        itemBuilder: (context, index) {
+                                          final specialty = specialties![index];
+                                          return InkWell(
+                                            onTap: () => Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ServiceScreen(
+                                                          specialtyId:
+                                                              specialty.id),
+                                                )),
+                                            child: Container(
+                                              padding:
+                                                  EdgeInsets.only(left: 10),
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  border: Border.all(
+                                                      color: Colors.white,
+                                                      width: 1),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.5),
+                                                      spreadRadius: 1,
+                                                      blurRadius: 1,
+                                                    ),
+                                                  ]),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Image.network(
+                                                    specialty.image,
+                                                    width: 45,
+                                                    color: AppColors.deepBlue,
+                                                  ),
+                                                  SizedBox(width: 10),
+                                                  Text(
+                                                    specialty.name,
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      )
+                              ],
+                            ),
+                          ),
+                          Image.asset('assets/images/anhBia.jpg'),
                         ],
                       ),
-                    ),
-                    Image.asset('assets/images/anhBia.jpg'),
-                  ],
-                ),
               ),
             )
           ],
