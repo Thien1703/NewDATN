@@ -252,8 +252,7 @@ class _HomePage extends State<HomePage> {
                                                               specialty.id),
                                                 )),
                                             child: Container(
-                                              padding:
-                                                  EdgeInsets.only(left: 10),
+                                              padding: EdgeInsets.only(left: 5),
                                               decoration: BoxDecoration(
                                                   color: Colors.white,
                                                   border: Border.all(
@@ -278,7 +277,7 @@ class _HomePage extends State<HomePage> {
                                                     width: 45,
                                                     color: AppColors.deepBlue,
                                                   ),
-                                                  SizedBox(width: 10),
+                                                  SizedBox(width: 5),
                                                   Text(
                                                     specialty.name,
                                                     style: TextStyle(

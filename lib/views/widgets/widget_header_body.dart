@@ -41,7 +41,7 @@ class WidgetHeaderBody extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.only(
         top: MediaQuery.of(context).padding.top + 10, // Padding theo notch
-        bottom: 10,
+        bottom: MediaQuery.of(context).padding.bottom + 10,
       ),
       color: AppColors.deepBlue,
       child: Column(
@@ -79,15 +79,21 @@ class HeaderRow extends StatelessWidget {
     return Row(
       children: [
         SizedBox(
-          width: 48, // Đảm bảo khoảng trống luôn có
-          child: iconBack
-              ? IconButton(
-                  icon: const Icon(Icons.arrow_back,
-                      color: Colors.white, size: 24),
-                  onPressed: onBackPressed ?? () => Navigator.of(context).pop(),
-                )
-              : const SizedBox.shrink(), // Khi không có icon, giữ khoảng trống
-        ),
+            width: 48, // Đảm bảo khoảng trống luôn có
+            child: iconBack
+                ? IconButton(
+                    icon: const Icon(Icons.arrow_back,
+                        color: Colors.white, size: 24),
+                    onPressed:
+                        onBackPressed ?? () => Navigator.of(context).pop(),
+                  )
+                : IconButton(
+                    icon: const Icon(Icons.arrow_back,
+                        color: AppColors.deepBlue, size: 24),
+                    onPressed:
+                        onBackPressed ?? () => Navigator.of(context).pop(),
+                  ) // Khi không có icon, giữ khoảng trống
+            ),
         Expanded(
           child: Text(
             title,

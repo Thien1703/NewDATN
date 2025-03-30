@@ -128,6 +128,11 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     return '${NumberFormat('#,###', 'vi_VN').format(total)} VNĐ';
   }
 
+  String formatCurrency(int amount) {
+    final formatter = NumberFormat("#,###", "vi_VN");
+    return "${formatter.format(amount)}đ";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(

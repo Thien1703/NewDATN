@@ -23,7 +23,7 @@ class Service {
   /// Getter để định dạng giá tiền
   String get formattedPrice {
     final formatter = NumberFormat("#,###", "vi_VN");
-    return "${formatter.format(price)}đ";
+    return "${formatter.format(price)}VNĐ";
   }
 
   factory Service.fromJson(Map<String, dynamic>? json) {

@@ -75,22 +75,31 @@ class _HomeScreensState extends State<HomeScreens> {
           child: Icon(Icons.add, size: 30, color: Colors.white),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: BottomAppBar(
-          shape: CircularNotchedRectangle(),
-          notchMargin: 8.0,
-          color: Colors.white,
-          child: Container(
-            height: screenHeight *
-                0.08, // Tự động điều chỉnh theo chiều cao màn hình
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildBottomBarItem(Icons.home, 'Trang chủ', 0),
-                _buildBottomBarItem(Icons.local_hospital, 'Lịch khám', 1),
-                SizedBox(width: 50), // Chừa chỗ cho FAB
-                _buildBottomBarItem(Icons.speed_outlined, 'Công cụ', 3),
-                _buildBottomBarItem(Icons.person, 'Tài khoản', 4),
-              ],
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              blurRadius: 2,
+              spreadRadius: 2,
+            )
+          ]),
+          child: BottomAppBar(
+            shape: CircularNotchedRectangle(),
+            notchMargin: 8.0,
+            color: Colors.white,
+            child: Container(
+              height: screenHeight *
+                  0.08, // Tự động điều chỉnh theo chiều cao màn hình
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildBottomBarItem(Icons.home, 'Trang chủ', 0),
+                  _buildBottomBarItem(Icons.local_hospital, 'Lịch khám', 1),
+                  SizedBox(width: 50), // Chừa chỗ cho FAB
+                  _buildBottomBarItem(Icons.speed_outlined, 'Công cụ', 3),
+                  _buildBottomBarItem(Icons.person, 'Tài khoản', 4),
+                ],
+              ),
             ),
           ),
         ),

@@ -33,6 +33,8 @@ class _NotiSucefullyState extends State<NotiSucefully> {
     });
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     final appointment = appointmentServices?.first.appointment;
@@ -312,7 +314,7 @@ class _NotiSucefullyState extends State<NotiSucefully> {
                 onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => HomePage(),
+                      builder: (context) => HomeScreens(),
                     )),
                 child: Container(
                   margin:

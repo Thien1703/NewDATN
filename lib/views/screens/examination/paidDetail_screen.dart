@@ -8,6 +8,7 @@ import 'package:health_care/views/screens/home/home_screens.dart';
 import 'package:health_care/views/widgets/bottomSheet/showCustomer.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/views/widgets/widget_lineBold.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class PaidDetailScreen extends StatefulWidget {
@@ -35,6 +36,11 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
     appointmentServices =
         await AppointmentserviceApi.getByAppointment(widget.appointmentId);
     setState(() {});
+  }
+
+  String formatCurrency(int amount) {
+    final formatter = NumberFormat("#,###", "vi_VN");
+    return "${formatter.format(amount)}VNĐ";
   }
 
   @override
@@ -207,7 +213,7 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
               ),
               _buildInfoRow(
                 "Giá",
-                item.service?.price.toString() ?? "Không có giá",
+                formatCurrency(item.service?.price?.toInt() ?? 0),
                 Colors.green,
               ),
               _buildInfoRow(
