@@ -48,7 +48,7 @@ class _HospitalInfoWidgetState extends State<HospitalInfoWidget> {
           Text(
             clinices?.name ?? 'Không xác định',
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),

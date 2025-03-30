@@ -6,7 +6,7 @@ import 'package:health_care/models/specialty.dart';
 import 'package:health_care/models/customer.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/viewmodels/api/specialty_api.dart';
-import 'package:health_care/views/screens/BMI/measureBMI_Screen.dart';
+import 'package:health_care/views/tools/BMI/measureBMI_Screen.dart';
 import 'package:health_care/views/screens/home/service_screen.dart';
 import 'package:health_care/views/screens/notification/notification_screen.dart';
 
@@ -182,7 +182,7 @@ class _HomePage extends State<HomePage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const BmiScreen()));
+                                              MeasurebmiScreen()));
                                 }),
                                 _buildFeatureButton('Kiểm tra sức khỏe',
                                     AppIcons.healthCheck, () {}),
@@ -338,7 +338,7 @@ Widget _buildFeatureButton(String text, String icon, VoidCallback onTap) {
             text,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 13,
               color: Colors.black,
             ),
           ),

@@ -135,60 +135,80 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
         Expanded(
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
-            child: ListView(
-              children: [
-                // Text('Customer ID: ${widget.customerId}'),
-                // Text("Clinic ID: ${widget.clinicId}"),
-                // Text("Dịch vụ đã chọn: ${widget.selectedServiceIds}"),
-                // Text("Ngày khám: ${widget.date}"),
-                // Text("Giờ khám: ${widget.time}"),
-                // Text("Thanh toán: ${widget.paymentId}"),
-                HospitalInfoWidget(
-                  clinicId: widget.clinicId,
-                ),
-                const SectionTitle(title: 'Thông tin bệnh nhân'),
-                const WidgetUserprofileCard(),
-                const SectionTitle(title: 'Thông tin dịch vụ'),
-                Card(
-                  child: Container(
+            child: services == null
+                ? Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
+                    height: 700,
+                    alignment: Alignment.center,
+                    child: SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: CircularProgressIndicator(strokeWidth: 3),
                     ),
-                    child: services == null
-                        ? Text('Chưa có dịch vụ')
-                        : ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: services!.length,
-                            itemBuilder: (context, index) {
-                              final service = services![index];
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    service.name,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  Text(
-                                    '${NumberFormat('#,###', 'vi_VN').format(service.price ?? 0)} VNĐ',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              );
-                            },
+                  )
+                : ListView(
+                    children: [
+                      // Text('Customer ID: ${widget.customerId}'),
+                      // Text("Clinic ID: ${widget.clinicId}"),
+                      // Text("Dịch vụ đã chọn: ${widget.selectedServiceIds}"),
+                      // Text("Ngày khám: ${widget.date}"),
+                      // Text("Giờ khám: ${widget.time}"),
+                      // Text("Thanh toán: ${widget.paymentId}"),
+                      HospitalInfoWidget(
+                        clinicId: widget.clinicId,
+                      ),
+                      const SectionTitle(title: 'Thông tin bệnh nhân'),
+                      const WidgetUserprofileCard(),
+                      const SectionTitle(title: 'Thông tin dịch vụ'),
+                      Card(
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
                           ),
+                          child: services == null
+                              ? Text('Chưa có dịch vụ')
+                              : ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: services!.length,
+                                  itemBuilder: (context, index) {
+                                    final service = services![index];
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'Dịch vụ: ${service.name}',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                color: AppColors.deepBlue,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(
+                                          'Giá: ${NumberFormat('#,###', 'vi_VN').format(service.price ?? 0)} VNĐ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(height: 10),
+                                      ],
+                                    );
+                                  },
+                                ),
+                        ),
+                      ),
+                      WidgetLineBold(),
+                      const CancellationNotice(),
+                    ],
                   ),
-                ),
-                WidgetLineBold(),
-                const CancellationNotice(),
-              ],
-            ),
           ),
         ),
         BottomBar(
@@ -221,42 +241,6 @@ class SectionTitle extends StatelessWidget {
     );
   }
 }
-
-// class BookingInformation extends StatelessWidget {
-//   final String text1;
-//   final String text2;
-//   final String text3;
-//   final String text4;
-
-//   const BookingInformation({
-//     super.key,
-//     required this.text1,
-//     required this.text2,
-//     required this.text3,
-//     required this.text4,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       margin: const EdgeInsets.only(top: 10),
-//       padding: const EdgeInsets.all(10),
-//       decoration: BoxDecoration(
-//         borderRadius: BorderRadius.circular(15),
-//         color: Colors.white,
-//       ),
-//       child: Column(
-//         children: [
-//           BookingInfoRow(image: AppIcons.specialty, text: text1),
-//           BookingInfoRow(image: AppIcons.service2, text: text2),
-//           BookingInfoRow(image: AppIcons.calendar, text: text3),
-//           BookingInfoRow(
-//               image: AppIcons.payment, text: text4, isTextBlack: true),
-//         ],
-//       ),
-//     );
-//   }
-// }
 
 class BookingInfoRow extends StatelessWidget {
   final String image;
@@ -366,7 +350,7 @@ class BottomBar extends StatelessWidget {
               priceDetails: [
                 {'title': 'Tiền khám', 'price': '0 VNĐ'},
                 {
-                  'title': 'Dịch vụ khám thêm',
+                  'title': 'Tiền dịch vụ',
                   'price': _calculateTotalPrice(),
                 },
                 {
@@ -381,7 +365,7 @@ class BottomBar extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: WidgetCustombutton(
               onTap: onContinue,
-              text: isLoading ? 'Đang xử lý...' : 'Thanh toán',
+              text: isLoading ? 'Đang xử lý...' : 'Đặt lịch khám',
               isLoading: isLoading,
             ),
           ),

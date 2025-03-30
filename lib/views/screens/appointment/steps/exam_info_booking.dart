@@ -308,6 +308,7 @@ class _TimeSelectorState extends State<TimeSelector> {
         text: selectedTime,
         bottomSheet: SelectTimeWidget(
           onTimeSelected: updateSelectedTime,
+          selectedDate: widget.selectedDate,
         ),
         color: selectedTime != 'Chọn giờ khám'
             ? AppColors.deepBlue

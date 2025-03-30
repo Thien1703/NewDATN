@@ -5,6 +5,7 @@ import 'package:health_care/viewmodels/api/appointmentService_api.dart';
 import 'package:health_care/viewmodels/api/appointment_api.dart';
 import 'package:health_care/views/screens/clinic/clinic_screen.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
+import 'package:health_care/views/widgets/bottomSheet/showCustomer.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/views/widgets/widget_lineBold.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -175,7 +176,12 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
           _buildInfoRow('Số điện thoại', customer.phoneNumber, Colors.black),
           const WidgetLineBold(),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) => Showcustomer(),
+              );
+            },
             child: const Text('Chi tiết',
                 style: TextStyle(
                     fontSize: 13,
@@ -206,7 +212,7 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
               ),
               _buildInfoRow(
                 "Bác sĩ",
-                item.employee?.fullName ?? "Chưa chọn",
+                item.employee?.fullName ?? "Đang cập nhật",
                 Colors.black,
               ),
               WidgetLineBold(),

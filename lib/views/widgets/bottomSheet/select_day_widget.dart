@@ -31,9 +31,11 @@ class _SelectDayWidgetState extends State<SelectDayWidget> {
             locale: 'vi',
             selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
             onDaySelected: (selectedDay, focusedDay) {
-              if (selectedDay.isBefore(DateTime.now())) {
+              if (selectedDay
+                  .isBefore(DateTime.now().subtract(Duration(days: 1)))) {
                 return;
               }
+
               setState(() {
                 _selectedDay = selectedDay;
                 _focusedDay = focusedDay;

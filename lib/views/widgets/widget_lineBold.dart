@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 
 class WidgetLineBold extends StatelessWidget {
-  const WidgetLineBold({super.key});
+  const WidgetLineBold({
+    super.key,
+    this.line,
+  });
+  final int? line;
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: List.generate(23, (index) {
+      children: List.generate(25, (index) {
         return Container(
           margin: EdgeInsets.symmetric(vertical: 15),
           width: 7,
           height: 1.5,
-          color: AppColors.neutralGrey2,
+          color: const Color.fromARGB(255, 189, 189, 189),
         );
       }),
     );
