@@ -10,6 +10,7 @@ import 'package:health_care/views/screens/BMI/measureBMI_Screen.dart';
 import 'package:health_care/views/screens/chat/clinic_chat_screen.dart';
 import 'package:health_care/views/screens/home/service_screen.dart';
 import 'package:health_care/views/screens/notification/notification_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -42,6 +43,15 @@ class _HomePage extends State<HomePage> {
       specialties = data;
       customers = result;
     });
+  }
+
+  void _launchURL(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      print("Không thể mở đường dẫn: $url");
+    }
   }
 
   @override
@@ -185,12 +195,78 @@ class _HomePage extends State<HomePage> {
                                           builder: (context) =>
                                               const BmiScreen()));
                                 }),
-                                _buildFeatureButton('Kiểm tra sức khỏe',
-                                    AppIcons.healthCheck, () {}),
+                                _buildFeatureButton(
+                                  'CSKH',
+                                  AppIcons.healthCheck,
+                                  () =>
+                                      _launchURL('https://zalo.me/0917107881'),
+                                ),
                                 _buildFeatureButton(
                                     'Tìm phòng khám', AppIcons.mapPlus, () {}),
                                 SizedBox(width: 10),
                               ],
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          GestureDetector(
+                            onTap: () => _launchURL(
+                                'https://zalo.me/0917107881'), // Link Zalo hoặc Fanpage
+                            child: Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 16), // Căn lề
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 16),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xFF0077FF),
+                                    Color(0xFF00A2FF)
+                                  ], // Gradient xanh
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        'assets/icons/chat_icon.png', // Thay bằng icon chat của bạn
+                                        width: 40,
+                                        height: 40,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        'khám online với\n      Bác Sĩ',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 6, horizontal: 12),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Text(
+                                      'Chat ngay',
+                                      style: TextStyle(
+                                        color: Colors.blueAccent,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                           CarouselSlider(
