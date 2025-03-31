@@ -215,7 +215,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 5,
                                 mainAxisSpacing: 5,
-                                childAspectRatio: 0.7,
+                                childAspectRatio: 0.6,
                               ),
                               itemCount: entry.value.length,
                               itemBuilder: (context, index) {
@@ -274,16 +274,16 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                           const SizedBox(height: 4),
                                           Row(
                                             children: [
-                                              const Icon(Icons.monetization_on,
-                                                  size: 22,
-                                                  color: Colors.yellow),
+                                              // const Icon(Icons.monetization_on,
+                                              //     size: 22,
+                                              //     color: Colors.yellow),
                                               const SizedBox(width: 4),
                                               Text(
                                                 service.formattedPrice,
                                                 style: const TextStyle(
                                                   color: Colors.black54,
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 19,
+                                                  fontSize: 18,
                                                 ),
                                               ),
                                             ],
