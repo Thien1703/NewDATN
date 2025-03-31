@@ -340,41 +340,47 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
           children: [
             Text(
               'Đã chọn ${selectedServices.length} dịch vụ',
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
+            Row(
               children: [
-                const Text(
-                  "Tổng thanh toán",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "Tổng",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    Text(
+                      '${formatCurrency(getTotalPrice())}',
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.deepBlue),
+                    ),
+                  ],
                 ),
-                Text(
-                  '${formatCurrency(getTotalPrice())}',
-                  style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.deepBlue),
+                ElevatedButton(
+                  onPressed: selectedServices.isEmpty
+                      ? null
+                      : () {
+                          Navigator.pop(context, {
+                            'selectedServiceList': selectedServices.toList(),
+                            'selectedServiceId':
+                                selectedServices.map((s) => s.id).toList(),
+                          });
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: selectedServices.isEmpty
+                        ? Colors.grey
+                        : AppColors.accent,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('XONG'),
                 ),
               ],
-            ),
-            ElevatedButton(
-              onPressed: selectedServices.isEmpty
-                  ? null
-                  : () {
-                      Navigator.pop(context, {
-                        'selectedServiceList': selectedServices.toList(),
-                        'selectedServiceId':
-                            selectedServices.map((s) => s.id).toList(),
-                      });
-                    },
-              style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    selectedServices.isEmpty ? Colors.grey : AppColors.accent,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text('XONG'),
-            ),
+            )
           ],
         ),
       ),
