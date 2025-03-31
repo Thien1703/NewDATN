@@ -1,11 +1,10 @@
-import 'package:health_care/models/appointment/appointment_service.dart';
-import 'package:health_care/views/screens/appointment/appointment_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:health_care/config/app_config.dart';
 import 'package:health_care/models/appointment/appointment.dart';
 import 'package:health_care/services/local_storage_service.dart';
 import 'package:health_care/models/appointment/appointment_Create.dart';
+import 'package:intl/intl.dart';
 
 class AppointmentApi {
   //Lấy tất cả đặt lịch
@@ -154,5 +153,91 @@ class AppointmentApi {
       print("⚠ Lỗi hệ thống: $e");
     }
     return null; // Nếu có lỗi, trả về null
+  }
+
+  //Hủy đặt lịch
+  static Future<bool?> getCancelAppointment(int appointmentId) async {
+    final url = Uri.parse('${AppConfig.baseUrl}/appointment/cancel');
+    String? token = await LocalStorageService.getToken();
+    if (token == null) return null;
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'id': appointmentId,
+      }),
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['status'] == 0;
+    } else {
+      print("Lỗi hủy đặt lịch: ${response.body}");
+    }
+    return null;
+  }
+
+  // Hủy đặt lịch
+  static Future<bool?> cancelAppointment(int appointmentId) async {
+    final url = Uri.parse('${AppConfig.baseUrl}/appointment/cancel');
+    String? token = await LocalStorageService.getToken();
+    if (token == null) return null;
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({'id': appointmentId}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['status'] == 0;
+    }
+    return null;
+  }
+
+  // Kiểm tra slot trống
+  static Future<Map<String, int>> fetchAvailableSlots(
+      int clinicId, DateTime date) async {
+    try {
+      final url =
+          Uri.parse('${AppConfig.baseUrl}/appointment/check-available-slots');
+      String? token = await LocalStorageService.getToken();
+      if (token == null) {
+        print('Error: Token is null');
+        return {};
+      }
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          "date": DateFormat('yyyy-MM-dd').format(date),
+          "clinicId": clinicId,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['status'] == 0 && data['data'] != null) {
+          Map<String, int> availableSlots = Map<String, int>.from(data['data']);
+          return availableSlots;
+        }
+      }
+
+      print('API Error: ${response.statusCode} - ${response.body}');
+      return {}; // Trả về danh sách trống nếu có lỗi
+    } catch (e) {
+      print('fetchAvailableSlots Error: $e');
+      return {};
+    }
   }
 }

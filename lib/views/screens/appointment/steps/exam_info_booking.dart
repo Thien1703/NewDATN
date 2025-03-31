@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_icons.dart';
 import 'package:health_care/config/app_config.dart';
+import 'package:health_care/viewmodels/api/clinic_api.dart';
 import 'package:health_care/views/widgets/appointment/widget_hospital_info_card.dart';
 import 'package:health_care/views/widgets/widget_select_item.dart';
 import 'package:health_care/views/widgets/appointment/widget_customButton.dart';
@@ -43,7 +44,7 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
   }
 
   void fetchClinics() async {
-    Clinic? data = await AppConfig.getClinicById(widget.clinicId);
+    Clinic? data = await ClinicApi.getClinicById(widget.clinicId);
     if (data != null) {
       setState(() {
         clinices = data;
@@ -93,7 +94,10 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
                   ignoring: !isServiceSelected,
                   child: Opacity(
                     opacity: isServiceSelected ? 1 : 0.5,
-                    child: DateSelector(onDateSelected: updateSelectedDate),
+                    child: DateSelector(
+                      onDateSelected: updateSelectedDate,
+                      clinicId: widget.clinicId,
+                    ),
                   ),
                 ),
                 SectionTitle(title: 'Giờ khám'),
@@ -101,7 +105,10 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
                   ignoring: !isDateSelected,
                   child: Opacity(
                     opacity: isDateSelected ? 1 : 0.5,
-                    child: TimeSelector(onTimeSelected: updateSelectedTime),
+                    child: TimeSelector(
+                      onTimeSelected: updateSelectedTime,
+                      selectedDate: selectedDate,
+                    ),
                   ),
                 ),
               ],
@@ -226,7 +233,9 @@ class _ServiceSelectorState extends State<ServiceSelector> {
 
 class DateSelector extends StatefulWidget {
   final Function(DateTime) onDateSelected;
-  const DateSelector({super.key, required this.onDateSelected});
+  final int clinicId;
+  const DateSelector(
+      {super.key, required this.onDateSelected, required this.clinicId});
 
   @override
   State<DateSelector> createState() => _DateSelectorState();
@@ -239,13 +248,17 @@ class _DateSelectorState extends State<DateSelector> {
     final DateTime? pickedDate = await showModalBottomSheet<DateTime>(
       context: context,
       isScrollControlled: true, // Quan trọng để tự động co giãn
-      builder: (context) => SelectDayWidget(),
+      builder: (context) => SelectDayWidget(
+        clinicId: widget.clinicId,
+      ),
     );
 
     if (pickedDate != null) {
       setState(() {
         _selectedDate = pickedDate;
       });
+      print("Ngày được chọn: ${DateFormat('yyyy-MM-dd').format(pickedDate)}");
+
       widget.onDateSelected(pickedDate); // Truyền ngày lên ExamInfoBooking
     }
   }
@@ -268,7 +281,9 @@ class _DateSelectorState extends State<DateSelector> {
 
 class TimeSelector extends StatefulWidget {
   final Function(String) onTimeSelected;
-  const TimeSelector({super.key, required this.onTimeSelected});
+  final DateTime? selectedDate;
+  const TimeSelector(
+      {super.key, required this.onTimeSelected, this.selectedDate});
 
   @override
   State<TimeSelector> createState() => _TimeSelectorState();
@@ -291,7 +306,10 @@ class _TimeSelectorState extends State<TimeSelector> {
       child: SelectItemWidget(
         image: AppIcons.clock,
         text: selectedTime,
-        bottomSheet: SelectTimeWidget(onTimeSelected: updateSelectedTime),
+        bottomSheet: SelectTimeWidget(
+          onTimeSelected: updateSelectedTime,
+          selectedDate: widget.selectedDate,
+        ),
         color: selectedTime != 'Chọn giờ khám'
             ? AppColors.deepBlue
             : Color(0xFF484848),

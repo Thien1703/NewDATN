@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/config/app_config.dart';
 import 'package:health_care/models/clinic.dart';
+import 'package:health_care/viewmodels/api/clinic_api.dart';
 
 class HospitalInfoWidget extends StatefulWidget {
   const HospitalInfoWidget({
@@ -23,7 +24,7 @@ class _HospitalInfoWidgetState extends State<HospitalInfoWidget> {
   }
 
   void fetchClinics() async {
-    Clinic? data = await AppConfig.getClinicById(widget.clinicId);
+    Clinic? data = await ClinicApi.getClinicById(widget.clinicId);
     if (data != null) {
       setState(() {
         clinices = data;
@@ -47,7 +48,7 @@ class _HospitalInfoWidgetState extends State<HospitalInfoWidget> {
           Text(
             clinices?.name ?? 'Không xác định',
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),

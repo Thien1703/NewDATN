@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/appointment/appointment_service.dart';
 import 'package:health_care/viewmodels/api/appointmentService_api.dart';
+import 'package:health_care/viewmodels/api/appointment_api.dart';
+import 'package:health_care/views/screens/clinic/clinic_screen.dart';
+import 'package:health_care/views/screens/home/home_screens.dart';
+import 'package:health_care/views/widgets/bottomSheet/showCustomer.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/views/widgets/widget_lineBold.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class PaidDetailScreen extends StatefulWidget {
@@ -32,6 +36,11 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
     appointmentServices =
         await AppointmentserviceApi.getByAppointment(widget.appointmentId);
     setState(() {});
+  }
+
+  String formatCurrency(int amount) {
+    final formatter = NumberFormat("#,###", "vi_VN");
+    return "${formatter.format(amount)}VNĐ";
   }
 
   @override
@@ -173,7 +182,12 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
           _buildInfoRow('Số điện thoại', customer.phoneNumber, Colors.black),
           const WidgetLineBold(),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) => Showcustomer(),
+              );
+            },
             child: const Text('Chi tiết',
                 style: TextStyle(
                     fontSize: 13,
@@ -199,12 +213,12 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
               ),
               _buildInfoRow(
                 "Giá",
-                item.service?.price.toString() ?? "Không có giá",
+                formatCurrency(item.service?.price?.toInt() ?? 0),
                 Colors.green,
               ),
               _buildInfoRow(
                 "Bác sĩ",
-                item.employee?.fullName ?? "Chưa chọn",
+                item.employee?.fullName ?? "Đang cập nhật",
                 Colors.black,
               ),
               WidgetLineBold(),
@@ -269,23 +283,34 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
   }
 
   Widget _buildSelectedSelected() {
-    return Container(
-      margin: EdgeInsets.only(bottom: 10),
-      width: double.infinity,
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ClinicScreen(
+                iconBack: true,
+              ),
+            ));
+      },
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10),
-        alignment: Alignment.center,
-        margin: EdgeInsets.symmetric(horizontal: 20),
-        decoration: BoxDecoration(
-            color: AppColors.deepBlue,
-            border: Border.all(color: AppColors.deepBlue, width: 1),
-            borderRadius: BorderRadius.circular(10)),
-        child: Text(
-          'Đạt lịch khám khác',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.white,
+        margin: EdgeInsets.only(bottom: 10),
+        width: double.infinity,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          alignment: Alignment.center,
+          margin: EdgeInsets.symmetric(horizontal: 20),
+          decoration: BoxDecoration(
+              color: AppColors.deepBlue,
+              border: Border.all(color: AppColors.deepBlue, width: 1),
+              borderRadius: BorderRadius.circular(10)),
+          child: Text(
+            'Đạt lịch khám khác',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+            ),
           ),
         ),
       ),
@@ -293,22 +318,79 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
   }
 
   Widget _buildSelectedCancel() {
-    return Container(
-      margin: EdgeInsets.only(bottom: 10),
-      width: double.infinity,
+    return InkWell(
+      onTap: () {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              title: Center(
+                child: Text(
+                  'Xác nhận hủy lịch?',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+              content: Text(
+                'Bạn có chắc chắn muốn hủy lịch khám này không',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+              ),
+              actionsAlignment: MainAxisAlignment.center,
+              actions: [
+                _buildAlertDialog(
+                    label: 'Hủy',
+                    onTap: () {
+                      Navigator.pop(context);
+                    }),
+                _buildAlertDialog(
+                    label: 'Xác nhận',
+                    onTap: () async {
+                      bool? sussess = await AppointmentApi.getCancelAppointment(
+                          appointmentServices!.first.appointment.id);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomeScreens(),
+                          ));
+                      if (sussess == true) {
+                        fetchAppointmentServices();
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('Hủy lịch thành công'),
+                          backgroundColor: Colors.grey,
+                        ));
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('Hủy lịch thất bại. Vui lòng thử lại'),
+                          backgroundColor: Colors.red,
+                        ));
+                      }
+                    },
+                    colorBackground: AppColors.deepBlue,
+                    colorText: Colors.white)
+              ],
+            );
+          },
+        );
+      },
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10),
-        alignment: Alignment.center,
-        margin: EdgeInsets.symmetric(horizontal: 20),
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.red, width: 1),
-            borderRadius: BorderRadius.circular(10)),
-        child: Text(
-          'Hủy lịch',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.red,
+        margin: EdgeInsets.only(bottom: 10),
+        width: double.infinity,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          alignment: Alignment.center,
+          margin: EdgeInsets.symmetric(horizontal: 20),
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.red, width: 1),
+              borderRadius: BorderRadius.circular(10)),
+          child: Text(
+            'Hủy lịch',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.red,
+            ),
           ),
         ),
       ),
@@ -332,6 +414,30 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
               style: TextStyle(
                   fontSize: 12, fontWeight: FontWeight.w600, color: color)),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAlertDialog(
+      {required String label,
+      VoidCallback? onTap,
+      Color? colorBackground,
+      Color? colorText}) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: 120,
+        padding: EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+          color: colorBackground,
+          border: Border.all(color: colorBackground ?? Colors.grey, width: 1),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: TextStyle(color: colorText, fontSize: 15),
+        ),
       ),
     );
   }

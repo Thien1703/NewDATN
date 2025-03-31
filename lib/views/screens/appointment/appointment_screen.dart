@@ -100,7 +100,12 @@ class _AppointmentScreen extends State<AppointmentScreen> {
       selectedIcon: StepIndicator(
         currentIndex: _currentIndex,
         isSelected: _isSelected,
-        onNavigateToScreen: navigateToScreen,
+        // onNavigateToScreen: navigateToScreen,
+        onNavigateToScreen: (index, title) {
+          if (index > _currentIndex) {
+            navigateToScreen(index, title);
+          }
+        },
       ),
       body: Container(
         width: double.infinity,
