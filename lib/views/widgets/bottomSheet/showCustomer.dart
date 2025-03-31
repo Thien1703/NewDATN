@@ -52,16 +52,16 @@ class _Showcustomer extends State<Showcustomer> {
                           'Họ và tên', customers?.fullName ?? 'Chưa cập nhật'),
                       _buildLabelRow('Điện thoại',
                           customers?.phoneNumber ?? 'Chưa cập nhật'),
-                      _buildLabelRow(
-                          'Ngày sinh', customers?.birthDate ?? 'Chưa cập nhật'),
+                      // _buildLabelRow(
+                      //     'Ngày sinh', customers?.birthDate ?? 'Chưa cập nhật'),
+                      _buildLabelRow('Ngày sinh', 'Chưa cập nhật'),
                       _buildLabelRow(
                           'Giới tính', customers?.gender ?? 'Chưa cập nhật'),
                       _buildLabelRow(
                           'Địa chỉ', customers?.address ?? 'Chưa cập nhật'),
                       _buildLabelRow(
                           'Email', customers?.email ?? 'Chưa cập nhật'),
-                      _buildLabelRow('Mã căn cước công dân', 'Chưa cập nhật'),
-                      _buildLabelRow('Mã bảo hiểm y tế', 'Chưa cập nhật'),
+
                     ],
                   ),
                 ),

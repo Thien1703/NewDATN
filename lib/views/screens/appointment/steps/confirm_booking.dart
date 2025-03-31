@@ -188,13 +188,14 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                       children: [
                                         Row(
                                           children: [
-                                            Text(
+                                          Expanded(child:   Text(
                                               'Dịch vụ: ${service.name}',
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w600,
                                                 color: AppColors.deepBlue,
-                                              ),
+                                              ),softWrap: true,
+                                            ),
                                             ),
                                           ],
                                         ),

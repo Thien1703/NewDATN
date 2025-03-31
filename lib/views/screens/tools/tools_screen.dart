@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/views/screens/tools/BMI/BMI_screen.dart';
-import 'package:health_care/views/screens/tools/BMI/measureBMI_Screen.dart';
 import 'package:health_care/views/screens/tools/BMR/BMR_screen.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 
@@ -14,64 +13,58 @@ class ToolsScreen extends StatefulWidget {
 class _ToolsScreen extends State<ToolsScreen> {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return WidgetHeaderBody(
       iconBack: false,
       title: 'Công cụ sức khỏe',
       body: Container(
         color: Colors.white,
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Công cụ tính nhanh',
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Công cụ tính nhanh',
+              style: TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Text(
+                'Kiểm tra nhanh các chỉ số sức khỏe',
                 style: TextStyle(
-                  fontSize: 19,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: Text(
-                  'Kiểm tra nhanh các chỉ số sức khỏe',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildSelected('assets/images/image2.jpg', () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BmiScreen(),
-                        ));
-                  }),
-                  _buildSelected('assets/images/image1.jpg', () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BmrScreen(),
-                        ));
-                  }),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildSelected('assets/images/image3.jpg', () {}),
-                  _buildSelected('assets/images/image4.jpg', () {}),
-                ],
-              )
-            ],
-          ),
+            ),
+            GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: screenWidth > 600 ? 3 : 2,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20,
+              childAspectRatio: 1.2,
+              children: [
+                _buildSelected('assets/images/image2.jpg', () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const BmiScreen()),
+                  );
+                }),
+                _buildSelected('assets/images/image1.jpg', () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const BmrScreen()),
+                  );
+                }),
+                _buildSelected('assets/images/image3.jpg', () {}),
+                _buildSelected('assets/images/image4.jpg', () {}),
+              ],
+            )
+          ],
         ),
       ),
     );
@@ -80,9 +73,12 @@ class _ToolsScreen extends State<ToolsScreen> {
   Widget _buildSelected(String image, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
-      child: Image.asset(
-        image,
-        width: 170,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Image.asset(
+          image,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }

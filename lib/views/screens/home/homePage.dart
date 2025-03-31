@@ -6,6 +6,8 @@ import 'package:health_care/models/specialty.dart';
 import 'package:health_care/models/customer.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/viewmodels/api/specialty_api.dart';
+import 'package:health_care/views/screens/map/chatbot.dart';
+import 'package:health_care/views/screens/map/searchMap.dart';
 import 'package:health_care/views/screens/tools/BMI/BMI_screen.dart';
 import 'package:health_care/views/screens/tools/BMI/measureBMI_Screen.dart';
 import 'package:health_care/views/screens/home/service_screen.dart';
@@ -179,9 +181,15 @@ class _HomePage extends State<HomePage> {
                             child: Row(
                               children: [
                                 _buildFeatureButton(
-                                    'Tìm phòng khám', AppIcons.mapPlus, () {}),
+                                    'Tìm phòng khám', AppIcons.mapPlus, () {  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => SearchScreen()));}),
                                 _buildFeatureButton(
-                                    'Chat với AI', AppIcons.robotAI, () {}),
+                                    'Chat với AI', AppIcons.robotAI, () {  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ChatBotScreen()));}),
                                 _buildFeatureButton('Đo BMI', AppIcons.bmiIcon,
                                     () {
                                   Navigator.push(

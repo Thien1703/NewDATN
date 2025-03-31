@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:health_care/views/screens/home/home_screens.dart';
 import 'package:health_care/views/screens/tools/gender_enum.dart';
 
 class BmiResultScreen extends StatelessWidget {
@@ -60,7 +61,9 @@ class BmiResultScreen extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.w600)),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreens(),));
+            },
             icon: Icon(
               Icons.cancel,
               size: 19,
