@@ -1,15 +1,17 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:health_care/config/app_config.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/viewmodels/auth_viewmodel.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/views/widgets/widget_selectGender.dart';
 import 'package:provider/provider.dart';
-import 'package:vietnam_provinces/vietnam_provinces.dart';
+import 'package:scroll_date_picker/scroll_date_picker.dart';
+import 'package:intl/intl.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  final Function onProfileUpdated; // Callback để cập nhật UI
+  final Function onProfileUpdated;
   const EditProfileScreen({super.key, required this.onProfileUpdated});
 
   @override
@@ -22,18 +24,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
 
-  Province? selectedProvince;
   String? selectedGender;
   bool isButtonEnabled = false;
-  File? _avatarFile; // Ảnh đại diện
+  File? _avatarFile;
+  DateTime _selectedDate = DateTime.now();
 
   @override
   void initState() {
     super.initState();
+    _loadUserProfile();
     _nameController.addListener(_updateButtonState);
     _dobController.addListener(_updateButtonState);
     _emailController.addListener(_updateButtonState);
     _addressController.addListener(_updateButtonState);
+  }
+
+  Future<void> _loadUserProfile() async {
+    final userProfile = await AppConfig.getUserProfile();
+    if (userProfile != null) {
+      setState(() {
+        _nameController.text = userProfile['fullName'] ?? '';
+        _dobController.text = userProfile['birthDate'] ?? '';
+        _emailController.text = userProfile['email'] ?? '';
+        _addressController.text = userProfile['address'] ?? '';
+        selectedGender = userProfile['gender'];
+        _selectedDate =
+            DateTime.tryParse(userProfile['birthDate'] ?? '') ?? DateTime.now();
+      });
+    }
   }
 
   void _updateButtonState() {
@@ -46,7 +64,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
-  /// Chọn ảnh từ thư viện và upload
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? pickedFile =
@@ -56,31 +73,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         _avatarFile = File(pickedFile.path);
       });
 
-      // Gọi hàm uploadAvatar từ AuthViewModel
       final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
       await authViewModel.uploadAvatar(context, _avatarFile!);
 
       _updateButtonState();
     }
-  }
-
-  /// Cập nhật hồ sơ người dùng
-  void _updateUserProfile(BuildContext context) async {
-    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
-
-    Map<String, dynamic> profileData = {
-      "fullName": _nameController.text.trim(),
-      "birthDate": _dobController.text.trim(),
-      "email": _emailController.text.trim(),
-      "address": _addressController.text.trim(),
-      "gender": selectedGender,
-    };
-    await authViewModel.updateProfile(context, profileData, _avatarFile);
-
-    // ✅ Gọi lại hàm cập nhật UI sau khi cập nhật xong
-    widget.onProfileUpdated();
-
-    // authViewModel.updateProfile(context, profileData, _avatarFile);
   }
 
   @override
@@ -134,10 +131,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _customTitle(title: 'Ngày sinh'),
-                        _customTextField(
-                          controller: _dobController,
-                          labelText: 'Ngày / Tháng / Năm',
-                          width: 170,
+                        SizedBox(
+                          height: 250,
+                          child: ScrollDatePicker(
+                            selectedDate: _selectedDate,
+                            locale: Locale('en'),
+                            onDateTimeChanged: (DateTime value) {
+                              setState(() {
+                                _selectedDate = value;
+                                _dobController.text =
+                                    DateFormat('yyyy-MM-dd').format(value);
+                              });
+                              _updateButtonState();
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -163,14 +170,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     controller: _emailController, labelText: 'Email'),
                 _customTitle(title: 'Địa chỉ'),
                 _customTextField(
-                    controller: _addressController,
-                    labelText: 'Chỉ nhập số nhà, tên đường, ấp thôn xóm,...'),
+                    controller: _addressController, labelText: 'Nhập địa chỉ'),
                 Container(
                   margin: const EdgeInsets.only(top: 12, bottom: 20),
                   width: double.infinity,
                   child: OutlinedButton(
                     onPressed: isButtonEnabled
-                        ? () => _updateUserProfile(context)
+                        ? () async {
+                            final authViewModel = Provider.of<AuthViewModel>(
+                                context,
+                                listen: false);
+                            Map<String, dynamic> profileData = {
+                              "fullName": _nameController.text.trim(),
+                              "birthDate": _dobController.text.trim(),
+                              "email": _emailController.text.trim(),
+                              "address": _addressController.text.trim(),
+                              "gender": selectedGender,
+                            };
+                            bool success = await authViewModel.updateProfile(
+                                context, profileData, _avatarFile);
+                            if (success) {
+                              widget
+                                  .onProfileUpdated(); // Gọi lại hàm để làm mới dữ liệu
+                            }
+                          }
                         : null,
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(
@@ -180,18 +203,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       backgroundColor: isButtonEnabled
                           ? AppColors.deepBlue
                           : AppColors.grey4,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 30),
                     ),
                     child: Text(
                       'Cập nhật',
-                      style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.neutralWhite),
+                      style: TextStyle(color: AppColors.neutralWhite),
                     ),
                   ),
                 ),
@@ -202,49 +217,47 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
     );
   }
+}
 
-  Widget _customTitle({required String title}) {
-    return Container(
-      margin: const EdgeInsets.only(top: 20),
-      child: Text(
-        title,
-        style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: AppColors.deepBlue),
-      ),
-    );
-  }
+Widget _customTitle({required String title}) {
+  return Container(
+    margin: const EdgeInsets.only(top: 20),
+    child: Text(
+      title,
+      style: TextStyle(
+          fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.deepBlue),
+    ),
+  );
+}
 
-  Widget _customTextField({
-    required TextEditingController controller,
-    required String labelText,
-    double width = double.infinity,
-  }) {
-    return Container(
-      height: 45,
-      width: width,
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: labelText,
-          filled: true,
-          fillColor: Colors.white,
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          labelStyle: const TextStyle(fontSize: 14),
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            borderSide: BorderSide(color: AppColors.accent, width: 1),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            borderSide: BorderSide(color: AppColors.neutralGrey2, width: 1),
-          ),
+Widget _customTextField({
+  required TextEditingController controller,
+  required String labelText,
+  double width = double.infinity,
+}) {
+  return Container(
+    height: 45,
+    width: width,
+    margin: const EdgeInsets.symmetric(vertical: 5),
+    child: TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: labelText,
+        filled: true,
+        fillColor: Colors.white,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        labelStyle: const TextStyle(fontSize: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          borderSide: BorderSide(color: AppColors.accent, width: 1),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          borderSide: BorderSide(color: AppColors.neutralGrey2, width: 1),
         ),
       ),
-    );
-  }
+    ),
+  );
 }

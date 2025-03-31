@@ -147,7 +147,8 @@ class AppConfig {
     }
   }
 
-   static Future<String?> uploadAvatar(File imageFile, int userId) async {
+  /// Đổi avatar
+  static Future<String?> uploadAvatar(File imageFile, int userId) async {
     final url = Uri.parse('$baseUrl/customer/avatar/$userId');
     String? token = await LocalStorageService.getToken();
 

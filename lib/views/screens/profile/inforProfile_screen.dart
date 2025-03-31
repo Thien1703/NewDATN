@@ -61,12 +61,17 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
-                  _buildInfoRow('Họ và tên', userData?['fullName'] ?? 'Chưa cập nhật'),
-                  _buildInfoRow('Ngày sinh', formatBirthDate(userData?['birthDate'])),
-                  _buildInfoRow('Giới tính', userData?['gender'] ?? 'Chưa cập nhật'),
+                  _buildInfoRow(
+                      'Họ và tên', userData?['fullName'] ?? 'Chưa cập nhật'),
+                  _buildInfoRow(
+                      'Ngày sinh', formatBirthDate(userData?['birthDate'])),
+                  _buildInfoRow(
+                      'Giới tính', userData?['gender'] ?? 'Chưa cập nhật'),
                   _buildInfoRow('Email', userData?['email'] ?? 'Chưa cập nhật'),
-                  _buildInfoRow('Số điện thoại', userData?['phoneNumber'] ?? 'Chưa cập nhật'),
-                  _buildInfoRow('Địa chỉ', userData?['address'] ?? 'Chưa cập nhật'),
+                  _buildInfoRow('Số điện thoại',
+                      userData?['phoneNumber'] ?? 'Chưa cập nhật'),
+                  _buildInfoRow(
+                      'Địa chỉ', userData?['address'] ?? 'Chưa cập nhật'),
                   const SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
@@ -76,10 +81,13 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => EditProfileScreen(
-                              onProfileUpdated: fetchUserData,
+                              onProfileUpdated: () async {
+                                await fetchUserData();
+                              },
                             ),
                           ),
                         );
+                        fetchUserData(); // Đảm bảo dữ liệu luôn mới ngay khi quay lại
                       },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(

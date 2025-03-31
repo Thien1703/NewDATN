@@ -42,9 +42,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           children: [
             _buildProfileHeader(),
-            _buildOrderSection(),
+            // _buildOrderSection(),
             _buildAccountSection(),
-            _buildPharmacyInfoSection(),
+            // _buildPharmacyInfoSection(),
             _buildLogoutButton(),
           ],
         ),
@@ -64,8 +64,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           CircleAvatar(
             radius: 40,
-            backgroundImage: _userData?['avatarPath'] != null
-                ? FileImage(File(_userData!['avatarPath']))
+            backgroundImage: _userData?['Avatar'] != null
+                ? NetworkImage(_userData!['Avatar'])
                 : const AssetImage('assets/images/avt.png') as ImageProvider,
           ),
           const SizedBox(width: 10),
@@ -94,40 +94,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildOrderSection() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Đơn của tôi",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildOrderItem(Icons.shopping_bag, "Đang xử lý"),
-              _buildOrderItem(Icons.local_shipping, "Đang giao"),
-              _buildOrderItem(Icons.check_circle, "Đã giao"),
-              _buildOrderItem(Icons.autorenew, "Đổi/Trả"),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildOrderItem(IconData icon, String label) {
-    return Column(
-      children: [
-        Icon(icon, size: 30, color: AppColors.deepBlue),
-        const SizedBox(height: 5),
-        Text(label, style: const TextStyle(fontSize: 14)),
-      ],
-    );
-  }
+  // Widget _buildOrderItem(IconData icon, String label) {
+  //   return Column(
+  //     children: [
+  //       Icon(icon, size: 30, color: AppColors.deepBlue),
+  //       const SizedBox(height: 5),
+  //       Text(label, style: const TextStyle(fontSize: 14)),
+  //     ],
+  //   );
+  // }
 
   Widget _buildAccountSection() {
     return Padding(
@@ -155,24 +130,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildPharmacyInfoSection() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Về Nhà thuốc FPT Long Châu",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          _buildMenuItem(Icons.info, "Giới thiệu nhà thuốc"),
-          _buildMenuItem(Icons.description, "Giấy phép kinh doanh"),
-          _buildMenuItem(Icons.policy, "Quy chế hoạt động"),
-        ],
-      ),
-    );
-  }
+  // Widget _buildPharmacyInfoSection() {
+  //   return Padding(
+  //     padding: const EdgeInsets.all(16.0),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         const Text(
+  //           "Về Nhà thuốc FPT Long Châu",
+  //           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+  //         ),
+  //         const SizedBox(height: 10),
+  //         _buildMenuItem(Icons.info, "Giới thiệu nhà thuốc"),
+  //         _buildMenuItem(Icons.description, "Giấy phép kinh doanh"),
+  //         _buildMenuItem(Icons.policy, "Quy chế hoạt động"),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildLogoutButton() {
     return Padding(

@@ -72,7 +72,7 @@ class AuthViewModel with ChangeNotifier {
     } else {
       Fluttertoast.showToast(
         msg: errorMessage,
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -116,7 +116,7 @@ class AuthViewModel with ChangeNotifier {
     if (errorMessage == null) {
       Fluttertoast.showToast(
         msg: "Cập nhật hồ sơ thành công!",
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.green,
         textColor: Colors.white,
@@ -126,7 +126,7 @@ class AuthViewModel with ChangeNotifier {
     } else {
       Fluttertoast.showToast(
         msg: errorMessage,
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
