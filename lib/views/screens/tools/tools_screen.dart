@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:health_care/views/tools/BMI/BMI_screen.dart';
-import 'package:health_care/views/tools/BMI/measureBMI_Screen.dart';
+import 'package:health_care/views/screens/tools/BMI/BMI_screen.dart';
+import 'package:health_care/views/screens/tools/BMI/measureBMI_Screen.dart';
+import 'package:health_care/views/screens/tools/BMR/BMR_screen.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 
 class ToolsScreen extends StatefulWidget {
@@ -50,7 +51,13 @@ class _ToolsScreen extends State<ToolsScreen> {
                           builder: (context) => BmiScreen(),
                         ));
                   }),
-                  _buildSelected('assets/images/image1.jpg', () {}),
+                  _buildSelected('assets/images/image1.jpg', () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BmrScreen(),
+                        ));
+                  }),
                 ],
               ),
               SizedBox(

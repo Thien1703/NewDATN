@@ -41,7 +41,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
         notifications.insert(0, newNotification);
       });
 
-      print("🟢 Thông báo mới đã được thêm. Tổng số hiện tại: ${notifications.length}");
+      print(
+          "🟢 Thông báo mới đã được thêm. Tổng số hiện tại: ${notifications.length}");
 
       await LocalStorageService.saveNotifications(notifications);
 
@@ -50,9 +51,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
     // Theo dõi trạng thái kết nối global
     _webSocketService.onConnectionChange = (bool isConnected) {
-      print(isConnected
-          ? "🟢 WebSocket kết nối!"
-          : "🔴 WebSocket ngắt kết nối.");
+      print(
+          isConnected ? "🟢 WebSocket kết nối!" : "🔴 WebSocket ngắt kết nối.");
       setState(() {
         _isConnected = isConnected;
       });
@@ -103,7 +103,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 final isNew = item["type"] == "NEW_APPOINTMENT";
 
                 return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   child: ListTile(
                     leading: CircleAvatar(
                       backgroundColor: isNew ? Colors.orange : Colors.green,
@@ -121,7 +122,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       children: [
                         if (item["appointment"] != null)
                           Text(_formatAppointment(item["appointment"])),
-                        Text("🕒 ${item["time"]}", style: const TextStyle(fontSize: 12)),
+                        Text("🕒 ${item["time"]}",
+                            style: const TextStyle(fontSize: 12)),
                       ],
                     ),
                     onTap: () => _showDetails(item),
@@ -135,8 +137,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
   String _formatAppointment(Map<String, dynamic> appointment) {
     try {
       final clinic = appointment["clinic"]?["name"] ?? "Phòng khám";
-      final date = DateFormat('dd/MM/yyyy').format(DateTime.parse(appointment["date"]));
-      final time = DateFormat('HH:mm').format(DateTime.parse("1970-01-01 ${appointment["time"]}"));
+      final date =
+          DateFormat('dd/MM/yyyy').format(DateTime.parse(appointment["date"]));
+      final time = DateFormat('HH:mm')
+          .format(DateTime.parse("1970-01-01 ${appointment["time"]}"));
       return "$clinic - $time ngày $date";
     } catch (e) {
       print("⚠️ Lỗi định dạng lịch hẹn: $e");

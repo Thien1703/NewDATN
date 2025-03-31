@@ -6,9 +6,11 @@ import 'package:health_care/models/specialty.dart';
 import 'package:health_care/models/customer.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/viewmodels/api/specialty_api.dart';
-import 'package:health_care/views/tools/BMI/measureBMI_Screen.dart';
+import 'package:health_care/views/screens/tools/BMI/BMI_screen.dart';
+import 'package:health_care/views/screens/tools/BMI/measureBMI_Screen.dart';
 import 'package:health_care/views/screens/home/service_screen.dart';
 import 'package:health_care/views/screens/notification/notification_screen.dart';
+import 'package:health_care/views/screens/tools/BMR/BMR_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -181,13 +183,18 @@ class _HomePage extends State<HomePage> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              MeasurebmiScreen()));
+                                          builder: (context) => BmiScreen()));
                                 }),
                                 _buildFeatureButton('Kiểm tra sức khỏe',
                                     AppIcons.healthCheck, () {}),
-                                _buildFeatureButton(
-                                    'Tìm phòng khám', AppIcons.mapPlus, () {}),
+                                _buildFeatureButton('Đo BMR', AppIcons.mapPlus,
+                                    () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => BmrScreen(),
+                                      ));
+                                }),
                                 SizedBox(width: 10),
                               ],
                             ),

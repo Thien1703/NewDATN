@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:health_care/views/screens/tools/gender_enum.dart';
 
 class BmiResultScreen extends StatelessWidget {
   final double bmi;
-  const BmiResultScreen({required this.bmi});
+  final double bfp;
+  final Gender gender;
+  const BmiResultScreen(
+      {super.key, required this.bmi, required this.bfp, required this.gender});
 
   String getBmiCategory() {
     if (bmi < 18.5) return 'Gầy';
@@ -47,13 +52,22 @@ class BmiResultScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text('Kết quả BMI', style: TextStyle(fontWeight: FontWeight.bold)),
-        centerTitle: true,
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
-        leading: BackButton(),
+        title: Text('Công cụ tính chi số BMI',
+            style: TextStyle(fontWeight: FontWeight.w600)),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.cancel,
+              size: 19,
+              color: Colors.grey.withOpacity(0.8),
+            ),
+          ),
+        ],
       ),
       backgroundColor: Colors.white,
       body: Padding(
@@ -61,12 +75,12 @@ class BmiResultScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('Chỉ số BMI của bạn là', style: TextStyle(fontSize: 20)),
+            Text('Chỉ số BMI của bạn là', style: TextStyle(fontSize: 16)),
             SizedBox(height: 10),
             Text(
               bmi.toStringAsFixed(1),
               style: TextStyle(
-                fontSize: 48,
+                fontSize: 38,
                 fontWeight: FontWeight.bold,
                 color: color,
               ),
