@@ -1,7 +1,8 @@
-import 'dart:convert'; // ✅ Quan trọng để dùng jsonDecode / jsonEncode
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:health_care/services/local_storage_service.dart';
-import 'package:health_care/services/websocket_service.dart';
+import 'package:health_care/services/websocket/websocket_manager.dart';
+import 'package:health_care/services/websocket/websocket_service.dart';
 import 'package:intl/intl.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -20,10 +21,44 @@ class _NotificationScreenState extends State<NotificationScreen> {
   void initState() {
     super.initState();
     _loadSavedNotifications();
-    _initializeWebSocket();
+
+    // Lấy instance WebSocketService global
+    _webSocketService = WebSocketManager.instance!;
+    _isConnected = true; // Đã kết nối global ở main.dart
+
+    // Gắn callback nhận thông báo mới vào WebSocket global
+    _webSocketService.onMessageReceived = (message) async {
+      print("📥 JSON nhận được: ${jsonEncode(message)}");
+
+      final newNotification = {
+        "type": message['type'],
+        "message": message['message'],
+        "appointment": message['appointment'],
+        "time": DateFormat('HH:mm:ss dd/MM/yyyy').format(DateTime.now()),
+      };
+
+      setState(() {
+        notifications.insert(0, newNotification);
+      });
+
+      print("🟢 Thông báo mới đã được thêm. Tổng số hiện tại: ${notifications.length}");
+
+      await LocalStorageService.saveNotifications(notifications);
+
+      _showSnackBar(message['message']);
+    };
+
+    // Theo dõi trạng thái kết nối global
+    _webSocketService.onConnectionChange = (bool isConnected) {
+      print(isConnected
+          ? "🟢 WebSocket kết nối!"
+          : "🔴 WebSocket ngắt kết nối.");
+      setState(() {
+        _isConnected = isConnected;
+      });
+    };
   }
 
-  // 🧠 Tải thông báo đã lưu từ local
   Future<void> _loadSavedNotifications() async {
     final saved = await LocalStorageService.getSavedNotifications();
     setState(() {
@@ -32,56 +67,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
     print("📦 Đã tải ${saved.length} thông báo từ local.");
   }
 
-  Future<void> _initializeWebSocket() async {
-    String? jwtToken = await LocalStorageService.getToken();
-    int? userIdInt = await LocalStorageService.getUserId();
-    String? userId = userIdInt?.toString();
-
-    print("🔍 Bắt đầu khởi tạo WebSocket...");
-    print("🔐 Token: $jwtToken");
-    print("🧑‍💼 userId: $userId");
-
-    if (jwtToken != null && userId != null) {
-      _webSocketService = WebSocketService(
-        jwtToken: jwtToken,
-        userId: userId,
-        onMessageReceived: (message) async {
-          print("📥 Nhận được thông báo: $message");
-
-          final newNotification = {
-            "type": message['type'],
-            "message": message['message'],
-            "appointment": message['appointment'],
-            "time": DateFormat('HH:mm:ss dd/MM/yyyy').format(DateTime.now()),
-          };
-
-          setState(() {
-            notifications.insert(0, newNotification);
-          });
-
-          // 💾 Lưu lại danh sách mới
-          await LocalStorageService.saveNotifications(notifications);
-
-          _showSnackBar(message['message']);
-        },
-        onConnectionChange: (bool isConnected) {
-          print(isConnected
-              ? "🟢 WebSocket kết nối!"
-              : "🔴 WebSocket ngắt kết nối.");
-          setState(() {
-            _isConnected = isConnected;
-          });
-        },
-      );
-
-      _webSocketService.connect();
-    } else {
-      print("⚠️ Không thể lấy được token hoặc userId");
-      _showSnackBar("Không thể kết nối WebSocket do thiếu thông tin.");
-    }
-  }
-
   void _showSnackBar(String message) {
+    print("🍫 SnackBar: $message");
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message), duration: const Duration(seconds: 3)),
     );
@@ -89,7 +76,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   void dispose() {
-    _webSocketService.disconnect();
+    // KHÔNG disconnect ở đây vì WebSocket global
     super.dispose();
   }
 
@@ -102,7 +89,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           IconButton(
             icon: Icon(_isConnected ? Icons.wifi : Icons.wifi_off),
             color: _isConnected ? Colors.green : Colors.red,
-            onPressed: _initializeWebSocket,
+            onPressed: () {},
           ),
         ],
       ),
@@ -148,11 +135,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
   String _formatAppointment(Map<String, dynamic> appointment) {
     try {
       final clinic = appointment["clinic"]?["name"] ?? "Phòng khám";
-      final date = appointment["date"] ?? "";
-      final time = appointment["time"] ?? "";
+      final date = DateFormat('dd/MM/yyyy').format(DateTime.parse(appointment["date"]));
+      final time = DateFormat('HH:mm').format(DateTime.parse("1970-01-01 ${appointment["time"]}"));
       return "$clinic - $time ngày $date";
     } catch (e) {
-      print("⚠️ Lỗi khi định dạng lịch hẹn: $e");
+      print("⚠️ Lỗi định dạng lịch hẹn: $e");
       return "";
     }
   }
@@ -161,20 +148,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
     final appointment = notification["appointment"];
     if (appointment == null) return;
 
-    final customerName = appointment["customer"]?["fullName"] ?? "Khách hàng";
-    final clinicName = appointment["clinic"]?["name"] ?? "Phòng khám";
-    final date = appointment["date"];
-    final time = appointment["time"];
-
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(notification["message"] ?? "Chi tiết thông báo"),
         content: Text("""
-👤 Khách: $customerName
-🏥 Phòng khám: $clinicName
-🗓 Ngày khám: $date
-⏰ Giờ: $time
+👤 Khách: ${appointment["customer"]?["fullName"] ?? "Khách hàng"}
+🏥 Phòng khám: ${appointment["clinic"]?["name"] ?? "Phòng khám"}
+🗓 Ngày khám: ${appointment["date"]}
+⏰ Giờ: ${appointment["time"]}
         """),
         actions: [
           TextButton(

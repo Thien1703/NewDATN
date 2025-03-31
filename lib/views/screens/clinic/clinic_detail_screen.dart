@@ -94,14 +94,14 @@ class _ClinicDetailScreenState extends State<ClinicDetailScreen> {
                         _buildOption('Đặt khám theo chuyên khoa'),
                         SizedBox(height: 10),
                         InkWell(
-                          onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ChatScreen(
-                                  clinicId: clinic!.id,
-                                  clinicName: clinic!.name,
-                                ),
-                              )),
+                          // onTap: () => Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) => ChatScreen(
+                          //         clinicId: clinic!.id,
+                          //         clinicName: clinic!.name,
+                          //       ),
+                          //     )),
                           child: _buildOption('Nhắn với phòng khám'),
                         ),
                         _buildLabel('Giới thiệu'),
