@@ -6,9 +6,11 @@ import 'package:health_care/models/specialty.dart';
 import 'package:health_care/models/customer.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/viewmodels/api/specialty_api.dart';
-import 'package:health_care/views/screens/BMI/measureBMI_Screen.dart';
+import 'package:health_care/views/screens/tools/BMI/BMI_screen.dart';
+import 'package:health_care/views/screens/tools/BMI/measureBMI_Screen.dart';
 import 'package:health_care/views/screens/home/service_screen.dart';
 import 'package:health_care/views/screens/notification/notification_screen.dart';
+import 'package:health_care/views/screens/tools/BMR/BMR_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -181,13 +183,18 @@ class _HomePage extends State<HomePage> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              const BmiScreen()));
+                                          builder: (context) => BmiScreen()));
                                 }),
                                 _buildFeatureButton('Kiểm tra sức khỏe',
                                     AppIcons.healthCheck, () {}),
-                                _buildFeatureButton(
-                                    'Tìm phòng khám', AppIcons.mapPlus, () {}),
+                                _buildFeatureButton('Đo BMR', AppIcons.mapPlus,
+                                    () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => BmrScreen(),
+                                      ));
+                                }),
                                 SizedBox(width: 10),
                               ],
                             ),
@@ -212,6 +219,9 @@ class _HomePage extends State<HomePage> {
                               viewportFraction: 0.8,
                             ),
                           ),
+                          // Container(
+
+                          // ),
                           Container(
                             margin: EdgeInsets.symmetric(horizontal: 15),
                             child: Column(
@@ -249,8 +259,7 @@ class _HomePage extends State<HomePage> {
                                                               specialty.id),
                                                 )),
                                             child: Container(
-                                              padding:
-                                                  EdgeInsets.only(left: 10),
+                                              padding: EdgeInsets.only(left: 5),
                                               decoration: BoxDecoration(
                                                   color: Colors.white,
                                                   border: Border.all(
@@ -275,7 +284,7 @@ class _HomePage extends State<HomePage> {
                                                     width: 45,
                                                     color: AppColors.deepBlue,
                                                   ),
-                                                  SizedBox(width: 10),
+                                                  SizedBox(width: 5),
                                                   Text(
                                                     specialty.name,
                                                     style: TextStyle(
@@ -335,7 +344,7 @@ Widget _buildFeatureButton(String text, String icon, VoidCallback onTap) {
             text,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 13,
               color: Colors.black,
             ),
           ),

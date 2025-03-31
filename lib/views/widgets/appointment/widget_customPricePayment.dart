@@ -1,28 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 
-class WidgetCustompricepayment extends StatelessWidget {
-  const WidgetCustompricepayment({super.key});
+class WidgetCustomPricePayment extends StatelessWidget {
+  final List<Map<String, dynamic>> priceDetails;
+
+  const WidgetCustomPricePayment({super.key, required this.priceDetails});
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _customRowTitleWithPrice(title: 'Tiền khám', price: '127,000 VNĐ'),
-        _customRowTitleWithPrice(
-            title: 'Dịch vụ khám thêm', price: '300,000 VNĐ'),
-        _customRowTitleWithPrice(
-            title: 'Tạm tính', price: '427,000 VNĐ', isTitleBold: true),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        children: priceDetails
+            .map((item) => _customRowTitleWithPrice(
+                  title: item['title'],
+                  price: item['price'],
+                  isTitleBold: item['isBold'] ?? false,
+                ))
+            .toList(),
+      ),
     );
   }
 }
+
 Widget _customRowTitleWithPrice({
   required String title,
   required String price,
   bool isTitleBold = false,
 }) {
-  return Container(
-    margin: EdgeInsets.only(bottom: 10),
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 5),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

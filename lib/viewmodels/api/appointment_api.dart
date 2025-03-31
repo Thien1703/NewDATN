@@ -202,14 +202,15 @@ class AppointmentApi {
   }
 
   // Kiểm tra slot trống
-  static Future<int> fetchAvailableSlots(DateTime date, String time) async {
+  static Future<Map<String, int>> fetchAvailableSlots(
+      int clinicId, DateTime date) async {
     try {
       final url =
           Uri.parse('${AppConfig.baseUrl}/appointment/check-available-slots');
       String? token = await LocalStorageService.getToken();
       if (token == null) {
         print('Error: Token is null');
-        return -1;
+        return {};
       }
 
       final response = await http.post(
@@ -220,24 +221,23 @@ class AppointmentApi {
         },
         body: jsonEncode({
           "date": DateFormat('yyyy-MM-dd').format(date),
-          "time": time,
+          "clinicId": clinicId,
         }),
       );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        if (data['status'] == 0 &&
-            data['data'] != null &&
-            data['data']['availableSlots'] != null) {
-          return data['data']['availableSlots'];
+        if (data['status'] == 0 && data['data'] != null) {
+          Map<String, int> availableSlots = Map<String, int>.from(data['data']);
+          return availableSlots;
         }
       }
 
       print('API Error: ${response.statusCode} - ${response.body}');
-      return -1; // Trả về -1 nếu có lỗi hoặc slot không khả dụng
+      return {}; // Trả về danh sách trống nếu có lỗi
     } catch (e) {
       print('fetchAvailableSlots Error: $e');
-      return -1;
+      return {};
     }
   }
 }

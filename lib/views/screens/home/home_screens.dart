@@ -6,8 +6,7 @@ import 'package:health_care/views/screens/clinic/clinic_screen.dart';
 import 'package:health_care/views/screens/profile/profile_screen.dart';
 import 'package:health_care/views/screens/examination/examination_screen.dart';
 import 'package:health_care/views/screens/home/homePage.dart';
-import 'package:health_care/views/screens/notification/notification_screen.dart';
-import 'package:health_care/views/tools/tools_screen.dart';
+import 'package:health_care/views/screens/tools/tools_screen.dart';
 import 'package:health_care/views/widgets/build_Draw.dart';
 
 class HomeScreens extends StatefulWidget {
@@ -24,15 +23,19 @@ class _HomeScreensState extends State<HomeScreens> {
   @override
   void initState() {
     super.initState();
-    fetchSpecialties();
+    fetchCustomerProfile();
   }
 
-  void fetchSpecialties() async {
-    Customer? result = await CustomerApi.getCustomerProfile();
-    if (result != null) {
-      setState(() {
-        customers = result;
-      });
+  void fetchCustomerProfile() async {
+    try {
+      Customer? result = await CustomerApi.getCustomerProfile();
+      if (mounted) {
+        setState(() {
+          customers = result;
+        });
+      }
+    } catch (e) {
+      debugPrint("Error fetching customer profile: $e");
     }
   }
 
@@ -52,66 +55,52 @@ class _HomeScreensState extends State<HomeScreens> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: _selectedIndex == 0
-          ? BuildDraw(
-              fullName: customers?.fullName ?? 'Không xác định',
-            )
-          : null,
-      extendBody: _selectedIndex == 0 ? true : false,
-      body: _screens[_selectedIndex],
-      floatingActionButton: SizedBox(
-        width: 50, // Tăng kích thước tổng thể
-        height: 50,
-        child: FloatingActionButton(
+    final double screenHeight = MediaQuery.of(context).size.height;
+    return SafeArea(
+      child: Scaffold(
+        drawer: _selectedIndex == 0
+            ? BuildDraw(fullName: customers?.fullName ?? 'Không xác định')
+            : null,
+        extendBody: _selectedIndex == 0,
+        body: _screens[_selectedIndex],
+        floatingActionButton: FloatingActionButton(
           backgroundColor: AppColors.deepBlue,
           shape: CircleBorder(),
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ClinicScreen()));
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ClinicScreen()),
+            );
           },
-          child: CircleAvatar(
-            radius: 15,
-            backgroundColor: Colors.white,
-            child: Icon(Icons.add, size: 25, color: AppColors.deepBlue),
-          ),
+          child: Icon(Icons.add, size: 30, color: Colors.white),
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05), // Màu bóng mờ
-              blurRadius: 10, // Độ mờ của bóng
-              spreadRadius: 2, // Độ lan của bóng
-              offset: Offset(0, -3), // Bóng đổ lên trên
-            ),
-          ],
-        ),
-        child: BottomAppBar(
-          elevation: 0,
-          shape: CircularNotchedRectangle(),
-          notchMargin: 8.0,
-          color: Colors.white,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildBottomBarItem(Icons.home, 'Trang chủ', 0),
-              _buildBottomBarItem(Icons.local_hospital, 'Lịch khám', 1),
-              Padding(
-                padding: EdgeInsets.only(top: 15),
-                child: Text(
-                  'Đặt lịch',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
-                ),
+              color: Colors.grey.withOpacity(0.2),
+              blurRadius: 2,
+              spreadRadius: 2,
+            )
+          ]),
+          child: BottomAppBar(
+            shape: CircularNotchedRectangle(),
+            notchMargin: 8.0,
+            color: Colors.white,
+            child: Container(
+              height: screenHeight *
+                  0.08, // Tự động điều chỉnh theo chiều cao màn hình
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildBottomBarItem(Icons.home, 'Trang chủ', 0),
+                  _buildBottomBarItem(Icons.local_hospital, 'Lịch khám', 1),
+                  SizedBox(width: 50), // Chừa chỗ cho FAB
+                  _buildBottomBarItem(Icons.speed_outlined, 'Công cụ', 3),
+                  _buildBottomBarItem(Icons.person, 'Tài khoản', 4),
+                ],
               ),
-              _buildBottomBarItem(Icons.build, 'Công cụ', 3),
-              _buildBottomBarItem(Icons.person, 'Tài khoản', 4),
-            ],
+            ),
           ),
         ),
       ),
@@ -123,6 +112,7 @@ class _HomeScreensState extends State<HomeScreens> {
     return GestureDetector(
       onTap: () => _onItemTapped(index),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             icon,
@@ -132,7 +122,7 @@ class _HomeScreensState extends State<HomeScreens> {
           Text(
             label,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 13,
               color: isSelected ? AppColors.deepBlue : Colors.grey,
             ),
           ),
