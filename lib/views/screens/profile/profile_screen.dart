@@ -26,13 +26,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _fetchUserProfile() async {
     try {
       final data = await AppConfig.getUserProfile();
-      setState(() {
-        _userData = data;
-      });
+      if (mounted) {
+        // Kiểm tra xem widget có còn tồn tại không
+        setState(() {
+          _userData = data;
+        });
+      }
     } catch (e) {
-      setState(() {});
+      if (mounted) {
+        setState(() {}); // Tránh gọi setState khi đã dispose
+      }
     }
   }
+
+  
 
   @override
   Widget build(BuildContext context) {

@@ -76,6 +76,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
       await authViewModel.uploadAvatar(context, _avatarFile!);
 
+      widget.onProfileUpdated(); // Gọi callback để reload ProfileScreen
+
       _updateButtonState();
     }
   }

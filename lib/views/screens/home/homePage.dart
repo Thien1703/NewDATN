@@ -36,10 +36,14 @@ class _HomePage extends State<HomePage> {
   void fetchSpecialties() async {
     List<Specialty>? data = await SpecialtyApi.getAllSpecialty();
     Customer? result = await CustomerApi.getCustomerProfile();
-    setState(() {
-      specialties = data;
-      customers = result;
-    });
+
+    if (mounted) {
+      // Kiểm tra xem widget có còn tồn tại không
+      setState(() {
+        specialties = data;
+        customers = result;
+      });
+    }
   }
 
   @override
