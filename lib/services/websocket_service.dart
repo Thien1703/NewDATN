@@ -15,45 +15,6 @@
 
 //   bool _isConnected = false;
 
-<<<<<<< HEAD
-  // Hàm khởi tạo kết nối WebSocket
-  void connect() {
-    stompClient = StompClient(
-      config: StompConfig(
-        url:
-            'wss://backend-healthcare-up0d.onrender.com/notifications/websocket', // URL WebSocket của server
-        onConnect: _onConnect, // Gọi khi kết nối thành công
-        beforeConnect: () async {
-          print('Waiting to connect...');
-          await Future.delayed(const Duration(milliseconds: 200));
-          print('Connecting...');
-        },
-        stompConnectHeaders: {
-          'Authorization':
-              'Bearer $jwtToken', // Gửi token trong header để xác thực
-        },
-        webSocketConnectHeaders: {
-          'Authorization': 'Bearer $jwtToken', // Header xác thực cho WebSocket
-        },
-        onWebSocketError: (dynamic error) {
-          print('🔴 WebSocket Error: $error'); // Xử lý lỗi khi kết nối thất bại
-          _setConnectionStatus(false);
-        },
-        onStompError: (StompFrame frame) {
-          print(
-              '🔴 Stomp Error: ${frame.body}'); // Xử lý lỗi khi có lỗi từ STOMP server
-          _setConnectionStatus(false);
-        },
-        onDisconnect: (StompFrame frame) {
-          print(
-              '🔴 WebSocket Disconnected'); // Xử lý khi WebSocket bị ngắt kết nối
-          _setConnectionStatus(false);
-        },
-        reconnectDelay: const Duration(
-            seconds: 5), // Thử kết nối lại sau 5 giây nếu bị mất kết nối
-      ),
-    );
-=======
 //   WebSocketService({
 //     required this.jwtToken,
 //     required this.userId,
@@ -97,7 +58,6 @@
 
 //     stompClient.activate();
 //   }
->>>>>>> 239b36e4ad7eb7d8c7ae5103b421a4ece7b3d87b
 
 //   void _onConnect(StompFrame frame) {
 //     print('🟢 WebSocket đã kết nối!');
