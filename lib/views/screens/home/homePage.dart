@@ -87,7 +87,7 @@ class _HomePage extends State<HomePage> {
               ],
               flexibleSpace: LayoutBuilder(
                 builder: (context, constraints) {
-                  bool isCollapsed = constraints.maxHeight < 100;
+                  bool isCollapsed = constraints.maxHeight < 90;
                   return FlexibleSpaceBar(
                     background: Image.asset(
                       'assets/images/backLogo.png',
@@ -111,9 +111,9 @@ class _HomePage extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Tìm phòng khám, chuyên khoa...',
+                            'Tìm phòng khám,chuyên khoa',
                             style: TextStyle(
-                              fontSize: isCollapsed ? 14 : 10,
+                              fontSize: isCollapsed ? 13 : 10,
                               color: const Color.fromARGB(255, 141, 141, 141),
                             ),
                           ),
@@ -181,15 +181,21 @@ class _HomePage extends State<HomePage> {
                             child: Row(
                               children: [
                                 _buildFeatureButton(
-                                    'Tìm phòng khám', AppIcons.mapPlus, () {  Navigator.push(
+                                    'Tìm phòng khám', AppIcons.mapPlus, () {
+                                  Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => SearchScreen()));}),
+                                          builder: (context) =>
+                                              SearchScreen()));
+                                }),
                                 _buildFeatureButton(
-                                    'Chat với AI', AppIcons.robotAI, () {  Navigator.push(
+                                    'Chat với AI', AppIcons.robotAI, () {
+                                  Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => ChatBotScreen()));}),
+                                          builder: (context) =>
+                                              ChatBotScreen()));
+                                }),
                                 _buildFeatureButton('Đo BMI', AppIcons.bmiIcon,
                                     () {
                                   Navigator.push(
@@ -197,8 +203,6 @@ class _HomePage extends State<HomePage> {
                                       MaterialPageRoute(
                                           builder: (context) => BmiScreen()));
                                 }),
-                                _buildFeatureButton('Kiểm tra sức khỏe',
-                                    AppIcons.healthCheck, () {}),
                                 _buildFeatureButton('Đo BMR', AppIcons.mapPlus,
                                     () {
                                   Navigator.push(

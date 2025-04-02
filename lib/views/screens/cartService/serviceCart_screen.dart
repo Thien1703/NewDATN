@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/service.dart';
 import 'package:health_care/viewmodels/api/service_api.dart';
-import 'dart:convert';
 import 'package:intl/intl.dart';
-import 'package:health_care/views/widgets/widget_header_body.dart';
 
 class ServiceCartScreen extends StatefulWidget {
   const ServiceCartScreen({super.key});
@@ -344,7 +342,6 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
             Text(
               'Đã chọn ${selectedServices.length} dịch vụ',
               style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
             ),
             Row(
               children: [
@@ -384,7 +381,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                   child: const Text('XONG'),
                 ),
               ],
-            )
+            ),
             Row(
               children: [
                 Column(

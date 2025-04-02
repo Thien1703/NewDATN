@@ -14,11 +14,23 @@ class _MeasurebmiScreenState extends State<MeasurebmiScreen> {
   String height = '';
   String weight = '';
 
-  bool get isFormValid =>
-      selectedGender != null &&
-      age.isNotEmpty &&
-      height.isNotEmpty &&
-      weight.isNotEmpty;
+  final TextEditingController ageController = TextEditingController();
+  final TextEditingController heightController = TextEditingController();
+  final TextEditingController weightController = TextEditingController();
+
+  bool get isFormValid {
+    final h = double.tryParse(height) ?? 0;
+    final w = double.tryParse(weight) ?? 0;
+    final a = int.tryParse(age) ?? 0;
+
+    return selectedGender != null &&
+        age.isNotEmpty &&
+        height.isNotEmpty &&
+        weight.isNotEmpty &&
+        h > 0 &&
+        w > 0 &&
+        a > 0;
+  }
 
   InputDecoration customInputDecoration(String suffixText) {
     return InputDecoration(
@@ -51,11 +63,13 @@ class _MeasurebmiScreenState extends State<MeasurebmiScreen> {
               CircleAvatar(
                 radius: 30,
                 backgroundColor: Colors.transparent,
-                child: Image.asset(assetPath,
-                    width: 80,
-                    height: 80,
-                    errorBuilder: (context, error, stackTrace) =>
-                        Icon(Icons.person)),
+                child: Image.asset(
+                  assetPath,
+                  width: 80,
+                  height: 80,
+                  errorBuilder: (context, error, stackTrace) =>
+                      Icon(Icons.person),
+                ),
               ),
               SizedBox(height: 8),
               Text(label, style: TextStyle(fontSize: 16)),
@@ -99,11 +113,12 @@ class _MeasurebmiScreenState extends State<MeasurebmiScreen> {
                 ],
               ),
               SizedBox(height: 20),
-              _buildInputField('Bạn bao nhiêu tuổi?', '', (val) => age = val),
               _buildInputField(
-                  'Chiều cao của bạn (cm)', 'cm', (val) => height = val),
-              _buildInputField(
-                  'Cân nặng của bạn (kg)', 'kg', (val) => weight = val),
+                  'Bạn bao nhiêu tuổi?', '', (val) => age = val, ageController),
+              _buildInputField('Chiều cao của bạn (cm)', 'cm',
+                  (val) => height = val, heightController),
+              _buildInputField('Cân nặng của bạn (kg)', 'kg',
+                  (val) => weight = val, weightController),
               SizedBox(height: 80),
               SizedBox(
                 width: double.infinity,
@@ -129,13 +144,18 @@ class _MeasurebmiScreenState extends State<MeasurebmiScreen> {
   }
 
   Widget _buildInputField(
-      String label, String suffix, Function(String) onChanged) {
+    String label,
+    String suffix,
+    Function(String) onChanged,
+    TextEditingController controller,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: TextStyle(fontSize: 16)),
         SizedBox(height: 8),
         TextField(
+          controller: controller,
           keyboardType: TextInputType.number,
           onChanged: (val) => setState(() => onChanged(val)),
           decoration: customInputDecoration(suffix).copyWith(
@@ -148,7 +168,7 @@ class _MeasurebmiScreenState extends State<MeasurebmiScreen> {
     );
   }
 
-  void _showResult() {
+  Future<void> _showResult() async {
     if (selectedGender == null) return;
 
     double h = double.tryParse(height) ?? 0;
@@ -159,7 +179,6 @@ class _MeasurebmiScreenState extends State<MeasurebmiScreen> {
 
     double bmi = w / ((h / 100) * (h / 100));
 
-    // Công thức mới
     double bfp;
     if (selectedGender == Gender.male) {
       bfp = (1.39 * bmi) + (0.16 * a) - 10.34 - 9;
@@ -167,7 +186,7 @@ class _MeasurebmiScreenState extends State<MeasurebmiScreen> {
       bfp = (1.39 * bmi) + (0.16 * a) - 9;
     }
 
-    Navigator.push(
+    final shouldReset = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => BmiResultScreen(
@@ -177,5 +196,17 @@ class _MeasurebmiScreenState extends State<MeasurebmiScreen> {
         ),
       ),
     );
+
+    if (shouldReset == true) {
+      setState(() {
+        selectedGender = null;
+        age = '';
+        height = '';
+        weight = '';
+        ageController.clear();
+        heightController.clear();
+        weightController.clear();
+      });
+    }
   }
 }

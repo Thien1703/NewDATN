@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_icons.dart';
-import 'package:health_care/config/app_config.dart';
 import 'package:health_care/viewmodels/api/clinic_api.dart';
 import 'package:health_care/views/widgets/appointment/widget_hospital_info_card.dart';
 import 'package:health_care/views/widgets/widget_select_item.dart';
@@ -257,7 +256,7 @@ class _DateSelectorState extends State<DateSelector> {
       setState(() {
         _selectedDate = pickedDate;
       });
-      print("Ngày được chọn: ${DateFormat('yyyy-MM-dd').format(pickedDate)}");
+      // print("Ngày được chọn: ${DateFormat('yyyy-MM-dd').format(pickedDate)}");
 
       widget.onDateSelected(pickedDate); // Truyền ngày lên ExamInfoBooking
     }

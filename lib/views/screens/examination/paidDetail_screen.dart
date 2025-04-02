@@ -5,6 +5,7 @@ import 'package:health_care/viewmodels/api/appointmentService_api.dart';
 import 'package:health_care/viewmodels/api/appointment_api.dart';
 import 'package:health_care/views/screens/clinic/clinic_screen.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
+import 'package:health_care/views/widgets/bottomSheet/header_bottomSheet.dart';
 import 'package:health_care/views/widgets/bottomSheet/showCustomer.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/views/widgets/widget_lineBold.dart';
@@ -24,8 +25,6 @@ class PaidDetailScreen extends StatefulWidget {
 
 class _PaidDetailScreenState extends State<PaidDetailScreen> {
   List<AppointmentService>? appointmentServices;
-  String qrData = 'fsdfsdfsdf';
-
   @override
   void initState() {
     super.initState();
@@ -112,18 +111,18 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Column(
-                children: const [
-                  Text('STT',
+                children: [
+                  Text('Mã phiếu khám',
                       style:
                           TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
-                  Text('1',
+                  Text(appointment.id.toString(),
                       style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 25,
                           fontWeight: FontWeight.bold,
                           color: AppColors.deepBlue)),
                 ],
               ),
-              QrImageView(data: qrData, size: 120),
+              QrImageView(data: appointment.id.toString(), size: 120),
             ],
           ),
           const SizedBox(height: 10),
@@ -318,58 +317,178 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
   }
 
   Widget _buildSelectedCancel() {
+    bool isLoading = false;
     return InkWell(
       onTap: () {
-        showDialog(
+        showModalBottomSheet(
           context: context,
-          barrierDismissible: false,
+          isScrollControlled: true,
           builder: (BuildContext context) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              title: Center(
-                child: Text(
-                  'Xác nhận hủy lịch?',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-              content: Text(
-                'Bạn có chắc chắn muốn hủy lịch khám này không',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
-              ),
-              actionsAlignment: MainAxisAlignment.center,
-              actions: [
-                _buildAlertDialog(
-                    label: 'Hủy',
-                    onTap: () {
-                      Navigator.pop(context);
-                    }),
-                _buildAlertDialog(
-                    label: 'Xác nhận',
-                    onTap: () async {
-                      bool? sussess = await AppointmentApi.getCancelAppointment(
-                          appointmentServices!.first.appointment.id);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomeScreens(),
-                          ));
-                      if (sussess == true) {
-                        fetchAppointmentServices();
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Hủy lịch thành công'),
-                          backgroundColor: Colors.grey,
-                        ));
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Hủy lịch thất bại. Vui lòng thử lại'),
-                          backgroundColor: Colors.red,
-                        ));
-                      }
-                    },
-                    colorBackground: AppColors.deepBlue,
-                    colorText: Colors.white)
-              ],
+            String? tempSelectedValue;
+            return StatefulBuilder(
+              builder: (context, setStateModal) {
+                return HeaderBottomSheet(
+                  title: 'Lý Do Hủy',
+                  body: Container(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        RadioListTile<String>(
+                          value: 'A',
+                          groupValue: tempSelectedValue,
+                          title: const Text(
+                            'Tôi bận, không thể đến khám',
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.zero,
+                          onChanged: (value) {
+                            setStateModal(() {
+                              tempSelectedValue = value!;
+                            });
+                          },
+                        ),
+                        RadioListTile<String>(
+                          value: 'B',
+                          groupValue: tempSelectedValue,
+                          title: const Text(
+                            'Tôi muốn đổi lịch khám',
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.zero,
+                          onChanged: (value) {
+                            setStateModal(() {
+                              tempSelectedValue = value!;
+                            });
+                          },
+                        ),
+                        RadioListTile<String>(
+                          value: 'C',
+                          groupValue: tempSelectedValue,
+                          title: const Text(
+                            'Tôi không còn triệu chứng',
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.zero,
+                          onChanged: (value) {
+                            setStateModal(() {
+                              tempSelectedValue = value!;
+                            });
+                          },
+                        ),
+                        RadioListTile<String>(
+                          value: 'D',
+                          groupValue: tempSelectedValue,
+                          title: const Text(
+                            'Tôi đặt nhầm lịch',
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.zero,
+                          onChanged: (value) {
+                            setStateModal(() {
+                              tempSelectedValue = value!;
+                            });
+                          },
+                        ),
+                        RadioListTile<String>(
+                          value: 'E',
+                          groupValue: tempSelectedValue,
+                          title: const Text(
+                            'Tôi không có nhu cầu đặt nữa',
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.zero,
+                          onChanged: (value) {
+                            setStateModal(() {
+                              tempSelectedValue = value!;
+                            });
+                          },
+                        ),
+                        RadioListTile<String>(
+                          value: 'G',
+                          groupValue: tempSelectedValue,
+                          title: const Text(
+                            'Tôi không tìm thấy lý do hủy phù hợp',
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.zero,
+                          onChanged: (value) {
+                            setStateModal(() {
+                              tempSelectedValue = value!;
+                            });
+                          },
+                        ),
+                        Container(
+                          width: double.infinity,
+                          child: OutlinedButton(
+                            onPressed: (tempSelectedValue == null || isLoading)
+                                ? null
+                                : () async {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    bool? success = await AppointmentApi
+                                        .getCancelAppointment(
+                                      appointmentServices!.first.appointment.id,
+                                    );
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                    if (mounted) {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => HomeScreens(),
+                                        ),
+                                      );
+                                    }
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(success == true
+                                            ? 'Hủy lịch thành công'
+                                            : 'Hủy lịch thất bại. Vui lòng thử lại'),
+                                        backgroundColor: success == true
+                                            ? Colors.grey
+                                            : Colors.red,
+                                      ),
+                                    );
+                                  },
+                            style: OutlinedButton.styleFrom(
+                                foregroundColor: tempSelectedValue == null
+                                    ? Colors.black
+                                    : Colors.white,
+                                backgroundColor: tempSelectedValue == null
+                                    ? Colors.grey
+                                    : AppColors.deepBlue),
+                            child: isLoading
+                                ? SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : Text('Xác nhận'),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              },
             );
           },
         );
@@ -378,16 +497,17 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
         margin: EdgeInsets.only(bottom: 10),
         width: double.infinity,
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 10),
+          padding: EdgeInsets.symmetric(vertical: 12),
           alignment: Alignment.center,
           margin: EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.red, width: 1),
-              borderRadius: BorderRadius.circular(10)),
+            border: Border.all(color: Colors.red, width: 1),
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: Text(
             'Hủy lịch',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 16,
               fontWeight: FontWeight.w500,
               color: Colors.red,
             ),
@@ -418,16 +538,18 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
     );
   }
 
-  Widget _buildAlertDialog(
-      {required String label,
-      VoidCallback? onTap,
-      Color? colorBackground,
-      Color? colorText}) {
+  Widget _buildAlertDialog({
+    required String label,
+    VoidCallback? onTap,
+    Color? colorBackground,
+    Color? colorText,
+  }) {
     return InkWell(
       onTap: onTap,
       child: Container(
-        width: 120,
-        padding: EdgeInsets.symmetric(vertical: 10),
+        constraints: BoxConstraints(
+            minWidth: 100, maxWidth: 200), // Đảm bảo kích thước phù hợp
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         decoration: BoxDecoration(
           color: colorBackground,
           border: Border.all(color: colorBackground ?? Colors.grey, width: 1),
@@ -436,7 +558,8 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
         child: Text(
           label,
           textAlign: TextAlign.center,
-          style: TextStyle(color: colorText, fontSize: 15),
+          style: TextStyle(
+              color: colorText, fontSize: 16), // Font to hơn chút cho dễ đọc
         ),
       ),
     );
