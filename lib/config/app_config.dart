@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:health_care/env.dart';
 import 'package:health_care/services/local_storage_service.dart';
 import 'package:health_care/models/clinic.dart';
@@ -163,7 +164,35 @@ static const String baseUrl = AppEnv.baseUrl;
     }
   }
 
-  // ====================== LẤY HỒ SƠ NGƯỜI DÙNG ====================
+  /// Đổi avatar
+  static Future<String?> uploadAvatar(File imageFile, int userId) async {
+    final url = Uri.parse('$baseUrl/customer/avatar/$userId');
+    String? token = await LocalStorageService.getToken();
+
+    var request = http.MultipartRequest('POST', url)
+      ..headers['Authorization'] = 'Bearer $token'
+      ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+
+    try {
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['status'] == 0) {
+          return data['message']; // Trả về URL ảnh đã upload
+        } else {
+          return data['message'] ?? "Lỗi không xác định từ server.";
+        }
+      } else {
+        return "Lỗi máy chủ: ${response.statusCode}";
+      }
+    } catch (e) {
+      return "Lỗi khi upload ảnh: $e";
+    }
+  }
+
+  // Lấy thông tin người dùng
   static Future<Map<String, dynamic>?> getUserProfile() async {
     final url = Uri.parse('$baseUrl/customer/get-my-info');
     final token = await LocalStorageService.getToken();

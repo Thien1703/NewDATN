@@ -277,6 +277,9 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                               // const Icon(Icons.monetization_on,
                                               //     size: 22,
                                               //     color: Colors.yellow),
+                                              // const Icon(Icons.monetization_on,
+                                              //     size: 22,
+                                              //     color: Colors.yellow),
                                               const SizedBox(width: 4),
                                               Text(
                                                 service.formattedPrice,
@@ -341,7 +344,47 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
             Text(
               'Đã chọn ${selectedServices.length} dịch vụ',
               style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
             ),
+            Row(
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "Tổng",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    Text(
+                      '${formatCurrency(getTotalPrice())}',
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.deepBlue),
+                    ),
+                  ],
+                ),
+                ElevatedButton(
+                  onPressed: selectedServices.isEmpty
+                      ? null
+                      : () {
+                          Navigator.pop(context, {
+                            'selectedServiceList': selectedServices.toList(),
+                            'selectedServiceId':
+                                selectedServices.map((s) => s.id).toList(),
+                          });
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: selectedServices.isEmpty
+                        ? Colors.grey
+                        : AppColors.accent,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('XONG'),
+                ),
+              ],
+            )
             Row(
               children: [
                 Column(

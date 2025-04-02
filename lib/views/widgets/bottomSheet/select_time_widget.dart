@@ -65,17 +65,17 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
               child: Text(
                 'Tất cả thời gian theo múi giờ Việt Nam GMT + 7',
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: FontWeight.w500,
                   color: Color(0xFFFEAD6D),
                 ),
               ),
             ),
-            Image.asset(
-              'assets/images/pageTime.jpg',
-              width: double.infinity,
-              height: 100,
-            ),
+            // Image.asset(
+            //   'assets/images/pageTime.jpg',
+            //   width: double.infinity,
+            //   height: 100,
+            // ),
           ],
         ),
       ),
@@ -136,4 +136,3 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
     );
   }
 }
-  
