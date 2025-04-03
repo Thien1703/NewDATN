@@ -2,6 +2,7 @@ C/C++ Structured LogO
 M
 KC:\src\flutter\packages\flutter_tools\gradle\src\main\groovy\CMakeLists.txtC
 A
+<<<<<<< HEAD
 ?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	·¬²Ôß2§ ˆÌŸÐß2m
 k
 iD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\additional_project_files.txt	¸¬²Ôß2 ¤×ÇÐß2j
@@ -26,3 +27,29 @@ a
 _D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\prefab_config.json	¸¬²Ôß2( ¸×ÇÐß2h
 f
 dD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\symbol_folder_index.txt	¸¬²Ôß2[ ¸×ÇÐß2
+=======
+?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	¶ýèàß2§ ˆÌŸÐß2m
+k
+iD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\additional_project_files.txt	¶ýèàß2 ‘ýèàß2j
+h
+fD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\android_gradle_build.json	¶ýèàß2¯ •ýèàß2o
+m
+kD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\android_gradle_build_mini.json	¶ýèàß2Œ §ýèàß2\
+Z
+XD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\build.ninja	¶ýèàß2ÔÒ Žüèàß2`
+^
+\D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\build.ninja.txt	¶ýèàß2e
+c
+aD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\build_file_index.txt	¶ýèàß2K ­ýèàß2f
+d
+bD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\compile_commands.json	¶ýèàß2	j
+h
+fD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\compile_commands.json.bin	¶ýèàß2
+p
+n
+lD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\metadata_generation_command.txt	¶ýèàß2É ©ýèàß2c
+a
+_D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\prefab_config.json	¶ýèàß2( «ýèàß2h
+f
+dD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\symbol_folder_index.txt	¶ýèàß2[ ­ýèàß2
+>>>>>>> newBranch

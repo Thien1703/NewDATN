@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/service.dart';
 import 'package:health_care/viewmodels/api/service_api.dart';
-import 'dart:convert';
 import 'package:intl/intl.dart';
-import 'package:health_care/views/widgets/widget_header_body.dart';
 
 class ServiceCartScreen extends StatefulWidget {
   const ServiceCartScreen({super.key});
@@ -215,7 +213,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 5,
                                 mainAxisSpacing: 5,
-                                childAspectRatio: 0.5,
+                                childAspectRatio: 0.6,
                               ),
                               itemCount: entry.value.length,
                               itemBuilder: (context, index) {
@@ -277,13 +275,16 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                               // const Icon(Icons.monetization_on,
                                               //     size: 22,
                                               //     color: Colors.yellow),
+                                              // const Icon(Icons.monetization_on,
+                                              //     size: 22,
+                                              //     color: Colors.yellow),
                                               const SizedBox(width: 4),
                                               Text(
                                                 service.formattedPrice,
                                                 style: const TextStyle(
                                                   color: Colors.black54,
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
+                                                  fontSize: 18,
                                                 ),
                                               ),
                                             ],
@@ -341,6 +342,45 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
             Text(
               'Đã chọn ${selectedServices.length} dịch vụ',
               style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+            ),
+            Row(
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "Tổng",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    Text(
+                      '${formatCurrency(getTotalPrice())}',
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.deepBlue),
+                    ),
+                  ],
+                ),
+                ElevatedButton(
+                  onPressed: selectedServices.isEmpty
+                      ? null
+                      : () {
+                          Navigator.pop(context, {
+                            'selectedServiceList': selectedServices.toList(),
+                            'selectedServiceId':
+                                selectedServices.map((s) => s.id).toList(),
+                          });
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: selectedServices.isEmpty
+                        ? Colors.grey
+                        : AppColors.accent,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('XONG'),
+                ),
+              ],
             ),
             Row(
               children: [
