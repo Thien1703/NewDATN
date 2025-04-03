@@ -2,6 +2,7 @@ C/C++ Structured LogO
 M
 KC:\src\flutter\packages\flutter_tools\gradle\src\main\groovy\CMakeLists.txtC
 A
+<<<<<<< HEAD
 ?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	ƒ«²Ôß2§ ˆÌŸÐß2k
 i
 gD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\arm64-v8a\additional_project_files.txt	ƒ«²Ôß2 µÇÇÐß2h
@@ -26,3 +27,29 @@ _
 ]D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\arm64-v8a\prefab_config.json	„«²Ôß2( éÇÇÐß2f
 d
 bD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\arm64-v8a\symbol_folder_index.txt	„«²Ôß2Y îÇÇÐß2
+=======
+?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	òåèàß2§ ˆÌŸÐß2k
+i
+gD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\arm64-v8a\additional_project_files.txt	óåèàß2 †äèàß2h
+f
+dD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\arm64-v8a\android_gradle_build.json	óåèàß2« ¦äèàß2m
+k
+iD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\arm64-v8a\android_gradle_build_mini.json	óåèàß2ˆ ðäèàß2Z
+X
+VD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\arm64-v8a\build.ninja	óåèàß2ÊÒ ’âèàß2^
+\
+ZD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\arm64-v8a\build.ninja.txt	óåèàß2c
+a
+_D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\arm64-v8a\build_file_index.txt	óåèàß2K üäèàß2d
+b
+`D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\arm64-v8a\compile_commands.json	óåèàß2	h
+f
+dD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\arm64-v8a\compile_commands.json.bin	óåèàß2
+n
+l
+jD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\arm64-v8a\metadata_generation_command.txt	óåèàß2¿ øäèàß2a
+_
+]D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\arm64-v8a\prefab_config.json	ôåèàß2( ùäèàß2f
+d
+bD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\arm64-v8a\symbol_folder_index.txt	ôåèàß2Y ùäèàß2
+>>>>>>> newBranch

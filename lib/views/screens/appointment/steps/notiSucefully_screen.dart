@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/appointment/appointment_service.dart';
 import 'package:health_care/viewmodels/api/appointmentService_api.dart';
-import 'package:health_care/views/screens/home/homePage.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
 import 'package:health_care/views/widgets/bottomSheet/showCustomer.dart';
 import 'package:health_care/views/widgets/widget_lineBold.dart';
@@ -104,28 +103,27 @@ class _NotiSucefullyState extends State<NotiSucefully> {
                                       ),
                                     ),
                                     const SizedBox(height: 10),
-                                    if (appointment != null)
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            appointment.time.substring(0, 5),
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.grey[700]),
-                                          ),
-                                          SizedBox(width: 20),
-                                          Text(
-                                            '${appointment.date.split("-")[2]}-${appointment.date.split("-")[1]}-${appointment.date.split("-")[0]}',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.grey[700]),
-                                          ),
-                                        ],
-                                      )
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          appointment.time.substring(0, 5),
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey[700]),
+                                        ),
+                                        SizedBox(width: 20),
+                                        Text(
+                                          '${appointment.date.split("-")[2]}-${appointment.date.split("-")[1]}-${appointment.date.split("-")[0]}',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey[700]),
+                                        ),
+                                      ],
+                                    )
                                   ],
                                 ),
                               ),
@@ -170,7 +168,7 @@ class _NotiSucefullyState extends State<NotiSucefully> {
                                         Text('Mã lịch khám',
                                             style: TextStyle(fontSize: 16)),
                                         Text(
-                                          appointment!.id.toString(),
+                                          appointment.id.toString(),
                                           style: TextStyle(
                                             fontSize: 35,
                                             color: Colors.green,
@@ -189,96 +187,84 @@ class _NotiSucefullyState extends State<NotiSucefully> {
                                 ),
                                 const WidgetLineBold(),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: appointment != null
-                                      ? Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
                                           children: [
-                                            Row(
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  child: Image.network(
-                                                    appointment.clinic.image,
-                                                    width: 80,
-                                                    height: 60,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 20),
-                                                Expanded(
-                                                  child: Text(
-                                                    appointment.clinic.name,
-                                                    softWrap: true,
-                                                    style: const TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            _buildRow(
-                                              'Ngày khám',
-                                              '${appointment.date.split("-")[2]}-${appointment.date.split("-")[1]}-${appointment.date.split("-")[0]}',
-                                            ),
-                                            _buildRow(
-                                                'Giờ khám',
-                                                appointment.time
-                                                    .substring(0, 5)),
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  top: 20, bottom: 10),
-                                              child: Text(
-                                                'THÔNG TIN BỆNH NHÂN',
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w400),
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: Image.network(
+                                                appointment.clinic.image,
+                                                width: 80,
+                                                height: 60,
+                                                fit: BoxFit.cover,
                                               ),
                                             ),
-                                            _buildRow('Họ và tên',
-                                                appointment.customer.fullName),
-                                            _buildRow('Ngày sinh',
-                                                // appointment.customer.birthDate
-                                                'Chưa cập nhật'
-                                                ),
-                                            _buildRow('Giới tính',
-                                                appointment.customer.gender),
-                                            _buildRow(
-                                                'Số điện thoại',
-                                                appointment
-                                                    .customer.phoneNumber),
-                                            SizedBox(height: 10),
-                                            Align(
-                                              alignment: Alignment.center,
-                                              child: InkWell(
-                                                onTap: () {
-                                                  showModalBottomSheet(
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        Showcustomer(),
-                                                  );
-                                                },
-                                                child: Text(
-                                                  'Xem chi tiết',
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: AppColors.deepBlue,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
+                                            const SizedBox(width: 20),
+                                            Expanded(
+                                              child: Text(
+                                                appointment.clinic.name,
+                                                softWrap: true,
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
                                                 ),
                                               ),
                                             ),
                                           ],
-                                        )
-                                      : const Center(
-                                          child: CircularProgressIndicator()),
-                                ),
+                                        ),
+                                        _buildRow(
+                                          'Ngày khám',
+                                          '${appointment.date.split("-")[2]}-${appointment.date.split("-")[1]}-${appointment.date.split("-")[0]}',
+                                        ),
+                                        _buildRow('Giờ khám',
+                                            appointment.time.substring(0, 5)),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 20, bottom: 10),
+                                          child: Text(
+                                            'THÔNG TIN BỆNH NHÂN',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                        ),
+                                        _buildRow('Họ và tên',
+                                            appointment.customer.fullName),
+                                        _buildRow('Ngày sinh',
+                                            appointment.customer.birthDate),
+                                        _buildRow('Giới tính',
+                                            appointment.customer.gender),
+                                        _buildRow('Số điện thoại',
+                                            appointment.customer.phoneNumber),
+                                        SizedBox(height: 10),
+                                        Align(
+                                          alignment: Alignment.center,
+                                          child: InkWell(
+                                            onTap: () {
+                                              showModalBottomSheet(
+                                                context: context,
+                                                builder: (context) =>
+                                                    Showcustomer(),
+                                              );
+                                            },
+                                            child: Text(
+                                              'Xem chi tiết',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: AppColors.deepBlue,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )),
                               ],
                             ),
                           ),

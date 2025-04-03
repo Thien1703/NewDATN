@@ -2,12 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:health_care/env.dart';
 import 'package:health_care/services/local_storage_service.dart';
-import 'package:health_care/models/clinic.dart';
 import 'package:http/http.dart' as http;
 
-
 class AppConfig {
-static const String baseUrl = AppEnv.baseUrl;
+  static const String baseUrl = AppEnv.baseUrl;
 
   // Đăng nhập
   static Future<String?> login(String phoneNumber, String password) async {
@@ -219,6 +217,7 @@ static const String baseUrl = AppEnv.baseUrl;
     }
     return null;
   }
+
   // Đổi mật khẩu
   static Future<String?> changePassword(int customerId, String oldPassword,
       String newPassword, String confirmNewPassword) async {
@@ -250,6 +249,7 @@ static const String baseUrl = AppEnv.baseUrl;
       return "Lỗi máy chủ: ${response.statusCode}";
     }
   }
+
   // ========================== ĐĂNG XUẤT ==========================
   static Future<String?> logout() async {
     final url = Uri.parse('$baseUrl/auth/logout');
