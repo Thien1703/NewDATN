@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:health_care/models/clinic.dart';
 import 'package:health_care/models/customer.dart';
 
@@ -37,7 +39,10 @@ class Appointment {
       date: json['date'] ?? "Chưa cập nhật",
       time: json['time'] ?? "Chưa cập nhật",
       status: json['status'] ?? "Chưa cập nhật",
-      cancelNote: json['cancelNote'.toString()] ?? 'Chưa cập nhật',
+      cancelNote:
+          json['cancelNote'] != null && json['cancelNote'].toString().isNotEmpty
+              ? utf8.decode(json['cancelNote'].toString().runes.toList())
+              : "Chưa cập nhật",
       payment: json['payment'] ?? 0,
     );
   }

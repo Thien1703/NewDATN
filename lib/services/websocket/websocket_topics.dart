@@ -1,5 +1,6 @@
 class WebSocketTopics {
-  static String clinicTopic(String clinicId) => '/topic/clinic/clinic_$clinicId';
+  static String clinicTopic(String clinicId) =>
+      '/topic/clinic/clinic_$clinicId';
 
   static String userTopic(String userId) => '/topic/user/$userId';
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_care/models/customer.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/views/widgets/bottomSheet/header_bottomSheet.dart';
+import 'package:intl/intl.dart';
 
 class Showcustomer extends StatefulWidget {
   const Showcustomer({super.key});
@@ -52,8 +53,13 @@ class _Showcustomer extends State<Showcustomer> {
                           'Họ và tên', customers?.fullName ?? 'Chưa cập nhật'),
                       _buildLabelRow('Điện thoại',
                           customers?.phoneNumber ?? 'Chưa cập nhật'),
-                      // _buildLabelRow(
-                      //     'Ngày sinh', customers?.birthDate ?? 'Chưa cập nhật'),
+                      _buildLabelRow(
+                        'Ngày sinh',
+                        customers?.birthDate != null
+                            ? DateFormat('dd/MM/yyyy')
+                                .format(DateTime.parse(customers!.birthDate))
+                            : 'Chưa cập nhật',
+                      ),
                       _buildLabelRow('Ngày sinh', 'Chưa cập nhật'),
                       _buildLabelRow(
                           'Giới tính', customers?.gender ?? 'Chưa cập nhật'),
@@ -61,7 +67,6 @@ class _Showcustomer extends State<Showcustomer> {
                           'Địa chỉ', customers?.address ?? 'Chưa cập nhật'),
                       _buildLabelRow(
                           'Email', customers?.email ?? 'Chưa cập nhật'),
-
                     ],
                   ),
                 ),

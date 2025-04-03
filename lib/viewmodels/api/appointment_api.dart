@@ -240,4 +240,39 @@ class AppointmentApi {
       return {};
     }
   }
+
+  //Update appointment
+  static Future<bool> updateAppointment(
+    int appointmentId,
+    String cancelNote,
+  ) async {
+    final url = Uri.parse('${AppConfig.baseUrl}/appointment/update-by-id');
+    String? token = await LocalStorageService.getToken();
+    if (token == null) return false;
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'id': appointmentId,
+          'status': 'CANCELLED',
+          'cancelNote': cancelNote,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        return true; // Thành công
+      } else {
+        print('Lỗi: ${response.statusCode} - ${response.body}');
+        return false; // Lỗi từ API
+      }
+    } catch (e) {
+      print('Lỗi ngoại lệ: $e');
+      return false; // Lỗi hệ thống
+    }
+  }
 }
