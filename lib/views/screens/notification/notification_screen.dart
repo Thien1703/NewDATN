@@ -114,15 +114,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       ),
                     ),
                     title: Text(
-                      item["message"] ?? "",
+                      'fsdfsfsdf ${item["message"] ?? ""}',
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (item["appointment"] != null)
-                          Text(_formatAppointment(item["appointment"])),
-                        Text("🕒 ${item["time"]}",
+                          Text(
+                              'fdfsdfs${_formatAppointment(item["appointment"])}'),
+                        Text("🕒itee ${item["time"]}",
                             style: const TextStyle(fontSize: 12)),
                       ],
                     ),
@@ -172,4 +173,3 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 }
-  

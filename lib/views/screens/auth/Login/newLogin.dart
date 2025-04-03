@@ -16,6 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailOrPhoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
   /// Hàm kiểm tra Gmail hoặc SĐT
   String? _validateEmailOrPhone(String? value) {
@@ -47,13 +48,23 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   /// Hàm đăng nhập sử dụng AuthViewModel
-  void _signIn() {
+  void _signIn() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
       final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
       String phoneOrEmail = _emailOrPhoneController.text.trim();
       String password = _passwordController.text.trim();
 
-      authViewModel.login(context, phoneOrEmail, password);
+      try {
+        await authViewModel.login(context, phoneOrEmail, password);
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -171,7 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 100),
                         GestureDetector(
-                          onTap: _signIn,
+                          onTap: _isLoading ? null : _signIn,
                           child: Container(
                             height: 55,
                             width: 300,
@@ -182,14 +193,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                 AppColors.softBlue,
                               ]),
                             ),
-                            child: const Center(
-                              child: Text(
-                                'Đăng nhập',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: Colors.white),
-                              ),
+                            child: Center(
+                              child: _isLoading
+                                  ? CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                  : Text(
+                                      'Đăng nhập',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          color: Colors.white),
+                                    ),
                             ),
                           ),
                         ),

@@ -42,47 +42,51 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
     return "${formatter.format(amount)}VNĐ";
   }
 
+  String formatDate(String date) {
+    DateTime parsedDate = DateTime.parse(date);
+    return DateFormat('dd-MM-yyyy').format(parsedDate);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: appointmentServices == null
-          ? const Center(child: CircularProgressIndicator())
-          : appointmentServices!.isEmpty
-              ? const Center(child: Text("Không có dịch vụ nào"))
-              : WidgetHeaderBody(
-                  iconBack: true,
-                  title: "Thông tin phiếu khám",
-                  body: Container(
-                    color: const Color(0xFFECECEC),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 10),
-                                  _buildClinicInfo(),
-                                  _sectionTitle('Thông tin bệnh nhân'),
-                                  _buildPatientInfo(),
-                                  _sectionTitle('Dịch vụ đã chọn'),
-                                  _buildSelectedServices(),
-                                  SizedBox(height: 20),
-                                ],
-                              ),
-                            ),
+      body: WidgetHeaderBody(
+        iconBack: true,
+        title: "Thông tin phiếu khám",
+        body: appointmentServices == null
+            ? const Center(child: CircularProgressIndicator())
+            : Container(
+                color: const Color(0xFFECECEC),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 10),
+                              _buildClinicInfo(),
+                              _sectionTitle('Thông tin bệnh nhân'),
+                              _buildPatientInfo(),
+                              // _sectionTitle('Thông tin dịch vụ'),
+                              // _buildSelectedServices(),
+                              _sectionTitle('Thông tin đăng ký khám'),
+                              _buildInfoClinic(),
+                              SizedBox(height: 20),
+                            ],
                           ),
                         ),
-                        appointmentServices!.first.appointment.status ==
-                                'CANCELLED'
-                            ? _buildSelectedSelected()
-                            : _buildSelectedCancel()
-                      ],
+                      ),
                     ),
-                  ),
+                    appointmentServices!.first.appointment.status == 'CANCELLED'
+                        ? _buildSelectedSelected()
+                        : _buildSelectedCancel()
+                  ],
                 ),
+              ),
+      ),
     );
   }
 
@@ -103,9 +107,11 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
       Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(appointment.clinic.name,
-              style:
-                  const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+          Text(
+            appointment.clinic.name,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            textAlign: TextAlign.center,
+          ),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -119,7 +125,7 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.deepBlue)),
+                          color: Colors.green)),
                 ],
               ),
               QrImageView(data: appointment.id.toString(), size: 120),
@@ -144,10 +150,13 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
           const WidgetLineBold(),
           _buildInfoRow(
               'Mã phiếu khám', appointment.id.toString(), Colors.black),
-          _buildInfoRow('Ngày khám', appointment.date, Colors.black),
-          _buildInfoRow('Giờ khám dự kiến', appointment.time, Colors.green),
-          // _buildInfoRow(
-          //     'Lý do', appointment.cancelNote ?? 'Không xác định', Colors.black)
+          _buildInfoRow(
+              'Ngày khám', formatDate(appointment.date), Colors.black),
+          _buildInfoRow('Giờ khám dự kiến', appointment.time.substring(0, 5),
+              Colors.green),
+          if (appointment.status == 'CANCELLED')
+            _buildInfoRow(
+                'Lý do', appointment.cancelNote ?? 'Không có', Colors.black)
         ],
       ),
     );
@@ -178,7 +187,8 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
     return _buildContainer(
       Column(
         children: [
-          _buildInfoRow('Mã bệnh nhân', customer.id.toString(), Colors.green),
+          _buildInfoRow(
+              'Mã bệnh nhân', customer.id.toString(), AppColors.deepBlue),
           _buildInfoRow('Họ và tên', customer.fullName, Colors.black),
           _buildInfoRow('Số điện thoại', customer.phoneNumber, Colors.black),
           const WidgetLineBold(),
@@ -200,43 +210,34 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
     );
   }
 
-  Widget _buildSelectedServices() {
-    return Column(
-      children: appointmentServices!.map((item) {
-        return _buildContainer(
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _buildInfoRow(
-                "Dịch vụ",
-                item.service?.name ?? "Không có dịch vụ",
-                Colors.black,
-              ),
-              _buildInfoRow(
-                "Giá",
-                formatCurrency(item.service?.price?.toInt() ?? 0),
-                Colors.green,
-              ),
-              _buildInfoRow(
-                "Bác sĩ",
-                item.employee?.fullName ?? "Đang cập nhật",
-                Colors.black,
-              ),
-              WidgetLineBold(),
-              InkWell(
-                onTap: () {},
-                child: const Text('Chi tiết',
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.deepBlue)),
-              ),
-            ],
-          ),
-        );
-      }).toList(),
-    );
-  }
+  // Widget _buildSelectedServices() {
+  //   return _buildContainer(
+  //     Column(
+  //       children: appointmentServices!.map((item) {
+  //         return Column(
+  //           crossAxisAlignment: CrossAxisAlignment.center,
+  //           children: [
+  //             _buildInfoRow(
+  //               "Dịch vụ",
+  //               item.service?.name ?? "Không có dịch vụ",
+  //               Colors.black,
+  //             ),
+  //             _buildInfoRow(
+  //               "Giá",
+  //               formatCurrency(item.service?.price?.toInt() ?? 0),
+  //               Colors.green,
+  //             ),
+  //             _buildInfoRow(
+  //               "Bác sĩ",
+  //               item.employee?.fullName ?? "Đang cập nhật",
+  //               Colors.black,
+  //             ),
+  //           ],
+  //         );
+  //       }).toList(),
+  //     ),
+  //   );
+  // }
 
   Widget _buildContainer(Widget child) {
     return Container(
@@ -255,6 +256,74 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
       ),
       child: child,
     );
+  }
+
+  Widget _buildInfoClinic() {
+    return _buildContainer(Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                appointmentServices!.first.appointment.clinic.name,
+                softWrap: true,
+              ),
+            ),
+            Image.network(
+              appointmentServices!.first.appointment.clinic.image,
+              width: 70,
+            )
+          ],
+        ),
+        Row(
+          children: [
+            Icon(
+              Icons.location_on_sharp,
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                appointmentServices!.first.appointment.clinic.address,
+                softWrap: true,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            )
+          ],
+        ),
+        WidgetLineBold(),
+        Column(
+          children: appointmentServices!.map((item) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _buildInfoRow(
+                  "Dịch vụ",
+                  item.service?.name ?? "Không có dịch vụ",
+                  Colors.black,
+                ),
+                _buildInfoRow(
+                    'Chuyên khoa',
+                    item.service?.specialty.name ?? 'Không có dịch vụ',
+                    Colors.black),
+                _buildInfoRow(
+                  "Giá",
+                  formatCurrency(item.service?.price?.toInt() ?? 0),
+                  Colors.green,
+                ),
+                _buildInfoRow(
+                  "Bác sĩ",
+                  item.employee?.fullName ?? "Đang cập nhật",
+                  Colors.black,
+                ),
+              ],
+            );
+          }).toList(),
+        ),
+      ],
+    ));
   }
 
   Widget _buildInfoRow(String label, String value, Color color) {
@@ -319,6 +388,7 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
   }
 
   Widget _buildSelectedCancel() {
+    String? tempSelectedValue;
     bool isLoading = false;
     return InkWell(
       onTap: () {
@@ -326,168 +396,167 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
           context: context,
           isScrollControlled: true,
           builder: (BuildContext context) {
-            String? tempSelectedValue;
             return StatefulBuilder(
               builder: (context, setStateModal) {
                 return HeaderBottomSheet(
                   title: 'Lý Do Hủy',
-                  body: Container(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        RadioListTile<String>(
-                          value: 'A',
-                          groupValue: tempSelectedValue,
-                          title: const Text(
-                            'Tôi bận, không thể đến khám',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
+                  body: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RadioListTile<String>(
+                        value: 'Tôi bận, không thể đến khám',
+                        groupValue: tempSelectedValue,
+                        title: const Text(
+                          'Tôi bận, không thể đến khám',
+                          style: TextStyle(
+                            fontSize: 14,
                           ),
-                          contentPadding: EdgeInsets.zero,
-                          onChanged: (value) {
-                            setStateModal(() {
-                              tempSelectedValue = value!;
-                            });
-                          },
                         ),
-                        RadioListTile<String>(
-                          value: 'B',
-                          groupValue: tempSelectedValue,
-                          title: const Text(
-                            'Tôi muốn đổi lịch khám',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
+                        contentPadding: EdgeInsets.zero,
+                        onChanged: (value) {
+                          setStateModal(() {
+                            tempSelectedValue = value!;
+                          });
+                        },
+                      ),
+                      RadioListTile<String>(
+                        value: 'Tôi muốn đổi lịch khám',
+                        groupValue: tempSelectedValue,
+                        title: const Text(
+                          'Tôi muốn đổi lịch khám',
+                          style: TextStyle(
+                            fontSize: 14,
                           ),
-                          contentPadding: EdgeInsets.zero,
-                          onChanged: (value) {
-                            setStateModal(() {
-                              tempSelectedValue = value!;
-                            });
-                          },
                         ),
-                        RadioListTile<String>(
-                          value: 'C',
-                          groupValue: tempSelectedValue,
-                          title: const Text(
-                            'Tôi không còn triệu chứng',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
+                        contentPadding: EdgeInsets.zero,
+                        onChanged: (value) {
+                          setStateModal(() {
+                            tempSelectedValue = value!;
+                          });
+                        },
+                      ),
+                      RadioListTile<String>(
+                        value: 'Tôi không còn triệu chứng',
+                        groupValue: tempSelectedValue,
+                        title: const Text(
+                          'Tôi không còn triệu chứng',
+                          style: TextStyle(
+                            fontSize: 14,
                           ),
-                          contentPadding: EdgeInsets.zero,
-                          onChanged: (value) {
-                            setStateModal(() {
-                              tempSelectedValue = value!;
-                            });
-                          },
                         ),
-                        RadioListTile<String>(
-                          value: 'D',
-                          groupValue: tempSelectedValue,
-                          title: const Text(
-                            'Tôi đặt nhầm lịch',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
+                        contentPadding: EdgeInsets.zero,
+                        onChanged: (value) {
+                          setStateModal(() {
+                            tempSelectedValue = value!;
+                          });
+                        },
+                      ),
+                      RadioListTile<String>(
+                        value: 'Tôi đặt nhầm lịch',
+                        groupValue: tempSelectedValue,
+                        title: const Text(
+                          'Tôi đặt nhầm lịch',
+                          style: TextStyle(
+                            fontSize: 14,
                           ),
-                          contentPadding: EdgeInsets.zero,
-                          onChanged: (value) {
-                            setStateModal(() {
-                              tempSelectedValue = value!;
-                            });
-                          },
                         ),
-                        RadioListTile<String>(
-                          value: 'E',
-                          groupValue: tempSelectedValue,
-                          title: const Text(
-                            'Tôi không có nhu cầu đặt nữa',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
+                        contentPadding: EdgeInsets.zero,
+                        onChanged: (value) {
+                          setStateModal(() {
+                            tempSelectedValue = value!;
+                          });
+                        },
+                      ),
+                      RadioListTile<String>(
+                        value: 'Tôi không có nhu cầu đặt nữa',
+                        groupValue: tempSelectedValue,
+                        title: const Text(
+                          'Tôi không có nhu cầu đặt nữa',
+                          style: TextStyle(
+                            fontSize: 14,
                           ),
-                          contentPadding: EdgeInsets.zero,
-                          onChanged: (value) {
-                            setStateModal(() {
-                              tempSelectedValue = value!;
-                            });
-                          },
                         ),
-                        RadioListTile<String>(
-                          value: 'G',
-                          groupValue: tempSelectedValue,
-                          title: const Text(
-                            'Tôi không tìm thấy lý do hủy phù hợp',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
+                        contentPadding: EdgeInsets.zero,
+                        onChanged: (value) {
+                          setStateModal(() {
+                            tempSelectedValue = value!;
+                          });
+                        },
+                      ),
+                      RadioListTile<String>(
+                        value: 'Tôi không tìm thấy lý do hủy phù hợp',
+                        groupValue: tempSelectedValue,
+                        title: const Text(
+                          'Tôi không tìm thấy lý do hủy phù hợp',
+                          style: TextStyle(
+                            fontSize: 14,
                           ),
-                          contentPadding: EdgeInsets.zero,
-                          onChanged: (value) {
-                            setStateModal(() {
-                              tempSelectedValue = value!;
-                            });
-                          },
                         ),
-                        Container(
-                          width: double.infinity,
-                          child: OutlinedButton(
-                            onPressed: (tempSelectedValue == null || isLoading)
-                                ? null
-                                : () async {
-                                    setState(() {
-                                      isLoading = true;
-                                    });
-                                    bool? success = await AppointmentApi
-                                        .getCancelAppointment(
-                                      appointmentServices!.first.appointment.id,
-                                    );
-                                    setState(() {
-                                      isLoading = false;
-                                    });
-                                    if (mounted) {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => HomeScreens(),
-                                        ),
-                                      );
-                                    }
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(success == true
-                                            ? 'Hủy lịch thành công'
-                                            : 'Hủy lịch thất bại. Vui lòng thử lại'),
-                                        backgroundColor: success == true
-                                            ? Colors.grey
-                                            : Colors.red,
+                        contentPadding: EdgeInsets.zero,
+                        onChanged: (value) {
+                          setStateModal(() {
+                            tempSelectedValue = value!;
+                          });
+                        },
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: OutlinedButton(
+                          onPressed: (tempSelectedValue == null || isLoading)
+                              ? null
+                              : () async {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  bool? success =
+                                      await AppointmentApi.updateAppointment(
+                                    appointmentServices!.first.appointment.id,
+                                    tempSelectedValue!,
+                                  );
+
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  if (mounted) {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => HomeScreens(),
                                       ),
                                     );
-                                  },
-                            style: OutlinedButton.styleFrom(
-                                foregroundColor: tempSelectedValue == null
-                                    ? Colors.black
-                                    : Colors.white,
-                                backgroundColor: tempSelectedValue == null
-                                    ? Colors.grey
-                                    : AppColors.deepBlue),
-                            child: isLoading
-                                ? SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2,
-                                    ),
-                                  )
-                                : Text('Xác nhận'),
-                          ),
-                        )
-                      ],
-                    ),
+                                  }
+                                  // ScaffoldMessenger.of(context).showSnackBar(
+                                  //   SnackBar(
+                                  //     content: Text(success == true
+                                  //         ? 'Hủy lịch thành công'
+                                  //         : 'Hủy lịch thất bại. Vui lòng thử lại'),
+                                  //     backgroundColor: success == true
+                                  //         ? Colors.grey
+                                  //         : Colors.red,
+                                  //   ),
+                                  // );
+                                },
+                          style: OutlinedButton.styleFrom(
+                              foregroundColor: tempSelectedValue == null
+                                  ? Colors.black
+                                  : Colors.white,
+                              backgroundColor: tempSelectedValue == null
+                                  ? Colors.grey
+                                  : AppColors.deepBlue),
+                          child: isLoading
+                              ? SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Text('Xác nhận'),
+                        ),
+                      )
+                    ],
                   ),
                 );
               },
