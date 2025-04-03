@@ -105,7 +105,7 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
         children: [
           Text(appointment.clinic.name,
               style:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                  const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -146,6 +146,8 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
               'Mã phiếu khám', appointment.id.toString(), Colors.black),
           _buildInfoRow('Ngày khám', appointment.date, Colors.black),
           _buildInfoRow('Giờ khám dự kiến', appointment.time, Colors.green),
+          // _buildInfoRow(
+          //     'Lý do', appointment.cancelNote ?? 'Không xác định', Colors.black)
         ],
       ),
     );

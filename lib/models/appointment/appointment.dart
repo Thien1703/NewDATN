@@ -8,6 +8,7 @@ class Appointment {
   final String date;
   final String time;
   final String status;
+  final String? cancelNote;
   final int? payment;
 
   Appointment({
@@ -17,6 +18,7 @@ class Appointment {
     required this.date,
     required this.time,
     required this.status,
+    this.cancelNote,
     this.payment,
   });
 
@@ -35,6 +37,7 @@ class Appointment {
       date: json['date'] ?? "Chưa cập nhật",
       time: json['time'] ?? "Chưa cập nhật",
       status: json['status'] ?? "Chưa cập nhật",
+      cancelNote: json['cancelNote'.toString()] ?? 'Chưa cập nhật',
       payment: json['payment'] ?? 0,
     );
   }
@@ -47,6 +50,7 @@ class Appointment {
       'date': date,
       'time': time,
       'status': status,
+      'cancelNote': cancelNote,
       'payment': payment,
     };
   }
@@ -59,6 +63,7 @@ class Appointment {
       date: "Chưa cập nhật",
       time: "Chưa cập nhật",
       status: "Chưa cập nhật",
+      cancelNote: "Chưa cập nhật",
       payment: 0,
     );
   }
