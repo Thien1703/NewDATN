@@ -5,6 +5,7 @@ import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/config/app_config.dart';
 import 'package:health_care/views/screens/profile/inforProfile_screen.dart';
 import 'package:health_care/viewmodels/auth_viewmodel.dart';
+import 'package:health_care/views/screens/profile/qr_customer.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -15,21 +16,22 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  Map<String, dynamic>? _userData;
+  Map<String, dynamic>? userData;
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _fetchUserProfile();
+    fetchUserProfile();
   }
 
-  Future<void> _fetchUserProfile() async {
+  Future<void> fetchUserProfile() async {
     try {
       final data = await AppConfig.getUserProfile();
       if (mounted) {
         // Kiểm tra xem widget có còn tồn tại không
         setState(() {
-          _userData = data;
+          userData = data;
         });
       }
     } catch (e) {
@@ -38,8 +40,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     }
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -71,16 +71,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           CircleAvatar(
             radius: 40,
-            backgroundImage: _userData?['avtar'] != null
-                ? NetworkImage(_userData!['avtar'])
-                : const AssetImage('assets/images/avt.png') as ImageProvider,
+            backgroundImage: userData?['avtar'] != null
+                ? NetworkImage(userData!['avtar'])
+                : const AssetImage('assets/images/noavatar.png')
+                    as ImageProvider,
           ),
           const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                _userData?['fullName'] ?? 'Người dùng',
+                userData?['fullName'] ?? 'Người dùng',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -88,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               Text(
-                _userData?['phoneNumber'] ?? 'Số điện thoại',
+                userData?['phoneNumber'] ?? 'Số điện thoại',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -101,16 +102,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // Widget _buildOrderItem(IconData icon, String label) {
-  //   return Column(
-  //     children: [
-  //       Icon(icon, size: 30, color: AppColors.deepBlue),
-  //       const SizedBox(height: 5),
-  //       Text(label, style: const TextStyle(fontSize: 14)),
-  //     ],
-  //   );
-  // }
-
   Widget _buildAccountSection() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -122,12 +113,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
-          _buildMenuItem(Icons.qr_code, "Mã QR của tôi"),
+          _buildMenuItem(
+            Icons.qr_code,
+            "Mã QR của tôi",
+            () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => QrCustomer()));
+            },
+          ),
           _buildMenuItem(Icons.person, "Thông tin cá nhân", () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (context) => const InforProfileScreen()),
-            );
+            Navigator.of(context)
+                .push(MaterialPageRoute(
+                    builder: (context) => const InforProfileScreen()))
+                .then((_) {
+              fetchUserProfile(); // Cập nhật lại dữ liệu khi trở về ProfileScreen
+            });
           }),
           _buildMenuItem(Icons.location_on, "Quản lý số địa chỉ"),
           _buildMenuItem(Icons.credit_card, "Quản lý thẻ thanh toán"),

@@ -1,14 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:health_care/config/app_config.dart';
+import 'package:health_care/views/widgets/bottomSheet/select_birthday_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/viewmodels/auth_viewmodel.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/views/widgets/widget_selectGender.dart';
 import 'package:provider/provider.dart';
-import 'package:scroll_date_picker/scroll_date_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final Function onProfileUpdated;
@@ -24,6 +25,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
 
+  Map<String, dynamic>? _userData;
   String? selectedGender;
   bool isButtonEnabled = false;
   File? _avatarFile;
@@ -48,8 +50,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         _emailController.text = userProfile['email'] ?? '';
         _addressController.text = userProfile['address'] ?? '';
         selectedGender = userProfile['gender'];
-        _selectedDate =
-            DateTime.tryParse(userProfile['birthDate'] ?? '') ?? DateTime.now();
+        // Kiểm tra và chuyển đổi ngày sinh
+        String? birthDateStr = userProfile['birthDate'];
+        if (birthDateStr != null && birthDateStr.isNotEmpty) {
+          try {
+            DateTime parsedDate = DateTime.parse(birthDateStr);
+            _selectedDate = parsedDate;
+            _dobController.text = DateFormat('dd/MM/yyyy').format(parsedDate);
+          } catch (e) {
+            print('Lỗi khi parse ngày sinh: $e');
+            _selectedDate = DateTime.now(); // Gán giá trị mặc định an toàn
+            _dobController.text = '';
+          }
+        }
+        // _selectedDate =
+        //     DateTime.tryParse(userProfile['birthDate'] ?? '') ?? DateTime.now();
       });
     }
   }
@@ -77,7 +92,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       await authViewModel.uploadAvatar(context, _avatarFile!);
 
       widget.onProfileUpdated(); // Gọi callback để reload ProfileScreen
-
+      if (mounted) {
+        setState(() {}); // Cập nhật UI ngay lập tức
+      }
       _updateButtonState();
     }
   }
@@ -99,12 +116,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 12.0),
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundImage: _avatarFile != null
-                              ? FileImage(_avatarFile!)
-                              : const AssetImage('assets/images/noavatar.png')
-                                  as ImageProvider,
+                        child: InkWell(
+                          onTap: _pickImage,
+                          child: CircleAvatar(
+                            radius: 40,
+                            backgroundImage: _avatarFile != null
+                                ? FileImage(_avatarFile!)
+                                : (_userData?['avtar'] != null &&
+                                            Uri.tryParse(_userData!['avtar'])
+                                                    ?.hasAbsolutePath ==
+                                                true
+                                        ? CachedNetworkImageProvider(
+                                            _userData!['avtar'])
+                                        : const AssetImage(
+                                            'assets/images/noavatar.png'))
+                                    as ImageProvider,
+                          ),
                         ),
                       ),
                       Positioned(
@@ -113,10 +140,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         child: InkWell(
                           onTap: _pickImage,
                           child: CircleAvatar(
-                            radius: 18,
+                            radius: 12,
                             backgroundColor: Colors.white,
                             child:
-                                Icon(Icons.camera_alt, color: AppColors.accent),
+                                Icon(Icons.camera_alt, color: AppColors.grey4),
                           ),
                         ),
                       ),
@@ -126,44 +153,60 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 _customTitle(title: 'Họ và tên'),
                 _customTextField(
                     controller: _nameController, labelText: 'Nhập họ và tên'),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // Column(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: [
+                //     _customTitle(title: 'Ngày sinh'),
+                //     // SizedBox(
+                //     //   height: 250,
+                //     //   child: ScrollDatePicker(
+                //     //     selectedDate: _selectedDate,
+                //     //     locale: Locale('vi'),
+                //     //     onDateTimeChanged: (DateTime value) {
+                //     //       setState(() {
+                //     //         _selectedDate = value;
+                //     //         _dobController.text =
+                //     //             DateFormat('yyyy-MM-dd').format(value);
+                //     //       });
+                //     //       _updateButtonState();
+                //     //     },
+                //     //   ),
+                //     // ),
+                //   SelectBirthday()
+                //   ],
+                // ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _customTitle(title: 'Ngày sinh'),
-                        SizedBox(
-                          height: 250,
-                          child: ScrollDatePicker(
-                            selectedDate: _selectedDate,
-                            locale: Locale('en'),
-                            onDateTimeChanged: (DateTime value) {
-                              setState(() {
-                                _selectedDate = value;
-                                _dobController.text =
-                                    DateFormat('yyyy-MM-dd').format(value);
-                              });
-                              _updateButtonState();
-                            },
-                          ),
-                        ),
-                      ],
+                    _customTitle(title: 'Ngày sinh'),
+                    SizedBox(height: 5),
+                    SelectBirthdayWidget(
+                      initialDate: _selectedDate,
+                      onDateSelected: (DateTime pickedDate) {
+                        setState(() {
+                          _selectedDate = pickedDate;
+                          _dobController.text =
+                              DateFormat('yyyy-MM-dd').format(pickedDate);
+                        });
+                        _updateButtonState();
+                      },
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _customTitle(title: 'Giới tính'),
-                        WidgetSelectGender(
-                          initialGender: selectedGender,
-                          onChanged: (String gender) {
-                            setState(() {
-                              selectedGender = gender;
-                            });
-                            _updateButtonState();
-                          },
-                        ),
-                      ],
+                  ],
+                ),
+
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _customTitle(title: 'Giới tính'),
+                    SizedBox(height: 5),
+                    WidgetSelectGender(
+                      initialGender: selectedGender,
+                      onChanged: (String gender) {
+                        setState(() {
+                          selectedGender = gender;
+                        });
+                        _updateButtonState();
+                      },
                     ),
                   ],
                 ),
@@ -198,6 +241,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           }
                         : null,
                     style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       side: BorderSide(
                           color: isButtonEnabled
                               ? AppColors.deepBlue
