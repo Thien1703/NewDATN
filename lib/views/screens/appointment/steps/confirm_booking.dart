@@ -1,7 +1,5 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
-import 'package:health_care/common/app_icons.dart';
 import 'package:health_care/models/clinic.dart';
 import 'package:health_care/models/service.dart';
 import 'package:health_care/viewmodels/api/clinic_api.dart';
@@ -122,12 +120,6 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     }
   }
 
-  String _calculateTotalPrice() {
-    if (services == null || services!.isEmpty) return '0 VNĐ';
-    double total = services!.fold(0, (sum, item) => sum + (item.price ?? 0));
-    return '${NumberFormat('#,###', 'vi_VN').format(total)} VNĐ';
-  }
-
   String formatCurrency(int amount) {
     final formatter = NumberFormat("#,###", "vi_VN");
     return "${formatter.format(amount)}đ";
@@ -188,12 +180,15 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                       children: [
                                         Row(
                                           children: [
-                                            Text(
-                                              'Dịch vụ: ${service.name}',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
-                                                color: AppColors.deepBlue,
+                                            Expanded(
+                                              child: Text(
+                                                'Dịch vụ: ${service.name}',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: AppColors.deepBlue,
+                                                ),
+                                                softWrap: true,
                                               ),
                                             ),
                                           ],

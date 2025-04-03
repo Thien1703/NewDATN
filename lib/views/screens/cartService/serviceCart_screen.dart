@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/service.dart';
 import 'package:health_care/viewmodels/api/service_api.dart';
-import 'dart:convert';
 import 'package:intl/intl.dart';
-import 'package:health_care/views/widgets/widget_header_body.dart';
 
 class ServiceCartScreen extends StatefulWidget {
   const ServiceCartScreen({super.key});
@@ -215,7 +213,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 5,
                                 mainAxisSpacing: 5,
-                                childAspectRatio: 0.7,
+                                childAspectRatio: 0.6,
                               ),
                               itemCount: entry.value.length,
                               itemBuilder: (context, index) {
@@ -274,16 +272,19 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                           const SizedBox(height: 4),
                                           Row(
                                             children: [
-                                              const Icon(Icons.monetization_on,
-                                                  size: 22,
-                                                  color: Colors.yellow),
+                                              // const Icon(Icons.monetization_on,
+                                              //     size: 22,
+                                              //     color: Colors.yellow),
+                                              // const Icon(Icons.monetization_on,
+                                              //     size: 22,
+                                              //     color: Colors.yellow),
                                               const SizedBox(width: 4),
                                               Text(
                                                 service.formattedPrice,
                                                 style: const TextStyle(
                                                   color: Colors.black54,
                                                   fontWeight: FontWeight.bold,
-                                                  fontSize: 19,
+                                                  fontSize: 18,
                                                 ),
                                               ),
                                             ],
@@ -340,41 +341,86 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
           children: [
             Text(
               'Đã chọn ${selectedServices.length} dịch vụ',
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
+            Row(
               children: [
-                const Text(
-                  "Tổng thanh toán",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "Tổng",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    Text(
+                      '${formatCurrency(getTotalPrice())}',
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.deepBlue),
+                    ),
+                  ],
                 ),
-                Text(
-                  '${formatCurrency(getTotalPrice())}',
-                  style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.deepBlue),
+                ElevatedButton(
+                  onPressed: selectedServices.isEmpty
+                      ? null
+                      : () {
+                          Navigator.pop(context, {
+                            'selectedServiceList': selectedServices.toList(),
+                            'selectedServiceId':
+                                selectedServices.map((s) => s.id).toList(),
+                          });
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: selectedServices.isEmpty
+                        ? Colors.grey
+                        : AppColors.accent,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('XONG'),
                 ),
               ],
             ),
-            ElevatedButton(
-              onPressed: selectedServices.isEmpty
-                  ? null
-                  : () {
-                      Navigator.pop(context, {
-                        'selectedServiceList': selectedServices.toList(),
-                        'selectedServiceId':
-                            selectedServices.map((s) => s.id).toList(),
-                      });
-                    },
-              style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    selectedServices.isEmpty ? Colors.grey : AppColors.accent,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text('XONG'),
-            ),
+            Row(
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "Tổng",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    Text(
+                      '${formatCurrency(getTotalPrice())}',
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.deepBlue),
+                    ),
+                  ],
+                ),
+                ElevatedButton(
+                  onPressed: selectedServices.isEmpty
+                      ? null
+                      : () {
+                          Navigator.pop(context, {
+                            'selectedServiceList': selectedServices.toList(),
+                            'selectedServiceId':
+                                selectedServices.map((s) => s.id).toList(),
+                          });
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: selectedServices.isEmpty
+                        ? Colors.grey
+                        : AppColors.accent,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('XONG'),
+                ),
+              ],
+            )
           ],
         ),
       ),

@@ -15,11 +15,12 @@ class _MeasurebmrScreenState extends State<MeasurebmrScreen> {
   String height = '';
   String weight = '';
 
-  bool get isFormValid =>
-      selectedGender != null &&
-      age.isNotEmpty &&
-      height.isNotEmpty &&
-      weight.isNotEmpty;
+  bool get isFormValid {
+    final h = double.tryParse(height) ?? 0;
+    final w = double.tryParse(weight) ?? 0;
+    final a = int.tryParse(age) ?? 0;
+    return selectedGender != null && a > 0 && h > 0 && w > 0;
+  }
 
   InputDecoration customInputDecoration(String suffixText) {
     return InputDecoration(
@@ -160,9 +161,9 @@ class _MeasurebmrScreenState extends State<MeasurebmrScreen> {
 
     double bmr;
     if (selectedGender == Gender.male) {
-      bmr = 88.36 + (13.4 * w) + (4.8 * h) - (5.7 * a);
+      bmr = 66.5 + (13.75 * w) + (5 * h) - (6.75 * a);
     } else {
-      bmr = 447.6 + (9.2 * w) + (3.1 * h) - (4.3 * a);
+      bmr = 655.1 + (9.563 * w) + (1.850 * h) - (4.676 * a);
     }
 
     Navigator.push(

@@ -72,7 +72,7 @@ class AuthViewModel with ChangeNotifier {
     } else {
       Fluttertoast.showToast(
         msg: errorMessage,
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -116,7 +116,7 @@ class AuthViewModel with ChangeNotifier {
     if (errorMessage == null) {
       Fluttertoast.showToast(
         msg: "Cập nhật hồ sơ thành công!",
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.green,
         textColor: Colors.white,
@@ -126,12 +126,52 @@ class AuthViewModel with ChangeNotifier {
     } else {
       Fluttertoast.showToast(
         msg: errorMessage,
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
       );
       return false; // ❌ Cập nhật thất bại
+    }
+  }
+
+  /// Upload ảnh đại diện
+  Future<void> uploadAvatar(BuildContext context, File imageFile) async {
+    int? userId = await LocalStorageService.getUserId();
+
+    if (userId == null) {
+      Fluttertoast.showToast(
+        msg: "Không tìm thấy ID người dùng, vui lòng đăng nhập lại.",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+
+    // Gọi API upload
+    String? result = await AppConfig.uploadAvatar(imageFile, userId);
+
+    if (!context.mounted) return;
+
+    if (result != null) {
+      Fluttertoast.showToast(
+        msg: "Cập nhật ảnh đại diện thành công!",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+      notifyListeners(); // Cập nhật giao diện
+    } else {
+      Fluttertoast.showToast(
+        msg: "Upload ảnh thất bại!",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
     }
   }
 

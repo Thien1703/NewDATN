@@ -6,6 +6,8 @@ import 'package:health_care/models/specialty.dart';
 import 'package:health_care/models/customer.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/viewmodels/api/specialty_api.dart';
+import 'package:health_care/views/screens/map/chatbot.dart';
+import 'package:health_care/views/screens/map/searchMap.dart';
 import 'package:health_care/views/screens/tools/BMI/BMI_screen.dart';
 import 'package:health_care/views/screens/tools/BMI/measureBMI_Screen.dart';
 import 'package:health_care/views/screens/home/service_screen.dart';
@@ -39,10 +41,14 @@ class _HomePage extends State<HomePage> {
   void fetchSpecialties() async {
     List<Specialty>? data = await SpecialtyApi.getAllSpecialty();
     Customer? result = await CustomerApi.getCustomerProfile();
-    setState(() {
-      specialties = data;
-      customers = result;
-    });
+
+    if (mounted) {
+      // Kiểm tra xem widget có còn tồn tại không
+      setState(() {
+        specialties = data;
+        customers = result;
+      });
+    }
   }
 
   @override
@@ -81,7 +87,7 @@ class _HomePage extends State<HomePage> {
               ],
               flexibleSpace: LayoutBuilder(
                 builder: (context, constraints) {
-                  bool isCollapsed = constraints.maxHeight < 100;
+                  bool isCollapsed = constraints.maxHeight < 90;
                   return FlexibleSpaceBar(
                     background: Image.asset(
                       'assets/images/backLogo.png',
@@ -105,9 +111,9 @@ class _HomePage extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Tìm phòng khám, chuyên khoa...',
+                            'Tìm phòng khám,chuyên khoa',
                             style: TextStyle(
-                              fontSize: isCollapsed ? 14 : 10,
+                              fontSize: isCollapsed ? 13 : 10,
                               color: const Color.fromARGB(255, 141, 141, 141),
                             ),
                           ),
@@ -175,9 +181,21 @@ class _HomePage extends State<HomePage> {
                             child: Row(
                               children: [
                                 _buildFeatureButton(
-                                    'Tìm phòng khám', AppIcons.mapPlus, () {}),
+                                    'Tìm phòng khám', AppIcons.mapPlus, () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              SearchScreen()));
+                                }),
                                 _buildFeatureButton(
-                                    'Chat với AI', AppIcons.robotAI, () {}),
+                                    'Chat với AI', AppIcons.robotAI, () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ChatBotScreen()));
+                                }),
                                 _buildFeatureButton('Đo BMI', AppIcons.bmiIcon,
                                     () {
                                   Navigator.push(
@@ -185,8 +203,6 @@ class _HomePage extends State<HomePage> {
                                       MaterialPageRoute(
                                           builder: (context) => BmiScreen()));
                                 }),
-                                _buildFeatureButton('Kiểm tra sức khỏe',
-                                    AppIcons.healthCheck, () {}),
                                 _buildFeatureButton('Đo BMR', AppIcons.mapPlus,
                                     () {
                                   Navigator.push(
