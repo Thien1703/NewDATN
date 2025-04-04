@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:health_care/views/screens/clinic/clinic_screen.dart';
 import 'package:health_care/views/screens/map/data_search_model.dart';
 import 'package:health_care/views/screens/map/form_field_widget.dart';
 import 'package:health_care/views/screens/map/search_map_view.dart';
@@ -13,9 +14,131 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   late GoogleMapController mapController;
+  Set<Marker> markers = {}; // Danh sách marker
+  late BitmapDescriptor clinicIcon;
 
-  void onMapCreated(GoogleMapController controller) {
-    mapController = controller;
+  @override
+  void initState() {
+    super.initState();
+    _loadCustomMarker();
+  }
+
+  void _loadCustomMarker() async {
+    clinicIcon = await BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(size: Size(100, 100)),
+      'assets/icons/maker1.png',
+    );
+    _generateFixedMarkers();
+  }
+
+  void _generateFixedMarkers() {
+    final List<Map<String, dynamic>> clinics = [
+      {
+        "name": "Phòng Khám Đa Khoa FPT-Quận 1",
+        "district": "Quận 1",
+        "lat": 10.776,
+        "lng": 106.700
+      },
+      {
+        "name": "Phòng Khám Đa Khoa FPT-Quận 3",
+        "district": "Quận 3",
+        "lat": 10.779,
+        "lng": 106.695
+      },
+      {
+        "name": "Phòng Khám Đa Khoa FPT-Quận 5",
+        "district": "Quận 5",
+        "lat": 10.762,
+        "lng": 106.682
+      },
+      {
+        "name": "Phòng Khám Đa Khoa FPT-Quận 7",
+        "district": "Quận 7",
+        "lat": 10.735,
+        "lng": 106.707
+      },
+      {
+        "name": "Phòng Khám Đa Khoa FPT-Quận 10",
+        "district": "Quận 10",
+        "lat": 10.770,
+        "lng": 106.668
+      },
+      {
+        "name": "Phòng Khám Đa Khoa FPT-Quận Bình Thạnh",
+        "district": "Bình Thạnh",
+        "lat": 10.804,
+        "lng": 106.690
+      },
+      {
+        "name": "Phòng Khám Đa Khoa FPT-Quận Govap",
+        "district": "Gò Vấp",
+        "lat": 10.822,
+        "lng": 106.687
+      },
+      {
+        "name": "Phòng Khám Đa Khoa FPT-Quận Phú NhuậnNhuận",
+        "district": "Phú Nhuận",
+        "lat": 10.799,
+        "lng": 106.677
+      },
+      {
+        "name": "Phòng Khám Đa Khoa FPT-Quận Tân Bình",
+        "district": "Tân Bình",
+        "lat": 10.800,
+        "lng": 106.647
+      },
+      {
+        "name": "Phòng Khám Đa Khoa FPT-Quận Thủ Đức",
+        "district": "Thủ Đức",
+        "lat": 10.853,
+        "lng": 106.736
+      },
+    ];
+
+    Set<Marker> newMarkers = clinics
+        .map((clinic) => Marker(
+              markerId: MarkerId(clinic["name"]),
+              position: LatLng(clinic["lat"], clinic["lng"]),
+              icon: clinicIcon,
+              infoWindow: InfoWindow(
+                title: clinic["name"],
+                snippet: clinic["district"],
+                onTap: () => _showClinicDialog(clinic["name"]),
+              ),
+            ))
+        .toSet();
+
+    setState(() {
+      markers = newMarkers;
+    });
+  }
+
+  void _showClinicDialog(String clinicName) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(clinicName),
+          content: const Text("Bạn có muốn xem chi tiết phòng khám này không?"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Đóng"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ClinicScreen()),
+                );
+              },
+              child: const Text("Đặt lịch ngay"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -25,24 +148,26 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Stack(
           children: [
             GoogleMap(
-                // style:
-                //     '[{"featureType": "poi.business","stylers": [{ "visibility": "off" }]}]',
-                // markers: Set.from(listMarker),
-                myLocationEnabled: true,
-                onMapCreated: onMapCreated,
-                zoomControlsEnabled: false,
-                initialCameraPosition: CameraPosition(
-                    zoom: 16,
-                    target: LatLng(10.854167759297065, 106.62574679688609))),
+              myLocationEnabled: true,
+              onMapCreated: (controller) => mapController = controller,
+              zoomControlsEnabled: false,
+              markers: markers,
+              initialCameraPosition: const CameraPosition(
+                zoom: 14,
+                target: LatLng(10.80, 106.65),
+              ),
+            ),
             GestureDetector(
               onTap: () async {
                 DataSearchModel? data = await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SearchAddressPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const SearchAddressPage()),
                 );
                 if (data != null) {
                   mapController.animateCamera(
-                      CameraUpdate.newLatLng(LatLng(data.lat!, data.lng!)));
+                    CameraUpdate.newLatLng(LatLng(data.lat!, data.lng!)),
+                  );
                 }
               },
               child: Padding(
@@ -54,10 +179,10 @@ class _SearchScreenState extends State<SearchScreen> {
                   labelText: 'Nhập địa chỉ tìm kiếm',
                   padding: 15,
                   isEnabled: false,
-                  icon: Icon(Icons.search),
+                  icon: const Icon(Icons.search),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

@@ -68,7 +68,8 @@ void main() async {
               color: isConfirmed ? Colors.green : Colors.red,
             ),
           ),
-          background: isConfirmed ? Colors.green.shade700 : Colors.redAccent.shade700,
+          background:
+              isConfirmed ? Colors.green.shade700 : Colors.redAccent.shade700,
           elevation: 10,
           autoDismiss: true,
           slideDismissDirection: DismissDirection.horizontal,
