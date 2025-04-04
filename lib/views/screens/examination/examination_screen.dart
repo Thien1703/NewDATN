@@ -61,17 +61,29 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                 color: const Color(0xFFECECEC),
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 20),
-                  child: filteredAppointments.isNotEmpty
-                      ? ListView.builder(
-                          padding: EdgeInsets.only(top: 10),
-                          itemCount: filteredAppointments.length,
-                          itemBuilder: (context, index) {
-                            final appointment =
-                                filteredAppointments.reversed.toList()[index];
-                            return _buildAppointmentCard(appointment);
-                          },
+                  child: appointments == null
+                      ? Container(
+                          width: double.infinity,
+                          height: 700,
+                          alignment: Alignment.center,
+                          child: SizedBox(
+                            width: 30,
+                            height: 30,
+                            child: CircularProgressIndicator(strokeWidth: 3),
+                          ),
                         )
-                      : Center(child: Text('Chưa có lịch khám')),
+                      : filteredAppointments.isNotEmpty
+                          ? ListView.builder(
+                              padding: EdgeInsets.only(top: 10),
+                              itemCount: filteredAppointments.length,
+                              itemBuilder: (context, index) {
+                                final appointment = filteredAppointments
+                                    .reversed
+                                    .toList()[index];
+                                return _buildAppointmentCard(appointment);
+                              },
+                            )
+                          : Center(child: Text('Chưa có lịch khám')),
                 )),
           ),
         ],

@@ -4,7 +4,8 @@ import 'package:health_care/views/widgets/bottomSheet/header_bottomSheet.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class SelectDayWidget extends StatefulWidget {
-  const SelectDayWidget({super.key});
+  const SelectDayWidget({super.key, required this.clinicId});
+  final int clinicId;
 
   @override
   State<SelectDayWidget> createState() => _SelectDayWidgetState();
@@ -30,10 +31,11 @@ class _SelectDayWidgetState extends State<SelectDayWidget> {
             locale: 'vi',
             selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
             onDaySelected: (selectedDay, focusedDay) {
-              if (!isSameDay(selectedDay, DateTime.now()) &&
-                  selectedDay.isBefore(DateTime.now())) {
+              if (selectedDay
+                  .isBefore(DateTime.now().subtract(Duration(days: 1)))) {
                 return;
               }
+
               setState(() {
                 _selectedDay = selectedDay;
                 _focusedDay = focusedDay;

@@ -106,7 +106,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
 
   String formatCurrency(int amount) {
     final formatter = NumberFormat("#,###", "vi_VN");
-    return "${formatter.format(amount)}đ";
+    return "${formatter.format(amount)}VNĐ";
   }
 
   @override

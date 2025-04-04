@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
+import 'package:health_care/views/screens/notification/notification_screen.dart';
 
 class BuildDraw extends StatefulWidget {
   const BuildDraw({super.key, required this.fullName});
@@ -43,7 +44,13 @@ class _BuildDrawState extends State<BuildDraw> {
           ),
           ListTile(
             title: Text('Thông báo'),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NotificationScreen(),
+                  ));
+            },
           ),
           ListTile(
             title: Text('Bệnh'),

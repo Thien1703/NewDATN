@@ -6,10 +6,11 @@ import 'package:health_care/models/specialty.dart';
 import 'package:health_care/models/customer.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/viewmodels/api/specialty_api.dart';
-import 'package:health_care/views/screens/BMI/measureBMI_Screen.dart';
+
 import 'package:health_care/views/screens/chat/chat_screen.dart';
 import 'package:health_care/views/screens/chat/clinic_chat_screen.dart';
 import 'package:health_care/views/screens/chatbot/botchat.dart';
+
 import 'package:health_care/views/screens/home/service_screen.dart';
 import 'package:health_care/views/screens/notification/notification_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -201,7 +202,7 @@ class _HomePage extends State<HomePage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const BmiScreen()));
+                                              MeasurebmiScreen()));
                                 }),
                                 _buildFeatureButton(
                                   'CSKH',
@@ -297,6 +298,9 @@ class _HomePage extends State<HomePage> {
                               viewportFraction: 0.8,
                             ),
                           ),
+                          // Container(
+
+                          // ),
                           Container(
                             margin: EdgeInsets.symmetric(horizontal: 15),
                             child: Column(
@@ -334,8 +338,7 @@ class _HomePage extends State<HomePage> {
                                                               specialty.id),
                                                 )),
                                             child: Container(
-                                              padding:
-                                                  EdgeInsets.only(left: 10),
+                                              padding: EdgeInsets.only(left: 5),
                                               decoration: BoxDecoration(
                                                   color: Colors.white,
                                                   border: Border.all(
@@ -360,7 +363,7 @@ class _HomePage extends State<HomePage> {
                                                     width: 45,
                                                     color: AppColors.deepBlue,
                                                   ),
-                                                  SizedBox(width: 10),
+                                                  SizedBox(width: 5),
                                                   Text(
                                                     specialty.name,
                                                     style: TextStyle(
@@ -420,7 +423,7 @@ Widget _buildFeatureButton(String text, String icon, VoidCallback onTap) {
             text,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 13,
               color: Colors.black,
             ),
           ),
