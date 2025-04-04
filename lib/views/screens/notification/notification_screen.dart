@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:health_care/services/local_storage_service.dart';
 import 'package:health_care/services/websocket/websocket_manager.dart';
 import 'package:health_care/services/websocket/websocket_service.dart';
+import 'package:health_care/views/screens/examination/paidDetail_screen.dart';
 import 'package:intl/intl.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -23,8 +24,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
     _loadSavedNotifications();
 
     // Lấy instance WebSocketService global
-    _webSocketService = WebSocketManager.instance!;
-    _isConnected = true; // Đã kết nối global ở main.dart
+    if (WebSocketManager.instance != null) {
+      _webSocketService = WebSocketManager.instance!;
+    } else {
+      print("❌ Lỗi: WebSocketManager chưa được khởi tạo!");
+      return;
+    }
 
     // Gắn callback nhận thông báo mới vào WebSocket global
     _webSocketService.onMessageReceived = (message) async {
@@ -37,41 +42,49 @@ class _NotificationScreenState extends State<NotificationScreen> {
         "time": DateFormat('HH:mm:ss dd/MM/yyyy').format(DateTime.now()),
       };
 
-      setState(() {
-        notifications.insert(0, newNotification);
-      });
+      if (mounted) {
+        setState(() {
+          notifications.insert(0, newNotification);
+        });
+      }
 
-      print("🟢 Thông báo mới đã được thêm. Tổng số hiện tại: ${notifications.length}");
+      print(
+          "🟢 Thông báo mới đã được thêm. Tổng số hiện tại: ${notifications.length}");
 
       await LocalStorageService.saveNotifications(notifications);
 
       _showSnackBar(message['message']);
+      await _loadSavedNotifications();
     };
 
     // Theo dõi trạng thái kết nối global
     _webSocketService.onConnectionChange = (bool isConnected) {
-      print(isConnected
-          ? "🟢 WebSocket kết nối!"
-          : "🔴 WebSocket ngắt kết nối.");
+      print(
+          isConnected ? "🟢 WebSocket kết nối!" : "🔴 WebSocket ngắt kết nối.");
       setState(() {
         _isConnected = isConnected;
       });
     };
+
+    // Kiểm tra kết nối ban đầu
+    _isConnected = _webSocketService.isConnected;
   }
 
   Future<void> _loadSavedNotifications() async {
     final saved = await LocalStorageService.getSavedNotifications();
+    print("📦 Đã tải ${saved.length} thông báo từ local.");
     setState(() {
       notifications = saved;
     });
-    print("📦 Đã tải ${saved.length} thông báo từ local.");
   }
 
   void _showSnackBar(String message) {
-    print("🍫 SnackBar: $message");
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), duration: const Duration(seconds: 3)),
-    );
+    if (mounted) {
+      print("🍫 SnackBar: $message");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message), duration: const Duration(seconds: 3)),
+      );
+    }
   }
 
   @override
@@ -103,7 +116,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 final isNew = item["type"] == "NEW_APPOINTMENT";
 
                 return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   child: ListTile(
                     leading: CircleAvatar(
                       backgroundColor: isNew ? Colors.orange : Colors.green,
@@ -113,7 +127,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       ),
                     ),
                     title: Text(
-                      item["message"] ?? "",
+                      item["message"] ?? "Thông báo không rõ",
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                     subtitle: Column(
@@ -121,10 +135,22 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       children: [
                         if (item["appointment"] != null)
                           Text(_formatAppointment(item["appointment"])),
-                        Text("🕒 ${item["time"]}", style: const TextStyle(fontSize: 12)),
+                        Text("🕒 ${item["time"]}",
+                            style: const TextStyle(fontSize: 12)),
                       ],
                     ),
-                    onTap: () => _showDetails(item),
+                    onTap: () {
+                      final appointment = item['appointment'];
+
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PaidDetailScreen(
+                              appointmentId: appointment['id'],
+                              status: appointment['status'],
+                            ),
+                          ));
+                    },
                   ),
                 );
               },
@@ -135,36 +161,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
   String _formatAppointment(Map<String, dynamic> appointment) {
     try {
       final clinic = appointment["clinic"]?["name"] ?? "Phòng khám";
-      final date = DateFormat('dd/MM/yyyy').format(DateTime.parse(appointment["date"]));
-      final time = DateFormat('HH:mm').format(DateTime.parse("1970-01-01 ${appointment["time"]}"));
+      final date =
+          DateFormat('dd/MM/yyyy').format(DateTime.parse(appointment["date"]));
+      final time = DateFormat('HH:mm')
+          .format(DateTime.parse("1970-01-01 ${appointment["time"]}"));
       return "$clinic - $time ngày $date";
     } catch (e) {
       print("⚠️ Lỗi định dạng lịch hẹn: $e");
       return "";
     }
-  }
-
-  void _showDetails(Map<String, dynamic> notification) {
-    final appointment = notification["appointment"];
-    if (appointment == null) return;
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(notification["message"] ?? "Chi tiết thông báo"),
-        content: Text("""
-👤 Khách: ${appointment["customer"]?["fullName"] ?? "Khách hàng"}
-🏥 Phòng khám: ${appointment["clinic"]?["name"] ?? "Phòng khám"}
-🗓 Ngày khám: ${appointment["date"]}
-⏰ Giờ: ${appointment["time"]}
-        """),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Đóng"),
-          )
-        ],
-      ),
-    );
   }
 }

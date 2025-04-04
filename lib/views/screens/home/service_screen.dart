@@ -19,6 +19,7 @@ class _ServiceScreen extends State<ServiceScreen> {
   List<Service>? filteredServices;
   TextEditingController searchController = TextEditingController();
   String specialtyName = 'Dich vụ';
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -35,6 +36,7 @@ class _ServiceScreen extends State<ServiceScreen> {
         if (services.isNotEmpty) {
           specialtyName = services.first.specialty.name;
         }
+        isLoading = false;
       });
     }
   }
@@ -53,43 +55,63 @@ class _ServiceScreen extends State<ServiceScreen> {
     return WidgetHeaderBody(
       iconBack: true,
       title: specialtyName,
-      body: services.isEmpty
-          ? Container(
-              width: double.infinity,
-              height: 700,
-              alignment: Alignment.center,
-              child: SizedBox(
-                width: 30,
-                height: 30,
-                child: CircularProgressIndicator(strokeWidth: 3),
-              ),
-            )
-          : Container(
-              color: const Color(0xFFECECEC),
-              child: Column(
-                children: [
-                  SingleChildScrollView(
+      color: AppColors.ghostWhite,
+      body: Container(
+        margin: EdgeInsets.symmetric(horizontal: 15),
+        child: isLoading
+            ? Container(
+                width: double.infinity,
+                height: 700,
+                alignment: Alignment.center,
+                child: SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: CircularProgressIndicator(strokeWidth: 3),
+                ),
+              )
+            : services.isEmpty
+                ? Container(
+                    width: double.infinity,
+                    height: 700,
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Chưa có dịch vụ nào',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                    ),
+                  )
+                : SingleChildScrollView(
                     child: Container(
-                      margin:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                      color: AppColors.ghostWhite,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            specialtyName,
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  specialtyName,
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  'Cùng phòng khám đa khoa FPT tìm hiểu các dịch vụ về ${specialtyName}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(height: 10),
-                          Text(
-                            'Cùng phòng khám đa khoa FPT tìm hiểu các dịch vụ về ${specialtyName}',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
+
+                          // Display the filtered services
                           filteredServices == null || filteredServices!.isEmpty
                               ? Padding(
                                   padding: const EdgeInsets.only(top: 40),
@@ -101,14 +123,15 @@ class _ServiceScreen extends State<ServiceScreen> {
                                 )
                               : GridView.builder(
                                   shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
+                                  physics:
+                                      NeverScrollableScrollPhysics(), // Disable scroll for GridView
                                   itemCount: filteredServices!.length,
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2,
                                     crossAxisSpacing: 12,
                                     mainAxisSpacing: 12,
-                                    childAspectRatio: 0.85,
+                                    childAspectRatio: 0.95,
                                   ),
                                   itemBuilder: (context, index) {
                                     final service = filteredServices![index];
@@ -118,10 +141,9 @@ class _ServiceScreen extends State<ServiceScreen> {
                                         borderRadius: BorderRadius.circular(16),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: const Color.fromARGB(
-                                                255, 170, 170, 170),
+                                            color: Colors.grey,
                                             spreadRadius: 1,
-                                            blurRadius: 1,
+                                            blurRadius: 2,
                                           ),
                                         ],
                                       ),
@@ -173,7 +195,10 @@ class _ServiceScreen extends State<ServiceScreen> {
                                     );
                                   },
                                 ),
+
                           SizedBox(height: 24),
+
+                          // Book appointment button
                           if (services.isNotEmpty)
                             Center(
                               child: SizedBox(
@@ -209,9 +234,7 @@ class _ServiceScreen extends State<ServiceScreen> {
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
+      ),
     );
   }
 }

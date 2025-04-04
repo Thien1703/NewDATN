@@ -24,6 +24,8 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
     return DateFormat('dd-MM-yyyy').format(parsedDate);
   }
 
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
@@ -35,10 +37,15 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
       customer = await CustomerApi.getCustomerProfile();
       if (customer != null) {
         appointments = await AppointmentApi.getAppointmentByCus(customer!.id);
-        setState(() {});
       }
     } catch (e) {
       debugPrint("❗ Lỗi hệ thống: $e");
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -58,33 +65,33 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
           _buildStatusFilter(),
           Expanded(
             child: Container(
-                color: const Color(0xFFECECEC),
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20),
-                  child: appointments == null
-                      ? Container(
-                          width: double.infinity,
-                          height: 700,
-                          alignment: Alignment.center,
-                          child: SizedBox(
-                            width: 30,
-                            height: 30,
-                            child: CircularProgressIndicator(strokeWidth: 3),
-                          ),
-                        )
-                      : filteredAppointments.isNotEmpty
-                          ? ListView.builder(
-                              padding: EdgeInsets.only(top: 10),
-                              itemCount: filteredAppointments.length,
-                              itemBuilder: (context, index) {
-                                final appointment = filteredAppointments
-                                    .reversed
-                                    .toList()[index];
-                                return _buildAppointmentCard(appointment);
-                              },
-                            )
-                          : Center(child: Text('Chưa có lịch khám')),
-                )),
+              color: const Color(0xFFECECEC),
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                child: isLoading
+                    ? Container(
+                        width: double.infinity,
+                        height: 700,
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: CircularProgressIndicator(strokeWidth: 3),
+                        ),
+                      )
+                    : filteredAppointments.isNotEmpty
+                        ? ListView.builder(
+                            padding: EdgeInsets.only(top: 10),
+                            itemCount: filteredAppointments.length,
+                            itemBuilder: (context, index) {
+                              final appointment =
+                                  filteredAppointments.reversed.toList()[index];
+                              return _buildAppointmentCard(appointment);
+                            },
+                          )
+                        : Center(child: Text('Chưa có lịch khám')),
+              ),
+            ),
           ),
         ],
       ),
@@ -96,6 +103,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
       'Tất cả': 'Tất cả',
       'Đã đặt khám': 'PENDING',
       'Đã xác nhận': 'CONFIRM',
+      'Đã khám': 'COMPLETED',
       'Đã hủy': 'CANCELLED'
     };
     return SingleChildScrollView(
@@ -179,7 +187,16 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
               ],
             ),
             SizedBox(height: 10),
-            _buildLabelRow(label: "Giờ khám", value: appointment.time),
+            Text(
+              appointment.clinic.address,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            SizedBox(height: 10),
+            _buildLabelRow(
+                label: "Giờ khám", value: appointment.time.substring(0, 5)),
             _buildLabelRow(
                 label: "Ngày khám", value: formatDate(appointment.date)),
             _buildLabelRow(
@@ -194,16 +211,18 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
     final statusMap = {
       'PENDING': 'Đã đặt lịch',
       'CONFIRM': 'Đã xác nhận',
+      'COMPLETED': 'Đã khám',
       'CANCELLED': 'Đã hủy'
     };
     final textColor = {
           'PENDING': Colors.green,
           'CONFIRM': AppColors.deepBlue,
+          'COMPLETED': AppColors.deepBlue,
           'CANCELLED': Colors.red
         }[status] ??
         Colors.black;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 6),
+      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
       decoration: BoxDecoration(
         color: textColor.withOpacity(0.2),
         border: Border.all(color: Color(0xFFDCEFDD), width: 1),
@@ -239,7 +258,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
             style: TextStyle(
               color: Colors.black,
               fontSize: 15,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],

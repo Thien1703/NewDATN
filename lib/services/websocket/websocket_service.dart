@@ -10,8 +10,8 @@ class WebSocketService {
   late StompClient stompClient;
   final String jwtToken;
   final String userId;
-   OnMessageReceived onMessageReceived;
-   OnConnectionChange onConnectionChange;
+  late OnMessageReceived onMessageReceived;
+  late OnConnectionChange onConnectionChange;
 
   bool _isConnected = false;
 
@@ -23,6 +23,12 @@ class WebSocketService {
   });
 
   void connect() {
+    // Đảm bảo chỉ tạo client khi chưa có kết nối
+    if (_isConnected) {
+      print("🔴 Đã có kết nối WebSocket.");
+      return;
+    }
+
     stompClient = StompClient(
       config: WebSocketConfig.createConfig(
         jwtToken: jwtToken,
@@ -58,6 +64,10 @@ class WebSocketService {
   }
 
   void disconnect() {
+    if (!_isConnected) {
+      print("🔴 WebSocket không kết nối.");
+      return;
+    }
     stompClient.deactivate();
     _setConnectionStatus(false);
   }
@@ -68,6 +78,9 @@ class WebSocketService {
       onConnectionChange(status);
     }
   }
+
+  // Thêm getter cho trạng thái kết nối
+  bool get isConnected => _isConnected;
 
   void subscribeToClinicChat(String clinicId) {
     final topic = WebSocketTopics.clinicTopic(clinicId);
@@ -100,7 +113,11 @@ class WebSocketService {
           try {
             final message = jsonDecode(frame.body!);
             print('📥 Nhận tin nhắn riêng: $message');
-            onMessageReceived(message);
+
+            // Kiểm tra nếu widget vẫn còn trong cây widget trước khi gọi setState
+            if (onMessageReceived != null) {
+              onMessageReceived(message);
+            }
           } catch (e) {
             print('❌ Lỗi JSON private chat: $e');
           }

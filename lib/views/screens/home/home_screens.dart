@@ -6,7 +6,7 @@ import 'package:health_care/views/screens/clinic/clinic_screen.dart';
 import 'package:health_care/views/screens/profile/profile_screen.dart';
 import 'package:health_care/views/screens/examination/examination_screen.dart';
 import 'package:health_care/views/screens/home/homePage.dart';
-import 'package:health_care/views/tools/tools_screen.dart';
+import 'package:health_care/views/screens/tools/tools_screen.dart';
 import 'package:health_care/views/widgets/build_Draw.dart';
 
 class HomeScreens extends StatefulWidget {

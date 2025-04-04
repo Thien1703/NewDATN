@@ -1,7 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 
-
 class LocalStorageService {
   static const _storage = FlutterSecureStorage();
   static const _keyToken = 'auth_token';
@@ -109,16 +108,32 @@ class LocalStorageService {
   static const _keyNotificationList = 'user_notifications';
 
   static Future<void> saveNotifications(List<Map<String, dynamic>> list) async {
-    final encoded = jsonEncode(list);
-    await _storage.write(key: _keyNotificationList, value: encoded);
+    try {
+      final encoded = jsonEncode(list);
+      await _storage.write(key: _keyNotificationList, value: encoded);
+      print("📦 Đã lưu ${list.length} thông báo vào local.");
+    } catch (e) {
+      print("❌ Lỗi khi lưu notifications vào local: $e");
+    }
   }
 
   static Future<List<Map<String, dynamic>>> getSavedNotifications() async {
     final raw = await _storage.read(key: _keyNotificationList);
-    if (raw == null) return [];
+    if (raw == null) {
+      print("📦 Không có dữ liệu thông báo lưu trữ.");
+      return [];
+    }
+
     try {
       final decoded = jsonDecode(raw);
-      return List<Map<String, dynamic>>.from(decoded);
+
+      // Kiểm tra kiểu dữ liệu sau khi giải mã
+      if (decoded is List) {
+        return List<Map<String, dynamic>>.from(decoded);
+      } else {
+        print("❌ Dữ liệu giải mã không phải là List. Đã nhận: $decoded");
+        return [];
+      }
     } catch (e) {
       print("❌ Lỗi khi đọc notifications từ local: $e");
       return [];

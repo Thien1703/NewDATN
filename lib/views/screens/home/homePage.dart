@@ -7,13 +7,18 @@ import 'package:health_care/models/customer.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/viewmodels/api/specialty_api.dart';
 
+import 'package:health_care/views/screens/map/chatbot.dart';
+import 'package:health_care/views/screens/map/searchMap.dart';
+import 'package:health_care/views/screens/tools/BMI/BMI_screen.dart';
+import 'package:health_care/views/screens/home/service_screen.dart';
+import 'package:health_care/views/screens/notification/notification_screen.dart';
+import 'package:health_care/views/screens/tools/BMR/BMR_screen.dart';
+
 import 'package:health_care/views/screens/chat/chat_screen.dart';
 import 'package:health_care/views/screens/chat/clinic_chat_screen.dart';
 import 'package:health_care/views/screens/chatbot/botchat.dart';
-
-import 'package:health_care/views/screens/home/service_screen.dart';
-import 'package:health_care/views/screens/notification/notification_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -42,10 +47,14 @@ class _HomePage extends State<HomePage> {
   void fetchSpecialties() async {
     List<Specialty>? data = await SpecialtyApi.getAllSpecialty();
     Customer? result = await CustomerApi.getCustomerProfile();
-    setState(() {
-      specialties = data;
-      customers = result;
-    });
+
+    if (mounted) {
+      // Kiểm tra xem widget có còn tồn tại không
+      setState(() {
+        specialties = data;
+        customers = result;
+      });
+    }
   }
 
   void _launchURL(String url) async {
@@ -93,7 +102,7 @@ class _HomePage extends State<HomePage> {
               ],
               flexibleSpace: LayoutBuilder(
                 builder: (context, constraints) {
-                  bool isCollapsed = constraints.maxHeight < 100;
+                  bool isCollapsed = constraints.maxHeight < 90;
                   return FlexibleSpaceBar(
                     background: Image.asset(
                       'assets/images/backLogo.png',
@@ -117,9 +126,9 @@ class _HomePage extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Tìm phòng khám, chuyên khoa...',
+                            'Tìm phòng khám,chuyên khoa',
                             style: TextStyle(
-                              fontSize: isCollapsed ? 14 : 10,
+                              fontSize: isCollapsed ? 13 : 10,
                               color: const Color.fromARGB(255, 141, 141, 141),
                             ),
                           ),
@@ -139,7 +148,9 @@ class _HomePage extends State<HomePage> {
               child: Container(
                 margin: EdgeInsets.only(bottom: 40),
                 decoration: BoxDecoration(
-                  color: Color(0xFFF0F2F5),
+                  color: Color(
+                    0xFFF0F2F5,
+                  ),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),
@@ -187,7 +198,13 @@ class _HomePage extends State<HomePage> {
                             child: Row(
                               children: [
                                 _buildFeatureButton(
-                                    'Tìm phòng khám', AppIcons.mapPlus, () {}),
+                                    'Tìm phòng khám', AppIcons.mapPlus, () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              SearchScreen()));
+                                }),
                                 _buildFeatureButton(
                                     'Chat với AI', AppIcons.robotAI, () {
                                   Navigator.push(
@@ -201,9 +218,17 @@ class _HomePage extends State<HomePage> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              MeasurebmiScreen()));
+                                          builder: (context) => BmiScreen()));
                                 }),
+                                _buildFeatureButton('Đo BMR', AppIcons.mapPlus,
+                                    () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => BmrScreen(),
+                                      ));
+                                }),
+
                                 _buildFeatureButton(
                                   'CSKH',
                                   AppIcons.healthCheck,
@@ -212,6 +237,7 @@ class _HomePage extends State<HomePage> {
                                 ),
                                 _buildFeatureButton(
                                     'Tìm phòng khám', AppIcons.mapPlus, () {}),
+
                                 SizedBox(width: 10),
                               ],
                             ),

@@ -5,6 +5,7 @@ import 'package:health_care/viewmodels/api/appointmentService_api.dart';
 import 'package:health_care/viewmodels/api/appointment_api.dart';
 import 'package:health_care/views/screens/clinic/clinic_screen.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
+import 'package:health_care/views/widgets/bottomSheet/header_bottomSheet.dart';
 import 'package:health_care/views/widgets/bottomSheet/showCustomer.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/views/widgets/widget_lineBold.dart';
@@ -24,8 +25,6 @@ class PaidDetailScreen extends StatefulWidget {
 
 class _PaidDetailScreenState extends State<PaidDetailScreen> {
   List<AppointmentService>? appointmentServices;
-  String qrData = 'fsdfsdfsdf';
-
   @override
   void initState() {
     super.initState();
@@ -43,47 +42,51 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
     return "${formatter.format(amount)}VNĐ";
   }
 
+  String formatDate(String date) {
+    DateTime parsedDate = DateTime.parse(date);
+    return DateFormat('dd-MM-yyyy').format(parsedDate);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: appointmentServices == null
-          ? const Center(child: CircularProgressIndicator())
-          : appointmentServices!.isEmpty
-              ? const Center(child: Text("Không có dịch vụ nào"))
-              : WidgetHeaderBody(
-                  iconBack: true,
-                  title: "Thông tin phiếu khám",
-                  body: Container(
-                    color: const Color(0xFFECECEC),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 10),
-                                  _buildClinicInfo(),
-                                  _sectionTitle('Thông tin bệnh nhân'),
-                                  _buildPatientInfo(),
-                                  _sectionTitle('Dịch vụ đã chọn'),
-                                  _buildSelectedServices(),
-                                  SizedBox(height: 20),
-                                ],
-                              ),
-                            ),
+      body: WidgetHeaderBody(
+        iconBack: true,
+        title: "Thông tin phiếu khám",
+        body: appointmentServices == null
+            ? const Center(child: CircularProgressIndicator())
+            : Container(
+                color: const Color(0xFFECECEC),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 10),
+                              _buildClinicInfo(),
+                              _sectionTitle('Thông tin bệnh nhân'),
+                              _buildPatientInfo(),
+                              // _sectionTitle('Thông tin dịch vụ'),
+                              // _buildSelectedServices(),
+                              _sectionTitle('Thông tin đăng ký khám'),
+                              _buildInfoClinic(),
+                              SizedBox(height: 20),
+                            ],
                           ),
                         ),
-                        appointmentServices!.first.appointment.status ==
-                                'CANCELLED'
-                            ? _buildSelectedSelected()
-                            : _buildSelectedCancel()
-                      ],
+                      ),
                     ),
-                  ),
+                    appointmentServices!.first.appointment.status == 'CANCELLED'
+                        ? _buildSelectedSelected()
+                        : _buildSelectedCancel()
+                  ],
                 ),
+              ),
+      ),
     );
   }
 
@@ -104,26 +107,28 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
       Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(appointment.clinic.name,
-              style:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          Text(
+            appointment.clinic.name,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            textAlign: TextAlign.center,
+          ),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Column(
-                children: const [
-                  Text('STT',
+                children: [
+                  Text('Mã phiếu khám',
                       style:
                           TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
-                  Text('1',
+                  Text(appointment.id.toString(),
                       style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 25,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.deepBlue)),
+                          color: Colors.green)),
                 ],
               ),
-              QrImageView(data: qrData, size: 120),
+              QrImageView(data: appointment.id.toString(), size: 120),
             ],
           ),
           const SizedBox(height: 10),
@@ -145,8 +150,13 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
           const WidgetLineBold(),
           _buildInfoRow(
               'Mã phiếu khám', appointment.id.toString(), Colors.black),
-          _buildInfoRow('Ngày khám', appointment.date, Colors.black),
-          _buildInfoRow('Giờ khám dự kiến', appointment.time, Colors.green),
+          _buildInfoRow(
+              'Ngày khám', formatDate(appointment.date), Colors.black),
+          _buildInfoRow('Giờ khám dự kiến', appointment.time.substring(0, 5),
+              Colors.green),
+          if (appointment.status == 'CANCELLED')
+            _buildInfoRow(
+                'Lý do', appointment.cancelNote ?? 'Không có', Colors.black)
         ],
       ),
     );
@@ -167,6 +177,7 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
     const statusColors = {
       'PENDING': Colors.green,
       'CONFIRM': AppColors.deepBlue,
+      'COMPLETED': AppColors.deepBlue,
       'CANCELLED': Colors.red
     };
     return statusColors[status] ?? Colors.black;
@@ -177,7 +188,8 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
     return _buildContainer(
       Column(
         children: [
-          _buildInfoRow('Mã bệnh nhân', customer.id.toString(), Colors.green),
+          _buildInfoRow(
+              'Mã bệnh nhân', customer.id.toString(), AppColors.deepBlue),
           _buildInfoRow('Họ và tên', customer.fullName, Colors.black),
           _buildInfoRow('Số điện thoại', customer.phoneNumber, Colors.black),
           const WidgetLineBold(),
@@ -199,43 +211,34 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
     );
   }
 
-  Widget _buildSelectedServices() {
-    return Column(
-      children: appointmentServices!.map((item) {
-        return _buildContainer(
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _buildInfoRow(
-                "Dịch vụ",
-                item.service?.name ?? "Không có dịch vụ",
-                Colors.black,
-              ),
-              _buildInfoRow(
-                "Giá",
-                formatCurrency(item.service?.price?.toInt() ?? 0),
-                Colors.green,
-              ),
-              _buildInfoRow(
-                "Bác sĩ",
-                item.employee?.fullName ?? "Đang cập nhật",
-                Colors.black,
-              ),
-              WidgetLineBold(),
-              InkWell(
-                onTap: () {},
-                child: const Text('Chi tiết',
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.deepBlue)),
-              ),
-            ],
-          ),
-        );
-      }).toList(),
-    );
-  }
+  // Widget _buildSelectedServices() {
+  //   return _buildContainer(
+  //     Column(
+  //       children: appointmentServices!.map((item) {
+  //         return Column(
+  //           crossAxisAlignment: CrossAxisAlignment.center,
+  //           children: [
+  //             _buildInfoRow(
+  //               "Dịch vụ",
+  //               item.service?.name ?? "Không có dịch vụ",
+  //               Colors.black,
+  //             ),
+  //             _buildInfoRow(
+  //               "Giá",
+  //               formatCurrency(item.service?.price?.toInt() ?? 0),
+  //               Colors.green,
+  //             ),
+  //             _buildInfoRow(
+  //               "Bác sĩ",
+  //               item.employee?.fullName ?? "Đang cập nhật",
+  //               Colors.black,
+  //             ),
+  //           ],
+  //         );
+  //       }).toList(),
+  //     ),
+  //   );
+  // }
 
   Widget _buildContainer(Widget child) {
     return Container(
@@ -254,6 +257,74 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
       ),
       child: child,
     );
+  }
+
+  Widget _buildInfoClinic() {
+    return _buildContainer(Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                appointmentServices!.first.appointment.clinic.name,
+                softWrap: true,
+              ),
+            ),
+            Image.network(
+              appointmentServices!.first.appointment.clinic.image,
+              width: 70,
+            )
+          ],
+        ),
+        Row(
+          children: [
+            Icon(
+              Icons.location_on_sharp,
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                appointmentServices!.first.appointment.clinic.address,
+                softWrap: true,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            )
+          ],
+        ),
+        WidgetLineBold(),
+        Column(
+          children: appointmentServices!.map((item) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _buildInfoRow(
+                  "Dịch vụ",
+                  item.service?.name ?? "Không có dịch vụ",
+                  Colors.black,
+                ),
+                _buildInfoRow(
+                    'Chuyên khoa',
+                    item.service?.specialty.name ?? 'Không có dịch vụ',
+                    Colors.black),
+                _buildInfoRow(
+                  "Giá",
+                  formatCurrency(item.service?.price?.toInt() ?? 0),
+                  Colors.green,
+                ),
+                _buildInfoRow(
+                  "Bác sĩ",
+                  item.employee?.fullName ?? "Đang cập nhật",
+                  Colors.black,
+                ),
+              ],
+            );
+          }).toList(),
+        ),
+      ],
+    ));
   }
 
   Widget _buildInfoRow(String label, String value, Color color) {
@@ -318,58 +389,178 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
   }
 
   Widget _buildSelectedCancel() {
+    String? tempSelectedValue;
+    bool isLoading = false;
     return InkWell(
       onTap: () {
-        showDialog(
+        showModalBottomSheet(
           context: context,
-          barrierDismissible: false,
+          isScrollControlled: true,
           builder: (BuildContext context) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              title: Center(
-                child: Text(
-                  'Xác nhận hủy lịch?',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-              content: Text(
-                'Bạn có chắc chắn muốn hủy lịch khám này không',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
-              ),
-              actionsAlignment: MainAxisAlignment.center,
-              actions: [
-                _buildAlertDialog(
-                    label: 'Hủy',
-                    onTap: () {
-                      Navigator.pop(context);
-                    }),
-                _buildAlertDialog(
-                    label: 'Xác nhận',
-                    onTap: () async {
-                      bool? sussess = await AppointmentApi.getCancelAppointment(
-                          appointmentServices!.first.appointment.id);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomeScreens(),
-                          ));
-                      if (sussess == true) {
-                        fetchAppointmentServices();
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Hủy lịch thành công'),
-                          backgroundColor: Colors.grey,
-                        ));
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Hủy lịch thất bại. Vui lòng thử lại'),
-                          backgroundColor: Colors.red,
-                        ));
-                      }
-                    },
-                    colorBackground: AppColors.deepBlue,
-                    colorText: Colors.white)
-              ],
+            return StatefulBuilder(
+              builder: (context, setStateModal) {
+                return HeaderBottomSheet(
+                  title: 'Lý Do Hủy',
+                  body: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RadioListTile<String>(
+                        value: 'Tôi bận, không thể đến khám',
+                        groupValue: tempSelectedValue,
+                        title: const Text(
+                          'Tôi bận, không thể đến khám',
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        contentPadding: EdgeInsets.zero,
+                        onChanged: (value) {
+                          setStateModal(() {
+                            tempSelectedValue = value!;
+                          });
+                        },
+                      ),
+                      RadioListTile<String>(
+                        value: 'Tôi muốn đổi lịch khám',
+                        groupValue: tempSelectedValue,
+                        title: const Text(
+                          'Tôi muốn đổi lịch khám',
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        contentPadding: EdgeInsets.zero,
+                        onChanged: (value) {
+                          setStateModal(() {
+                            tempSelectedValue = value!;
+                          });
+                        },
+                      ),
+                      RadioListTile<String>(
+                        value: 'Tôi không còn triệu chứng',
+                        groupValue: tempSelectedValue,
+                        title: const Text(
+                          'Tôi không còn triệu chứng',
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        contentPadding: EdgeInsets.zero,
+                        onChanged: (value) {
+                          setStateModal(() {
+                            tempSelectedValue = value!;
+                          });
+                        },
+                      ),
+                      RadioListTile<String>(
+                        value: 'Tôi đặt nhầm lịch',
+                        groupValue: tempSelectedValue,
+                        title: const Text(
+                          'Tôi đặt nhầm lịch',
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        contentPadding: EdgeInsets.zero,
+                        onChanged: (value) {
+                          setStateModal(() {
+                            tempSelectedValue = value!;
+                          });
+                        },
+                      ),
+                      RadioListTile<String>(
+                        value: 'Tôi không có nhu cầu đặt nữa',
+                        groupValue: tempSelectedValue,
+                        title: const Text(
+                          'Tôi không có nhu cầu đặt nữa',
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        contentPadding: EdgeInsets.zero,
+                        onChanged: (value) {
+                          setStateModal(() {
+                            tempSelectedValue = value!;
+                          });
+                        },
+                      ),
+                      RadioListTile<String>(
+                        value: 'Tôi không tìm thấy lý do hủy phù hợp',
+                        groupValue: tempSelectedValue,
+                        title: const Text(
+                          'Tôi không tìm thấy lý do hủy phù hợp',
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                        contentPadding: EdgeInsets.zero,
+                        onChanged: (value) {
+                          setStateModal(() {
+                            tempSelectedValue = value!;
+                          });
+                        },
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: OutlinedButton(
+                          onPressed: (tempSelectedValue == null || isLoading)
+                              ? null
+                              : () async {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  bool? success =
+                                      await AppointmentApi.updateAppointment(
+                                    appointmentServices!.first.appointment.id,
+                                    tempSelectedValue!,
+                                  );
+
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  if (mounted) {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => HomeScreens(),
+                                      ),
+                                    );
+                                  }
+                                  // ScaffoldMessenger.of(context).showSnackBar(
+                                  //   SnackBar(
+                                  //     content: Text(success == true
+                                  //         ? 'Hủy lịch thành công'
+                                  //         : 'Hủy lịch thất bại. Vui lòng thử lại'),
+                                  //     backgroundColor: success == true
+                                  //         ? Colors.grey
+                                  //         : Colors.red,
+                                  //   ),
+                                  // );
+                                },
+                          style: OutlinedButton.styleFrom(
+                              foregroundColor: tempSelectedValue == null
+                                  ? Colors.black
+                                  : Colors.white,
+                              backgroundColor: tempSelectedValue == null
+                                  ? Colors.grey
+                                  : AppColors.deepBlue),
+                          child: isLoading
+                              ? SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Text('Xác nhận'),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
             );
           },
         );
@@ -378,16 +569,17 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
         margin: EdgeInsets.only(bottom: 10),
         width: double.infinity,
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 10),
+          padding: EdgeInsets.symmetric(vertical: 12),
           alignment: Alignment.center,
           margin: EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.red, width: 1),
-              borderRadius: BorderRadius.circular(10)),
+            border: Border.all(color: Colors.red, width: 1),
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: Text(
             'Hủy lịch',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 16,
               fontWeight: FontWeight.w500,
               color: Colors.red,
             ),
@@ -399,7 +591,7 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
 
   Widget _buildStatusBadge(String text, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
           color: color.withOpacity(0.2),
           borderRadius: BorderRadius.circular(15)),
@@ -418,16 +610,18 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
     );
   }
 
-  Widget _buildAlertDialog(
-      {required String label,
-      VoidCallback? onTap,
-      Color? colorBackground,
-      Color? colorText}) {
+  Widget _buildAlertDialog({
+    required String label,
+    VoidCallback? onTap,
+    Color? colorBackground,
+    Color? colorText,
+  }) {
     return InkWell(
       onTap: onTap,
       child: Container(
-        width: 120,
-        padding: EdgeInsets.symmetric(vertical: 10),
+        constraints: BoxConstraints(
+            minWidth: 100, maxWidth: 200), // Đảm bảo kích thước phù hợp
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         decoration: BoxDecoration(
           color: colorBackground,
           border: Border.all(color: colorBackground ?? Colors.grey, width: 1),
@@ -436,7 +630,8 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
         child: Text(
           label,
           textAlign: TextAlign.center,
-          style: TextStyle(color: colorText, fontSize: 15),
+          style: TextStyle(
+              color: colorText, fontSize: 16), // Font to hơn chút cho dễ đọc
         ),
       ),
     );

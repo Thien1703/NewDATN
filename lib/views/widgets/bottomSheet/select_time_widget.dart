@@ -35,7 +35,8 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
     return HeaderBottomSheet(
       title: 'Chọn giờ khám',
       body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        color: Colors.white,
+        margin: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +66,7 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
               child: Text(
                 'Tất cả thời gian theo múi giờ Việt Nam GMT + 7',
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: FontWeight.w500,
                   color: Color(0xFFFEAD6D),
                 ),
@@ -136,4 +137,3 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
     );
   }
 }
-  
