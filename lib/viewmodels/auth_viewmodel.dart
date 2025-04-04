@@ -43,27 +43,29 @@ class AuthViewModel with ChangeNotifier {
     }
   }
 
-  /// Đăng ký
-  Future<void> register(BuildContext context, String fullName,
-      String phoneNumber, String password) async {
-    String? errorMessage =
-        await AppConfig.register(fullName, phoneNumber, password);
+  /// Đăng ký + Xác thực OTP
+  Future<void> register(
+    BuildContext context,
+    String fullName,
+    String phoneNumber,
+    String email,
+    String password,
+  ) async {
+    // Gọi API đăng ký từ AppConfig
+    String? errorMessage = await AppConfig.register(
+        context, fullName, phoneNumber, email, password);
 
     if (!context.mounted) return; // 🔹 Kiểm tra State còn tồn tại không
 
     if (errorMessage == null) {
-      // Hiển thị thông báo đăng ký thành công
+      // Hiển thị thông báo OTP đã gửi
       Fluttertoast.showToast(
-        msg: "Đăng ký thành công!",
+        msg: "Đăng ký tài khoản thành công!",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.green,
         textColor: Colors.white,
       );
-      // Lấy token đã lưu
-      String? token = await LocalStorageService.getToken();
-      print("Token đã lưu sau khi đăng ký: $token");
-
       // Chuyển sang màn hình Home
       Navigator.pushReplacement(
         context,

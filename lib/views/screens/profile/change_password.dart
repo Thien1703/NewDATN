@@ -15,7 +15,8 @@ class ChangePasswordScreen extends StatefulWidget {
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   bool _isOldPasswordVisible = false;
   bool _isNewPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
@@ -52,10 +53,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     String newPassword = _newPasswordController.text.trim();
     String confirmPassword = _confirmPasswordController.text.trim();
 
-    if (newPassword != confirmPassword) {
+
+    if (newPassword == oldPassword) {
       Fluttertoast.showToast(
-        msg: "Mật khẩu mới và xác nhận mật khẩu không khớp.",
-        toastLength: Toast.LENGTH_LONG,
+        msg: "Mật khẩu mới không được trùng với mật khẩu cũ.",
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -63,7 +65,19 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       return;
     }
 
-    await authViewModel.changePassword(context, oldPassword, newPassword, confirmPassword);
+    if (newPassword != confirmPassword) {
+      Fluttertoast.showToast(
+        msg: "Mật khẩu mới và xác nhận mật khẩu không khớp.",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+
+    await authViewModel.changePassword(
+        context, oldPassword, newPassword, confirmPassword);
   }
 
   @override
@@ -118,8 +132,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 onPressed: isButtonEnabled ? _handleChangePassword : null,
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(
-                      color: isButtonEnabled ? AppColors.deepBlue : AppColors.grey4),
-                  backgroundColor: isButtonEnabled ? AppColors.deepBlue : AppColors.grey4,
+                      color: isButtonEnabled
+                          ? AppColors.deepBlue
+                          : AppColors.grey4),
+                  backgroundColor:
+                      isButtonEnabled ? AppColors.deepBlue : AppColors.grey4,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
@@ -172,7 +189,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           fillColor: Colors.white,
           floatingLabelBehavior: FloatingLabelBehavior.never,
           labelStyle: const TextStyle(fontSize: 14),
-          contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
           border: OutlineInputBorder(
             borderRadius: const BorderRadius.all(Radius.circular(10)),
             borderSide: BorderSide(color: AppColors.accent, width: 1),

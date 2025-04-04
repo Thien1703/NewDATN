@@ -13,12 +13,13 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _fullNameController = TextEditingController();
-  final TextEditingController _emailOrPhoneController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  // final TextEditingController _confirmPasswordController =
+  //     TextEditingController();
   bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
+  // bool _obscureConfirmPassword = true;
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -26,20 +27,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
   }
 
-  void _toggleConfirmPasswordVisibility() {
-    setState(() {
-      _obscureConfirmPassword = !_obscureConfirmPassword;
-    });
-  }
+  // void _toggleConfirmPasswordVisibility() {
+  //   setState(() {
+  //     _obscureConfirmPassword = !_obscureConfirmPassword;
+  //   });
+  // }
 
   void _register() {
     if (_formKey.currentState!.validate()) {
       final String fullName = _fullNameController.text.trim();
-      final String phoneOrEmail = _emailOrPhoneController.text.trim();
+      final String phoneNumber = _phoneNumberController.text.trim();
+      final String email = _emailController.text.trim();
       final String password = _passwordController.text.trim();
 
       Provider.of<AuthViewModel>(context, listen: false)
-          .register(context, fullName, phoneOrEmail, password);
+          .register(context, fullName, phoneNumber, email, password);
     }
   }
 
@@ -50,14 +52,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return null;
   }
 
-  String? _validateEmailOrPhone(String? value) {
+  String? _validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Vui lòng nhập số điện thoại hoặc email';
+      return 'Vui lòng nhập email';
     }
-    if (!RegExp(r'^[0-9]+$').hasMatch(value) &&
-        !RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
-            .hasMatch(value)) {
-      return 'Số điện thoại hoặc email không hợp lệ';
+    if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+        .hasMatch(value)) {
+      return 'Email không hợp lệ';
+    }
+    return null;
+  }
+
+  String? _validatePhone(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Vui lòng nhập số điện thoại';
+    }
+    if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+      return 'Số điện thoại không hợp lệ';
     }
     return null;
   }
@@ -69,15 +80,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return null;
   }
 
-  String? _validateConfirmPassword(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Vui lòng nhập lại mật khẩu';
-    }
-    if (value != _passwordController.text) {
-      return 'Mật khẩu xác nhận không khớp';
-    }
-    return null;
-  }
+  // String? _validateConfirmPassword(String? value) {
+  //   if (value == null || value.trim().isEmpty) {
+  //     return 'Vui lòng nhập lại mật khẩu';
+  //   }
+  //   if (value != _passwordController.text) {
+  //     return 'Mật khẩu xác nhận không khớp';
+  //   }
+  //   return null;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -150,15 +161,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         const SizedBox(height: 10),
                         TextFormField(
-                          controller: _emailOrPhoneController,
+                          controller: _phoneNumberController,
                           decoration: const InputDecoration(
-                            labelText: 'Nhập email hoặc số điện thoại',
+                            labelText: 'Nhập số điện thoại',
                             labelStyle: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.grey,
                             ),
                           ),
-                          validator: _validateEmailOrPhone,
+                          validator: _validatePhone,
+                        ),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          controller: _emailController,
+                          decoration: const InputDecoration(
+                            labelText: 'Nhập email',
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          validator: _validateEmail,
                         ),
                         const SizedBox(height: 10),
                         TextFormField(
@@ -182,29 +205,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           validator: _validatePassword,
                         ),
-                        const SizedBox(height: 10),
-                        TextFormField(
-                          controller: _confirmPasswordController,
-                          obscureText: _obscureConfirmPassword,
-                          decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscureConfirmPassword
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                                color: Colors.grey,
-                              ),
-                              onPressed: _toggleConfirmPasswordVisibility,
-                            ),
-                            labelText: 'Nhập lại mật khẩu',
-                            labelStyle: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          validator: _validateConfirmPassword,
-                        ),
-                        const SizedBox(height: 50),
+                        const SizedBox(height: 15),
+                        // TextFormField(
+                        //   controller: _confirmPasswordController,
+                        //   obscureText: _obscureConfirmPassword,
+                        //   decoration: InputDecoration(
+                        //     suffixIcon: IconButton(
+                        //       icon: Icon(
+                        //         _obscureConfirmPassword
+                        //             ? Icons.visibility_off
+                        //             : Icons.visibility,
+                        //         color: Colors.grey,
+                        //       ),
+                        //       onPressed: _toggleConfirmPasswordVisibility,
+                        //     ),
+                        //     labelText: 'Nhập lại mật khẩu',
+                        //     labelStyle: const TextStyle(
+                        //       fontWeight: FontWeight.bold,
+                        //       color: Colors.grey,
+                        //     ),
+                        //   ),
+                        //   validator: _validateConfirmPassword,
+                        // ),
+                        // const SizedBox(height: 50),
                         GestureDetector(
                           onTap: _register,
                           child: Container(
