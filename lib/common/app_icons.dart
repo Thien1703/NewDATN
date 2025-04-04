@@ -41,6 +41,7 @@ class AppIcons {
   static const String bookingIcon = 'assets/icons/booking_icon.png';
   static const String bookingIconBlack = 'assets/icons/booking_icon_black.png';
   static const String notificationIcon = 'assets/icons/notification_icon.png';
+
   static const String notificationIconBlack =
       'assets/icons/notification_icon_black.png';
   static const String scheduleIcon = 'assets/icons/schedule_icon.png';
@@ -52,4 +53,5 @@ class AppIcons {
   static const String robotAI = 'assets/icons/robotAI_icon.png';
   static const String bmiIcon = 'assets/icons/bmi_icon.png';
   static const String healthCheck = 'assets/icons/healthCheck_icon.png';
+  static const String maker = 'assets/icons/maker.png';
 }
