@@ -9,8 +9,8 @@ import '../config/app_config.dart';
 class AuthViewModel with ChangeNotifier {
   /// Đăng nhập
   Future<void> login(
-      BuildContext context, String phone, String password) async {
-    String? errorMessage = await AppConfig.login(phone, password);
+      BuildContext context, String phoneNumber, String password) async {
+    String? errorMessage = await AppConfig.login(phoneNumber, password);
 
     if (!context.mounted) return; // 🔹 Kiểm tra State còn tồn tại không
 
