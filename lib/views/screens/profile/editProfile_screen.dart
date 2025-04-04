@@ -22,7 +22,6 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _dobController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
 
   Map<String, dynamic>? _userData;
@@ -37,7 +36,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _loadUserProfile();
     _nameController.addListener(_updateButtonState);
     _dobController.addListener(_updateButtonState);
-    _emailController.addListener(_updateButtonState);
     _addressController.addListener(_updateButtonState);
   }
 
@@ -47,7 +45,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       setState(() {
         _nameController.text = userProfile['fullName'] ?? '';
         _dobController.text = userProfile['birthDate'] ?? '';
-        _emailController.text = userProfile['email'] ?? '';
         _addressController.text = userProfile['address'] ?? '';
         selectedGender = userProfile['gender'];
         // Kiểm tra và chuyển đổi ngày sinh
@@ -73,7 +70,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() {
       isButtonEnabled = _nameController.text.isNotEmpty &&
           _dobController.text.isNotEmpty &&
-          _emailController.text.isNotEmpty &&
           _addressController.text.isNotEmpty &&
           selectedGender != null;
     });
@@ -210,9 +206,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ],
                 ),
-                _customTitle(title: 'Email'),
-                _customTextField(
-                    controller: _emailController, labelText: 'Email'),
                 _customTitle(title: 'Địa chỉ'),
                 _customTextField(
                     controller: _addressController, labelText: 'Nhập địa chỉ'),
@@ -228,7 +221,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             Map<String, dynamic> profileData = {
                               "fullName": _nameController.text.trim(),
                               "birthDate": _dobController.text.trim(),
-                              "email": _emailController.text.trim(),
                               "address": _addressController.text.trim(),
                               "gender": selectedGender,
                             };
