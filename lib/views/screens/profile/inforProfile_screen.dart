@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/config/app_config.dart';
+import 'package:health_care/viewmodels/auth_viewmodel.dart';
 import 'package:health_care/views/screens/profile/change_password.dart';
 import 'package:health_care/views/screens/profile/editProfile_screen.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class InforProfileScreen extends StatefulWidget {
   const InforProfileScreen({super.key});
@@ -16,6 +21,7 @@ class InforProfileScreen extends StatefulWidget {
 class _InforProfileScreenState extends State<InforProfileScreen> {
   Map<String, dynamic>? userData;
   bool isLoading = true;
+  File? _avatarFile;
 
   @override
   void initState() {
@@ -26,6 +32,7 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
   Future<void> fetchUserData() async {
     setState(() => isLoading = true);
     final data = await AppConfig.getUserProfile();
+    debugPrint('User data: $data');
     if (mounted) {
       setState(() {
         userData = data;
@@ -44,6 +51,21 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
     }
   }
 
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _avatarFile = File(pickedFile.path);
+      });
+
+      final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+      await authViewModel.uploadAvatar(context, _avatarFile!);
+
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return WidgetHeaderBody(
@@ -56,9 +78,21 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Thông tin tài khoản',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Center(
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: CircleAvatar(
+                            radius: 40,
+                            backgroundImage: userData?['avtar'] != null
+                                ? NetworkImage(userData!['avtar'])
+                                : const AssetImage('assets/images/noavatar.png')
+                                    as ImageProvider,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 10),
                   _buildInfoRow(
