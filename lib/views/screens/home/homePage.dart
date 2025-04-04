@@ -205,14 +205,14 @@ class _HomePage extends State<HomePage> {
                                           builder: (context) =>
                                               SearchScreen()));
                                 }),
-                                _buildFeatureButton(
-                                    'Chat với AI', AppIcons.robotAI, () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ChatBotScreen()));
-                                }),
+                                // _buildFeatureButton(
+                                //     'Chat với AI', AppIcons.robotAI, () {
+                                //   Navigator.push(
+                                //       context,
+                                //       MaterialPageRoute(
+                                //           builder: (context) =>
+                                //               ChatBotScreen()));
+                                // }),
                                 _buildFeatureButton('Đo BMI', AppIcons.bmiIcon,
                                     () {
                                   Navigator.push(
