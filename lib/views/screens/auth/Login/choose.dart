@@ -10,10 +10,16 @@ class chooseSigninRes extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        height: double.infinity,
         width: double.infinity,
         decoration: const BoxDecoration(
-          color: AppColors.deepBlue,
+          gradient: LinearGradient(
+            colors: [
+              AppColors.deepBlue,
+              Color.fromARGB(255, 106, 168, 231)
+            ], // Màu bắt đầu và kết thúc
+            begin: Alignment.topLeft, // Hướng bắt đầu
+            end: Alignment.bottomRight, // Hướng kết thúc
+          ),
         ),
         child: Column(children: [
           const Padding(
@@ -27,12 +33,9 @@ class chooseSigninRes extends StatelessWidget {
           const SizedBox(
             height: 70,
           ),
-          const Text(
-            'Chào mừng quay trở lại',
-            style: TextStyle(fontSize: 30, color: Colors.white),
-          ),
+
           const SizedBox(
-            height: 30,
+            height: 60,
           ),
           GestureDetector(
             onTap: () {

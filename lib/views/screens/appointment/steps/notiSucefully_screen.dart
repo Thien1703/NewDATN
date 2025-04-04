@@ -5,6 +5,7 @@ import 'package:health_care/viewmodels/api/appointmentService_api.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
 import 'package:health_care/views/widgets/bottomSheet/showCustomer.dart';
 import 'package:health_care/views/widgets/widget_lineBold.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class NotiSucefully extends StatefulWidget {
@@ -236,8 +237,17 @@ class _NotiSucefullyState extends State<NotiSucefully> {
                                         ),
                                         _buildRow('Họ và tên',
                                             appointment.customer.fullName),
-                                        _buildRow('Ngày sinh',
-                                            appointment.customer.birthDate),
+                                        //             ? DateFormat('dd/MM/yyyy')
+                                        // .format(DateTime.parse(customers!.birthDate))
+                                        _buildRow(
+                                            'Ngày sinh',
+                                            appointment.customer.birthDate !=
+                                                    null
+                                                ? DateFormat('dd/MM/yyyy')
+                                                    .format(DateTime.parse(
+                                                        appointment.customer
+                                                            .birthDate))
+                                                : 'Chưa cập nhật'),
                                         _buildRow('Giới tính',
                                             appointment.customer.gender),
                                         _buildRow('Số điện thoại',

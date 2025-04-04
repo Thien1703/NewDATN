@@ -58,67 +58,42 @@ class _ClinicScreenState extends State<ClinicScreen> {
             margin: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
             child: Column(
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border:
-                              Border.all(color: AppColors.softBlue, width: 1.5),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.search, color: AppColors.softBlue),
-                            const SizedBox(width: 5),
-                            Expanded(
-                              child: TextField(
-                                controller: searchController,
-                                onChanged: filterClinics,
-                                decoration: const InputDecoration(
-                                  hintText: 'Tìm kiếm phòng khám, theo địa chỉ',
-                                  hintStyle: TextStyle(
-                                    fontSize: 14,
-                                  ),
-                                  border: InputBorder.none,
-                                  isDense: true,
-                                ),
-                              ),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.softBlue, width: 1.5),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.search, color: AppColors.softBlue),
+                      const SizedBox(width: 5),
+                      Expanded(
+                        child: TextField(
+                          controller: searchController,
+                          onChanged: filterClinics,
+                          decoration: const InputDecoration(
+                            hintText: 'Tìm kiếm phòng khám, theo địa chỉ',
+                            hintStyle: TextStyle(
+                              fontSize: 14,
                             ),
-                            if (searchController.text.isNotEmpty)
-                              IconButton(
-                                icon: const Icon(Icons.clear,
-                                    color: Colors.black54),
-                                onPressed: () {
-                                  searchController.clear();
-                                  filterClinics('');
-                                },
-                              ),
-                          ],
+                            border: InputBorder.none,
+                            isDense: true,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 10),
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 6,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Icon(Icons.location_on_outlined,
-                          color: AppColors.deepBlue, size: 20),
-                    ),
-                  ],
+                      if (searchController.text.isNotEmpty)
+                        IconButton(
+                          icon: const Icon(Icons.clear, color: Colors.black54),
+                          onPressed: () {
+                            searchController.clear();
+                            filterClinics('');
+                          },
+                        ),
+                    ],
+                  ),
                 ),
                 clinics == null
                     ? Container(
