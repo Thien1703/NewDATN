@@ -6,19 +6,16 @@ import 'package:health_care/models/specialty.dart';
 import 'package:health_care/models/customer.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/viewmodels/api/specialty_api.dart';
-
-import 'package:health_care/views/screens/map/chatbot.dart';
+import 'package:health_care/views/screens/chatbot/botchat.dart';
 import 'package:health_care/views/screens/map/searchMap.dart';
+import 'package:health_care/views/screens/search/search_screen.dart';
 import 'package:health_care/views/screens/tools/BMI/BMI_screen.dart';
 import 'package:health_care/views/screens/home/service_screen.dart';
 import 'package:health_care/views/screens/notification/notification_screen.dart';
 import 'package:health_care/views/screens/tools/BMR/BMR_screen.dart';
-
 import 'package:health_care/views/screens/chat/chat_screen.dart';
 import 'package:health_care/views/screens/chat/clinic_chat_screen.dart';
-import 'package:health_care/views/screens/chatbot/botchat.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -112,32 +109,39 @@ class _HomePage extends State<HomePage> {
                         left: isCollapsed ? 50 : 0,
                         bottom: isCollapsed ? 10 : 20,
                         right: isCollapsed ? 40 : 0),
-                    title: Container(
-                      width: double.infinity,
-                      margin: EdgeInsets.symmetric(horizontal: 10),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.white, width: 1),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Tìm phòng khám,chuyên khoa',
-                            style: TextStyle(
-                              fontSize: isCollapsed ? 13 : 10,
-                              color: const Color.fromARGB(255, 141, 141, 141),
+                    title: InkWell(
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SearchHome(),
+                          )),
+                      child: Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(color: Colors.white, width: 1),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Tìm phòng khám,chuyên khoa',
+                              style: TextStyle(
+                                fontSize: isCollapsed ? 13 : 10,
+                                color: const Color.fromARGB(255, 141, 141, 141),
+                              ),
                             ),
-                          ),
-                          Icon(
-                            Icons.mic,
-                            color: AppColors.deepBlue,
-                            size: isCollapsed ? 25 : 15,
-                          )
-                        ],
+                            Icon(
+                              Icons.mic,
+                              color: AppColors.deepBlue,
+                              size: isCollapsed ? 25 : 15,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -205,14 +209,14 @@ class _HomePage extends State<HomePage> {
                                           builder: (context) =>
                                               SearchScreen()));
                                 }),
-                                // _buildFeatureButton(
-                                //     'Chat với AI', AppIcons.robotAI, () {
-                                //   Navigator.push(
-                                //       context,
-                                //       MaterialPageRoute(
-                                //           builder: (context) =>
-                                //               ChatBotScreen()));
-                                // }),
+                                _buildFeatureButton(
+                                    'Chat với AI', AppIcons.robotAI, () {
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //       builder: (context) => ChatBotScreen(),
+                                  //     ));
+                                }),
                                 _buildFeatureButton('Đo BMI', AppIcons.bmiIcon,
                                     () {
                                   Navigator.push(
@@ -228,16 +232,14 @@ class _HomePage extends State<HomePage> {
                                         builder: (context) => BmrScreen(),
                                       ));
                                 }),
-
                                 _buildFeatureButton(
                                   'CSKH',
                                   AppIcons.healthCheck,
                                   () =>
                                       _launchURL('https://zalo.me/0917107881'),
                                 ),
-                                _buildFeatureButton(
-                                    'Tìm phòng khám', AppIcons.mapPlus, () {}),
-
+                                // _buildFeatureButton(
+                                //     'Chat AI', AppIcons.chatbot, () {}),
                                 SizedBox(width: 10),
                               ],
                             ),

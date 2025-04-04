@@ -237,17 +237,19 @@ class _NotiSucefullyState extends State<NotiSucefully> {
                                         ),
                                         _buildRow('Họ và tên',
                                             appointment.customer.fullName),
-                                        //             ? DateFormat('dd/MM/yyyy')
-                                        // .format(DateTime.parse(customers!.birthDate))
                                         _buildRow(
-                                            'Ngày sinh',
-                                            appointment.customer.birthDate !=
-                                                    null
-                                                ? DateFormat('dd/MM/yyyy')
-                                                    .format(DateTime.parse(
-                                                        appointment.customer
-                                                            .birthDate))
-                                                : 'Chưa cập nhật'),
+                                          'Ngày sinh',
+                                          (appointment.customer.birthDate !=
+                                                      null &&
+                                                  appointment.customer.birthDate
+                                                      .isNotEmpty)
+                                              ? DateFormat('dd/MM/yyyy').format(
+                                                  DateTime.tryParse(appointment
+                                                          .customer
+                                                          .birthDate) ??
+                                                      DateTime(1970, 1, 1))
+                                              : 'Chưa cập nhật',
+                                        ),
                                         _buildRow('Giới tính',
                                             appointment.customer.gender),
                                         _buildRow('Số điện thoại',

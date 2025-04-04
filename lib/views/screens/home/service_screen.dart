@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/viewmodels/api/service_api.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
@@ -57,7 +56,7 @@ class _ServiceScreen extends State<ServiceScreen> {
       title: specialtyName,
       color: AppColors.ghostWhite,
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 15),
+        margin: EdgeInsets.symmetric(horizontal: 20),
         child: isLoading
             ? Container(
                 width: double.infinity,
@@ -114,7 +113,7 @@ class _ServiceScreen extends State<ServiceScreen> {
                           // Display the filtered services
                           filteredServices == null || filteredServices!.isEmpty
                               ? Padding(
-                                  padding: const EdgeInsets.only(top: 40),
+                                  padding: const EdgeInsets.only(top: 10),
                                   child: Text(
                                     'Chưa có dịch vụ nào',
                                     style: TextStyle(
@@ -122,6 +121,7 @@ class _ServiceScreen extends State<ServiceScreen> {
                                   ),
                                 )
                               : GridView.builder(
+                                  padding: EdgeInsets.zero,
                                   shrinkWrap: true,
                                   physics:
                                       NeverScrollableScrollPhysics(), // Disable scroll for GridView
@@ -131,22 +131,13 @@ class _ServiceScreen extends State<ServiceScreen> {
                                     crossAxisCount: 2,
                                     crossAxisSpacing: 12,
                                     mainAxisSpacing: 12,
-                                    childAspectRatio: 0.95,
+                                    childAspectRatio: 0.9,
                                   ),
                                   itemBuilder: (context, index) {
                                     final service = filteredServices![index];
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(16),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey,
-                                            spreadRadius: 1,
-                                            blurRadius: 2,
-                                          ),
-                                        ],
-                                      ),
+                                    return Card(
+                                      elevation: 3,
+                                      color: Colors.white,
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -186,6 +177,9 @@ class _ServiceScreen extends State<ServiceScreen> {
                                                     fontSize: 15,
                                                     fontWeight: FontWeight.bold,
                                                   ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 2,
                                                 ),
                                               ],
                                             ),
