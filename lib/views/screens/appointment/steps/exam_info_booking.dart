@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_icons.dart';
-import 'package:health_care/config/app_config.dart';
+import 'package:health_care/viewmodels/api/clinic_api.dart';
 import 'package:health_care/views/widgets/appointment/widget_hospital_info_card.dart';
 import 'package:health_care/views/widgets/widget_select_item.dart';
 import 'package:health_care/views/widgets/appointment/widget_customButton.dart';
@@ -43,7 +43,7 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
   }
 
   void fetchClinics() async {
-    Clinic? data = await AppConfig.getClinicById(widget.clinicId);
+    Clinic? data = await ClinicApi.getClinicById(widget.clinicId);
     if (data != null) {
       setState(() {
         clinices = data;
@@ -71,38 +71,51 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
 
   @override
   Widget build(BuildContext context) {
-    // Kiểm tra xem các trường đã đủ thông tin chưa:
-    bool isButtonEnabled = selectedServiceId.isNotEmpty &&
-        selectedDate != null &&
-        selectedTime != null;
+    bool isServiceSelected = selectedServiceId.isNotEmpty;
+    bool isDateSelected = selectedDate != null;
+    bool isTimeSelected = selectedTime != null;
+    bool isButtonEnabled =
+        isServiceSelected && isDateSelected && isTimeSelected;
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 25),
+      margin: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: ListView(
               children: [
-                HospitalInfoWidget(
-                  clinicId: widget.clinicId,
-                ),
+                HospitalInfoWidget(clinicId: widget.clinicId),
                 SectionTitle(title: 'Dịch vụ'),
                 ServiceSelector(onServicesSelected: updateSelectedServices),
                 SectionTitle(title: 'Ngày khám'),
-                DateSelector(onDateSelected: updateSelectedDate),
+                IgnorePointer(
+                  ignoring: !isServiceSelected,
+                  child: Opacity(
+                    opacity: isServiceSelected ? 1 : 0.5,
+                    child: DateSelector(
+                      onDateSelected: updateSelectedDate,
+                      clinicId: widget.clinicId,
+                    ),
+                  ),
+                ),
                 SectionTitle(title: 'Giờ khám'),
-                TimeSelector(onTimeSelected: updateSelectedTime),
+                IgnorePointer(
+                  ignoring: !isDateSelected,
+                  child: Opacity(
+                    opacity: isDateSelected ? 1 : 0.5,
+                    child: TimeSelector(
+                      onTimeSelected: updateSelectedTime,
+                      selectedDate: selectedDate,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
           WidgetCustombutton(
-            // Nếu isButtonEnabled false thì onTap truyền null => nút bị vô hiệu hóa, màu xám
             onTap: isButtonEnabled
                 ? () {
-                    print(
-                      "Dữ liệu gửi sang ProfileBooking: clinicId = ${widget.clinicId}, dịch vụ: $selectedServiceId, ngày: $selectedDate, giờ: $selectedTime",
-                    );
                     widget.onNavigateToScreen(
                       1,
                       'Chọn hồ sơ',
@@ -112,7 +125,7 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
                       time: selectedTime!,
                     );
                   }
-                : null,
+                : null, // Vô hiệu hóa nút nếu chưa chọn đủ
             text: 'Tiếp tục',
           ),
         ],
@@ -182,18 +195,34 @@ class _ServiceSelectorState extends State<ServiceSelector> {
               widget.onServicesSelected(selectedServiceId);
             }
           },
+          color: selectedServices.isNotEmpty
+              ? AppColors.deepBlue
+              : Color(0xFF484848),
+          colorIcon: selectedServices.isNotEmpty
+              ? AppColors.deepBlue
+              : Color(0xFF484848),
         ),
         if (selectedServices.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ...selectedServices.map((service) => Text(
-                      "- ${service.name}",
-                      style: TextStyle(fontSize: 14, color: Colors.black),
-                    )),
-              ],
+            child: Wrap(
+              spacing: 10, // Khoảng cách giữa các phần tử ngang
+              runSpacing: 5, // Khoảng cách giữa các dòng
+              children: selectedServices
+                  .map((service) => Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200], // Màu nền nhẹ
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          '- ${service.name}',
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.black),
+                        ),
+                      ))
+                  .toList(),
             ),
           ),
       ],
@@ -203,7 +232,9 @@ class _ServiceSelectorState extends State<ServiceSelector> {
 
 class DateSelector extends StatefulWidget {
   final Function(DateTime) onDateSelected;
-  const DateSelector({super.key, required this.onDateSelected});
+  final int clinicId;
+  const DateSelector(
+      {super.key, required this.onDateSelected, required this.clinicId});
 
   @override
   State<DateSelector> createState() => _DateSelectorState();
@@ -216,13 +247,17 @@ class _DateSelectorState extends State<DateSelector> {
     final DateTime? pickedDate = await showModalBottomSheet<DateTime>(
       context: context,
       isScrollControlled: true, // Quan trọng để tự động co giãn
-      builder: (context) => SelectDayWidget(),
+      builder: (context) => SelectDayWidget(
+        clinicId: widget.clinicId,
+      ),
     );
 
     if (pickedDate != null) {
       setState(() {
         _selectedDate = pickedDate;
       });
+      // print("Ngày được chọn: ${DateFormat('yyyy-MM-dd').format(pickedDate)}");
+
       widget.onDateSelected(pickedDate); // Truyền ngày lên ExamInfoBooking
     }
   }
@@ -235,13 +270,19 @@ class _DateSelectorState extends State<DateSelector> {
           ? DateFormat('dd/MM/yyyy').format(_selectedDate!)
           : 'Chọn ngày khám',
       onTap: () => _showDatePicker(context),
+      color:
+          _selectedDate != null ? AppColors.deepBlue : const Color(0xFF484848),
+      colorIcon:
+          _selectedDate != null ? AppColors.deepBlue : const Color(0xFF484848),
     );
   }
 }
 
 class TimeSelector extends StatefulWidget {
   final Function(String) onTimeSelected;
-  const TimeSelector({super.key, required this.onTimeSelected});
+  final DateTime? selectedDate;
+  const TimeSelector(
+      {super.key, required this.onTimeSelected, this.selectedDate});
 
   @override
   State<TimeSelector> createState() => _TimeSelectorState();
@@ -264,7 +305,16 @@ class _TimeSelectorState extends State<TimeSelector> {
       child: SelectItemWidget(
         image: AppIcons.clock,
         text: selectedTime,
-        bottomSheet: SelectTimeWidget(onTimeSelected: updateSelectedTime),
+        bottomSheet: SelectTimeWidget(
+          onTimeSelected: updateSelectedTime,
+          selectedDate: widget.selectedDate,
+        ),
+        color: selectedTime != 'Chọn giờ khám'
+            ? AppColors.deepBlue
+            : Color(0xFF484848),
+        colorIcon: selectedTime != 'Chọn giờ khám'
+            ? AppColors.deepBlue
+            : Color(0xFF484848),
       ),
     );
   }

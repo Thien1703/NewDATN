@@ -1,5 +1,7 @@
 import 'dart:convert';
-import 'specialty.dart';
+
+import 'package:health_care/models/specialty.dart';
+import 'package:intl/intl.dart';
 
 class Service {
   final int id;
@@ -7,6 +9,9 @@ class Service {
   final String name;
   final String description;
   final double price;
+  final String image;
+  final double? averageRating;
+  final int? reviewCount;
 
   Service({
     required this.id,
@@ -14,15 +19,36 @@ class Service {
     required this.name,
     required this.description,
     required this.price,
+    required this.image,
+    required this.averageRating,
+    required this.reviewCount,
   });
 
-  factory Service.fromJson(Map<String, dynamic> json) {
+  /// Getter để định dạng giá tiền
+  String get formattedPrice {
+    final formatter = NumberFormat("#,###", "vi_VN");
+    return "${formatter.format(price)}VNĐ";
+  }
+
+  factory Service.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      throw ArgumentError("JSON cannot be null");
+    }
     return Service(
-      id: json['id'],
-      specialty: Specialty.fromJson(json['specialty']),
-      name: utf8.decode(json['name'].runes.toList()),
-      description: utf8.decode(json['description'].runes.toList()),
-      price: (json['price'] as num).toDouble(),
+      id: json['id'] != null ? json['id'] as int : 0,
+      specialty: json['specialty'] != null
+          ? Specialty.fromJson(json['specialty'])
+          : Specialty.defaultSpecialty(),
+      name: json['name'] != null
+          ? utf8.decode(json['name'].toString().runes.toList())
+          : "Chưa cập nhật",
+      description: json['description'] != null
+          ? utf8.decode(json['description'].toString().runes.toList())
+          : "Chưa cập nhật",
+      price: json['price'] != null ? (json['price'] as num).toDouble() : 0.0,
+      image: json['image'] ?? "assets/images/imageError.png",
+      averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0.0,
+      reviewCount: json['reviewCount'] ?? 0,
     );
   }
 
@@ -33,6 +59,9 @@ class Service {
       'name': name,
       'description': description,
       'price': price,
+      'image': image,
+      'averageRating': averageRating,
+      'reviewCount': reviewCount,
     };
   }
 }

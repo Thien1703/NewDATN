@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:health_care/views/screens/auth/Login/newLogin.dart';
-// import 'package:health_care/views/screens/auth/login/login_screen.dart';
 import '../services/local_storage_service.dart';
 import '../views/screens/home/home_screens.dart';
 import '../config/app_config.dart';
@@ -73,7 +72,7 @@ class AuthViewModel with ChangeNotifier {
     } else {
       Fluttertoast.showToast(
         msg: errorMessage,
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -117,7 +116,7 @@ class AuthViewModel with ChangeNotifier {
     if (errorMessage == null) {
       Fluttertoast.showToast(
         msg: "Cập nhật hồ sơ thành công!",
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.green,
         textColor: Colors.white,
@@ -127,12 +126,96 @@ class AuthViewModel with ChangeNotifier {
     } else {
       Fluttertoast.showToast(
         msg: errorMessage,
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
       );
       return false; // ❌ Cập nhật thất bại
+    }
+  }
+
+  /// Upload ảnh đại diện
+  Future<void> uploadAvatar(BuildContext context, File imageFile) async {
+    int? userId = await LocalStorageService.getUserId();
+
+    if (userId == null) {
+      Fluttertoast.showToast(
+        msg: "Không tìm thấy ID người dùng, vui lòng đăng nhập lại.",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+
+    // Gọi API upload
+    String? result = await AppConfig.uploadAvatar(imageFile, userId);
+
+    if (!context.mounted) return;
+
+    if (result != null) {
+      Fluttertoast.showToast(
+        msg: "Cập nhật ảnh đại diện thành công!",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+      notifyListeners(); // Cập nhật giao diện
+    } else {
+      Fluttertoast.showToast(
+        msg: "Upload ảnh thất bại!",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    }
+  }
+
+  /// Đổi mật khẩu
+  Future<void> changePassword(BuildContext context, String oldPassword,
+      String newPassword, String confirmNewPassword) async {
+    // Lấy token người dùng từ local storage
+    String? token = await LocalStorageService.getToken();
+    int? customerId = await LocalStorageService.getUserId();
+
+    if (token == null || customerId == null) {
+      Fluttertoast.showToast(
+        msg: "Lỗi: Không tìm thấy thông tin đăng nhập, vui lòng đăng nhập lại.",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+      return;
+    }
+
+    // Gọi API đổi mật khẩu
+    String? errorMessage = await AppConfig.changePassword(
+        customerId, oldPassword, newPassword, confirmNewPassword);
+
+    if (!context.mounted) return;
+
+    if (errorMessage == null) {
+      Fluttertoast.showToast(
+        msg: "Đổi mật khẩu thành công!",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+      Navigator.pop(context); // Quay lại màn hình trước đó
+    } else {
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
     }
   }
 

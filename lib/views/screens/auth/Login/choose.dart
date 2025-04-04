@@ -10,31 +10,32 @@ class chooseSigninRes extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        height: double.infinity,
         width: double.infinity,
         decoration: const BoxDecoration(
-            gradient: LinearGradient(colors: [
-          AppColors.accent,
-          AppColors.primary,
-        ])),
+          gradient: LinearGradient(
+            colors: [
+              AppColors.deepBlue,
+              Color.fromARGB(255, 106, 168, 231)
+            ], // Màu bắt đầu và kết thúc
+            begin: Alignment.topLeft, // Hướng bắt đầu
+            end: Alignment.bottomRight, // Hướng kết thúc
+          ),
+        ),
         child: Column(children: [
           const Padding(
             padding: EdgeInsets.only(top: 150.0),
             child: Image(
-              image: AssetImage('assets/images/logoApp.png'),
-              height: 150, // Chiều cao logo
-              fit: BoxFit.contain, // Hiển thị vừa vặn trong chiều cao đã đặt
+              image: AssetImage('assets/images/logoDATN.png'),
+              height: 60,
+              fit: BoxFit.contain,
             ),
           ),
           const SizedBox(
             height: 70,
           ),
-          const Text(
-            'Welcome Back',
-            style: TextStyle(fontSize: 30, color: Colors.white),
-          ),
+
           const SizedBox(
-            height: 30,
+            height: 60,
           ),
           GestureDetector(
             onTap: () {
@@ -50,7 +51,7 @@ class chooseSigninRes extends StatelessWidget {
               ),
               child: const Center(
                 child: Text(
-                  'SIGN IN',
+                  'Đăng nhập',
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -64,8 +65,10 @@ class chooseSigninRes extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const RegisterScreen()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const RegisterScreen()));
             },
             child: Container(
               height: 53,
@@ -76,7 +79,7 @@ class chooseSigninRes extends StatelessWidget {
               ),
               child: const Center(
                 child: Text(
-                  'SIGN UP',
+                  'Đăng ký',
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,

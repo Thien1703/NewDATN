@@ -5,20 +5,20 @@ class Clinic {
   final String name;
   final String image;
   final String description;
-  final double? rating;
-  final int? reviewCount;
+  final double rating;
+  final int reviewCount;
   final String address;
   final String facilitie;
-  final double? latitude;
-  final double? longitude;
+  final double latitude;
+  final double longitude;
 
   Clinic({
     required this.id,
     required this.name,
     required this.image,
     required this.description,
-    this.rating,
-    this.reviewCount,
+    required this.rating,
+    required this.reviewCount,
     required this.address,
     required this.facilitie,
     required this.latitude,
@@ -26,22 +26,28 @@ class Clinic {
   });
 
   // Chuyển từ JSON sang Object
-  factory Clinic.fromJson(Map<String, dynamic> json) {
+  factory Clinic.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return Clinic.defaultClinic();
+    }
     return Clinic(
       id: json['id'] ?? 0,
-      name: utf8.decode(json['name'].toString().codeUnits),
-      image: json['image'] ?? '',
-      description: utf8.decode(json['description'].toString().codeUnits),
-      rating: json['rating'] != null ? (json['rating'] as num).toDouble() : 0.0,
+      name: json['name'] != null && json['name'].toString().isNotEmpty
+          ? utf8.decode(json['name'].toString().runes.toList())
+          : "Chưa cập nhật",
+      image: json['image'] ?? "assets/images/imageError.png",
+      description: json['description'] != null &&
+              json['description'].toString().isNotEmpty
+          ? utf8.decode(json['description'].toString().runes.toList())
+          : "Chưa cập nhật",
+      rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
       reviewCount: json['reviewCount'] ?? 0,
-      address: utf8.decode(json['address'].toString().codeUnits),
-      facilitie: utf8.decode(json['facilitie'].toString().codeUnits),
-      latitude: json['latitude'] != null
-          ? (json['latitude'] as num).toDouble()
-          : null,
-      longitude: json['longitude'] != null
-          ? (json['longitude'] as num).toDouble()
-          : null,
+      address: json['address'] != null && json['address'].toString().isNotEmpty
+          ? utf8.decode(json['address'].toString().runes.toList())
+          : "Chưa cập nhật",
+      facilitie: json['facilitie'] ?? "Chưa cập nhật",
+      latitude: (json['latitude'] as num?)?.toDouble() ?? 0.0,
+      longitude: (json['longitude'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -59,5 +65,21 @@ class Clinic {
       'latitude': latitude,
       'longitude': longitude,
     };
+  }
+
+  // Giá trị mặc định nếu tất cả đều null
+  static Clinic defaultClinic() {
+    return Clinic(
+      id: 0,
+      name: "Chưa cập nhật",
+      image: "assets/images/imageError.png",
+      description: "Chưa cập nhật",
+      rating: 0.0,
+      reviewCount: 0,
+      address: "Chưa cập nhật",
+      facilitie: "Chưa cập nhật",
+      latitude: 0.0,
+      longitude: 0.0,
+    );
   }
 }
