@@ -5,4 +5,3 @@ class AppEnv {
   //local
   static const String baseUrl = 'http://172.27.192.1:8080';
 }
-
