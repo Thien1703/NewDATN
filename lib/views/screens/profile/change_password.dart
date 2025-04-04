@@ -53,6 +53,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     String newPassword = _newPasswordController.text.trim();
     String confirmPassword = _confirmPasswordController.text.trim();
 
+
     //   // Gọi API kiểm tra mật khẩu cũ có đúng không
     // bool isOldPasswordCorrect = await authViewModel.verifyOldPassword(oldPassword);
 
@@ -66,6 +67,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     //   );
     //   return;
     // }
+
 
     if (newPassword == oldPassword) {
       Fluttertoast.showToast(

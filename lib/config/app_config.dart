@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:health_care/env.dart';
 import 'package:health_care/services/local_storage_service.dart';
 import 'package:http/http.dart' as http;
@@ -50,8 +51,10 @@ class AppConfig {
 
   // ========================= ĐĂNG KÝ =========================
   static Future<String?> register(
+    BuildContext context,
     String fullName,
     String phoneNumber,
+    String email,
     String password,
   ) async {
     final url = Uri.parse('$baseUrl/auth/register');
@@ -62,6 +65,49 @@ class AppConfig {
       body: jsonEncode({
         'fullName': fullName,
         'phoneNumber': phoneNumber,
+        'email': email,
+        'password': password,
+      }),
+    );
+
+    final data = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      if (data['status'] == 0) {
+        // Hiển thị thông báo OTP đã gửi
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(data['message'] ?? "OTP da dc gui den email.")),
+        );
+
+        // Hiển thị hộp thoại nhập OTP
+        String? otp = await showOtpDialog(context);
+
+        if (otp != null && otp.isNotEmpty) {
+          return await verifyOtp(fullName, phoneNumber, email, password, otp);
+        } else {
+          return "Bạn chưa nhập OTP.";
+        }
+      } else {
+        return data['message'] ?? "Lỗi không xác định từ server.";
+      }
+    } else if (response.statusCode == 409) {
+      return "Tài khoản đã tồn tại.";
+    } else {
+      return "Lỗi máy chủ: ${response.statusCode}";
+    }
+  }
+
+  static Future<String?> verifyOtp(String fullName, String phoneNumber,
+      String email, String password, String otp) async {
+    final url = Uri.parse('$baseUrl/auth/register/verify-otp?otp=$otp');
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'fullName': fullName,
+        'phoneNumber': phoneNumber,
+        'email': email,
         'password': password,
       }),
     );
@@ -73,22 +119,45 @@ class AppConfig {
         final token = data['data']['token'];
         await LocalStorageService.saveToken(token);
 
-        // Lưu userId sau khi đăng ký
+        // Lưu userId sau khi xác thực OTP thành công
         final userId = await getMyUserId();
         if (userId != null) {
           await LocalStorageService.saveUserId(userId);
-          print("✅ Đăng ký xong, lưu userId: $userId");
+          print("✅ Xác thực OTP xong, lưu userId: $userId");
         }
 
         return null;
       } else {
-        return data['message'] ?? "Lỗi không xác định từ server.";
+        return data['message'] ?? "OTP không hợp lệ.";
       }
-    } else if (response.statusCode == 409) {
-      return "Tài khoản đã tồn tại.";
     } else {
-      return "Lỗi máy chủ: ${response.statusCode}";
+      return "Lỗi xác thực OTP: ${response.statusCode}";
     }
+  }
+
+  static Future<String?> showOtpDialog(BuildContext context) async {
+    String otp = "";
+    return await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Nhập mã OTP"),
+        content: TextField(
+          keyboardType: TextInputType.number,
+          onChanged: (value) => otp = value,
+          decoration: InputDecoration(hintText: "Nhập mã OTP nhận được"),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, null), // Hủy bỏ
+            child: Text("Hủy"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, otp), // Gửi OTP
+            child: Text("Xác nhận"),
+          ),
+        ],
+      ),
+    );
   }
 
   // ===================== LẤY USER ID =========================
@@ -245,6 +314,8 @@ class AppConfig {
       } else {
         return data['message'] ?? "Lỗi không xác định từ server.";
       }
+    } else if (response.statusCode == 400) {
+      return "Mật khẩu mới không được trùng mật khẩu cũ";
     } else {
       return "Lỗi máy chủ: ${response.statusCode}";
     }

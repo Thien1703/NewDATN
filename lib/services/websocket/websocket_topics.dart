@@ -7,4 +7,5 @@ class WebSocketTopics {
   static const String sendChatMessage = '/app/chat.send';
 
   static const String testNotification = '/app/notify';
+  
 }
