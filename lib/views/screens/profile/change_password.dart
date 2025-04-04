@@ -54,6 +54,21 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     String confirmPassword = _confirmPasswordController.text.trim();
 
 
+    //   // Gọi API kiểm tra mật khẩu cũ có đúng không
+    // bool isOldPasswordCorrect = await authViewModel.verifyOldPassword(oldPassword);
+
+    // if (!isOldPasswordCorrect) {
+    //   Fluttertoast.showToast(
+    //     msg: "Mật khẩu cũ không chính xác.",
+    //     toastLength: Toast.LENGTH_LONG,
+    //     gravity: ToastGravity.BOTTOM,
+    //     backgroundColor: Colors.red,
+    //     textColor: Colors.white,
+    //   );
+    //   return;
+    // }
+
+
     if (newPassword == oldPassword) {
       Fluttertoast.showToast(
         msg: "Mật khẩu mới không được trùng với mật khẩu cũ.",
