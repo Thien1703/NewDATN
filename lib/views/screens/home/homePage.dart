@@ -239,73 +239,77 @@ class _HomePage extends State<HomePage> {
                                       _launchURL('https://zalo.me/0917107881'),
                                 ),
                                 // _buildFeatureButton(
+
+                                //     'Tìm phòng khám', AppIcons.mapPlus, () {}),
+                                // SizedBox(width: 10),
+
                                 //     'Chat AI', AppIcons.chatbot, () {}),
                                 SizedBox(width: 10),
                               ],
                             ),
                           ),
-                          SizedBox(height: 20),
-                          GestureDetector(
-                            onTap: () => _launchURL(
-                                'https://zalo.me/0917107881'), // Link Zalo hoặc Fanpage
-                            child: Container(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: 16), // Căn lề
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 16),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Color(0xFF0077FF),
-                                    Color(0xFF00A2FF)
-                                  ], // Gradient xanh
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Image.asset(
-                                        'assets/icons/chat_icon.png', // Thay bằng icon chat của bạn
-                                        width: 40,
-                                        height: 40,
-                                      ),
-                                      SizedBox(width: 10),
-                                      Text(
-                                        'khám online với\n      Bác Sĩ',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 6, horizontal: 12),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    child: Text(
-                                      'Chat ngay',
-                                      style: TextStyle(
-                                        color: Colors.blueAccent,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
+                          // SizedBox(height: 20),
+                          // GestureDetector(
+                          //   onTap: () => _launchURL(
+                          //       'https://zalo.me/0917107881'), // Link Zalo hoặc Fanpage
+                          //   child: Container(
+                          //     margin: EdgeInsets.symmetric(
+                          //         horizontal: 16), // Căn lề
+                          //     padding: EdgeInsets.symmetric(
+                          //         vertical: 12, horizontal: 16),
+                          //     decoration: BoxDecoration(
+                          //       gradient: LinearGradient(
+                          //         colors: [
+                          //           Color(0xFF0077FF),
+                          //           Color(0xFF00A2FF)
+                          //         ], // Gradient xanh
+                          //         begin: Alignment.topLeft,
+                          //         end: Alignment.bottomRight,
+                          //       ),
+                          //       borderRadius: BorderRadius.circular(20),
+                          //     ),
+                          //     child: Row(
+                          //       mainAxisAlignment:
+                          //           MainAxisAlignment.spaceBetween,
+                          //       children: [
+                          //         Row(
+                          //           children: [
+                          //             Image.asset(
+                          //               'assets/icons/chat_icon.png', // Thay bằng icon chat của bạn
+                          //               width: 40,
+                          //               height: 40,
+                          //             ),
+                          //             SizedBox(width: 10),
+                          //             Text(
+                          //               'Đặt khám online với\n      Bác Sĩ',
+                          //               style: TextStyle(
+                          //                 color: Colors.white,
+                          //                 fontSize: 16,
+                          //                 fontWeight: FontWeight.bold,
+                          //               ),
+                          //             ),
+                          //           ],
+                          //         ),
+                          //         Container(
+                          //           padding: EdgeInsets.symmetric(
+                          //               vertical: 6, horizontal: 12),
+                          //           decoration: BoxDecoration(
+                          //             color: Colors.white,
+                          //             borderRadius: BorderRadius.circular(15),
+                          //           ),
+                          //           child: Text(
+                          //             'Đặt ngay',
+                          //             style: TextStyle(
+                          //               color: Colors.blueAccent,
+                          //               fontSize: 14,
+                          //               fontWeight: FontWeight.bold,
+                          //             ),
+                          //           ),
+                          //         )
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
                           CarouselSlider(
                             items: imgList
                                 .map(
@@ -340,6 +344,7 @@ class _HomePage extends State<HomePage> {
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold),
                                 ),
+                                SizedBox(height: 15),
                                 specialties!.isEmpty
                                     ? Center(
                                         child: Text('Không có dịch vụ nào'))

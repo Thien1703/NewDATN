@@ -112,7 +112,17 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      StarScreen(),
+                                                      StarScreen(
+                                                    customerId:
+                                                        appointmentServices!
+                                                                .first
+                                                                .appointment
+                                                                .customer
+                                                                ?.id ??
+                                                            0,
+                                                    serviceId:
+                                                        item.service?.id ?? 0,
+                                                  ),
                                                 ));
                                           },
                                           child: Text('Đánh giá'),
