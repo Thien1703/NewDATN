@@ -10,6 +10,8 @@ class Service {
   final String description;
   final double price;
   final String image;
+  final double? averageRating;
+  final int? reviewCount;
 
   Service({
     required this.id,
@@ -18,6 +20,8 @@ class Service {
     required this.description,
     required this.price,
     required this.image,
+    required this.averageRating,
+    required this.reviewCount,
   });
 
   /// Getter để định dạng giá tiền
@@ -43,6 +47,8 @@ class Service {
           : "Chưa cập nhật",
       price: json['price'] != null ? (json['price'] as num).toDouble() : 0.0,
       image: json['image'] ?? "assets/images/imageError.png",
+      averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0.0,
+      reviewCount: json['reviewCount'] ?? 0,
     );
   }
 
@@ -54,6 +60,8 @@ class Service {
       'description': description,
       'price': price,
       'image': image,
+      'averageRating': averageRating,
+      'reviewCount': reviewCount,
     };
   }
 }

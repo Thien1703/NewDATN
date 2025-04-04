@@ -1,2 +1,0 @@
-D:/FPT-Polytechnic/Term7/NewDATN/android/app/.cxx/Debug/3558342p/arm64-v8a/CMakeFiles/edit_cache.dir
-D:/FPT-Polytechnic/Term7/NewDATN/android/app/.cxx/Debug/3558342p/arm64-v8a/CMakeFiles/rebuild_cache.dir
