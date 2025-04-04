@@ -35,7 +35,8 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
     return HeaderBottomSheet(
       title: 'Chọn giờ khám',
       body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        color: Colors.white,
+        margin: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,11 +72,11 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
                 ),
               ),
             ),
-            // Image.asset(
-            //   'assets/images/pageTime.jpg',
-            //   width: double.infinity,
-            //   height: 100,
-            // ),
+            Image.asset(
+              'assets/images/pageTime.jpg',
+              width: double.infinity,
+              height: 100,
+            ),
           ],
         ),
       ),

@@ -9,7 +9,6 @@ import 'package:health_care/viewmodels/api/specialty_api.dart';
 import 'package:health_care/views/screens/map/chatbot.dart';
 import 'package:health_care/views/screens/map/searchMap.dart';
 import 'package:health_care/views/screens/tools/BMI/BMI_screen.dart';
-import 'package:health_care/views/screens/tools/BMI/measureBMI_Screen.dart';
 import 'package:health_care/views/screens/home/service_screen.dart';
 import 'package:health_care/views/screens/notification/notification_screen.dart';
 import 'package:health_care/views/screens/tools/BMR/BMR_screen.dart';
@@ -133,7 +132,9 @@ class _HomePage extends State<HomePage> {
               child: Container(
                 margin: EdgeInsets.only(bottom: 40),
                 decoration: BoxDecoration(
-                  color: Color(0xFFF0F2F5),
+                  color: Color(
+                    0xFFF0F2F5,
+                  ),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),

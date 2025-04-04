@@ -177,6 +177,7 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
     const statusColors = {
       'PENDING': Colors.green,
       'CONFIRM': AppColors.deepBlue,
+      'COMPLETED': AppColors.deepBlue,
       'CANCELLED': Colors.red
     };
     return statusColors[status] ?? Colors.black;
@@ -590,7 +591,7 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
 
   Widget _buildStatusBadge(String text, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
           color: color.withOpacity(0.2),
           borderRadius: BorderRadius.circular(15)),

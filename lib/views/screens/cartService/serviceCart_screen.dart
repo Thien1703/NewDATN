@@ -17,6 +17,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
   Map<String, List<Service>> filteredServices = {};
   TextEditingController searchController = TextEditingController();
   Set<Service> selectedServices = {}; // Danh sách dịch vụ đã chọn
+  String selectedSpecialty = ''; // Lưu chuyên khoa đang được chọn
 
   @override
   void initState() {
@@ -84,7 +85,18 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
     });
   }
 
-  /// Toggle chọn/bỏ chọn dịch vụ
+  void _selectSpecialty(String specialty) {
+    setState(() {
+      selectedSpecialty = specialty;
+      if (specialty.isEmpty) {
+        filteredServices =
+            groupedServices; // Hiển thị tất cả dịch vụ khi không có chuyên khoa được chọn
+      } else {
+        filteredServices = {specialty: groupedServices[specialty]!};
+      }
+    });
+  }
+
   void _toggleService(Service service) {
     setState(() {
       if (selectedServices.contains(service)) {
@@ -95,7 +107,6 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
     });
   }
 
-  /// Tính tổng tiền của dịch vụ đã chọn
   int getTotalPrice() {
     return selectedServices
         .fold(0.0, (sum, service) => sum + service.price)
@@ -130,201 +141,282 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
           },
         ),
       ),
-      body: Column(
-        children: [
-          // Thanh tìm kiếm
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: TextField(
-                controller: searchController,
-                decoration: InputDecoration(
-                  hintText: 'Tìm kiếm chuyên khoa/dịch vụ...',
-                  hintStyle: TextStyle(color: Colors.grey.shade500),
-                  prefixIcon: const Icon(Icons.search,
-                      color: AppColors.accent, size: 22),
-                  suffixIcon: searchController.text.isNotEmpty
-                      ? IconButton(
-                          icon: const Icon(Icons.clear, color: Colors.grey),
-                          onPressed: () {
-                            searchController.clear();
-                            _filterServices();
-                            setState(() {});
-                          },
-                        )
-                      : null,
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
+      body: Container(
+        color: AppColors.ghostWhite,
+        child: Column(
+          children: [
+            // Thanh tìm kiếm
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(
+                      color: AppColors.softBlue,
+                      width: 1.5), // Đổi màu và độ dày border theo yêu cầu
                 ),
-                style: const TextStyle(fontSize: 16),
-                onChanged: (value) {
-                  setState(() {});
-                  _filterServices();
-                },
+                child: Row(
+                  children: [
+                    SizedBox(width: 10),
+                    const Icon(Icons.search,
+                        color: AppColors.softBlue), // Tạo icon tìm kiếm
+                    const SizedBox(width: 5),
+                    Expanded(
+                      child: TextField(
+                        controller: searchController,
+                        decoration: const InputDecoration(
+                          hintText: 'Tìm kiếm dịch vụ, theo tên hoặc loại...',
+                          hintStyle: TextStyle(
+                            fontSize: 14, // Đặt kích thước font cho placeholder
+                          ),
+                          border:
+                              InputBorder.none, // Loại bỏ border của TextField
+                          isDense:
+                              true, // Đảm bảo rằng trường input không quá cao
+                        ),
+                      ),
+                    ),
+                    if (searchController.text.isNotEmpty)
+                      IconButton(
+                        icon: const Icon(Icons.clear,
+                            color: Colors.black54), // Clear icon
+                        onPressed: () {
+                          searchController.clear();
+                          _filterServices(); // Clear filter khi icon được nhấn
+                        },
+                      ),
+                  ],
+                ),
               ),
             ),
-          ),
-
-          // Danh sách dịch vụ
-          Expanded(
-            child: filteredServices.isEmpty
-                ? const Center(child: CircularProgressIndicator())
-                : Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: ListView(
-                      children: filteredServices.entries.map((entry) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              child: Text(
-                                entry.key,
-                                style: const TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.deepBlue,
-                                ),
-                              ),
-                            ),
-                            GridView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              padding: EdgeInsets.zero,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 5,
-                                mainAxisSpacing: 5,
-                                childAspectRatio: 0.6,
-                              ),
-                              itemCount: entry.value.length,
-                              itemBuilder: (context, index) {
-                                final service = entry.value[index];
-                                bool isSelected =
-                                    selectedServices.contains(service);
-                                return GestureDetector(
-                                  onTap: () => _toggleService(service),
-                                  child: Card(
-                                    elevation: isSelected ? 6 : 3,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                      side: isSelected
-                                          ? BorderSide(
-                                              color: AppColors.accent, width: 2)
-                                          : BorderSide.none,
-                                    ),
+            // Danh sách dịch vụ
+            Expanded(
+              child: filteredServices.isEmpty
+                  ? const Center(child: CircularProgressIndicator())
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: ListView(
+                        children: [
+                          // Row Chuyên khoa
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis
+                                  .horizontal, // Make the row scrollable horizontally
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  // Nút "Tất cả" luôn hiển thị
+                                  GestureDetector(
+                                    onTap: () => _selectSpecialty(
+                                        ''), // Lọc tất cả dịch vụ
                                     child: Padding(
-                                      padding: const EdgeInsets.all(12),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            child: Image.network(
-                                              service.image,
-                                              width: double.infinity,
-                                              height: 90,
-                                              fit: BoxFit.cover,
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                return Container(
-                                                  height: 90,
-                                                  width: double.infinity,
-                                                  color: Colors.grey[300],
-                                                  child: const Icon(
-                                                      Icons.broken_image,
-                                                      size: 50,
-                                                      color: Colors.grey),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                          const SizedBox(height: 6),
-                                          Text(
-                                            service.name,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                            ),
-                                            // maxLines: 1,
-                                            // overflow: TextOverflow.ellipsis,
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Row(
-                                            children: [
-                                              // const Icon(Icons.monetization_on,
-                                              //     size: 22,
-                                              //     color: Colors.yellow),
-                                              // const Icon(Icons.monetization_on,
-                                              //     size: 22,
-                                              //     color: Colors.yellow),
-                                              const SizedBox(width: 4),
-                                              Text(
-                                                service.formattedPrice,
-                                                style: const TextStyle(
-                                                  color: Colors.black54,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const Spacer(),
-                                          Center(
-                                            child: ElevatedButton(
-                                              onPressed: () =>
-                                                  _toggleService(service),
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: isSelected
-                                                    ? AppColors.accent
-                                                    : Colors.white,
-                                                foregroundColor: isSelected
-                                                    ? Colors.white
-                                                    : AppColors.accent,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                ),
-                                              ),
-                                              child: Text(isSelected
-                                                  ? 'Bỏ chọn'
-                                                  : 'Chọn dịch vụ'),
-                                            ),
-                                          )
-                                        ],
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8),
+                                      child: Chip(
+                                        label: const Text('Tất cả'),
+                                        backgroundColor:
+                                            selectedSpecialty.isEmpty
+                                                ? AppColors.accent
+                                                : Colors.grey[300],
                                       ),
                                     ),
                                   ),
-                                );
-                              },
+                                  // Các chuyên khoa khác
+                                  ...groupedServices.keys.map((specialty) {
+                                    return GestureDetector(
+                                      onTap: () => _selectSpecialty(specialty),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8),
+                                        child: Chip(
+                                          label: Text(specialty),
+                                          backgroundColor:
+                                              selectedSpecialty == specialty
+                                                  ? AppColors.accent
+                                                  : Colors.grey[300],
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ],
+                              ),
                             ),
-                          ],
-                        );
-                      }).toList(),
+                          ),
+                          ...filteredServices.entries.map(
+                            (entry) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    child: Text(
+                                      entry.key,
+                                      style: const TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.deepBlue,
+                                      ),
+                                    ),
+                                  ),
+                                  GridView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    padding: EdgeInsets.zero,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 5,
+                                      mainAxisSpacing: 5,
+                                      childAspectRatio: 0.85,
+                                    ),
+                                    itemCount: entry.value.length,
+                                    itemBuilder: (context, index) {
+                                      final service = entry.value[index];
+                                      bool isSelected =
+                                          selectedServices.contains(service);
+                                      return GestureDetector(
+                                        onTap: () => _toggleService(service),
+                                        child: Card(
+                                          color: Colors.white,
+                                          elevation: isSelected ? 6 : 3,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                            side: isSelected
+                                                ? BorderSide(
+                                                    color: AppColors.deepBlue,
+                                                    width: 2)
+                                                : BorderSide.none,
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(12),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        color: Colors.grey
+                                                            .withOpacity(0.5),
+                                                        width: 1),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                  ),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                    child: Image.network(
+                                                      service.image,
+                                                      width: double.infinity,
+                                                      height: 90,
+                                                      fit: BoxFit.cover,
+                                                      errorBuilder: (context,
+                                                          error, stackTrace) {
+                                                        return Container(
+                                                          height: 90,
+                                                          width:
+                                                              double.infinity,
+                                                          color:
+                                                              Colors.grey[300],
+                                                          child: const Icon(
+                                                              Icons
+                                                                  .broken_image,
+                                                              size: 50,
+                                                              color:
+                                                                  Colors.grey),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 6),
+                                                Text(
+                                                  service.name,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 2,
+                                                ),
+
+                                                const SizedBox(height: 4),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      service.formattedPrice,
+                                                      style: const TextStyle(
+                                                        color: Colors.black54,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        Icon(Icons.star,
+                                                            color:
+                                                                Colors.amber),
+                                                        Text(
+                                                          service.averageRating
+                                                              .toString(),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                                const Spacer(),
+                                                // Center(
+                                                //   child: ElevatedButton(
+                                                //     onPressed: () =>
+                                                //         _toggleService(service),
+                                                //     style: ElevatedButton.styleFrom(
+                                                //       backgroundColor: isSelected
+                                                //           ? AppColors.accent
+                                                //           : Colors.white,
+                                                //       foregroundColor: isSelected
+                                                //           ? Colors.white
+                                                //           : AppColors.accent,
+                                                //       shape: RoundedRectangleBorder(
+                                                //         borderRadius:
+                                                //             BorderRadius.circular(
+                                                //                 8),
+                                                //       ),
+                                                //     ),
+                                                //     child: Text(isSelected
+                                                //         ? 'Bỏ chọn'
+                                                //         : 'Chọn dịch vụ'),
+                                                //   ),
+                                                // )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          ).toList(),
+                        ],
+                      ),
                     ),
-                  ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
 
       // thanh toán
@@ -341,17 +433,18 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
           children: [
             Text(
               'Đã chọn ${selectedServices.length} dịch vụ',
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
             ),
             Row(
               children: [
                 Column(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     const Text(
-                      "Tổng",
+                      "Tổng thanh toán",
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
                     ),
                     Text(
                       '${formatCurrency(getTotalPrice())}',
@@ -362,6 +455,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                     ),
                   ],
                 ),
+                SizedBox(width: 5),
                 ElevatedButton(
                   onPressed: selectedServices.isEmpty
                       ? null
@@ -374,53 +468,14 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                         },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: selectedServices.isEmpty
-                        ? Colors.grey
-                        : AppColors.accent,
+                        ? Colors.white
+                        : AppColors.deepBlue,
                     foregroundColor: Colors.white,
                   ),
                   child: const Text('XONG'),
                 ),
               ],
             ),
-            Row(
-              children: [
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      "Tổng",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    Text(
-                      '${formatCurrency(getTotalPrice())}',
-                      style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.deepBlue),
-                    ),
-                  ],
-                ),
-                ElevatedButton(
-                  onPressed: selectedServices.isEmpty
-                      ? null
-                      : () {
-                          Navigator.pop(context, {
-                            'selectedServiceList': selectedServices.toList(),
-                            'selectedServiceId':
-                                selectedServices.map((s) => s.id).toList(),
-                          });
-                        },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: selectedServices.isEmpty
-                        ? Colors.grey
-                        : AppColors.accent,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text('XONG'),
-                ),
-              ],
-            )
           ],
         ),
       ),

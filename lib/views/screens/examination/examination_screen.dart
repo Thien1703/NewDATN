@@ -103,6 +103,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
       'Tất cả': 'Tất cả',
       'Đã đặt khám': 'PENDING',
       'Đã xác nhận': 'CONFIRM',
+      'Đã khám': 'COMPLETED',
       'Đã hủy': 'CANCELLED'
     };
     return SingleChildScrollView(
@@ -210,16 +211,18 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
     final statusMap = {
       'PENDING': 'Đã đặt lịch',
       'CONFIRM': 'Đã xác nhận',
+      'COMPLETED': 'Đã khám',
       'CANCELLED': 'Đã hủy'
     };
     final textColor = {
           'PENDING': Colors.green,
           'CONFIRM': AppColors.deepBlue,
+          'COMPLETED': AppColors.deepBlue,
           'CANCELLED': Colors.red
         }[status] ??
         Colors.black;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 6),
+      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
       decoration: BoxDecoration(
         color: textColor.withOpacity(0.2),
         border: Border.all(color: Color(0xFFDCEFDD), width: 1),
