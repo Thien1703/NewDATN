@@ -75,7 +75,12 @@ class _LoginScreenState extends State<LoginScreen> {
             height: double.infinity,
             width: double.infinity,
             decoration: const BoxDecoration(
-              color: AppColors.deepBlue,
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.deepBlue,
+                  Color.fromARGB(255, 210, 231, 243)
+                ], // Màu bắt đầu và kết thúc
+              ),
             ),
             child: const Padding(
                 padding: EdgeInsets.only(top: 60.0, left: 22),
@@ -83,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Xin chào',
+                      'Xin mời',
                       style: TextStyle(
                           fontSize: 20,
                           color: Colors.white,
