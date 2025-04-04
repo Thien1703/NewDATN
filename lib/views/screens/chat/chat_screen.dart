@@ -1,5 +1,6 @@
 // import 'package:flutter/material.dart';
 // import 'package:health_care/services/local_storage_service.dart';
+// import 'package:health_care/services/websocket/websocket_service.dart';
 // import 'package:health_care/services/websocket_service.dart';
 // import 'package:intl/intl.dart';
 
@@ -54,7 +55,9 @@
 //           _scrollToBottom();
 //         },
 //         onConnectionChange: (connected) {
-//           print(connected ? '🟢 WebSocket Connected' : '🔴 WebSocket Disconnected');
+//           print(connected
+//               ? '🟢 WebSocket Connected'
+//               : '🔴 WebSocket Disconnected');
 //         },
 //       );
 
@@ -124,13 +127,16 @@
 //               itemBuilder: (_, index) {
 //                 final msg = messages[index];
 //                 final isMe = msg['isMe'] == true;
-//                 final time = DateFormat.Hm().format(DateTime.parse(msg['time']));
+//                 final time =
+//                     DateFormat.Hm().format(DateTime.parse(msg['time']));
 
 //                 return Align(
-//                   alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+//                   alignment:
+//                       isMe ? Alignment.centerRight : Alignment.centerLeft,
 //                   child: Column(
-//                     crossAxisAlignment:
-//                         isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+//                     crossAxisAlignment: isMe
+//                         ? CrossAxisAlignment.end
+//                         : CrossAxisAlignment.start,
 //                     children: [
 //                       Container(
 //                         padding: const EdgeInsets.all(10),
@@ -153,7 +159,8 @@
 //                         padding: const EdgeInsets.symmetric(horizontal: 8),
 //                         child: Text(
 //                           time,
-//                           style: const TextStyle(fontSize: 11, color: Colors.grey),
+//                           style:
+//                               const TextStyle(fontSize: 11, color: Colors.grey),
 //                         ),
 //                       ),
 //                     ],
