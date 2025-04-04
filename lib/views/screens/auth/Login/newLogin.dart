@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/viewmodels/auth_viewmodel.dart';
+import 'package:health_care/views/screens/auth/Login/forgotPassword_screen.dart';
 import 'package:health_care/views/screens/auth/Login/newRes.dart';
 import 'package:provider/provider.dart';
 
@@ -74,6 +75,13 @@ class _LoginScreenState extends State<LoginScreen> {
       MaterialPageRoute(
           builder: (context) =>
               RegisterScreen()), // Thay thế bằng màn hình đăng ký của bạn
+    );
+  }
+
+  void _forgotPassword() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
     );
   }
 
@@ -169,14 +177,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        const Align(
+                        Align(
                           alignment: Alignment.bottomLeft,
-                          child: Text(
-                            'Quên mật khẩu',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                              color: Color(0xff281537),
+                          child: GestureDetector(
+                            onTap: _forgotPassword,
+                            child: Text(
+                              'Quên mật khẩu',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: Color(0xff281537),
+                              ),
                             ),
                           ),
                         ),

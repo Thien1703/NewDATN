@@ -1323,9 +1323,5 @@ packages:
     source: hosted
     version: "1.1.0"
 sdks:
-<<<<<<< HEAD
   dart: ">=3.7.0 <4.0.0"
-=======
-  dart: ">=3.7.0-0 <4.0.0"
->>>>>>> newBranch
   flutter: ">=3.27.0"

@@ -2,54 +2,27 @@ C/C++ Structured LogO
 M
 KC:\src\flutter\packages\flutter_tools\gradle\src\main\groovy\CMakeLists.txtC
 A
-<<<<<<< HEAD
-?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	Õ≠≤‘ﬂ2ß àÃü–ﬂ2e
+?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	æ…˙Ä‡2ß àÃü–ﬂ2e
 c
-aD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\additional_project_files.txt	Õ≠≤‘ﬂ2 „Ê«–ﬂ2b
+aD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\additional_project_files.txt	æ…˙Ä‡2 ˘€Ä„ﬂ2b
 `
-^D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\android_gradle_build.json	Õ≠≤‘ﬂ2ü ËÊ«–ﬂ2g
+^D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\android_gradle_build.json	æ…˙Ä‡2ü ¸€Ä„ﬂ2g
 e
-cD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\android_gradle_build_mini.json	Õ≠≤‘ﬂ2¸ ˚Ê«–ﬂ2T
+cD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\android_gradle_build_mini.json	æ…˙Ä‡2¸ ˇ€Ä„ﬂ2T
 R
-PD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\build.ninja	Õ≠≤‘ﬂ2¨“ ΩÂ«–ﬂ2X
+PD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\build.ninja	æ…˙Ä‡2¨“ ¸⁄Ä„ﬂ2X
 V
-TD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\build.ninja.txt	Õ≠≤‘ﬂ2]
+TD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\build.ninja.txt	æ…˙Ä‡2]
 [
-YD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\build_file_index.txt	Õ≠≤‘ﬂ2K ˝Ê«–ﬂ2^
+YD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\build_file_index.txt	æ…˙Ä‡2K Å‹Ä„ﬂ2^
 \
-ZD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\compile_commands.json	Õ≠≤‘ﬂ2	b
+ZD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\compile_commands.json	æ…˙Ä‡2	b
 `
-^D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\compile_commands.json.bin	Õ≠≤‘ﬂ2
+^D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\compile_commands.json.bin	æ…˙Ä‡2
 h
 f
-dD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\metadata_generation_command.txt	Õ≠≤‘ﬂ2° ¸Ê«–ﬂ2[
+dD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\metadata_generation_command.txt	æ…˙Ä‡2° ˇ€Ä„ﬂ2[
 Y
-WD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\prefab_config.json	Õ≠≤‘ﬂ2( ¸Ê«–ﬂ2`
+WD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\prefab_config.json	æ…˙Ä‡2( Å‹Ä„ﬂ2`
 ^
-\D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\symbol_folder_index.txt	Õ≠≤‘ﬂ2S ˝Ê«–ﬂ2
-=======
-?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	ÒåÈ‡ﬂ2ß àÃü–ﬂ2e
-c
-aD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\additional_project_files.txt	ÒåÈ‡ﬂ2 €åÈ‡ﬂ2b
-`
-^D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\android_gradle_build.json	ÒåÈ‡ﬂ2ü ﬁåÈ‡ﬂ2g
-e
-cD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\android_gradle_build_mini.json	ÒåÈ‡ﬂ2¸ ÎåÈ‡ﬂ2T
-R
-PD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\build.ninja	ÒåÈ‡ﬂ2¨“ ‰ãÈ‡ﬂ2X
-V
-TD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\build.ninja.txt	ÒåÈ‡ﬂ2]
-[
-YD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\build_file_index.txt	ÒåÈ‡ﬂ2K ÓåÈ‡ﬂ2^
-\
-ZD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\compile_commands.json	ÒåÈ‡ﬂ2	b
-`
-^D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\compile_commands.json.bin	ÒåÈ‡ﬂ2
-h
-f
-dD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\metadata_generation_command.txt	ÒåÈ‡ﬂ2° ÌåÈ‡ﬂ2[
-Y
-WD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\prefab_config.json	ÒåÈ‡ﬂ2( ÌåÈ‡ﬂ2`
-^
-\D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\symbol_folder_index.txt	ÒåÈ‡ﬂ2S ÓåÈ‡ﬂ2
->>>>>>> newBranch
+\D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\x86\symbol_folder_index.txt	ø…˙Ä‡2S Å‹Ä„ﬂ2
