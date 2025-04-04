@@ -1,30 +1,58 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 import 'package:health_care/viewmodels/auth_viewmodel.dart';
 import 'package:health_care/views/screens/auth/Login/newLogin.dart';
 import 'package:health_care/views/screens/welcome/splash_screen.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
+import 'package:health_care/views/screens/examination/paidDetail_screen.dart';
 import 'package:vietnam_provinces/vietnam_provinces.dart';
 import 'package:health_care/services/local_storage_service.dart';
 import 'package:health_care/services/websocket/websocket_manager.dart';
-import 'package:intl/intl.dart';
-import 'package:overlay_support/overlay_support.dart';
+
+final FlutterLocalNotificationsPlugin localNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // ✅ Yêu cầu quyền thông báo nếu chưa được cấp (Android 13+)
+  if (await Permission.notification.isDenied) {
+    await Permission.notification.request();
+  }
+
   await VietnamProvinces.initialize();
 
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: "AIzaSyCqzgAi64GAYpZZ_pkEwriIV4-RFuYEgWM",
-      appId: "1:357055052387:android:3ca405edbbe269ed929656",
-      messagingSenderId: "357055052387",
-      projectId: "health-care-a85f5",
-      storageBucket: "health-care-a85f5.firebasestorage.app",
-    ),
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  const InitializationSettings initializationSettings =
+      InitializationSettings(android: initializationSettingsAndroid);
+
+  await localNotificationsPlugin.initialize(
+    initializationSettings,
+    onDidReceiveNotificationResponse: (NotificationResponse response) {
+      print("🔔 Người dùng đã nhấn thông báo: ${response.payload}");
+      if (response.payload != null && response.payload!.startsWith("appointmentId:")) {
+        final id = int.tryParse(response.payload!.split(":")[1]);
+        if (id != null) {
+          navigatorKey.currentState?.push(
+            MaterialPageRoute(
+              builder: (_) => PaidDetailScreen(
+                appointmentId: id,
+                status: "CONFIRMED", // hoặc truyền từ local nếu có
+              ),
+            ),
+          );
+        }
+      }
+    },
   );
 
   final jwtToken = await LocalStorageService.getToken();
@@ -37,66 +65,75 @@ void main() async {
       onMessageReceived: (message) async {
         final notificationMessage = message['message'];
         final notificationType = message['type'];
+        final appointment = message['appointment'];
+        final appointmentId = appointment?['id'];
 
-        print("📥 Global notification: $notificationMessage");
+        print("📥 Đã nhận thông báo mới: $notificationMessage");
 
-        final saved = await LocalStorageService.getSavedNotifications();
+        final savedNotifications =
+            await LocalStorageService.getSavedNotifications();
         final newNotification = {
           "type": notificationType,
           "message": notificationMessage,
-          "appointment": message['appointment'],
+          "appointment": appointment,
           "time": DateFormat('HH:mm:ss dd/MM/yyyy').format(DateTime.now()),
         };
-        saved.insert(0, newNotification);
-        await LocalStorageService.saveNotifications(saved);
+        savedNotifications.insert(0, newNotification);
+        await LocalStorageService.saveNotifications(savedNotifications);
 
-        final isConfirmed = notificationType == 'CONFIRMED_APPOINTMENT';
-
-        showSimpleNotification(
-          Text(
-            notificationMessage,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 15,
-            ),
-          ),
-          leading: CircleAvatar(
-            backgroundColor: Colors.white,
-            child: Icon(
-              isConfirmed ? Icons.check_circle : Icons.cancel,
-              color: isConfirmed ? Colors.green : Colors.red,
-            ),
-          ),
-          background:
-              isConfirmed ? Colors.green.shade700 : Colors.redAccent.shade700,
-          elevation: 10,
-          autoDismiss: true,
-          slideDismissDirection: DismissDirection.horizontal,
-          duration: const Duration(seconds: 4),
-          position: NotificationPosition.top,
+        // ✅ Gửi notification với payload chứa ID
+        await _showLocalNotification(
+          notificationType,
+          notificationMessage,
+          appointmentId?.toString(),
         );
       },
       onConnectionChange: (isConnected) {
         print(isConnected
-            ? "🟢 WebSocket đã kết nối (global)."
-            : "🔴 WebSocket đã ngắt kết nối (global).");
+            ? "🟢 WebSocket đã kết nối thành công."
+            : "🔴 WebSocket đã ngắt kết nối.");
       },
     ).connect();
   } else {
-    print("⚠️ Không thể khởi tạo WebSocket: thiếu token hoặc userId.");
+    print("⚠️ Không thể kết nối WebSocket: thiếu thông tin xác thực.");
   }
 
-  runApp(
-    OverlaySupport.global(
-      child: const MyApp(),
-    ),
+  runApp(const MyApp());
+}
+
+Future<void> _showLocalNotification(String type, String message, String? appointmentId) async {
+  final isConfirmed = type == 'CONFIRMED_APPOINTMENT';
+
+  const AndroidNotificationDetails androidNotificationDetails =
+      AndroidNotificationDetails(
+    'appointment_channel_id',
+    'Thông báo lịch hẹn',
+    channelDescription: 'Thông báo xác nhận hoặc hủy lịch hẹn.',
+    importance: Importance.max,
+    priority: Priority.high,
+    icon: '@mipmap/ic_launcher',
+  );
+
+  const NotificationDetails notificationDetails =
+      NotificationDetails(android: androidNotificationDetails);
+
+  await localNotificationsPlugin.show(
+    DateTime.now().millisecondsSinceEpoch ~/ 1000,
+    isConfirmed ? '✅ Xác nhận lịch hẹn' : '❌ Hủy lịch hẹn',
+    message,
+    notificationDetails,
+    payload: appointmentId != null ? "appointmentId:$appointmentId" : null,
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -104,6 +141,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
       ],
       child: MaterialApp(
+        navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
         routes: {
