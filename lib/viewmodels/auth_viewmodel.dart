@@ -35,7 +35,7 @@ class AuthViewModel with ChangeNotifier {
     } else {
       Fluttertoast.showToast(
         msg: errorMessage,
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -82,6 +82,101 @@ class AuthViewModel with ChangeNotifier {
     }
   }
 
+  // // Quên mật khẩu ==> Đặt lại mật khẩu
+  // Future<void> forgotPassword(
+  //   BuildContext context,
+  //   String email,
+  //   String newPassword,
+  //   String confirmPassword,
+  // ) async {
+  //   // Bước 1: Gửi OTP tới email
+  //   String? sendOtpError = await AppConfig.sendOtpForForgotPassword(email);
+
+  //   if (!context.mounted) return;
+
+  //   if (sendOtpError != null) {
+  //     Fluttertoast.showToast(
+  //       msg: sendOtpError,
+  //       toastLength: Toast.LENGTH_SHORT,
+  //       gravity: ToastGravity.BOTTOM,
+  //       backgroundColor: Colors.red,
+  //       textColor: Colors.white,
+  //     );
+  //     return;
+  //   }
+
+  //   Fluttertoast.showToast(
+  //     msg: "Đã gửi mã OTP tới email.",
+  //     toastLength: Toast.LENGTH_SHORT,
+  //     gravity: ToastGravity.BOTTOM,
+  //     backgroundColor: Colors.green,
+  //     textColor: Colors.white,
+  //   );
+
+  //   // Bước 2: Hiển thị dialog nhập mã OTP
+  //   final otp = await AppConfig.showOtpDialog(context);
+
+  //   if (otp == null || otp.isEmpty) {
+  //     Fluttertoast.showToast(
+  //       msg: "Xác thực OTP đã bị huỷ.",
+  //       toastLength: Toast.LENGTH_SHORT,
+  //       gravity: ToastGravity.BOTTOM,
+  //       backgroundColor: Colors.orange,
+  //       textColor: Colors.white,
+  //     );
+  //     return;
+  //   }
+
+  //   // Bước 3: Xác thực OTP
+  //   String? verifyError = await AppConfig.verifyForgotPasswordOtp(
+  //     email: email,
+  //     otp: otp,
+  //   );
+
+  //   if (verifyError != null) {
+  //     Fluttertoast.showToast(
+  //       msg: verifyError,
+  //       toastLength: Toast.LENGTH_SHORT,
+  //       gravity: ToastGravity.BOTTOM,
+  //       backgroundColor: Colors.red,
+  //       textColor: Colors.white,
+  //     );
+  //     return;
+  //   }
+
+  //   // Bước 4: Gửi yêu cầu đặt lại mật khẩu
+  //   String? resetError = await AppConfig.resetPassword(
+  //     email: email,
+  //     otp: otp,
+  //     newPassword: newPassword,
+  //     confirmPassword: confirmPassword,
+  //   );
+
+  //   if (resetError == null) {
+  //     Fluttertoast.showToast(
+  //       msg: "Đặt lại mật khẩu thành công!",
+  //       toastLength: Toast.LENGTH_SHORT,
+  //       gravity: ToastGravity.BOTTOM,
+  //       backgroundColor: Colors.green,
+  //       textColor: Colors.white,
+  //     );
+
+  //     // Chuyển về màn hình đăng nhập
+  //     Navigator.of(context).pushAndRemoveUntil(
+  //       MaterialPageRoute(builder: (_) => LoginScreen()),
+  //       (route) => false,
+  //     );
+  //   } else {
+  //     Fluttertoast.showToast(
+  //       msg: resetError,
+  //       toastLength: Toast.LENGTH_SHORT,
+  //       gravity: ToastGravity.BOTTOM,
+  //       backgroundColor: Colors.red,
+  //       textColor: Colors.white,
+  //     );
+  //   }
+  // }
+
   /// Cập nhật hồ sơ
   Future<bool> updateProfile(BuildContext context,
       Map<String, dynamic> profileData, File? avatar) async {
@@ -100,7 +195,7 @@ class AuthViewModel with ChangeNotifier {
     if (userId == null) {
       Fluttertoast.showToast(
         msg: "Lỗi: Không thể xác định ID người dùng.",
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -144,7 +239,7 @@ class AuthViewModel with ChangeNotifier {
     if (userId == null) {
       Fluttertoast.showToast(
         msg: "Không tìm thấy ID người dùng, vui lòng đăng nhập lại.",
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -160,7 +255,7 @@ class AuthViewModel with ChangeNotifier {
     if (result != null) {
       Fluttertoast.showToast(
         msg: "Cập nhật ảnh đại diện thành công!",
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.green,
         textColor: Colors.white,
@@ -169,7 +264,7 @@ class AuthViewModel with ChangeNotifier {
     } else {
       Fluttertoast.showToast(
         msg: "Upload ảnh thất bại!",
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -187,7 +282,7 @@ class AuthViewModel with ChangeNotifier {
     if (token == null || customerId == null) {
       Fluttertoast.showToast(
         msg: "Lỗi: Không tìm thấy thông tin đăng nhập, vui lòng đăng nhập lại.",
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -204,7 +299,7 @@ class AuthViewModel with ChangeNotifier {
     if (errorMessage == null) {
       Fluttertoast.showToast(
         msg: "Đổi mật khẩu thành công!",
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.green,
         textColor: Colors.white,
@@ -213,7 +308,7 @@ class AuthViewModel with ChangeNotifier {
     } else {
       Fluttertoast.showToast(
         msg: errorMessage,
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -247,7 +342,7 @@ class AuthViewModel with ChangeNotifier {
     } else {
       Fluttertoast.showToast(
         msg: "Lỗi khi đăng xuất: $errorMessage",
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,

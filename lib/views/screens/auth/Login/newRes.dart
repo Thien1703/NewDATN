@@ -118,7 +118,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      'Đăng nhập',
+                      'Đăng ký',
                       style: TextStyle(
                           fontSize: 30,
                           color: Colors.white,
