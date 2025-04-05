@@ -272,7 +272,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                       crossAxisCount: 2,
                                       crossAxisSpacing: 5,
                                       mainAxisSpacing: 5,
-                                      childAspectRatio: 0.85,
+                                      childAspectRatio: 0.8,
                                     ),
                                     itemCount: entry.value.length,
                                     itemBuilder: (context, index) {
@@ -321,7 +321,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                                       errorBuilder: (context,
                                                           error, stackTrace) {
                                                         return Container(
-                                                          height: 90,
+                                                          height: 80,
                                                           width:
                                                               double.infinity,
                                                           color:
@@ -342,7 +342,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                                   service.name,
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 14,
+                                                    fontSize: 12,
                                                   ),
                                                   overflow:
                                                       TextOverflow.ellipsis,
@@ -361,7 +361,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                                         color: Colors.black54,
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        fontSize: 12,
+                                                        fontSize: 10,
                                                       ),
                                                     ),
                                                     Row(

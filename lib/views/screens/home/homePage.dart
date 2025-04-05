@@ -211,11 +211,11 @@ class _HomePage extends State<HomePage> {
                                 }),
                                 _buildFeatureButton(
                                     'Chat với AI', AppIcons.robotAI, () {
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //       builder: (context) => ChatBotScreen(),
-                                  //     ));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ChatBotScreen(),
+                                      ));
                                 }),
                                 _buildFeatureButton('Đo BMI', AppIcons.bmiIcon,
                                     () {

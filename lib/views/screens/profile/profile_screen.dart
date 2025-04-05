@@ -113,14 +113,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
-          _buildMenuItem(
-            Icons.qr_code,
-            "Mã QR của tôi",
-            () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => QrCustomer()));
-            },
-          ),
+          // _buildMenuItem(
+          //   Icons.qr_code,
+          //   "Mã QR của tôi",
+          //   () {
+          //     Navigator.push(context,
+          //         MaterialPageRoute(builder: (context) => QrCustomer()));
+          //   },
+          // ),
           _buildMenuItem(Icons.person, "Thông tin cá nhân", () {
             Navigator.of(context)
                 .push(MaterialPageRoute(
@@ -129,9 +129,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               fetchUserProfile(); // Cập nhật lại dữ liệu khi trở về ProfileScreen
             });
           }),
-          _buildMenuItem(Icons.location_on, "Quản lý số địa chỉ"),
-          _buildMenuItem(Icons.credit_card, "Quản lý thẻ thanh toán"),
-          _buildMenuItem(Icons.local_hospital, "Đơn thuốc của tôi"),
+          // _buildMenuItem(Icons.location_on, "Quản lý số địa chỉ"),
+          // _buildMenuItem(Icons.credit_card, "Quản lý thẻ thanh toán"),
+          // _buildMenuItem(Icons.local_hospital, "Đơn thuốc của tôi"),
         ],
       ),
     );

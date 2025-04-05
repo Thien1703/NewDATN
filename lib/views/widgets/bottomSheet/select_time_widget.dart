@@ -36,14 +36,14 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
       title: 'Chọn giờ khám',
       body: Container(
         color: Colors.white,
-        margin: const EdgeInsets.symmetric(horizontal: 10),
+        // margin: const EdgeInsets.symmetric(horizontal: 5),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _customLabel(label: 'Buổi sáng'),
             Wrap(
-              spacing: 13.0,
+              spacing: 10.0,
               runSpacing: 13.0,
               children: allTimes
                   .where((time) => int.parse(time.split(':')[0]) < 12)
@@ -53,7 +53,7 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
             ),
             _customLabel(label: 'Buổi chiều'),
             Wrap(
-              spacing: 13.0,
+              spacing: 10.0,
               runSpacing: 13.0,
               children: allTimes
                   .where((time) => int.parse(time.split(':')[0]) >= 12)
@@ -75,7 +75,7 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
             Image.asset(
               'assets/images/pageTime.jpg',
               width: double.infinity,
-              height: 100,
+              height: 90,
             ),
           ],
         ),

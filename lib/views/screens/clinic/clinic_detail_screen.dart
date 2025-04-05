@@ -90,8 +90,18 @@ class _ClinicDetailScreenState extends State<ClinicDetailScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 10),
-                        _buildOption('Đặt khám theo chuyên khoa'),
+                        // SizedBox(height: 10),
+                        // InkWell(
+                        //   onTap: () => Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //         builder: (context) => ChatScreen(
+                        //           clinicId: clinic!.id,
+                        //           clinicName: clinic!.name,
+                        //         ),
+                        //       )),
+                        //   child: _buildOption('Đặt lịch khám'),
+                        // ),
                         SizedBox(height: 10),
                         InkWell(
                           onTap: () => Navigator.push(
@@ -106,9 +116,9 @@ class _ClinicDetailScreenState extends State<ClinicDetailScreen> {
                         ),
                         _buildLabel('Giới thiệu'),
                         _buildIntro(),
-                        _buildLabel('Chuyên khoa'),
-                        Text('Thông tin các Chuyên Khoa'),
-                        _buildLabel('Một số bác sĩ tiêu biểu tại phòng khám'),
+                        // _buildLabel('Chuyên khoa'),
+                        // Text('Thông tin các Chuyên Khoa'),
+                        // _buildLabel('Một số bác sĩ tiêu biểu tại phòng khám'),
                       ],
                     ),
                   ),
