@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/common/app_colors.dart';
+import 'package:provider/provider.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
-  const ForgotPasswordScreen({Key? key}) : super(key: key);
+  const ForgotPasswordScreen({super.key});
 
   @override
   State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
@@ -17,8 +18,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     if (_formKey.currentState!.validate()) {
       String email = _emailController.text.trim();
 
-      // Provider.of<AuthViewModel>(context, listen: false)
-      //     .sendOtpForForgotPassword(context, email);
+
     }
   }
 
