@@ -160,6 +160,94 @@ class AppConfig {
     );
   }
 
+// =================== QUÊN MẬT KHẨU ===================
+
+  /// Bước 1: Gửi OTP tới email
+  static Future<String?> sendOtpForForgotPassword(String email) async {
+    final url = Uri.parse('$baseUrl/forgot-password/send-otp');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': email}),
+      );
+
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
+
+      if (response.statusCode == 200 && data['status'] == 0) {
+        print("✅Gửi OTP tới cho email: $email");
+        return null; // ✅ Gửi OTP thành công
+      } else {
+        return data['message'] ?? 'Gửi OTP thất bại.';
+      }
+    } catch (e) {
+      print("❌ Lỗi gửi OTP: $e");
+      return 'Đã xảy ra lỗi khi gửi OTP.';
+    }
+  }
+
+  /// Bước 2: Xác thực mã OTP
+  static Future<String?> verifyForgotPasswordOtp({
+    required String email,
+    required String otp,
+  }) async {
+    final url = Uri.parse('$baseUrl/forgot-password/verify-otp?otp=$otp');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': email}),
+      );
+
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
+
+      if (response.statusCode == 200 && data['status'] == 0) {
+        print("✅ OTP xác thực thành công cho $email");
+        return null; // ✅ OTP hợp lệ
+      } else {
+        return data['message'] ?? 'Xác thực OTP thất bại.';
+      }
+    } catch (e) {
+      print("❌ Lỗi xác thực OTP: $e");
+      return 'Đã xảy ra lỗi khi xác thực OTP.';
+    }
+  }
+
+  /// Bước 3: Đặt lại mật khẩu mới
+  static Future<String?> resetPassword(
+      {required String email,
+      required String otp,
+      required String newPassword,
+      required String confirmPassword}) async {
+    final url = Uri.parse('$baseUrl/forgot-password/reset');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': email,
+          'otp': otp,
+          'newPassword': newPassword,
+          'confirmNewPassword': confirmPassword,
+        }),
+      );
+
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
+
+      if (response.statusCode == 200 && data['status'] == 0) {
+        return null; // ✅ Đặt lại mật khẩu thành công
+      } else {
+        return data['message'] ?? 'Không thể đặt lại mật khẩu.';
+      }
+    } catch (e) {
+      print("❌ Lỗi đặt lại mật khẩu: $e");
+      return 'Đã xảy ra lỗi khi đặt lại mật khẩu.';
+    }
+  }
+
   // ===================== LẤY USER ID =========================
   static Future<int?> getMyUserId() async {
     final url = Uri.parse('$baseUrl/customer/get-my-info');

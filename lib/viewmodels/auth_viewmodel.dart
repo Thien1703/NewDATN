@@ -35,7 +35,7 @@ class AuthViewModel with ChangeNotifier {
     } else {
       Fluttertoast.showToast(
         msg: errorMessage,
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -100,7 +100,7 @@ class AuthViewModel with ChangeNotifier {
     if (userId == null) {
       Fluttertoast.showToast(
         msg: "Lỗi: Không thể xác định ID người dùng.",
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -144,7 +144,7 @@ class AuthViewModel with ChangeNotifier {
     if (userId == null) {
       Fluttertoast.showToast(
         msg: "Không tìm thấy ID người dùng, vui lòng đăng nhập lại.",
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -160,7 +160,7 @@ class AuthViewModel with ChangeNotifier {
     if (result != null) {
       Fluttertoast.showToast(
         msg: "Cập nhật ảnh đại diện thành công!",
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.green,
         textColor: Colors.white,
@@ -169,7 +169,7 @@ class AuthViewModel with ChangeNotifier {
     } else {
       Fluttertoast.showToast(
         msg: "Upload ảnh thất bại!",
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -187,7 +187,7 @@ class AuthViewModel with ChangeNotifier {
     if (token == null || customerId == null) {
       Fluttertoast.showToast(
         msg: "Lỗi: Không tìm thấy thông tin đăng nhập, vui lòng đăng nhập lại.",
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -204,7 +204,7 @@ class AuthViewModel with ChangeNotifier {
     if (errorMessage == null) {
       Fluttertoast.showToast(
         msg: "Đổi mật khẩu thành công!",
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.green,
         textColor: Colors.white,
@@ -213,7 +213,7 @@ class AuthViewModel with ChangeNotifier {
     } else {
       Fluttertoast.showToast(
         msg: errorMessage,
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
@@ -247,7 +247,7 @@ class AuthViewModel with ChangeNotifier {
     } else {
       Fluttertoast.showToast(
         msg: "Lỗi khi đăng xuất: $errorMessage",
-        toastLength: Toast.LENGTH_LONG,
+        toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,

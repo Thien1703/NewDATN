@@ -113,7 +113,6 @@ class _SelectDayWidgetState extends State<SelectDayWidget> {
             children: [
               _buildLegendIndicator(Colors.grey, 'Hôm nay'),
               _buildLegendIndicator(AppColors.softBlue, 'Còn trống'),
-              // _buildLegendIndicator(Colors.grey, 'Kín lịch'),
             ],
           ),
           SizedBox(height: 10),

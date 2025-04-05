@@ -4,6 +4,7 @@ import 'package:health_care/models/appointment/appointment_service.dart';
 import 'package:health_care/viewmodels/api/appointmentService_api.dart';
 import 'package:health_care/viewmodels/api/appointment_api.dart';
 import 'package:health_care/views/screens/clinic/clinic_screen.dart';
+import 'package:health_care/views/screens/examination/star_screen.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
 import 'package:health_care/views/widgets/bottomSheet/header_bottomSheet.dart';
 import 'package:health_care/views/widgets/bottomSheet/showCustomer.dart';
@@ -74,6 +75,63 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
                               // _buildSelectedServices(),
                               _sectionTitle('Thông tin đăng ký khám'),
                               _buildInfoClinic(),
+                              Column(
+                                children: appointmentServices!.map((item) {
+                                  return _buildContainer(
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        _buildInfoRow(
+                                          "Dịch vụ",
+                                          item.service?.name ??
+                                              "Không có dịch vụ",
+                                          Colors.black,
+                                        ),
+                                        _buildInfoRow(
+                                            'Chuyên khoa',
+                                            item.service?.specialty.name ??
+                                                'Không có dịch vụ',
+                                            Colors.black),
+                                        _buildInfoRow(
+                                          "Giá",
+                                          formatCurrency(
+                                              item.service?.price?.toInt() ??
+                                                  0),
+                                          Colors.green,
+                                        ),
+                                        _buildInfoRow(
+                                          "Bác sĩ",
+                                          item.employee?.fullName ??
+                                              "Đang cập nhật",
+                                          Colors.black,
+                                        ),
+                                        OutlinedButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      StarScreen(
+                                                    customerId:
+                                                        appointmentServices!
+                                                                .first
+                                                                .appointment
+                                                                .customer
+                                                                ?.id ??
+                                                            0,
+                                                    serviceId:
+                                                        item.service?.id ?? 0,
+                                                  ),
+                                                ));
+                                          },
+                                          child: Text('Đánh giá'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
                               SizedBox(height: 20),
                             ],
                           ),
@@ -293,35 +351,6 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
               ),
             )
           ],
-        ),
-        WidgetLineBold(),
-        Column(
-          children: appointmentServices!.map((item) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _buildInfoRow(
-                  "Dịch vụ",
-                  item.service?.name ?? "Không có dịch vụ",
-                  Colors.black,
-                ),
-                _buildInfoRow(
-                    'Chuyên khoa',
-                    item.service?.specialty.name ?? 'Không có dịch vụ',
-                    Colors.black),
-                _buildInfoRow(
-                  "Giá",
-                  formatCurrency(item.service?.price?.toInt() ?? 0),
-                  Colors.green,
-                ),
-                _buildInfoRow(
-                  "Bác sĩ",
-                  item.employee?.fullName ?? "Đang cập nhật",
-                  Colors.black,
-                ),
-              ],
-            );
-          }).toList(),
         ),
       ],
     ));
