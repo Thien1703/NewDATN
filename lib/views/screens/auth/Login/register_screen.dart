@@ -4,7 +4,7 @@ import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/viewmodels/auth_viewmodel.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  const RegisterScreen({super.key});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -16,10 +16,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  // final TextEditingController _confirmPasswordController =
-  //     TextEditingController();
   bool _obscurePassword = true;
-  // bool _obscureConfirmPassword = true;
+  bool _isLoading = false;
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -27,21 +25,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
   }
 
-  // void _toggleConfirmPasswordVisibility() {
-  //   setState(() {
-  //     _obscureConfirmPassword = !_obscureConfirmPassword;
-  //   });
-  // }
-
-  void _register() {
+  void _register() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
       final String fullName = _fullNameController.text.trim();
       final String phoneNumber = _phoneNumberController.text.trim();
       final String email = _emailController.text.trim();
       final String password = _passwordController.text.trim();
 
-      Provider.of<AuthViewModel>(context, listen: false)
-          .register(context, fullName, phoneNumber, email, password);
+      final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+      await authViewModel.register(
+          context, fullName, phoneNumber, email, password);
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -79,16 +78,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
     return null;
   }
-
-  // String? _validateConfirmPassword(String? value) {
-  //   if (value == null || value.trim().isEmpty) {
-  //     return 'Vui lòng nhập lại mật khẩu';
-  //   }
-  //   if (value != _passwordController.text) {
-  //     return 'Mật khẩu xác nhận không khớp';
-  //   }
-  //   return null;
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +218,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         // ),
                         // const SizedBox(height: 50),
                         GestureDetector(
-                          onTap: _register,
+                          onTap: _isLoading ? null : _register,
                           child: Container(
                             height: 55,
                             width: 300,
@@ -240,15 +229,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 AppColors.softBlue,
                               ]),
                             ),
-                            child: const Center(
-                              child: Text(
-                                'Đăng ký',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                ),
-                              ),
+                            child: Center(
+                              child: _isLoading
+                                  ? const CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
+                                    )
+                                  : const Text(
+                                      'Đăng ký',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                             ),
                           ),
                         ),

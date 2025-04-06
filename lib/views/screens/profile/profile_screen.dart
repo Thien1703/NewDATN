@@ -1,12 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/config/app_config.dart';
 import 'package:health_care/views/screens/profile/inforProfile_screen.dart';
-import 'package:health_care/viewmodels/auth_viewmodel.dart';
 import 'package:health_care/views/screens/profile/qr_customer.dart';
-import 'package:provider/provider.dart';
+import 'package:health_care/views/widgets/bottomSheet/logOut_bottomSheet.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -137,35 +134,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // Widget _buildPharmacyInfoSection() {
-  //   return Padding(
-  //     padding: const EdgeInsets.all(16.0),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         const Text(
-  //           "Về Nhà thuốc FPT Long Châu",
-  //           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-  //         ),
-  //         const SizedBox(height: 10),
-  //         _buildMenuItem(Icons.info, "Giới thiệu nhà thuốc"),
-  //         _buildMenuItem(Icons.description, "Giấy phép kinh doanh"),
-  //         _buildMenuItem(Icons.policy, "Quy chế hoạt động"),
-  //       ],
-  //     ),
-  //   );
-  // }
-
   Widget _buildLogoutButton() {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, bottom: 40.0),
       child: OutlinedButton(
-        onPressed: () async {
-          final authViewModel = Provider.of<AuthViewModel>(
-            context,
-            listen: false,
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent, // để bo góc đẹp hơn
+            builder: (context) => const LogoutBottomsheet(),
           );
-          await authViewModel.signOut(context);
         },
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.deepBlue,

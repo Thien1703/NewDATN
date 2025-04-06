@@ -27,6 +27,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Map<String, dynamic>? _userData;
   String? selectedGender;
   bool isButtonEnabled = false;
+  bool isLoading = false;
   File? _avatarFile;
   DateTime _selectedDate = DateTime.now();
 
@@ -60,13 +61,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             _dobController.text = '';
           }
         }
-        // _selectedDate =
-        //     DateTime.tryParse(userProfile['birthDate'] ?? '') ?? DateTime.now();
       });
     }
   }
 
   void _updateButtonState() {
+    if (!mounted) return;
     setState(() {
       isButtonEnabled = _nameController.text.isNotEmpty &&
           _dobController.text.isNotEmpty &&
@@ -149,28 +149,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 _customTitle(title: 'Họ và tên'),
                 _customTextField(
                     controller: _nameController, labelText: 'Nhập họ và tên'),
-                // Column(
-                //   crossAxisAlignment: CrossAxisAlignment.start,
-                //   children: [
-                //     _customTitle(title: 'Ngày sinh'),
-                //     // SizedBox(
-                //     //   height: 250,
-                //     //   child: ScrollDatePicker(
-                //     //     selectedDate: _selectedDate,
-                //     //     locale: Locale('vi'),
-                //     //     onDateTimeChanged: (DateTime value) {
-                //     //       setState(() {
-                //     //         _selectedDate = value;
-                //     //         _dobController.text =
-                //     //             DateFormat('yyyy-MM-dd').format(value);
-                //     //       });
-                //     //       _updateButtonState();
-                //     //     },
-                //     //   ),
-                //     // ),
-                //   SelectBirthday()
-                //   ],
-                // ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -189,7 +167,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ],
                 ),
-
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -211,10 +188,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     controller: _addressController, labelText: 'Nhập địa chỉ'),
                 Container(
                   margin: const EdgeInsets.only(top: 12, bottom: 20),
+                  height: 55,
                   width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: isButtonEnabled
+                  child: GestureDetector(
+                    onTap: isButtonEnabled
                         ? () async {
+                            setState(() {
+                              isLoading = true; // Start loading
+                            });
                             final authViewModel = Provider.of<AuthViewModel>(
                                 context,
                                 listen: false);
@@ -226,27 +207,37 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             };
                             bool success = await authViewModel.updateProfile(
                                 context, profileData, _avatarFile);
+                            setState(() {
+                              isLoading = false; // Stop loading
+                            });
                             if (success) {
                               widget
                                   .onProfileUpdated(); // Gọi lại hàm để làm mới dữ liệu
                             }
                           }
                         : null,
-                    style: OutlinedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: isButtonEnabled && !isLoading
+                            ? AppColors.deepBlue
+                            : AppColors.softBlue,
                       ),
-                      side: BorderSide(
-                          color: isButtonEnabled
-                              ? AppColors.deepBlue
-                              : AppColors.grey4),
-                      backgroundColor: isButtonEnabled
-                          ? AppColors.deepBlue
-                          : AppColors.grey4,
-                    ),
-                    child: Text(
-                      'Cập nhật',
-                      style: TextStyle(color: AppColors.neutralWhite),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Center(
+                        child: isLoading
+                            ? CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : Text(
+                                'Cập nhật',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                      ),
                     ),
                   ),
                 ),

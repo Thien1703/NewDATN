@@ -452,7 +452,16 @@ class AppConfig {
         return data['message'] ?? "Lỗi không xác định từ server.";
       }
     } else if (response.statusCode == 400) {
-      return "Mật khẩu mới không được trùng mật khẩu cũ";
+      final data = jsonDecode(response.body);
+      if (data['status'] == 4001) {
+        return "Mật khẩu cũ không chính xác";
+      }
+      if (data['status'] == 4002) {
+        return "Mật khẩu xác nhận không trùng khớp";
+      }
+      if (data['status'] == 1008) {
+        return "Mật khẩu mới không trùng được trùng mật khẩu cũ";
+      }
     } else {
       return "Lỗi máy chủ: ${response.statusCode}";
     }
