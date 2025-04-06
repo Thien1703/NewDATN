@@ -39,7 +39,8 @@ void main() async {
     initializationSettings,
     onDidReceiveNotificationResponse: (NotificationResponse response) {
       print("🔔 Người dùng đã nhấn thông báo: ${response.payload}");
-      if (response.payload != null && response.payload!.startsWith("appointmentId:")) {
+      if (response.payload != null &&
+          response.payload!.startsWith("appointmentId:")) {
         final id = int.tryParse(response.payload!.split(":")[1]);
         if (id != null) {
           navigatorKey.currentState?.push(
@@ -101,7 +102,8 @@ void main() async {
   runApp(const MyApp());
 }
 
-Future<void> _showLocalNotification(String type, String message, String? appointmentId) async {
+Future<void> _showLocalNotification(
+    String type, String message, String? appointmentId) async {
   final isConfirmed = type == 'CONFIRMED_APPOINTMENT';
 
   const AndroidNotificationDetails androidNotificationDetails =

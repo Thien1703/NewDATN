@@ -147,7 +147,7 @@ class _ServiceScreen extends State<ServiceScreen> {
                                                 top: Radius.circular(16)),
                                             child: Image.network(
                                               service.image,
-                                              height: 110,
+                                              height: 100,
                                               width: double.infinity,
                                               fit: BoxFit.cover,
                                               errorBuilder: (_, __, ___) =>
@@ -166,7 +166,7 @@ class _ServiceScreen extends State<ServiceScreen> {
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.all(10),
+                                            padding: const EdgeInsets.all(8.0),
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -174,7 +174,7 @@ class _ServiceScreen extends State<ServiceScreen> {
                                                 Text(
                                                   service.name,
                                                   style: TextStyle(
-                                                    fontSize: 15,
+                                                    fontSize: 12,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                   overflow:

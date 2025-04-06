@@ -76,7 +76,7 @@ class _SearchScreenState extends State<SearchScreen> {
         "lng": 106.687
       },
       {
-        "name": "Phòng Khám Đa Khoa FPT-Quận Phú NhuậnNhuận",
+        "name": "Phòng Khám Đa Khoa FPT-Quận Phú Nhuận",
         "district": "Phú Nhuận",
         "lat": 10.799,
         "lng": 106.677

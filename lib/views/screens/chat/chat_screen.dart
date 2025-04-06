@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/services/local_storage_service.dart';
 import 'package:health_care/services/websocket/websocket_service.dart';
 import 'package:intl/intl.dart';
@@ -124,17 +125,71 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Text('💬 ${widget.clinicName}'),
-            const SizedBox(width: 8),
-            Icon(
-              Icons.circle,
-              size: 12,
-              color: _isConnected ? Colors.green : Colors.red,
-            ),
-          ],
+      // appBar: AppBar(
+      //   elevation: 1,
+      //   backgroundColor: Colors.white,
+      //   foregroundColor: Colors.black87,
+      //   title: Row(
+      //     children: [
+      //       const Icon(Icons.chat_bubble_outline, color: Colors.blueAccent),
+      //       const SizedBox(width: 8),
+      //       Expanded(
+      //         child: Text(
+      //           widget.clinicName,
+      //           style: const TextStyle(fontWeight: FontWeight.bold),
+      //           overflow: TextOverflow.ellipsis,
+      //         ),
+      //       ),
+      //       const SizedBox(width: 8),
+      //       Icon(
+      //         Icons.circle,
+      //         size: 12,
+      //         color: _isConnected ? Colors.green : Colors.red,
+      //       ),
+      //     ],
+      //   ),
+      // ),
+      appBar: PreferredSize(
+        preferredSize:
+            Size.fromHeight(70), // Tăng chiều cao để có thêm khoảng trống
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.deepBlue,
+            borderRadius: BorderRadius.vertical(
+                bottom: Radius.circular(20)), // Bo góc dưới
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 5,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.chat, color: Colors.white, size: 28),
+                  SizedBox(width: 20),
+                  Expanded(
+                    child: Text(
+                      'Phòng Khám ${widget.clinicName}',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      softWrap: true,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       body: Column(
@@ -142,7 +197,7 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               itemCount: messages.length,
               itemBuilder: (_, index) {
                 final msg = messages[index];
@@ -150,53 +205,58 @@ class _ChatScreenState extends State<ChatScreen> {
                 final time =
                     DateFormat.Hm().format(DateTime.parse(msg['time']));
 
-                return Align(
+                return Container(
                   alignment:
                       isMe ? Alignment.centerRight : Alignment.centerLeft,
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                    margin: const EdgeInsets.symmetric(vertical: 6),
+                  margin: const EdgeInsets.symmetric(vertical: 6),
+                  child: ConstrainedBox(
                     constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.7,
+                      maxWidth: MediaQuery.of(context).size.width * 0.75,
                     ),
-                    decoration: BoxDecoration(
-                      color: isMe ? Colors.blueAccent : Colors.grey[200],
-                      borderRadius: BorderRadius.only(
-                        topLeft: const Radius.circular(12),
-                        topRight: const Radius.circular(12),
-                        bottomLeft: Radius.circular(isMe ? 12 : 0),
-                        bottomRight: Radius.circular(isMe ? 0 : 12),
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: isMe ? Colors.blueAccent : Colors.grey.shade200,
+                        borderRadius: BorderRadius.only(
+                          topLeft: const Radius.circular(16),
+                          topRight: const Radius.circular(16),
+                          bottomLeft: Radius.circular(isMe ? 16 : 0),
+                          bottomRight: Radius.circular(isMe ? 0 : 16),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 14),
+                        child: Column(
+                          crossAxisAlignment: isMe
+                              ? CrossAxisAlignment.end
+                              : CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              msg['content'],
+                              style: TextStyle(
+                                color: isMe ? Colors.white : Colors.black87,
+                                fontSize: 15,
+                                height: 1.3,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              time,
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: isMe ? Colors.white70 : Colors.grey,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: isMe
-                          ? CrossAxisAlignment.end
-                          : CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          msg['content'],
-                          style: TextStyle(
-                            color: isMe ? Colors.white : Colors.black87,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          time,
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: isMe ? Colors.white70 : Colors.grey,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 );
@@ -204,8 +264,9 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           const Divider(height: 1),
-          Padding(
-            padding: const EdgeInsets.all(8),
+          Container(
+            color: Colors.white,
+            padding: const EdgeInsets.fromLTRB(12, 10, 12, 14),
             child: Row(
               children: [
                 Expanded(
@@ -213,17 +274,26 @@ class _ChatScreenState extends State<ChatScreen> {
                     controller: _controller,
                     focusNode: _focusNode,
                     onSubmitted: (_) => _sendMessage(),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: "Nhập tin nhắn...",
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                      filled: true,
+                      fillColor: Colors.grey.shade100,
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: _sendMessage,
-                  child: const Icon(Icons.send),
+                GestureDetector(
+                  onTap: _sendMessage,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.blueAccent,
+                    child: const Icon(Icons.send, color: Colors.white),
+                  ),
                 )
               ],
             ),

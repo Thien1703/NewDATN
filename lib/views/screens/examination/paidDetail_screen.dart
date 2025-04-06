@@ -106,27 +106,33 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
                                               "Đang cập nhật",
                                           Colors.black,
                                         ),
-                                        OutlinedButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      StarScreen(
-                                                    customerId:
-                                                        appointmentServices!
-                                                                .first
-                                                                .appointment
-                                                                .customer
-                                                                ?.id ??
-                                                            0,
-                                                    serviceId:
-                                                        item.service?.id ?? 0,
-                                                  ),
-                                                ));
-                                          },
-                                          child: Text('Đánh giá'),
-                                        ),
+                                        appointmentServices!
+                                                    .first.appointment.status ==
+                                                'COMPLEMENTED'
+                                            ? OutlinedButton(
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            StarScreen(
+                                                          customerId:
+                                                              appointmentServices!
+                                                                      .first
+                                                                      .appointment
+                                                                      .customer
+                                                                      ?.id ??
+                                                                  0,
+                                                          serviceId: item
+                                                                  .service
+                                                                  ?.id ??
+                                                              0,
+                                                        ),
+                                                      ));
+                                                },
+                                                child: Text('Đánh giá'),
+                                              )
+                                            : Container(),
                                       ],
                                     ),
                                   );
