@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:health_care/views/screens/auth/Login/newLogin.dart';
+import 'package:health_care/views/screens/auth/Login/login_screen.dart';
 import '../services/local_storage_service.dart';
 import '../views/screens/home/home_screens.dart';
 import '../config/app_config.dart';
@@ -74,6 +74,76 @@ class AuthViewModel with ChangeNotifier {
     } else {
       Fluttertoast.showToast(
         msg: errorMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    }
+  }
+
+  /// Quên mật khẩu: Gửi OTP và xác thực
+  Future<String?> forgotPassword(BuildContext context, String email) async {
+    String? result = await AppConfig.forgotPassword(context, email);
+
+    if (!context.mounted) return null;
+
+    if (result == null) {
+      Fluttertoast.showToast(
+        msg: "Xác thực OTP thành công!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+      // ✅ Trả về OTP ở đây (ví dụ AppConfig.forgotPassword đã trả về nó)
+      return result; // giả sử result là OTP
+    } else {
+      Fluttertoast.showToast(
+        msg: result,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    }
+    return null;
+  }
+
+  /// Đặt lại mật khẩu mới
+  Future<void> resetPassword(
+    BuildContext context,
+    String email,
+    String otp,
+    String newPassword,
+    String confirmPassword,
+  ) async {
+    String? result = await AppConfig.resetPassword(
+      email: email,
+      otp: otp,
+      newPassword: newPassword,
+      confirmPassword: confirmPassword,
+    );
+
+    if (!context.mounted) return;
+
+    if (result == null) {
+      Fluttertoast.showToast(
+        msg: "Đặt lại mật khẩu thành công!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+
+      // Quay về màn hình đăng nhập
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+    } else {
+      Fluttertoast.showToast(
+        msg: result,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,

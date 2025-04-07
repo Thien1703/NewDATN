@@ -41,9 +41,9 @@ class AppConfig {
         return data['message'] ?? "Đăng nhập thất bại.";
       }
     } else if (response.statusCode == 401) {
-      return "Mật khẩu không đúng.";
+      return "Mật khẩu không đúng!";
     } else if (response.statusCode == 404) {
-      return "Tài khoản không tồn tại.";
+      return "Tài khoản không tồn tại!";
     } else {
       return "Lỗi máy chủ: ${response.statusCode}";
     }
@@ -71,22 +71,34 @@ class AppConfig {
     );
 
     final data = jsonDecode(response.body);
+
     if (response.statusCode == 200) {
       if (data['status'] == 0) {
-        // Hiển thị thông báo OTP đã gửi
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(data['message'] ?? "OTP da dc gui den email.")),
-        );
+        String? otp;
+        String? verifyResult;
+        String? errorMessage;
 
-        // Hiển thị hộp thoại nhập OTP
-        String? otp = await showOtpDialog(context);
+        do {
+          otp = await showOtpDialog(context, errorMessage: errorMessage);
 
-        if (otp != null && otp.isNotEmpty) {
-          return await verifyOtp(fullName, phoneNumber, email, password, otp);
-        } else {
-          return "Bạn chưa nhập OTP.";
-        }
+          if (otp == null) {
+            return "Bạn đã hủy xác thực OTP.";
+          }
+
+          if (otp.isEmpty) {
+            errorMessage = "Bạn chưa nhập OTP.";
+            continue;
+          }
+
+          verifyResult =
+              await verifyOtp(fullName, phoneNumber, email, password, otp);
+
+          if (verifyResult != null) {
+            errorMessage = "Bạn nhập sai OTP. Vui lòng nhập đúng.";
+          }
+        } while (verifyResult != null);
+
+        return null; // ✅ Thành công
       } else {
         return data['message'] ?? "Lỗi không xác định từ server.";
       }
@@ -135,36 +147,74 @@ class AppConfig {
     }
   }
 
-  static Future<String?> showOtpDialog(BuildContext context) async {
+  static Future<String?> showOtpDialog(BuildContext context,
+      {String? errorMessage}) async {
     String otp = "";
+    String? localError = errorMessage;
+
     return await showDialog<String>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Nhập mã OTP"),
-        content: TextField(
-          keyboardType: TextInputType.number,
-          onChanged: (value) => otp = value,
-          decoration: InputDecoration(hintText: "Nhập mã OTP nhận được"),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, null), // Hủy bỏ
-            child: Text("Hủy"),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, otp), // Gửi OTP
-            child: Text("Xác nhận"),
-          ),
-        ],
-      ),
+      barrierDismissible: false,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text("Nhập mã OTP"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      otp = value;
+                      if (localError != null) {
+                        setState(() => localError = null);
+                      }
+                    },
+                    decoration: const InputDecoration(
+                      hintText: "Nhập mã OTP nhận được",
+                    ),
+                  ),
+                  if (localError != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        localError!,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, null),
+                  child: const Text("Hủy"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    if (otp.isEmpty) {
+                      setState(() {
+                        localError = "Bạn chưa nhập OTP.";
+                      });
+                    } else {
+                      Navigator.pop(context, otp);
+                    }
+                  },
+                  child: const Text("Xác nhận"),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
-
 // =================== QUÊN MẬT KHẨU ===================
 
   /// Bước 1: Gửi OTP tới email
-  static Future<String?> sendOtpForForgotPassword(String email) async {
-    final url = Uri.parse('$baseUrl/forgot-password/send-otp');
+  static Future<String?> forgotPassword(
+      BuildContext context, String email) async {
+    final url = Uri.parse('$baseUrl/auth/forgot-password/send-otp');
 
     try {
       final response = await http.post(
@@ -173,11 +223,33 @@ class AppConfig {
         body: jsonEncode({'email': email}),
       );
 
+      final responseBody = utf8.decode(response.bodyBytes);
+      print("🔁 Response status: ${response.statusCode}");
+      print("🔁 Response body: $responseBody");
       final data = jsonDecode(utf8.decode(response.bodyBytes));
 
       if (response.statusCode == 200 && data['status'] == 0) {
         print("✅Gửi OTP tới cho email: $email");
-        return null; // ✅ Gửi OTP thành công
+
+        String? otp;
+        String? verifyResult;
+        String? errorMessage;
+        do {
+          otp = await showOtpDialog(context, errorMessage: errorMessage);
+
+          if (otp == null) return "Bạn đã hủy xác thực OTP.";
+          if (otp.isEmpty) {
+            errorMessage = "Bạn chưa nhập OTP.";
+            continue;
+          }
+
+          verifyResult = await verifyForgotPasswordOtp(email: email, otp: otp);
+          if (verifyResult != null) {
+            errorMessage = "Bạn nhập sai OTP. Vui lòng nhập lại.";
+          }
+        } while (verifyResult != null);
+
+        return null; // ✅ OTP xác thực thành công
       } else {
         return data['message'] ?? 'Gửi OTP thất bại.';
       }
@@ -192,7 +264,7 @@ class AppConfig {
     required String email,
     required String otp,
   }) async {
-    final url = Uri.parse('$baseUrl/forgot-password/verify-otp?otp=$otp');
+    final url = Uri.parse('$baseUrl/auth/forgot-password/verify-otp?otp=$otp');
 
     try {
       final response = await http.post(
@@ -221,7 +293,7 @@ class AppConfig {
       required String otp,
       required String newPassword,
       required String confirmPassword}) async {
-    final url = Uri.parse('$baseUrl/forgot-password/reset');
+    final url = Uri.parse('$baseUrl/auth/forgot-password/reset');
 
     try {
       final response = await http.post(
@@ -403,10 +475,20 @@ class AppConfig {
         return data['message'] ?? "Lỗi không xác định từ server.";
       }
     } else if (response.statusCode == 400) {
-      return "Mật khẩu mới không được trùng mật khẩu cũ";
+      final data = jsonDecode(response.body);
+      if (data['status'] == 4001) {
+        return "Mật khẩu cũ không chính xác";
+      }
+      if (data['status'] == 4002) {
+        return "Mật khẩu xác nhận không trùng khớp";
+      }
+      if (data['status'] == 1008) {
+        return "Mật khẩu mới không trùng được trùng mật khẩu cũ";
+      }
     } else {
       return "Lỗi máy chủ: ${response.statusCode}";
     }
+    return null;
   }
 
   // ========================== ĐĂNG XUẤT ==========================

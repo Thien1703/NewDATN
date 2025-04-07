@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:health_care/viewmodels/auth_viewmodel.dart';
-import 'package:health_care/views/screens/auth/Login/newLogin.dart';
+import 'package:health_care/views/screens/auth/Login/login_screen.dart';
 import 'package:health_care/views/screens/welcome/splash_screen.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
 import 'package:health_care/views/screens/examination/paidDetail_screen.dart';
