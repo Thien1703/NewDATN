@@ -134,16 +134,13 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ChatScreen(
-                                                        clinicId: clinic.id,
-                                                        clinicName:
-                                                            clinic.name),
-                                              ),
+                                                  builder: (context) =>
+                                                      ClinicDetailScreen(
+                                                          clinicId: clinic.id)),
                                             );
                                           },
                                           child: Icon(
-                                            Icons.chat,
+                                            Icons.info,
                                             color: AppColors.deepBlue,
                                             size: 30,
                                           ),

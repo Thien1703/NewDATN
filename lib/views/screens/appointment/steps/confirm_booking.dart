@@ -24,7 +24,6 @@ class ConfirmBooking extends StatefulWidget {
     required this.selectedServiceIds,
     required this.date,
     required this.time,
-    required this.paymentId,
   });
 
   final Function(int, String) onNavigateToScreen;
@@ -33,8 +32,6 @@ class ConfirmBooking extends StatefulWidget {
   final List<int> selectedServiceIds;
   final String date;
   final String time;
-  final int paymentId;
-
   @override
   State<ConfirmBooking> createState() => _ConfirmBookingState();
 }
@@ -82,7 +79,6 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
       date: widget.date,
       time: widget.time,
       status: "pending",
-      paymentId: widget.paymentId,
     );
 
     int? appointmentId = await AppointmentApi.createAppointment(newBooking);

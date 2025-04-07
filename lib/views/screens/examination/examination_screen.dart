@@ -103,6 +103,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
       'Tất cả': 'Tất cả',
       'Đã đặt khám': 'PENDING',
       'Đã xác nhận': 'CONFIRM',
+      'Đã tới khám': 'ARRIVED',
       'Đã khám': 'COMPLETED',
       'Đã hủy': 'CANCELLED'
     };
@@ -211,12 +212,14 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
     final statusMap = {
       'PENDING': 'Đã đặt lịch',
       'CONFIRM': 'Đã xác nhận',
+      'ARRIVED': 'Đã tới khám',
       'COMPLETED': 'Đã khám',
       'CANCELLED': 'Đã hủy'
     };
     final textColor = {
           'PENDING': Colors.green,
           'CONFIRM': AppColors.deepBlue,
+          'ARRIVED': AppColors.softBlue,
           'COMPLETED': AppColors.deepBlue,
           'CANCELLED': Colors.red
         }[status] ??

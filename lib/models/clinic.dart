@@ -8,7 +8,6 @@ class Clinic {
   final double rating;
   final int reviewCount;
   final String address;
-  final String facilitie;
   final double latitude;
   final double longitude;
 
@@ -20,7 +19,6 @@ class Clinic {
     required this.rating,
     required this.reviewCount,
     required this.address,
-    required this.facilitie,
     required this.latitude,
     required this.longitude,
   });
@@ -45,7 +43,6 @@ class Clinic {
       address: json['address'] != null && json['address'].toString().isNotEmpty
           ? utf8.decode(json['address'].toString().runes.toList())
           : "Chưa cập nhật",
-      facilitie: json['facilitie'] ?? "Chưa cập nhật",
       latitude: (json['latitude'] as num?)?.toDouble() ?? 0.0,
       longitude: (json['longitude'] as num?)?.toDouble() ?? 0.0,
     );
@@ -61,7 +58,6 @@ class Clinic {
       'rating': rating,
       'reviewCount': reviewCount,
       'address': address,
-      'facilitie': facilitie,
       'latitude': latitude,
       'longitude': longitude,
     };
@@ -77,7 +73,6 @@ class Clinic {
       rating: 0.0,
       reviewCount: 0,
       address: "Chưa cập nhật",
-      facilitie: "Chưa cập nhật",
       latitude: 0.0,
       longitude: 0.0,
     );
