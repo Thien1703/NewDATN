@@ -1,28 +1,23 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:health_care/views/screens/auth/auth_service.dart'; // Đảm bảo AuthService được triển khai đúng
-import 'package:health_care/views/screens/auth/register/name_screen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class OTPPopup extends StatefulWidget {
-  final String verificationID; // Số điện thoại truyền từ RegisterScreen
-
-  const OTPPopup({super.key, required this.verificationID});
+  final String email;
+  const OTPPopup({super.key, required this.email});
 
   @override
   State<OTPPopup> createState() => _OTPPopupState();
 }
 
 class _OTPPopupState extends State<OTPPopup> {
-  // final AuthService _authService = AuthService(); // Service xác thực OTP
-  final TextEditingController smsController =
+  final TextEditingController otpController =
       TextEditingController(); // Bộ điều khiển cho mã OTP
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black.withOpacity(0.5),
+      // backgroundColor: Colors.black.withOpacity(0.5),
       body: Center(
         child: Container(
           width: double.infinity,
@@ -47,19 +42,19 @@ class _OTPPopupState extends State<OTPPopup> {
               const SizedBox(height: 10),
 
               // Mô tả
-              Text(
-                'Vui lòng nhập mã OTP được gửi về SĐT để đăng ký tài khoản',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black.withOpacity(0.7),
-                ),
-              ),
+              // Text(
+              //   'Vui lòng nhập mã OTP được gửi về email $email',
+              //   textAlign: TextAlign.center,
+              //   style: TextStyle(
+              //     fontSize: 14,
+              //     color: Colors.black.withOpacity(0.7),
+              //   ),
+              // ),
               const SizedBox(height: 20),
 
               // Input mã OTP
               PinCodeTextField(
-                controller: smsController,
+                controller: otpController,
                 appContext: context,
                 length: 6,
                 animationType: AnimationType.none,
@@ -77,15 +72,15 @@ class _OTPPopupState extends State<OTPPopup> {
               ),
               const SizedBox(height: 10),
 
-              // Đồng hồ đếm giờ (hiển thị cố định trong ví dụ)
-              Text(
-                '01:13',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black.withOpacity(0.7),
-                ),
-              ),
-              const SizedBox(height: 10),
+              // // Đồng hồ đếm giờ (hiển thị cố định trong ví dụ)
+              // Text(
+              //   '01:13',
+              //   style: TextStyle(
+              //     fontSize: 14,
+              //     color: Colors.black.withOpacity(0.7),
+              //   ),
+              // ),
+              // const SizedBox(height: 10),
 
               // Nút "Bỏ qua" và "Xác nhận"
               Row(
@@ -108,35 +103,14 @@ class _OTPPopupState extends State<OTPPopup> {
                       ),
                     ),
                     child: Text(
-                      'Bỏ qua',
+                      'Hủy',
                       style: TextStyle(color: Colors.black),
                     ),
                   ),
 
                   // Nút Xác nhận
                   TextButton(
-                    onPressed: () async {
-                      // Create a PhoneAuthCredential with the code
-                      try {
-                        PhoneAuthCredential credential =
-                            PhoneAuthProvider.credential(
-                                verificationId: widget.verificationID,
-                                smsCode: smsController.text);
-                        // Sign the user in (or link) with the credential
-                        await FirebaseAuth.instance
-                            .signInWithCredential(credential);
-                        // ScaffoldMessenger.of(context).showSnackBar(
-                        //     SnackBar(content: Text('Login success')));
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const NameScreen(),
-                          ),
-                        );
-                      } on FirebaseAuthException catch (ex) {
-                        print(ex.message);
-                      }
-                    },
+                    onPressed: () {},
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         vertical: 10,

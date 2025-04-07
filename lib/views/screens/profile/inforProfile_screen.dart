@@ -62,7 +62,6 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
 
       final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
       await authViewModel.uploadAvatar(context, _avatarFile!);
-
     }
   }
 
@@ -125,12 +124,18 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
                       },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(25),
                         ),
                         backgroundColor: AppColors.deepBlue,
                         foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
-                      child: const Text('Chỉnh sửa'),
+                      child: const Text(
+                        'Chỉnh sửa',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -147,12 +152,18 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
                       },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(25),
                         ),
                         backgroundColor: AppColors.deepBlue,
                         foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
-                      child: const Text('Đổi mật khẩu'),
+                      child: const Text(
+                        'Đổi mật khẩu',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ],

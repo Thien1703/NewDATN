@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
-import 'package:health_care/views/screens/auth/Login/newLogin.dart';
-import 'package:health_care/views/screens/auth/Login/newRes.dart';
+import 'package:health_care/views/screens/auth/Login/login_screen.dart';
+import 'package:health_care/views/screens/auth/Login/register_screen.dart';
 
 class chooseSigninRes extends StatelessWidget {
   const chooseSigninRes({Key? key}) : super(key: key);
