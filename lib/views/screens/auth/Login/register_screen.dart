@@ -73,8 +73,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   String? _validatePassword(String? value) {
-    if (value == null || value.length < 6) {
-      return 'Mật khẩu phải có ít nhất 6 ký tự';
+    if (value == null || value.trim().isEmpty) {
+      return 'Vui lòng nhập mật khẩu';
+    }
+
+    // Regex: ít nhất 6 kí tự, 1 chữ hoa, 1 chữ thường, 1 số
+    final regex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$');
+
+    if (!regex.hasMatch(value)) {
+      return 'Mật khẩu phải có ít nhất 6 ký tự, gồm chữ hoa, chữ thường và số';
     }
     return null;
   }

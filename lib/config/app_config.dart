@@ -41,9 +41,9 @@ class AppConfig {
         return data['message'] ?? "Đăng nhập thất bại.";
       }
     } else if (response.statusCode == 401) {
-      return "Mật khẩu không đúng.";
+      return "Mật khẩu không đúng!";
     } else if (response.statusCode == 404) {
-      return "Tài khoản không tồn tại.";
+      return "Tài khoản không tồn tại!";
     } else {
       return "Lỗi máy chủ: ${response.statusCode}";
     }
@@ -212,8 +212,9 @@ class AppConfig {
 // =================== QUÊN MẬT KHẨU ===================
 
   /// Bước 1: Gửi OTP tới email
-  static Future<String?> sendOtpForForgotPassword(String email) async {
-    final url = Uri.parse('$baseUrl/forgot-password/send-otp');
+  static Future<String?> forgotPassword(
+      BuildContext context, String email) async {
+    final url = Uri.parse('$baseUrl/auth/forgot-password/send-otp');
 
     try {
       final response = await http.post(
@@ -222,11 +223,33 @@ class AppConfig {
         body: jsonEncode({'email': email}),
       );
 
+      final responseBody = utf8.decode(response.bodyBytes);
+      print("🔁 Response status: ${response.statusCode}");
+      print("🔁 Response body: $responseBody");
       final data = jsonDecode(utf8.decode(response.bodyBytes));
 
       if (response.statusCode == 200 && data['status'] == 0) {
         print("✅Gửi OTP tới cho email: $email");
-        return null; // ✅ Gửi OTP thành công
+
+        String? otp;
+        String? verifyResult;
+        String? errorMessage;
+        do {
+          otp = await showOtpDialog(context, errorMessage: errorMessage);
+
+          if (otp == null) return "Bạn đã hủy xác thực OTP.";
+          if (otp.isEmpty) {
+            errorMessage = "Bạn chưa nhập OTP.";
+            continue;
+          }
+
+          verifyResult = await verifyForgotPasswordOtp(email: email, otp: otp);
+          if (verifyResult != null) {
+            errorMessage = "Bạn nhập sai OTP. Vui lòng nhập lại.";
+          }
+        } while (verifyResult != null);
+
+        return null; // ✅ OTP xác thực thành công
       } else {
         return data['message'] ?? 'Gửi OTP thất bại.';
       }
@@ -241,7 +264,7 @@ class AppConfig {
     required String email,
     required String otp,
   }) async {
-    final url = Uri.parse('$baseUrl/forgot-password/verify-otp?otp=$otp');
+    final url = Uri.parse('$baseUrl/auth/forgot-password/verify-otp?otp=$otp');
 
     try {
       final response = await http.post(
@@ -270,7 +293,7 @@ class AppConfig {
       required String otp,
       required String newPassword,
       required String confirmPassword}) async {
-    final url = Uri.parse('$baseUrl/forgot-password/reset');
+    final url = Uri.parse('$baseUrl/auth/forgot-password/reset');
 
     try {
       final response = await http.post(
@@ -465,6 +488,7 @@ class AppConfig {
     } else {
       return "Lỗi máy chủ: ${response.statusCode}";
     }
+    return null;
   }
 
   // ========================== ĐĂNG XUẤT ==========================

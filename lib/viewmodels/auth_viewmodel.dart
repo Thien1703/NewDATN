@@ -82,100 +82,75 @@ class AuthViewModel with ChangeNotifier {
     }
   }
 
-  // // Quên mật khẩu ==> Đặt lại mật khẩu
-  // Future<void> forgotPassword(
-  //   BuildContext context,
-  //   String email,
-  //   String newPassword,
-  //   String confirmPassword,
-  // ) async {
-  //   // Bước 1: Gửi OTP tới email
-  //   String? sendOtpError = await AppConfig.sendOtpForForgotPassword(email);
+  /// Quên mật khẩu: Gửi OTP và xác thực
+  Future<String?> forgotPassword(BuildContext context, String email) async {
+    String? result = await AppConfig.forgotPassword(context, email);
 
-  //   if (!context.mounted) return;
+    if (!context.mounted) return null;
 
-  //   if (sendOtpError != null) {
-  //     Fluttertoast.showToast(
-  //       msg: sendOtpError,
-  //       toastLength: Toast.LENGTH_SHORT,
-  //       gravity: ToastGravity.BOTTOM,
-  //       backgroundColor: Colors.red,
-  //       textColor: Colors.white,
-  //     );
-  //     return;
-  //   }
+    if (result == null) {
+      Fluttertoast.showToast(
+        msg: "Xác thực OTP thành công!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+      // ✅ Trả về OTP ở đây (ví dụ AppConfig.forgotPassword đã trả về nó)
+      return result; // giả sử result là OTP
+    } else {
+      Fluttertoast.showToast(
+        msg: result,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    }
+    return null;
+  }
 
-  //   Fluttertoast.showToast(
-  //     msg: "Đã gửi mã OTP tới email.",
-  //     toastLength: Toast.LENGTH_SHORT,
-  //     gravity: ToastGravity.BOTTOM,
-  //     backgroundColor: Colors.green,
-  //     textColor: Colors.white,
-  //   );
+  /// Đặt lại mật khẩu mới
+  Future<void> resetPassword(
+    BuildContext context,
+    String email,
+    String otp,
+    String newPassword,
+    String confirmPassword,
+  ) async {
+    String? result = await AppConfig.resetPassword(
+      email: email,
+      otp: otp,
+      newPassword: newPassword,
+      confirmPassword: confirmPassword,
+    );
 
-  //   // Bước 2: Hiển thị dialog nhập mã OTP
-  //   final otp = await AppConfig.showOtpDialog(context);
+    if (!context.mounted) return;
 
-  //   if (otp == null || otp.isEmpty) {
-  //     Fluttertoast.showToast(
-  //       msg: "Xác thực OTP đã bị huỷ.",
-  //       toastLength: Toast.LENGTH_SHORT,
-  //       gravity: ToastGravity.BOTTOM,
-  //       backgroundColor: Colors.orange,
-  //       textColor: Colors.white,
-  //     );
-  //     return;
-  //   }
+    if (result == null) {
+      Fluttertoast.showToast(
+        msg: "Đặt lại mật khẩu thành công!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
 
-  //   // Bước 3: Xác thực OTP
-  //   String? verifyError = await AppConfig.verifyForgotPasswordOtp(
-  //     email: email,
-  //     otp: otp,
-  //   );
-
-  //   if (verifyError != null) {
-  //     Fluttertoast.showToast(
-  //       msg: verifyError,
-  //       toastLength: Toast.LENGTH_SHORT,
-  //       gravity: ToastGravity.BOTTOM,
-  //       backgroundColor: Colors.red,
-  //       textColor: Colors.white,
-  //     );
-  //     return;
-  //   }
-
-  //   // Bước 4: Gửi yêu cầu đặt lại mật khẩu
-  //   String? resetError = await AppConfig.resetPassword(
-  //     email: email,
-  //     otp: otp,
-  //     newPassword: newPassword,
-  //     confirmPassword: confirmPassword,
-  //   );
-
-  //   if (resetError == null) {
-  //     Fluttertoast.showToast(
-  //       msg: "Đặt lại mật khẩu thành công!",
-  //       toastLength: Toast.LENGTH_SHORT,
-  //       gravity: ToastGravity.BOTTOM,
-  //       backgroundColor: Colors.green,
-  //       textColor: Colors.white,
-  //     );
-
-  //     // Chuyển về màn hình đăng nhập
-  //     Navigator.of(context).pushAndRemoveUntil(
-  //       MaterialPageRoute(builder: (_) => LoginScreen()),
-  //       (route) => false,
-  //     );
-  //   } else {
-  //     Fluttertoast.showToast(
-  //       msg: resetError,
-  //       toastLength: Toast.LENGTH_SHORT,
-  //       gravity: ToastGravity.BOTTOM,
-  //       backgroundColor: Colors.red,
-  //       textColor: Colors.white,
-  //     );
-  //   }
-  // }
+      // Quay về màn hình đăng nhập
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+    } else {
+      Fluttertoast.showToast(
+        msg: result,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    }
+  }
 
   /// Cập nhật hồ sơ
   Future<bool> updateProfile(BuildContext context,
