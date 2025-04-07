@@ -226,8 +226,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       child: Center(
                         child: isLoading
-                            ? CircularProgressIndicator(
-                                color: Colors.white,
+                            ? SizedBox(
+
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
                               )
                             : Text(
                                 'Cập nhật',

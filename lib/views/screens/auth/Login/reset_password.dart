@@ -17,6 +17,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+  bool _isLoading = false;
 
   final _formKey = GlobalKey<FormState>();
   String? _validateNewPassword(String? value) {
@@ -88,24 +89,33 @@ class _ResetPasswordState extends State<ResetPassword> {
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      final newPassword = _newPasswordController.text.trim();
-                      final confirmPassword =
-                          _confirmPasswordController.text.trim();
-                      final authViewModel =
-                          Provider.of<AuthViewModel>(context, listen: false);
+                  onPressed: _isLoading
+                      ? null
+                      : () async {
+                          if (_formKey.currentState!.validate()) {
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            final newPassword =
+                                _newPasswordController.text.trim();
+                            final confirmPassword =
+                                _confirmPasswordController.text.trim();
+                            final authViewModel = Provider.of<AuthViewModel>(
+                                context,
+                                listen: false);
 
-                      await authViewModel.resetPassword(context, widget.email,
-                          widget.otp, newPassword, confirmPassword);
+                            await authViewModel.resetPassword(
+                                context,
+                                widget.email,
+                                widget.otp,
+                                newPassword,
+                                confirmPassword);
 
-                      // if (context.mounted) {
-                      //   Fluttertoast.showToast(
-                      //       msg: 'Đặt lại mật khẩu thành công');
-                      //   Navigator.pop(context); // hoặc chuyển về màn hình login
-                      // }
-                    }
-                  },
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          }
+                        },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.deepBlue,
                     foregroundColor: Colors.white,
@@ -113,7 +123,16 @@ class _ResetPasswordState extends State<ResetPassword> {
                     textStyle:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  child: Text("Đặt lại mật khẩu"),
+                  child: _isLoading
+                      ? SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : Text("Đặt lại mật khẩu"),
                 ),
               ],
             ),

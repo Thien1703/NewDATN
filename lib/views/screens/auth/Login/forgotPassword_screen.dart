@@ -113,7 +113,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           height: 24,
                           width: 24,
                           child: CircularProgressIndicator(
-                            strokeWidth: 3,
+                            strokeWidth: 2,
                             color: Colors.white,
                           ),
                         )
