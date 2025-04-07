@@ -88,7 +88,7 @@ class AuthViewModel with ChangeNotifier {
 
     if (!context.mounted) return null;
 
-    if (result == null) {
+    if (result != null) {
       Fluttertoast.showToast(
         msg: "Xác thực OTP thành công!",
         toastLength: Toast.LENGTH_SHORT,
@@ -100,7 +100,7 @@ class AuthViewModel with ChangeNotifier {
       return result; // giả sử result là OTP
     } else {
       Fluttertoast.showToast(
-        msg: result,
+        msg: 'Xác thực OTP thất bại',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,

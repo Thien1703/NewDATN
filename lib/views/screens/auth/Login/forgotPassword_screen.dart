@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:health_care/viewmodels/auth_viewmodel.dart';
 import 'package:health_care/views/screens/auth/Login/reset_password.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
@@ -15,6 +16,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
   // ✅ Hàm kiểm tra email
   String? _validateEmail(String? value) {
@@ -31,18 +33,37 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   // ✅ Hàm gửi OTP
   Future<void> _sendOtp() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
       String email = _emailController.text.trim();
       final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
 
       String? otp = await authViewModel.forgotPassword(context, email);
+      print('🔐 In OTP: $otp');
+
+      setState(() {
+        _isLoading = false;
+      });
 
       if (otp != null && context.mounted) {
+        Fluttertoast.showToast(
+          msg: 'Xác thực OTP thành công!',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+        );
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => ResetPassword(email: email, otp: otp),
           ),
         );
+      } else {
+        // Xác thực thất bại hoặc bị hủy
+        print("❌ OTP null hoặc không xác thực được");
       }
     }
   }
@@ -87,7 +108,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  child: Text("Tiếp tục"),
+                  child: _isLoading
+                      ? SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 3,
+                            color: Colors.white,
+                          ),
+                        )
+                      : Text("Tiếp tục"),
                 ),
               ],
             ),
