@@ -66,7 +66,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (value == null || value.trim().isEmpty) {
       return 'Vui lòng nhập số điện thoại';
     }
-    if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+    // Kiểm tra định dạng: bắt đầu bằng 0 và theo sau là 9 chữ số (tổng cộng 10 số)
+    if (!RegExp(r'^0[0-9]{9}$').hasMatch(value)) {
       return 'Số điện thoại không hợp lệ';
     }
     return null;
