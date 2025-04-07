@@ -249,7 +249,7 @@ class AppConfig {
           }
         } while (verifyResult != null);
 
-        return null; // ✅ OTP xác thực thành công
+        return otp; // ✅ Giữ lại OTP xác thực thành công để truyền sang resetPassword
       } else {
         return data['message'] ?? 'Gửi OTP thất bại.';
       }
@@ -274,6 +274,7 @@ class AppConfig {
       );
 
       final data = jsonDecode(utf8.decode(response.bodyBytes));
+      print("📥 Response: ${response.statusCode} - ${data}");
 
       if (response.statusCode == 200 && data['status'] == 0) {
         print("✅ OTP xác thực thành công cho $email");
