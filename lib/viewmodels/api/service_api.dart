@@ -113,4 +113,56 @@ class ServiceApi {
 
     return null;
   }
+
+// Lấy API của dịch vụ theo id dịch vụ (chỉ 1 ID dịch vụ)
+  static Future<Service?> getServiceById(int serviceId) async {
+    final url = Uri.parse(
+        '${AppConfig.baseUrl}/service/get-by-id'); // Giả sử bạn có endpoint này
+    String? token = await LocalStorageService.getToken();
+
+    if (token == null) {
+      print("❌ Lỗi: Không tìm thấy token");
+      return null;
+    }
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({"id": serviceId}), // Gửi ID dịch vụ duy nhất
+      );
+
+      print("📌 API Response Status: ${response.statusCode}");
+      print("📌 API Response Headers: ${response.headers}");
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body); // Không ép về UTF-8
+
+        if (data is Map<String, dynamic> && data['status'] == 0) {
+          // Kiểm tra nếu API trả về dữ liệu hợp lệ
+          print("✅ API trả về dịch vụ hợp lệ.");
+
+          // Lấy trường 'data' chứa thông tin dịch vụ và chuyển thành đối tượng Service
+          var serviceData = data['data'];
+          if (serviceData != null && serviceData is Map<String, dynamic>) {
+            return Service.fromJson(
+                serviceData); // Chuyển đổi dữ liệu thành đối tượng Service
+          } else {
+            print("❌ Dữ liệu dịch vụ không hợp lệ: $serviceData");
+          }
+        } else {
+          print("❌ Lỗi từ API: ${data['message']}");
+        }
+      } else {
+        print("❌ Lỗi API: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      print("❌ Lỗi khi gọi API: $e");
+    }
+
+    return null;
+  }
 }

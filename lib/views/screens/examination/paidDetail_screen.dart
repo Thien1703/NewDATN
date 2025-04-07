@@ -108,7 +108,7 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
                                         ),
                                         appointmentServices!
                                                     .first.appointment.status ==
-                                                'COMPLEMENTED'
+                                                'COMPLETED'
                                             ? OutlinedButton(
                                                 onPressed: () {
                                                   Navigator.push(
@@ -144,7 +144,12 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
                         ),
                       ),
                     ),
-                    appointmentServices!.first.appointment.status == 'CANCELLED'
+                    appointmentServices!.first.appointment.status ==
+                                'CANCELLED' ||
+                            appointmentServices!.first.appointment.status ==
+                                'ARRIVED' ||
+                            appointmentServices!.first.appointment.status ==
+                                'COMPLETED'
                         ? _buildSelectedSelected()
                         : _buildSelectedCancel()
                   ],

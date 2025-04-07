@@ -32,6 +32,7 @@ class ConfirmBooking extends StatefulWidget {
   final List<int> selectedServiceIds;
   final String date;
   final String time;
+
   @override
   State<ConfirmBooking> createState() => _ConfirmBookingState();
 }
