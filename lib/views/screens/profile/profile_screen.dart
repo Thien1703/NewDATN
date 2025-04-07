@@ -129,9 +129,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               fetchUserProfile(); // Cập nhật lại dữ liệu khi trở về ProfileScreen
             });
           }),
-          // _buildMenuItem(Icons.location_on, "Quản lý số địa chỉ"),
-          // _buildMenuItem(Icons.credit_card, "Quản lý thẻ thanh toán"),
-          // _buildMenuItem(Icons.local_hospital, "Đơn thuốc của tôi"),
         ],
       ),
     );

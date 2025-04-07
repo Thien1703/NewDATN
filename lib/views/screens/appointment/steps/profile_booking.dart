@@ -12,14 +12,12 @@ class ProfileBooking extends StatefulWidget {
     int? customerId,
     String? date, // ✅ Thêm ngày khám
     String? time, // ✅ Thêm giờ khám
-    int? paymentId, // ✅ Thêm phương thức thanh toán
   }) onNavigateToScreen;
 
   final int clinicId;
   final List<int> selectedServiceId;
   final String date; // Thêm ngày khám
   final String time; // Thêm giờ khám
-  final int paymentId;
 
   const ProfileBooking({
     super.key,
@@ -28,7 +26,6 @@ class ProfileBooking extends StatefulWidget {
     required this.selectedServiceId,
     required this.date,
     required this.time,
-    this.paymentId = 1,
   });
 
   @override
@@ -55,7 +52,6 @@ class _ProfileBooking extends State<ProfileBooking> {
       serviceIds: widget.selectedServiceId,
       date: widget.date,
       time: widget.time,
-      paymentId: widget.paymentId,
     );
   }
 

@@ -89,7 +89,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                               return _buildAppointmentCard(appointment);
                             },
                           )
-                        : Center(child: Text('Chưa có lịch khám')),
+                        : Center(child: Text('Không có lịch khám')),
               ),
             ),
           ),
@@ -103,6 +103,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
       'Tất cả': 'Tất cả',
       'Đã đặt khám': 'PENDING',
       'Đã xác nhận': 'CONFIRM',
+      'Đã tới khám': 'ARRIVED',
       'Đã khám': 'COMPLETED',
       'Đã hủy': 'CANCELLED'
     };
@@ -186,21 +187,36 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                 ),
               ],
             ),
-            SizedBox(height: 10),
-            Text(
-              appointment.clinic.address,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            SizedBox(height: 10),
+            SizedBox(height: 5),
             _buildLabelRow(
                 label: "Giờ khám", value: appointment.time.substring(0, 5)),
             _buildLabelRow(
                 label: "Ngày khám", value: formatDate(appointment.date)),
             _buildLabelRow(
                 label: 'Bệnh nhân', value: appointment.customer.fullName),
+            SizedBox(height: 5),
+            // Align(
+            //   alignment: Alignment.topRight,
+            //   child: appointment.status == "COMPLETED"
+            //       ? InkWell(
+            //           child: Container(
+            //             padding:
+            //                 EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            //             decoration: BoxDecoration(
+            //               border: Border.all(color: Colors.red, width: 1),
+            //               borderRadius: BorderRadius.circular(5),
+            //             ),
+            //             child: Text(
+            //               'Đánh giá',
+            //               style: TextStyle(
+            //                 fontSize: 15,
+            //                 color: Colors.red,
+            //               ),
+            //             ),
+            //           ),
+            //         )
+            //       : Container(),
+            // )
           ],
         ),
       ),
@@ -211,12 +227,14 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
     final statusMap = {
       'PENDING': 'Đã đặt lịch',
       'CONFIRM': 'Đã xác nhận',
+      'ARRIVED': 'Đã tới khám',
       'COMPLETED': 'Đã khám',
       'CANCELLED': 'Đã hủy'
     };
     final textColor = {
           'PENDING': Colors.green,
           'CONFIRM': AppColors.deepBlue,
+          'ARRIVED': AppColors.softBlue,
           'COMPLETED': AppColors.deepBlue,
           'CANCELLED': Colors.red
         }[status] ??

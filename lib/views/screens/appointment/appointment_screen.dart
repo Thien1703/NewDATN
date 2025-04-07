@@ -19,6 +19,11 @@ class AppointmentScreen extends StatefulWidget {
 class _AppointmentScreen extends State<AppointmentScreen> {
   int _currentIndex = 0;
   String _showTitleScreen = 'Chọn thông tin khám';
+
+  List<int> selectedServiceId = [];
+  DateTime? selectedDate;
+  String? selectedTime;
+
   int? customerId; // Thêm biến customerId
   late final List<Widget> _screens;
   late List<bool> _isSelected;
@@ -45,7 +50,6 @@ class _AppointmentScreen extends State<AppointmentScreen> {
         selectedServiceIds: [],
         date: 'Chưa chọn ngày', // Giá trị mặc định
         time: 'Chưa chọn giờ', // Giá trị mặc định
-        paymentId: 1,
       ),
     ];
   }
@@ -57,8 +61,7 @@ class _AppointmentScreen extends State<AppointmentScreen> {
     String? date,
     String? time,
     List<int>? serviceIds,
-    int? customerId, // ✅ Thêm customerId
-    int? paymentId, // ✅ Thêm paymentId
+    int? customerId,
   }) {
     setState(() {
       _currentIndex = index;
@@ -74,7 +77,6 @@ class _AppointmentScreen extends State<AppointmentScreen> {
           selectedServiceId: serviceIds ?? [],
           date: date ?? 'Chưa chọn ngày',
           time: time ?? 'Chưa chọn giờ',
-          paymentId: paymentId ?? 1, // ✅ Lưu paymentId khi chọn hồ sơ
         );
       }
 
@@ -86,7 +88,6 @@ class _AppointmentScreen extends State<AppointmentScreen> {
           selectedServiceIds: serviceIds ?? [],
           date: date ?? 'Chưa chọn ngày',
           time: time ?? 'Chưa chọn giờ',
-          paymentId: paymentId ?? 1, // ✅ Đảm bảo truyền paymentId
         );
       }
     });
@@ -100,12 +101,12 @@ class _AppointmentScreen extends State<AppointmentScreen> {
       selectedIcon: StepIndicator(
         currentIndex: _currentIndex,
         isSelected: _isSelected,
-        // onNavigateToScreen: navigateToScreen,
-        onNavigateToScreen: (index, title) {
-          if (index > _currentIndex) {
-            navigateToScreen(index, title);
-          }
-        },
+        onNavigateToScreen: navigateToScreen,
+        // onNavigateToScreen: (index, title) {
+        //   if (index > _currentIndex) {
+        //     navigateToScreen(index, title);
+        //   }
+        // },
       ),
       body: Container(
         width: double.infinity,

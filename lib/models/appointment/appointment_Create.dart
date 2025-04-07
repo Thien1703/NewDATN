@@ -5,8 +5,6 @@ class AppointmentCreate {
   final String date;
   final String time;
   final String? status;
-  final int? paymentId;
-
   AppointmentCreate({
     this.id,
     required this.clinicId,
@@ -14,7 +12,6 @@ class AppointmentCreate {
     required this.date,
     required this.time,
     this.status,
-    this.paymentId,
   });
 
   factory AppointmentCreate.fromJson(Map<String, dynamic> json) {
@@ -25,7 +22,6 @@ class AppointmentCreate {
       date: json['date'],
       time: json['time'],
       status: json['status'],
-      paymentId: json['paymentId'],
     );
   }
   Map<String, dynamic> toJson() {
@@ -35,9 +31,6 @@ class AppointmentCreate {
       'date': date,
       'time': time,
     };
-    if (paymentId != null) {
-      data['paymentId'] = paymentId;
-    }
     return data;
   }
 }

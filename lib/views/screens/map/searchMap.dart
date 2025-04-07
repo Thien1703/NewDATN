@@ -4,6 +4,7 @@ import 'package:health_care/views/screens/clinic/clinic_screen.dart';
 import 'package:health_care/views/screens/map/data_search_model.dart';
 import 'package:health_care/views/screens/map/form_field_widget.dart';
 import 'package:health_care/views/screens/map/search_map_view.dart';
+import 'package:geolocator/geolocator.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -21,6 +22,45 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
     _loadCustomMarker();
+    _goToCurrentLocation();
+  }
+
+  Future<void> _goToCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) return;
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) return;
+    }
+
+    if (permission == LocationPermission.deniedForever) return;
+
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    final LatLng currentLatLng = LatLng(position.latitude, position.longitude);
+
+    // Thêm marker vị trí hiện tại
+    setState(() {
+      markers.add(
+        Marker(
+          markerId: const MarkerId("currentLocation"),
+          position: currentLatLng,
+          infoWindow: const InfoWindow(title: "Vị trí của bạn"),
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+        ),
+      );
+    });
+
+    if (mapController != null) {
+      mapController.animateCamera(CameraUpdate.newLatLng(currentLatLng));
+    }
   }
 
   void _loadCustomMarker() async {
@@ -36,8 +76,8 @@ class _SearchScreenState extends State<SearchScreen> {
       {
         "name": "Phòng Khám Đa Khoa FPT-Quận 1",
         "district": "Quận 1",
-        "lat": 10.776,
-        "lng": 106.700
+        "lat": 10.856003139908193,
+        "lng": 106.63188467921057
       },
       {
         "name": "Phòng Khám Đa Khoa FPT-Quận 3",
@@ -154,7 +194,7 @@ class _SearchScreenState extends State<SearchScreen> {
               markers: markers,
               initialCameraPosition: const CameraPosition(
                 zoom: 14,
-                target: LatLng(10.80, 106.65),
+                target: LatLng(10.853044766455003, 106.62679932231619),
               ),
             ),
             GestureDetector(

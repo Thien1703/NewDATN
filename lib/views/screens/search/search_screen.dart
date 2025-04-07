@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/clinic.dart';
@@ -6,6 +8,8 @@ import 'package:health_care/models/specialty.dart';
 import 'package:health_care/viewmodels/api/clinic_api.dart';
 import 'package:health_care/viewmodels/api/service_api.dart';
 import 'package:health_care/viewmodels/api/specialty_api.dart';
+import 'package:health_care/views/screens/appointment/appointment_screen.dart';
+import 'package:health_care/views/screens/home/service_screen.dart';
 
 class SearchHome extends StatefulWidget {
   const SearchHome({super.key});
@@ -20,6 +24,10 @@ class _SearchHome extends State<SearchHome> {
   List<Service>? services;
   List<Clinic>? clinics;
   List<dynamic> filteredResults = [];
+  Timer? _debounce;
+  List<Specialty> filteredSpecialties = [];
+  List<Service> filteredServices = [];
+  List<Clinic> filteredClinics = [];
 
   @override
   void initState() {
@@ -40,6 +48,17 @@ class _SearchHome extends State<SearchHome> {
             filterResults(_searchQuery); // Cập nhật filteredResults
       });
     }
+  }
+
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      setState(() {
+        _searchQuery = query;
+        filteredResults =
+            filterResults(_searchQuery); // Lọc và cập nhật kết quả
+      });
+    });
   }
 
 // Lọc dữ liệu theo từ khóa tìm kiếm
@@ -95,13 +114,7 @@ class _SearchHome extends State<SearchHome> {
                 Expanded(
                   child: TextField(
                     controller: _searchController,
-                    onChanged: (query) {
-                      setState(() {
-                        _searchQuery = query;
-                        filteredResults = filterResults(
-                            _searchQuery); // Lọc và cập nhật kết quả
-                      });
-                    },
+                    onChanged: _onSearchChanged,
                     decoration: const InputDecoration(
                       hintText: 'Tìm kiếm phòng khám, chuyên khoa,dịch vụ',
                       hintStyle: TextStyle(
@@ -117,7 +130,10 @@ class _SearchHome extends State<SearchHome> {
                     icon: const Icon(Icons.clear, color: Colors.black54),
                     onPressed: () {
                       _searchController.clear();
-                      filterResults('');
+                      setState(() {
+                        _searchQuery = '';
+                        filteredResults.clear();
+                      });
                     },
                   ),
               ],
@@ -143,11 +159,128 @@ class _SearchHome extends State<SearchHome> {
                           itemCount: results.length,
                           itemBuilder: (context, index) {
                             var item = results[index];
-                            return ListTile(
-                              title: Text(item.name),
-                              subtitle:
-                                  Text(item.description ?? 'Không có mô tả'),
-                            );
+                            if (item is Specialty) {
+                              // Chuyên khoa
+                              return InkWell(
+                                onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ServiceScreen(specialtyId: item.id),
+                                    )),
+                                child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black12,
+                                        blurRadius: 5,
+                                        offset: Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: ListTile(
+                                    leading: Image.network(
+                                      item.image,
+                                      color: AppColors.deepBlue,
+                                      width: 50,
+                                    ),
+                                    title: Text(
+                                      item.name,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    subtitle: Text(
+                                        item.description ?? 'Không có mô tả'),
+                                  ),
+                                ),
+                              );
+                            } else if (item is Service) {
+                              // Dịch vụ
+                              return Container(
+                                margin: EdgeInsets.symmetric(vertical: 5),
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.green[50],
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 5,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: ListTile(
+                                  leading: Image.network(item.image),
+                                  title: Text(
+                                    item.name,
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  subtitle: Text(
+                                    item.description ?? 'Không có mô tả',
+                                    style: TextStyle(
+                                        overflow: TextOverflow.ellipsis),
+                                    maxLines: 3,
+                                  ),
+                                ),
+                              );
+                            } else if (item is Clinic) {
+                              // Phòng khám
+                              return InkWell(
+                                onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          AppointmentScreen(clinicId: item.id),
+                                    )),
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(
+                                    vertical: 5,
+                                    horizontal: 10,
+                                  ),
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 5,
+                                          offset: Offset(0, 2),
+                                          spreadRadius: 1),
+                                    ],
+                                  ),
+                                  child: ListTile(
+                                    leading: Image.network(
+                                      item.image,
+                                      width: 100,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    title: Text(
+                                      item.name,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      maxLines: 2,
+                                    ),
+                                    subtitle: Text(
+                                      item.address ?? 'Không có địa chỉ',
+                                      style: TextStyle(
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      maxLines: 2,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return SizedBox(); // Nếu không phải loại nào trên
+                            }
                           },
                         );
                 }
