@@ -255,7 +255,11 @@ class _SearchHome extends State<SearchHome> {
                                     ],
                                   ),
                                   child: ListTile(
-                                    leading: Image.network(item.image),
+                                    leading: Image.network(
+                                      item.image,
+                                      width: 100,
+                                      fit: BoxFit.cover,
+                                    ),
                                     title: Text(
                                       item.name,
                                       style: TextStyle(
