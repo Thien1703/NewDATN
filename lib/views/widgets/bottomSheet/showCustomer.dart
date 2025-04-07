@@ -55,12 +55,14 @@ class _Showcustomer extends State<Showcustomer> {
                           customers?.phoneNumber ?? 'Chưa cập nhật'),
                       _buildLabelRow(
                         'Ngày sinh',
-                        customers?.birthDate != null
-                            ? DateFormat('dd/MM/yyyy')
-                                .format(DateTime.parse(customers!.birthDate))
+                        customers?.birthDate != null &&
+                                customers!.birthDate.isNotEmpty &&
+                                customers!.birthDate.toLowerCase() != 'null'
+                            ? DateFormat('dd/MM/yyyy').format(
+                                DateTime.tryParse(customers!.birthDate) ??
+                                    DateTime(1900))
                             : 'Chưa cập nhật',
                       ),
-                      _buildLabelRow('Ngày sinh', 'Chưa cập nhật'),
                       _buildLabelRow(
                           'Giới tính', customers?.gender ?? 'Chưa cập nhật'),
                       _buildLabelRow(
