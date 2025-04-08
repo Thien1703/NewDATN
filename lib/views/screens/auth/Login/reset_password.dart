@@ -18,6 +18,8 @@ class _ResetPasswordState extends State<ResetPassword> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   bool _isLoading = false;
+  bool _obscureNewPassword = true;
+  bool _obscureConfirmPassword = true;
 
   final _formKey = GlobalKey<FormState>();
   String? _validateNewPassword(String? value) {
@@ -66,11 +68,24 @@ class _ResetPasswordState extends State<ResetPassword> {
                 SizedBox(height: 15),
                 TextFormField(
                   controller: _newPasswordController,
-                  decoration: const InputDecoration(
+                  obscureText: _obscureNewPassword,
+                  decoration: InputDecoration(
                     labelText: 'Nhập mật khẩu',
-                    labelStyle: TextStyle(
+                    labelStyle: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.grey,
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureNewPassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscureNewPassword = !_obscureNewPassword;
+                        });
+                      },
                     ),
                   ),
                   validator: _validateNewPassword,
@@ -78,11 +93,24 @@ class _ResetPasswordState extends State<ResetPassword> {
                 SizedBox(height: 20),
                 TextFormField(
                   controller: _confirmPasswordController,
-                  decoration: const InputDecoration(
+                  obscureText: _obscureConfirmPassword,
+                  decoration: InputDecoration(
                     labelText: 'Xác nhận mật khẩu',
-                    labelStyle: TextStyle(
+                    labelStyle: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.grey,
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureConfirmPassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscureConfirmPassword = !_obscureConfirmPassword;
+                        });
+                      },
                     ),
                   ),
                   validator: _validateConfirmPassword,
