@@ -1,4 +1,5 @@
 import 'package:health_care/views/screens/examination/paidDetail_screen.dart';
+import 'package:health_care/views/screens/examination/ratingStar/showServiceStar_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
@@ -195,28 +196,35 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
             _buildLabelRow(
                 label: 'Bệnh nhân', value: appointment.customer.fullName),
             SizedBox(height: 5),
-            // Align(
-            //   alignment: Alignment.topRight,
-            //   child: appointment.status == "COMPLETED"
-            //       ? InkWell(
-            //           child: Container(
-            //             padding:
-            //                 EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            //             decoration: BoxDecoration(
-            //               border: Border.all(color: Colors.red, width: 1),
-            //               borderRadius: BorderRadius.circular(5),
-            //             ),
-            //             child: Text(
-            //               'Đánh giá',
-            //               style: TextStyle(
-            //                 fontSize: 15,
-            //                 color: Colors.red,
-            //               ),
-            //             ),
-            //           ),
-            //         )
-            //       : Container(),
-            // )
+            Align(
+              alignment: Alignment.topRight,
+              child: appointment.status == "COMPLETED"
+                  ? InkWell(
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ShowservicestarScreen(
+                              appointmentId: appointment.id,
+                            ),
+                          )),
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.red, width: 1),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Text(
+                          'Đánh giá',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(),
+            )
           ],
         ),
       ),

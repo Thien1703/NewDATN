@@ -87,6 +87,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                         });
                       },
                     ),
+                    errorMaxLines: 2,
                   ),
                   validator: _validateNewPassword,
                 ),
