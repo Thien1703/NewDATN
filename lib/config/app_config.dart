@@ -246,10 +246,10 @@ class AppConfig {
         //   return null;
         // }
           if (otp == null) return "cancelled";
-          if (otp.isEmpty) {
-            errorMessage = "Bạn chưa nhập OTP.";
-            continue;
-          }
+          // if (otp.isEmpty) {
+          //   errorMessage = "Bạn chưa nhập OTP.";
+          //   continue;
+          // }
 
         return otp; // ✅ OTP hợp lệ
       } else {
