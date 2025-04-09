@@ -1,34 +1,31 @@
 class Rating {
   final int id;
-  final String customerName;
+  final int appointmentId;
+  final int serviceId;
   final int stars;
-  final String? comment; // Vì comment có thể là null, nên sử dụng kiểu String?
+  final String? comment;
+  final String customerName;
+  final bool? status;
 
   Rating({
     required this.id,
-    required this.customerName,
+    required this.appointmentId,
+    required this.serviceId,
     required this.stars,
-    this.comment, // comment có thể là null
+    this.comment,
+    required this.customerName,
+    required this.status,
   });
 
-  // Factory method để tạo đối tượng từ JSON
   factory Rating.fromJson(Map<String, dynamic> json) {
     return Rating(
       id: json['id'],
-      customerName: json['customerName'],
+      appointmentId: json['appointmentId'],
+      serviceId: json['serviceId'],
       stars: json['stars'],
-      comment:
-          json['comment'], // comment có thể là null, không cần kiểm tra kiểu
+      comment: json['comment'],
+      customerName: json['customerName'],
+      status: json['status'] == null ? null : json['status'] == "TRUE",
     );
-  }
-
-  // Chuyển từ Dart object sang JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'customerName': customerName,
-      'stars': stars,
-      'comment': comment,
-    };
   }
 }
