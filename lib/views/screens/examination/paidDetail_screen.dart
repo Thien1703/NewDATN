@@ -4,7 +4,7 @@ import 'package:health_care/models/appointment/appointment_service.dart';
 import 'package:health_care/viewmodels/api/appointmentService_api.dart';
 import 'package:health_care/viewmodels/api/appointment_api.dart';
 import 'package:health_care/views/screens/clinic/clinic_screen.dart';
-import 'package:health_care/views/screens/examination/star_screen.dart';
+import 'package:health_care/views/screens/examination/ratingStar/star_screen.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
 import 'package:health_care/views/widgets/bottomSheet/header_bottomSheet.dart';
 import 'package:health_care/views/widgets/bottomSheet/showCustomer.dart';
@@ -106,33 +106,33 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
                                               "Đang cập nhật",
                                           Colors.black,
                                         ),
-                                        appointmentServices!
-                                                    .first.appointment.status ==
-                                                'COMPLETED'
-                                            ? OutlinedButton(
-                                                onPressed: () {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            StarScreen(
-                                                          customerId:
-                                                              appointmentServices!
-                                                                      .first
-                                                                      .appointment
-                                                                      .customer
-                                                                      ?.id ??
-                                                                  0,
-                                                          serviceId: item
-                                                                  .service
-                                                                  ?.id ??
-                                                              0,
-                                                        ),
-                                                      ));
-                                                },
-                                                child: Text('Đánh giá'),
-                                              )
-                                            : Container(),
+                                        // appointmentServices!
+                                        //             .first.appointment.status ==
+                                        //         'COMPLETED'
+                                        //     ? OutlinedButton(
+                                        //         onPressed: () {
+                                        //           Navigator.push(
+                                        //               context,
+                                        //               MaterialPageRoute(
+                                        //                 builder: (context) =>
+                                        //                     StarScreen(
+                                        //                   customerId:
+                                        //                       appointmentServices!
+                                        //                               .first
+                                        //                               .appointment
+                                        //                               .customer
+                                        //                               ?.id ??
+                                        //                           0,
+                                        //                   serviceId: item
+                                        //                           .service
+                                        //                           ?.id ??
+                                        //                       0,
+                                        //                 ),
+                                        //               ));
+                                        //         },
+                                        //         child: Text('Đánh giá'),
+                                        //       )
+                                        //     : Container(),
                                       ],
                                     ),
                                   );

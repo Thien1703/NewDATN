@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:health_care/env.dart';
 import 'package:health_care/services/local_storage_service.dart';
+import 'package:health_care/views/screens/auth/Login/otp_screen.dart';
 import 'package:http/http.dart' as http;
 
 class AppConfig {
@@ -187,7 +188,7 @@ class AppConfig {
               ),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.pop(context, null),
+                  onPressed: () => Navigator.pop(context),
                   child: const Text("Hủy"),
                 ),
                 TextButton(
@@ -223,33 +224,29 @@ class AppConfig {
         body: jsonEncode({'email': email}),
       );
 
-      final responseBody = utf8.decode(response.bodyBytes);
-      print("🔁 Response status: ${response.statusCode}");
-      print("🔁 Response body: $responseBody");
       final data = jsonDecode(utf8.decode(response.bodyBytes));
 
       if (response.statusCode == 200 && data['status'] == 0) {
         print("✅Gửi OTP tới cho email: $email");
 
-        String? otp;
-        String? verifyResult;
-        String? errorMessage;
-        do {
-          otp = await showOtpDialog(context, errorMessage: errorMessage);
+        final otp = await Navigator.push<String>(
+          context,
+          MaterialPageRoute(
+            builder: (_) => OtpScreen(
+              email: email,
+              onOtpSubmit: (otp) async {
+                return await verifyForgotPasswordOtp(email: email, otp: otp);
+              },
+            ),
+          ),
+        );
 
-          if (otp == null) return "Bạn đã hủy xác thực OTP.";
-          if (otp.isEmpty) {
-            errorMessage = "Bạn chưa nhập OTP.";
-            continue;
-          }
+        if (otp == null) {
+          print("🛑 Người dùng đã thoát màn hình OTP.");
+          return null;
+        }
 
-          verifyResult = await verifyForgotPasswordOtp(email: email, otp: otp);
-          if (verifyResult != null) {
-            errorMessage = "Bạn nhập sai OTP. Vui lòng nhập lại.";
-          }
-        } while (verifyResult != null);
-
-        return otp; // ✅ Giữ lại OTP xác thực thành công để truyền sang resetPassword
+        return otp; // ✅ OTP hợp lệ
       } else {
         return data['message'] ?? 'Gửi OTP thất bại.';
       }

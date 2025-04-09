@@ -16,6 +16,8 @@ class AppColors {
   static const Color deepBlue = Color(0xFF1565C0);
   static const Color ghostWhite = Color(0xFFF0F2F5);
 
+  static const Color blueWhite = Color(0xFFA7DCFB);
+
   // Neutral Colors
   static const Color neutralWhite = Color(0xFFFFFFFF);
   static const Color neutralLightGreen1 = Color(0xFFECF6ED);

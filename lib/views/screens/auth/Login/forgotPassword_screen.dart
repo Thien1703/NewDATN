@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:health_care/viewmodels/auth_viewmodel.dart';
 import 'package:health_care/views/screens/auth/Login/reset_password.dart';
-import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +17,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
-  // ✅ Hàm kiểm tra email
   String? _validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Vui lòng nhập email';
@@ -30,12 +28,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return null;
   }
 
-  // ✅ Hàm gửi OTP
   Future<void> _sendOtp() async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+      setState(() => _isLoading = true);
 
       String email = _emailController.text.trim();
       final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
@@ -43,9 +38,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       String? otp = await authViewModel.forgotPassword(context, email);
       print('🔐 In OTP: $otp');
 
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _isLoading = false);
 
       if (otp != null && context.mounted) {
         Fluttertoast.showToast(
@@ -62,7 +55,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           ),
         );
       } else {
-        // Xác thực thất bại hoặc bị hủy
         print("❌ OTP null hoặc không xác thực được");
       }
     }
@@ -71,56 +63,106 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: WidgetHeaderBody(
-        iconBack: true,
-        title: "Quên mật khẩu",
-        body: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Text(
-                  "Nhập email để nhận mã OTP",
-                  style: TextStyle(fontSize: 18, color: AppColors.deepBlue),
-                ),
-                SizedBox(height: 15),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Nhập email',
-                    labelStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 10),
+
+              IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.arrow_back_ios),
+              ),
+              const SizedBox(height: 10),
+
+              // Title
+              const Center(
+                child: Text(
+                  "Quên mật khẩu",
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
                   ),
-                  validator: _validateEmail,
                 ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _sendOtp,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.deepBlue,
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                    textStyle: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+              ),
+              const SizedBox(height: 8),
+              const Center(
+                child: Text(
+                  "Vui lòng nhập email để nhận mã xác thực OTP.",
+                  style: TextStyle(fontSize: 14, color: Colors.black87),
+                ),
+              ),
+              const SizedBox(height: 40),
+
+              // Form
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _emailController,
+                      validator: _validateEmail,
+                      // keyboardType: TextInputType.emailAddress,
+                      // autovalidateMode: AutovalidateMode.onUserInteraction,
+                      decoration: InputDecoration(
+                        hintText: 'Nhập email của bạn',
+                        hintStyle: const TextStyle(
+                          fontSize: 14,
+                          color: Color.fromARGB(255, 108, 108, 108),
+                        ),
+                        prefixIcon: const Icon(
+                          Icons.email,
+                          color: AppColors.deepBlue,
+                          size: 25,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        errorStyle: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 13,
+                          height:
+                              1.3, // ✅ giúp lỗi hiển thị gọn, tự động xuống dòng
+                        ),
+                      ),
+                      style: const TextStyle(fontSize: 16),
                     ),
-                  ),
-                  child: _isLoading
-                      ? SizedBox(
-                          height: 24,
-                          width: 24,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
+
+                    const SizedBox(height: 30),
+
+                    // Submit button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: _isLoading ? null : _sendOtp,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.deepBlue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
                           ),
-                        )
-                      : Text("Tiếp tục"),
+                        ),
+                        child: _isLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : const Text(
+                                "Tiếp tục",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

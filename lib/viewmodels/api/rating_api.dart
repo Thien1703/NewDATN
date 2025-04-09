@@ -6,23 +6,29 @@ import 'dart:convert';
 
 class RatingApi {
   static Future<RatingCreate?> writeApiRating(
-      int serviceId, int customerId, int stars, String? comment) async {
+    int appointmentId,
+    int serviceId,
+    int customerId,
+    int stars,
+    String? comment,
+  ) async {
     final url = Uri.parse('${AppConfig.baseUrl}/rating/create');
 
-    // Lấy token từ local storage
     String? token = await LocalStorageService.getToken();
     if (token == null) {
-      print('Token không hợp lệ.');
+      print('❌ Token không hợp lệ.');
       return null;
     }
 
-    // Kiểm tra xem các tham số có hợp lệ không
-    if (serviceId <= 0 || customerId <= 0 || stars < 1 || stars > 5) {
-      print('Thông tin không hợp lệ.');
+    if (appointmentId <= 0 ||
+        serviceId <= 0 ||
+        customerId <= 0 ||
+        stars < 1 ||
+        stars > 5) {
+      print('❌ Dữ liệu đầu vào không hợp lệ.');
       return null;
     }
 
-    // Tạo request
     try {
       final response = await http.post(
         url,
@@ -31,6 +37,7 @@ class RatingApi {
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode({
+          "appointmentId": appointmentId,
           "serviceId": serviceId,
           "customerId": customerId,
           "stars": stars,
@@ -38,18 +45,27 @@ class RatingApi {
         }),
       );
 
-      // Kiểm tra response từ server
-      if (response.statusCode == 200) {
+      print('📥 API response: ${response.statusCode} - ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        return RatingCreate.fromJson(responseBody['data']);
+
+        if (responseBody.containsKey('status') &&
+            responseBody['status'] == 0 &&
+            responseBody.containsKey('data')) {
+          return RatingCreate.fromJson(responseBody['data']);
+        } else {
+          print(
+              '⚠️ Server trả lỗi: ${responseBody['message'] ?? "Không rõ lý do"}');
+          return null;
+        }
       } else {
-        print('Lỗi khi gửi đánh giá: ${response.statusCode}');
-        print('Chi tiết lỗi: ${response.body}');
+        print('❌ HTTP Error: ${response.statusCode}');
+        print('❌ Response: ${response.body}');
         return null;
       }
     } catch (e) {
-      // Xử lý lỗi kết nối hoặc các lỗi không mong muốn
-      print('Đã xảy ra lỗi: $e');
+      print('❌ Lỗi exception: $e');
       return null;
     }
   }
