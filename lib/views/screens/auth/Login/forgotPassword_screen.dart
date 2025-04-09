@@ -47,7 +47,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         _isLoading = false;
       });
 
-      if (otp != null && context.mounted) {
+      if (otp != null && otp != "cancelled" && context.mounted) {
         Fluttertoast.showToast(
           msg: 'Xác thực OTP thành công!',
           toastLength: Toast.LENGTH_SHORT,
@@ -61,6 +61,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             builder: (context) => ResetPassword(email: email, otp: otp),
           ),
         );
+      } else if (otp == "cancelled") {
+        print("❌ Người dùng đã hủy xác thực OTP.");
       } else {
         // Xác thực thất bại hoặc bị hủy
         print("❌ OTP null hoặc không xác thực được");

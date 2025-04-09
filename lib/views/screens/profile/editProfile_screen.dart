@@ -28,6 +28,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String? selectedGender;
   bool isButtonEnabled = false;
   bool isLoading = false;
+  bool isAvatarLoading = false;
   File? _avatarFile;
   DateTime _selectedDate = DateTime.now();
 
@@ -48,18 +49,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         _dobController.text = userProfile['birthDate'] ?? '';
         _addressController.text = userProfile['address'] ?? '';
         selectedGender = userProfile['gender'];
+
+        // Cập nhật dữ liệu avatar
+        _userData = userProfile;
+        if (userProfile['avatar'] != null && userProfile['avatar'].isNotEmpty) {
+          // Kiểm tra URL hợp lệ
+          if (Uri.tryParse(userProfile['avatar'])?.hasAbsolutePath == true) {
+            _userData!['avatar'] = userProfile['avatar'];
+          } else {
+            print('URL avatar không hợp lệ.');
+            _userData!['avatar'] = null;
+          }
+        }
+
         // Kiểm tra và chuyển đổi ngày sinh
         String? birthDateStr = userProfile['birthDate'];
         if (birthDateStr != null && birthDateStr.isNotEmpty) {
           try {
             DateTime parsedDate = DateTime.parse(birthDateStr);
             _selectedDate = parsedDate;
-            _dobController.text = DateFormat('dd/MM/yyyy').format(parsedDate);
+            _dobController.text = DateFormat('yyyy/MM/dd').format(parsedDate);
           } catch (e) {
             print('Lỗi khi parse ngày sinh: $e');
-            _selectedDate = DateTime.now(); // Gán giá trị mặc định an toàn
-            _dobController.text = '';
+            _dobController.text = ''; // Hiển thị rỗng nếu xảy ra lỗi
           }
+        } else {
+          // Nếu birthDate không tồn tại, đặt giá trị mặc định
+          _selectedDate = DateTime.now();
+          _dobController.text = '';
         }
       });
     }
@@ -81,11 +98,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
+        isAvatarLoading = true;
         _avatarFile = File(pickedFile.path);
       });
 
       final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
       await authViewModel.uploadAvatar(context, _avatarFile!);
+
+      setState(() {
+        isAvatarLoading = false; // Kết thúc loading
+      });
 
       widget.onProfileUpdated(); // Gọi callback để reload ProfileScreen
       if (mounted) {
@@ -127,6 +149,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         : const AssetImage(
                                             'assets/images/noavatar.png'))
                                     as ImageProvider,
+                            child: isAvatarLoading
+                                ? const CircularProgressIndicator(
+                                    color: AppColors.softBlue)
+                                : null, // Hiển thị spinner nếu đang tải
                           ),
                         ),
                       ),
@@ -227,7 +253,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       child: Center(
                         child: isLoading
                             ? SizedBox(
-
                                 child: CircularProgressIndicator(
                                   color: Colors.white,
                                 ),

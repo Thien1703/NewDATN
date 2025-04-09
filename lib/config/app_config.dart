@@ -237,7 +237,7 @@ class AppConfig {
         do {
           otp = await showOtpDialog(context, errorMessage: errorMessage);
 
-          if (otp == null) return "Bạn đã hủy xác thực OTP.";
+          if (otp == null) return "cancelled";
           if (otp.isEmpty) {
             errorMessage = "Bạn chưa nhập OTP.";
             continue;
