@@ -88,7 +88,16 @@ class AuthViewModel with ChangeNotifier {
 
     if (!context.mounted) return null;
 
-    if (result != null) {
+    if (result == "cancelled") {
+      Fluttertoast.showToast(
+        msg: "Bạn đã hủy xác thực OTP.",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.orange,
+        textColor: Colors.white,
+      );
+      return null; // Hủy thì không trả về OTP
+    } else if (result != null) {
       Fluttertoast.showToast(
         msg: "Xác thực OTP thành công!",
         toastLength: Toast.LENGTH_SHORT,
@@ -96,18 +105,17 @@ class AuthViewModel with ChangeNotifier {
         backgroundColor: Colors.green,
         textColor: Colors.white,
       );
-      // ✅ Trả về OTP ở đây (ví dụ AppConfig.forgotPassword đã trả về nó)
-      return result; // giả sử result là OTP
+      return result; // OTP hợp lệ
     } else {
       Fluttertoast.showToast(
-        msg: 'Xác thực OTP thất bại',
+        msg: 'Xác thực OTP thất bại.',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
         textColor: Colors.white,
       );
+      return null;
     }
-    return null;
   }
 
   /// Đặt lại mật khẩu mới

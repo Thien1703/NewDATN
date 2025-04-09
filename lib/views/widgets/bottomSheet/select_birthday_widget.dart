@@ -23,7 +23,7 @@ class _SelectBirthdayWidgetState extends State<SelectBirthdayWidget> {
   @override
   void initState() {
     super.initState();
-    _selectedDate = widget.initialDate;
+    _selectedDate = widget.initialDate ?? DateTime.now();
   }
 
   void _openDatePicker() {
@@ -107,7 +107,7 @@ class _SelectBirthdayWidgetState extends State<SelectBirthdayWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              DateFormat('dd-MM-yyyy').format(_selectedDate),
+              DateFormat('yyyy-MM-dd').format(_selectedDate),
               style: const TextStyle(fontSize: 16),
             ),
             const Icon(Icons.calendar_today),

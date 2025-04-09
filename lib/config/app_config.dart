@@ -241,10 +241,15 @@ class AppConfig {
           ),
         );
 
-        if (otp == null) {
-          print("🛑 Người dùng đã thoát màn hình OTP.");
-          return null;
-        }
+        // if (otp == null) {
+        //   print("🛑 Người dùng đã thoát màn hình OTP.");
+        //   return null;
+        // }
+          if (otp == null) return "cancelled";
+          // if (otp.isEmpty) {
+          //   errorMessage = "Bạn chưa nhập OTP.";
+          //   continue;
+          // }
 
         return otp; // ✅ OTP hợp lệ
       } else {
