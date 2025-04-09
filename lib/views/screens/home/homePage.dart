@@ -135,11 +135,6 @@ class _HomePage extends State<HomePage> {
                                 color: const Color.fromARGB(255, 141, 141, 141),
                               ),
                             ),
-                            Icon(
-                              Icons.mic,
-                              color: AppColors.deepBlue,
-                              size: isCollapsed ? 25 : 15,
-                            )
                           ],
                         ),
                       ),

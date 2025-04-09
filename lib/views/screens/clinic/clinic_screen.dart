@@ -125,25 +125,25 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                   padding: EdgeInsets.all(15),
                                   child: Column(
                                     children: [
-                                      Align(
-                                        alignment: Alignment.topRight,
-                                        child: InkWell(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ClinicDetailScreen(
-                                                          clinicId: clinic.id)),
-                                            );
-                                          },
-                                          child: Icon(
-                                            Icons.info,
-                                            color: AppColors.deepBlue,
-                                            size: 30,
-                                          ),
-                                        ),
-                                      ),
+                                      // Align(
+                                      //   alignment: Alignment.topRight,
+                                      //   child: InkWell(
+                                      //     onTap: () {
+                                      //       Navigator.push(
+                                      //         context,
+                                      //         MaterialPageRoute(
+                                      //             builder: (context) =>
+                                      //                 ClinicDetailScreen(
+                                      //                     clinicId: clinic.id)),
+                                      //       );
+                                      //     },
+                                      //     child: Icon(
+                                      //       Icons.info,
+                                      //       color: AppColors.deepBlue,
+                                      //       size: 30,
+                                      //     ),
+                                      //   ),
+                                      // ),
                                       Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
