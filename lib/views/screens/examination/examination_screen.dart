@@ -3,6 +3,7 @@ import 'package:health_care/viewmodels/api/rating_api.dart';
 import 'package:health_care/views/screens/examination/paidDetail_screen.dart';
 import 'package:health_care/views/screens/examination/ratingStar/showEvaluate_screen.dart';
 import 'package:health_care/views/screens/examination/ratingStar/showServiceStar_screen.dart';
+import 'package:health_care/views/screens/examination/unPaidDetail_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
@@ -168,15 +169,23 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
   Widget _buildAppointmentCard(Appointment appointment) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PaidDetailScreen(
-              appointmentId: appointment.id,
-              status: appointment.status,
-            ),
-          ),
-        );
+        appointment.status == "CANCELLED"
+            ? Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UnpaiddetailScreen(
+                    appointmentId: appointment.id,
+                  ),
+                ))
+            : Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PaidDetailScreen(
+                    appointmentId: appointment.id,
+                    status: appointment.status,
+                  ),
+                ),
+              );
       },
       child: Card(
         elevation: 5,
@@ -262,7 +271,9 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                             onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ShowevaluateScreen(),
+                                  builder: (context) => ShowevaluateScreen(
+                                    appointmentId: appointment.id,
+                                  ),
                                 )),
                             child: Container(
                               padding: EdgeInsets.symmetric(
@@ -299,11 +310,11 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
       'CANCELLED': 'Đã hủy'
     };
     final textColor = {
-          'PENDING': Colors.green,
-          'CONFIRM': AppColors.deepBlue,
-          'ARRIVED': AppColors.softBlue,
-          'COMPLETED': AppColors.deepBlue,
-          'CANCELLED': Colors.red
+          'PENDING': Colors.blueAccent,
+          'CONFIRM': Colors.orangeAccent,
+          'ARRIVED': Colors.teal,
+          'COMPLETED': Colors.green,
+          'CANCELLED': Colors.redAccent
         }[status] ??
         Colors.black;
     return Container(
