@@ -4,16 +4,15 @@ import 'package:health_care/common/app_icons.dart';
 import 'package:health_care/config/app_config.dart';
 import 'package:intl/intl.dart';
 
-class WidgetUserprofileCard extends StatefulWidget {
+class WidgetCustomerinforCard extends StatefulWidget {
   final Function(int)? onTap;
-
-  const WidgetUserprofileCard({super.key, this.onTap});
+  const WidgetCustomerinforCard({super.key, this.onTap});
 
   @override
-  WidgetUserprofileCardState createState() => WidgetUserprofileCardState();
+  WidgetCustomerinforCardState createState() => WidgetCustomerinforCardState();
 }
 
-class WidgetUserprofileCardState extends State<WidgetUserprofileCard> {
+class WidgetCustomerinforCardState extends State<WidgetCustomerinforCard> {
   Map<String, dynamic>? userInfo;
   bool isLoading = true;
 
@@ -128,7 +127,7 @@ Widget _customRow({
         ),
         if (onEdit != null)
           IconButton(
-            icon: Icon(Icons.edit, size: 18, color: AppColors.deepBlue),
+            icon: Icon(Icons.add, size: 18, color: AppColors.deepBlue),
             onPressed: onEdit,
           ),
       ],

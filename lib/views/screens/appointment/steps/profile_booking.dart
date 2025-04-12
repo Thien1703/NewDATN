@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
+import 'package:health_care/viewmodels/profile_viewmodel.dart';
 import 'package:health_care/views/screens/profile/add_profile.dart';
-import 'package:health_care/views/screens/profile/editProfile_screen.dart';
-import 'package:health_care/views/widgets/widget_userProfile_card.dart';
+import 'package:health_care/views/screens/profile/widget_profile_card.dart';
+import 'package:health_care/views/widgets/widget_customerInfor_card.dart';
 
 class ProfileBooking extends StatefulWidget {
   final Function(
@@ -34,12 +35,32 @@ class ProfileBooking extends StatefulWidget {
 }
 
 class _ProfileBooking extends State<ProfileBooking> {
-  final GlobalKey<WidgetUserprofileCardState> _profileCardKey = GlobalKey();
+  final GlobalKey<WidgetCustomerinforCardState> _profileCardKey = GlobalKey();
+  late ProfileViewModel _profileViewModel;
+  List<Map<String, dynamic>> _profiles = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _profileViewModel = ProfileViewModel();
+    _fetchAllProfiles();
+  }
+
+  Future<void> _fetchAllProfiles() async {
+    final profiles = await _profileViewModel.getAllProfiles();
+    if (mounted) {
+      setState(() {
+        _profiles = profiles ?? [];
+        _isLoading = false;
+      });
+    }
+  }
 
   /// Hàm cập nhật thông tin user
-  void _fetchUserProfile() {
-    _profileCardKey.currentState?.fetchUserProfile();
-  }
+  // void _fetchUserProfile() {
+  //   _profileCardKey.currentState?.fetchUserProfile();
+  // }
 
   void _handleProfileTap(int customerId) {
     print("ID khách hàng: $customerId");
@@ -97,11 +118,11 @@ class _ProfileBooking extends State<ProfileBooking> {
                     );
                   },
                   icon: Icon(
-                    Icons.edit,
+                    Icons.add,
                     size: 18,
                     color: Colors.white,
                   ),
-                  label: Text("Chỉnh sửa"),
+                  label: Text("Thêm"),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.accent, // Màu nút
                     foregroundColor: Colors.white, // Màu chữ
@@ -113,11 +134,27 @@ class _ProfileBooking extends State<ProfileBooking> {
               ],
             ),
           ),
-          WidgetUserprofileCard(
+          WidgetCustomerinforCard(
             key: _profileCardKey, // ✅ Thêm key để truy cập state
             onTap: _handleProfileTap,
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
+          _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : ListView.separated(
+                  shrinkWrap: true,
+                  physics:
+                      NeverScrollableScrollPhysics(), // Dùng khi bọc trong ListView lớn hơn
+                  itemCount: _profiles.length,
+                  separatorBuilder: (context, index) => SizedBox(height: 10),
+                  itemBuilder: (context, index) {
+                    final profile = _profiles[index];
+                    return WidgetProfileCard(
+                      profile: profile,
+                      onTap: _handleProfileTap,
+                    );
+                  },
+                ),
         ],
       ),
     );

@@ -130,4 +130,33 @@ class ProfileConfig {
       return null;
     }
   }
+
+// Lấy hồ sơ theo ID
+  static Future<Map<String, dynamic>?> getProfileById(int id) async {
+    final url = Uri.parse('$baseUrl/profile/get-by-id');
+    final token = await LocalStorageService.getToken();
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({'id': id}),
+      );
+
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
+
+      if (response.statusCode == 200 && data['status'] == 0) {
+        return data['data']; // Trả về thông tin hồ sơ
+      } else {
+        print('⚠️ Lỗi khi lấy hồ sơ theo ID: ${data['message']}');
+        return null;
+      }
+    } catch (e) {
+      print('❌ Lỗi khi gọi API get-by-id: $e');
+      return null;
+    }
+  }
 }

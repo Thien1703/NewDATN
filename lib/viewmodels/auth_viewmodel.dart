@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:health_care/viewmodels/toast_helper.dart';
 import 'package:health_care/views/screens/auth/Login/login_screen.dart';
 import '../services/local_storage_service.dart';
 import '../views/screens/home/home_screens.dart';
@@ -16,13 +17,7 @@ class AuthViewModel with ChangeNotifier {
 
     if (errorMessage == null) {
       // Hiển thị thông báo thành công
-      Fluttertoast.showToast(
-        msg: "Đăng nhập thành công!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-      );
+      showToastSuccess("Đăng nhập thành công!");
       // Lấy token đã lưu
       String? token = await LocalStorageService.getToken();
       print("Token đã lưu sau khi đăng nhập: $token");
@@ -33,13 +28,7 @@ class AuthViewModel with ChangeNotifier {
         MaterialPageRoute(builder: (context) => const HomeScreens()),
       );
     } else {
-      Fluttertoast.showToast(
-        msg: errorMessage,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      showToastError(errorMessage);
     }
   }
 
@@ -59,26 +48,14 @@ class AuthViewModel with ChangeNotifier {
 
     if (errorMessage == null) {
       // Hiển thị thông báo OTP đã gửi
-      Fluttertoast.showToast(
-        msg: "Đăng ký tài khoản thành công!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-      );
+      showToastSuccess("Đăng ký tài khoản thành công!");
       // Chuyển sang màn hình Home
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomeScreens()),
       );
     } else {
-      Fluttertoast.showToast(
-        msg: errorMessage,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      showToastError(errorMessage);
     }
   }
 
@@ -98,22 +75,10 @@ class AuthViewModel with ChangeNotifier {
       );
       return null; // Hủy thì không trả về OTP
     } else if (result != null) {
-      Fluttertoast.showToast(
-        msg: "Xác thực OTP thành công!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-      );
+      showToastSuccess("Xác thực OTP thành công!");
       return result; // OTP hợp lệ
     } else {
-      Fluttertoast.showToast(
-        msg: 'Xác thực OTP thất bại.',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      showToastError("Xác thực OTP thất bại!");
       return null;
     }
   }
@@ -136,13 +101,7 @@ class AuthViewModel with ChangeNotifier {
     if (!context.mounted) return;
 
     if (result == null) {
-      Fluttertoast.showToast(
-        msg: "Đặt lại mật khẩu thành công!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-      );
+      showToastSuccess("Đặt lại mật khẩu thành công!");
 
       // Quay về màn hình đăng nhập
       Navigator.pushReplacement(
@@ -150,13 +109,7 @@ class AuthViewModel with ChangeNotifier {
         MaterialPageRoute(builder: (context) => const LoginScreen()),
       );
     } else {
-      Fluttertoast.showToast(
-        msg: result,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      showToastError(result);
     }
   }
 
@@ -176,13 +129,7 @@ class AuthViewModel with ChangeNotifier {
 
     // 🔹 Nếu vẫn không có userId, báo lỗi
     if (userId == null) {
-      Fluttertoast.showToast(
-        msg: "Lỗi: Không thể xác định ID người dùng.",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      showToastError("Không thể cập nhật hồ sơ! Vui lòng đăng nhập trước.");
       return false; // ❌ Cập nhật thất bại
     }
 
@@ -194,23 +141,11 @@ class AuthViewModel with ChangeNotifier {
     if (!context.mounted) return false;
 
     if (errorMessage == null) {
-      Fluttertoast.showToast(
-        msg: "Cập nhật hồ sơ thành công!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-      );
+      showToastSuccess("Cập nhật hồ sơ thành công!");
       Navigator.pop(context); // Quay lại màn hình trước đó
       return true; // ✅ Cập nhật thành công
     } else {
-      Fluttertoast.showToast(
-        msg: errorMessage,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      showToastError(errorMessage);
       return false; // ❌ Cập nhật thất bại
     }
   }
@@ -220,13 +155,7 @@ class AuthViewModel with ChangeNotifier {
     int? userId = await LocalStorageService.getUserId();
 
     if (userId == null) {
-      Fluttertoast.showToast(
-        msg: "Không tìm thấy ID người dùng, vui lòng đăng nhập lại.",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      showToastError("Không tìm thấy ID người dùng, vui lòng đăng nhập lại!");
       return;
     }
 
@@ -236,22 +165,10 @@ class AuthViewModel with ChangeNotifier {
     if (!context.mounted) return;
 
     if (result != null) {
-      Fluttertoast.showToast(
-        msg: "Cập nhật ảnh đại diện thành công!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-      );
+      showToastSuccess("Cập nhật ảnh đại diện thành công!");
       notifyListeners(); // Cập nhật giao diện
     } else {
-      Fluttertoast.showToast(
-        msg: "Upload ảnh thất bại!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      showToastError("Cập nhật ảnh đại diện thất bại. Vui lòng thử lại!");
     }
   }
 
@@ -263,13 +180,8 @@ class AuthViewModel with ChangeNotifier {
     int? customerId = await LocalStorageService.getUserId();
 
     if (token == null || customerId == null) {
-      Fluttertoast.showToast(
-        msg: "Lỗi: Không tìm thấy thông tin đăng nhập, vui lòng đăng nhập lại.",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      showToastError(
+          "Không tìm thấy thông tin đăng nhập, vui lòng đăng nhập lại!");
       return;
     }
 
@@ -280,22 +192,10 @@ class AuthViewModel with ChangeNotifier {
     if (!context.mounted) return;
 
     if (errorMessage == null) {
-      Fluttertoast.showToast(
-        msg: "Đổi mật khẩu thành công!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-      );
+      showToastSuccess("Đổi mật khẩu thành công!");
       Navigator.pop(context); // Quay lại màn hình trước đó
     } else {
-      Fluttertoast.showToast(
-        msg: errorMessage,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      showToastError(errorMessage);
     }
   }
 
@@ -309,13 +209,7 @@ class AuthViewModel with ChangeNotifier {
       print("Token đã bị xóa thành công!");
       await LocalStorageService.logOut(); // Xóa token
 
-      Fluttertoast.showToast(
-        msg: "Đăng xuất thành công!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-      );
+      showToastSuccess("Đăng xuất thành công!");
 
       // Chuyển về màn hình Splash
       Navigator.of(context).pushAndRemoveUntil(
@@ -323,13 +217,7 @@ class AuthViewModel with ChangeNotifier {
         (route) => false,
       );
     } else {
-      Fluttertoast.showToast(
-        msg: "Lỗi khi đăng xuất: $errorMessage",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      showToastError("Lỗi khi đăng xuất: $errorMessage");
     }
   }
 }

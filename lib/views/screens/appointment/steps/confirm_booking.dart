@@ -4,12 +4,14 @@ import 'package:health_care/models/clinic.dart';
 import 'package:health_care/models/service.dart';
 import 'package:health_care/viewmodels/api/clinic_api.dart';
 import 'package:health_care/viewmodels/api/service_api.dart';
+import 'package:health_care/viewmodels/profile_viewmodel.dart';
 import 'package:health_care/views/screens/appointment/steps/notiSucefully_screen.dart';
+import 'package:health_care/views/screens/profile/widget_profile_card.dart';
 import 'package:health_care/views/widgets/appointment/widget_hospital_info_card.dart';
 import 'package:health_care/views/widgets/appointment/widget_customPricePayment.dart';
 import 'package:health_care/views/widgets/appointment/widget_customButton.dart';
 import 'package:health_care/views/widgets/widget_lineBold.dart';
-import 'package:health_care/views/widgets/widget_userProfile_card.dart';
+import 'package:health_care/views/widgets/widget_customerInfor_card.dart';
 import 'package:health_care/models/appointment/appointment_Create.dart';
 import 'package:health_care/viewmodels/api/appointment_api.dart';
 import 'package:health_care/viewmodels/api/appointmentService_api.dart';
@@ -38,6 +40,7 @@ class ConfirmBooking extends StatefulWidget {
 }
 
 class _ConfirmBookingState extends State<ConfirmBooking> {
+  Map<String, dynamic>? selectedProfile;
   bool isLoading = false;
   Clinic? clinices;
   List<Service>? services;
@@ -47,6 +50,18 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     super.initState();
     fetchClinics();
     fetchServices();
+    _loadProfile();
+  }
+
+    Future<void> _loadProfile() async {
+    final profile =
+        await ProfileViewModel().getProfileById(widget.customerId);
+    if (mounted) {
+      setState(() {
+        selectedProfile = profile;
+        isLoading = false;
+      });
+    }
   }
 
   void fetchServices() async {
@@ -159,7 +174,8 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                         clinicId: widget.clinicId,
                       ),
                       const SectionTitle(title: 'Thông tin bệnh nhân'),
-                      const WidgetUserprofileCard(),
+                      const WidgetCustomerinforCard(),
+                      // const WidgetProfileCard(profile: selectedProfile);
                       const SectionTitle(title: 'Thông tin dịch vụ'),
                       Card(
                         child: Container(
