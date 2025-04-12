@@ -231,7 +231,7 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                                                   clinic.name)),
                                                 );
                                               },
-                                              child: Text('Đặt lịch ngay',
+                                              child: Text('Chat phòng khám',
                                                   style: TextStyle(
                                                       fontSize: 17,
                                                       fontWeight:
@@ -265,7 +265,7 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                                   ),
                                                 );
                                               },
-                                              child: Text('Đặt lịch ngay',
+                                              child: Text('Đặt lịch',
                                                   style: TextStyle(
                                                       fontSize: 17,
                                                       fontWeight:
