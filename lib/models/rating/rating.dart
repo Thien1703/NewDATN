@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Rating {
   final int id;
   final int appointmentId;
@@ -23,7 +25,9 @@ class Rating {
       appointmentId: json['appointmentId'],
       serviceId: json['serviceId'],
       stars: json['stars'],
-      comment: json['comment'],
+      comment: json['comment'] != null
+          ? utf8.decode(json['comment'].toString().runes.toList())
+          : null,
       customerName: json['customerName'],
       status: json['status'] == null ? null : json['status'] == "TRUE",
     );
