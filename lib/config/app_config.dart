@@ -82,7 +82,12 @@ class AppConfig {
         return data['message'] ?? "Lỗi không xác định từ server.";
       }
     } else if (response.statusCode == 409) {
-      return "Tài khoản đã tồn tại.";
+      if (data['status'] == 3001) {
+        return "Tài khoản email đã được đăng ký";
+      }
+      if (data['status'] == 3003) {
+        return "Số điện thoại đã được đăng ký";
+      }
     } else {
       return "Lỗi máy chủ: ${response.statusCode}";
     }
@@ -256,7 +261,15 @@ class AppConfig {
           ),
         );
 
+        // if (otp == null) {
+        //   print("🛑 Người dùng đã thoát màn hình OTP.");
+        //   return null;
+        // }
         if (otp == null) return "cancelled";
+        // if (otp.isEmpty) {
+        //   errorMessage = "Bạn chưa nhập OTP.";
+        //   continue;
+        // }
 
         return otp; // ✅ OTP hợp lệ
       } else {

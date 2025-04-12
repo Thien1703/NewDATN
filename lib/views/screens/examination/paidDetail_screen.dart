@@ -4,7 +4,6 @@ import 'package:health_care/models/appointment/appointment_service.dart';
 import 'package:health_care/viewmodels/api/appointmentService_api.dart';
 import 'package:health_care/viewmodels/api/appointment_api.dart';
 import 'package:health_care/views/screens/clinic/clinic_screen.dart';
-import 'package:health_care/views/screens/examination/ratingStar/star_screen.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
 import 'package:health_care/views/widgets/bottomSheet/header_bottomSheet.dart';
 import 'package:health_care/views/widgets/bottomSheet/showCustomer.dart';
@@ -223,9 +222,6 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
               'Ngày khám', formatDate(appointment.date), Colors.black),
           _buildInfoRow('Giờ khám dự kiến', appointment.time.substring(0, 5),
               Colors.green),
-          if (appointment.status == 'CANCELLED')
-            _buildInfoRow(
-                'Lý do', appointment.cancelNote ?? 'Không có', Colors.black)
         ],
       ),
     );
@@ -236,6 +232,8 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
     const statusMap = {
       'PENDING': 'Đã đặt lịch',
       'CONFIRM': 'Đã xác nhận',
+      'ARRIVED': 'Đã tới khám',
+      'COMPLETED': 'Đã khám',
       'CANCELLED': 'Đã hủy'
     };
     return statusMap[status] ?? status;
@@ -244,10 +242,11 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
 // Hàm lấy màu theo trạng thái
   Color getStatusColor(String status) {
     const statusColors = {
-      'PENDING': Colors.green,
-      'CONFIRM': AppColors.deepBlue,
-      'COMPLETED': AppColors.deepBlue,
-      'CANCELLED': Colors.red
+      'PENDING': Colors.blueAccent,
+      'CONFIRM': Colors.orangeAccent,
+      'ARRIVED': Colors.teal,
+      'COMPLETED': Colors.green,
+      'CANCELLED': Colors.redAccent
     };
     return statusColors[status] ?? Colors.black;
   }

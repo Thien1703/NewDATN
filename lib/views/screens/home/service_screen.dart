@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/viewmodels/api/service_api.dart';
+import 'package:health_care/views/screens/home/serviceDetail_screen.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/models/service.dart';
 import 'package:health_care/views/screens/clinic/clinic_screen.dart';
@@ -135,56 +136,68 @@ class _ServiceScreen extends State<ServiceScreen> {
                                   ),
                                   itemBuilder: (context, index) {
                                     final service = filteredServices![index];
-                                    return Card(
-                                      elevation: 3,
-                                      color: Colors.white,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.vertical(
-                                                top: Radius.circular(16)),
-                                            child: Image.network(
-                                              service.image,
-                                              height: 100,
-                                              width: double.infinity,
-                                              fit: BoxFit.cover,
-                                              errorBuilder: (_, __, ___) =>
-                                                  Container(
+                                    return InkWell(
+                                      onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ServicedetailScreen(
+                                                    serviceId: service.id),
+                                          )),
+                                      child: Card(
+                                        elevation: 3,
+                                        color: Colors.white,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                      top: Radius.circular(16)),
+                                              child: Image.network(
+                                                service.image,
                                                 height: 100,
                                                 width: double.infinity,
-                                                color: Colors.grey[300],
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons.broken_image,
-                                                    color: Colors.grey,
-                                                    size: 50,
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (_, __, ___) =>
+                                                    Container(
+                                                  height: 100,
+                                                  width: double.infinity,
+                                                  color: Colors.grey[300],
+                                                  child: Center(
+                                                    child: Icon(
+                                                      Icons.broken_image,
+                                                      color: Colors.grey,
+                                                      size: 50,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  service.name,
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.bold,
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    service.name,
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 2,
                                                   ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 2,
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     );
                                   },
