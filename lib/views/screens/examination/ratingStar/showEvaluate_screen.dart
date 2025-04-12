@@ -97,7 +97,7 @@ class _ShowevaluateScreen extends State<ShowevaluateScreen> {
                               child: Row(
                                 children: [
                                   Image.network(
-                                    service?.image ?? 'fsdfsdf',
+                                    service?.image ?? 'không thấy ảnh',
                                     width: 70,
                                   ),
                                   SizedBox(width: 10),
