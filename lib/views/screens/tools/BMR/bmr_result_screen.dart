@@ -6,7 +6,7 @@ class BmrResultScreen extends StatelessWidget {
   final double bmr;
   final Gender gender;
 
-  BmrResultScreen({required this.bmr, required this.gender});
+  const BmrResultScreen({super.key, required this.bmr, required this.gender});
 
   @override
   Widget build(BuildContext context) {

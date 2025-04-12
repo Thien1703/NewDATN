@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
+import 'package:health_care/views/screens/profile/add_profile.dart';
 import 'package:health_care/views/screens/profile/editProfile_screen.dart';
 import 'package:health_care/views/widgets/widget_userProfile_card.dart';
 
@@ -84,11 +85,14 @@ class _ProfileBooking extends State<ProfileBooking> {
                   onPressed: () {
                     Navigator.push(
                       context,
+                      // MaterialPageRoute(
+                      //   builder: (context) => EditProfileScreen(
+                      //     onProfileUpdated:
+                      //         _fetchUserProfile, // Gọi lại hàm này để cập nhật UI
+                      //   ),
+                      // ),
                       MaterialPageRoute(
-                        builder: (context) => EditProfileScreen(
-                          onProfileUpdated:
-                              _fetchUserProfile, // Gọi lại hàm này để cập nhật UI
-                        ),
+                        builder: (context) => AddProfile(),
                       ),
                     );
                   },

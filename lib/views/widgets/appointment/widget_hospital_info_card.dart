@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
-import 'package:health_care/config/app_config.dart';
 import 'package:health_care/models/clinic.dart';
 import 'package:health_care/viewmodels/api/clinic_api.dart';
 
@@ -25,7 +24,7 @@ class _HospitalInfoWidgetState extends State<HospitalInfoWidget> {
 
   void fetchClinics() async {
     Clinic? data = await ClinicApi.getClinicById(widget.clinicId);
-    if (data != null) {
+    if (data != null && mounted) {
       setState(() {
         clinices = data;
       });

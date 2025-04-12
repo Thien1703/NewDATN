@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/clinic.dart';
 import 'package:health_care/viewmodels/api/clinic_api.dart';
-import 'package:health_care/views/screens/clinic/clinic_detail_screen.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/views/screens/appointment/appointment_screen.dart';
 
@@ -120,7 +119,7 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 color: Colors.white,
-                                shadowColor: Colors.black.withOpacity(0.3),
+                                shadowColor: Colors.black,
                                 child: Padding(
                                   padding: EdgeInsets.all(15),
                                   child: Column(

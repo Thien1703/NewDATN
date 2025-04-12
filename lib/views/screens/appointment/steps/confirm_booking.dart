@@ -53,7 +53,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     List<Service>? fetchedServices =
         await ServiceApi.getServiceByIds(widget.selectedServiceIds);
 
-    if (fetchedServices != null) {
+    if (fetchedServices != null && mounted) {
       setState(() {
         services = fetchedServices;
       });
@@ -62,7 +62,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
 
   void fetchClinics() async {
     Clinic? data = await ClinicApi.getClinicById(widget.clinicId);
-    if (data != null) {
+    if (data != null && mounted) {
       setState(() {
         clinices = data;
       });
@@ -70,6 +70,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
   }
 
   Future<void> _bookAppointment() async {
+    if (!mounted) return;
     setState(() => isLoading = true);
 
     // Gửi yêu cầu tạo lịch hẹn
@@ -81,7 +82,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
       time: widget.time,
       status: "pending",
     );
-
+    if (!mounted) return;
     int? appointmentId = await AppointmentApi.createAppointment(newBooking);
 
     if (appointmentId == null) {
@@ -98,7 +99,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
       appointmentId,
       widget.selectedServiceIds,
     );
-
+    if (!mounted) return;
     setState(() => isLoading = false);
 
     if (serviceAdded) {
@@ -115,6 +116,12 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
             content: Text("❌ Thêm dịch vụ thất bại, vui lòng thử lại!")),
       );
     }
+  }
+
+  @override
+  void dispose() {
+    // Cancel any ongoing asynchronous operations if needed.
+    super.dispose();
   }
 
   String formatCurrency(int amount) {

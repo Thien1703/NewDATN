@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 
 class WidgetUserprofileCard extends StatefulWidget {
   final Function(int)? onTap;
-  // final Function(Function refreshProfile)? onEdit; // Gửi hàm để cập nhật dữ liệu sau khi chỉnh sửa
 
   const WidgetUserprofileCard({super.key, this.onTap});
 
@@ -100,24 +99,38 @@ class WidgetUserprofileCardState extends State<WidgetUserprofileCard> {
   }
 }
 
-Widget _customRow({required String image, required String titleOfImage}) {
+Widget _customRow({
+  required String image,
+  required String titleOfImage,
+  VoidCallback? onEdit,
+}) {
   return Container(
     margin: EdgeInsets.only(bottom: 5),
     child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Image.asset(
-          image,
-          color: AppColors.deepBlue,
-          width: 25,
+        Row(
+          children: [
+            Image.asset(
+              image,
+              color: AppColors.deepBlue,
+              width: 25,
+            ),
+            SizedBox(width: 10),
+            Text(
+              titleOfImage,
+              style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.deepBlue),
+            ),
+          ],
         ),
-        SizedBox(width: 10),
-        Text(
-          titleOfImage,
-          style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: AppColors.deepBlue),
-        ),
+        if (onEdit != null)
+          IconButton(
+            icon: Icon(Icons.edit, size: 18, color: AppColors.deepBlue),
+            onPressed: onEdit,
+          ),
       ],
     ),
   );

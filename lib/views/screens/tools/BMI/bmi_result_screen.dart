@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:health_care/views/screens/home/homePage.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
-import 'package:health_care/views/screens/tools/gender_enum.dart';
-import 'package:flutter/material.dart';
 import 'package:health_care/views/screens/tools/gender_enum.dart';
 
 class BmiResultScreen extends StatelessWidget {
@@ -11,11 +8,11 @@ class BmiResultScreen extends StatelessWidget {
   final Gender gender;
 
   const BmiResultScreen({
-    Key? key,
+    super.key,
     required this.bmi,
     required this.bfp,
     required this.gender,
-  }) : super(key: key);
+  });
 
   int getBmiCategoryIndex() {
     if (bmi < 18.5) return 0;
