@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/rating/rating.dart';
 import 'package:health_care/models/service.dart';
 import 'package:health_care/viewmodels/api/rating_api.dart';
@@ -56,45 +57,141 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                       margin: EdgeInsets.symmetric(horizontal: 15),
                       child: Container(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             SizedBox(height: 10),
-                            Image.network(
-                              services!.image,
-                              fit: BoxFit.cover,
-                            ),
-                            Text(
-                              'Chuyên khoa: ${services!.specialty.name}',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
+                            Container(
+                              height: 200,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black26, // màu bóng
+                                    blurRadius: 8, // độ mờ
+                                    offset: Offset(0, 4), // vị trí bóng (x, y)
+                                  ),
+                                ],
                               ),
-                            ),
-                            SizedBox(height: 3),
-                            Text(
-                              'Dịch vụ: ${services?.name ?? 'Không xác định'}',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(height: 3),
-                            Text(
-                              'Giá: ${services!.price.toString()}',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(height: 3),
-                            Text(
-                              'Mô tả: ${services!.description}',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
+                              child: ClipRRect(
+                                borderRadius:
+                                    BorderRadius.circular(12), // Góc bo
+                                child: Image.network(
+                                  services!.image,
+                                  fit: BoxFit.cover,
+                                  height: 200,
+                                  width: double.infinity,
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  },
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Icon(Icons.broken_image,
+                                        size: 100, color: Colors.grey);
+                                  },
+                                ),
                               ),
                             ),
                             SizedBox(height: 10),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: 'Chuyên khoa: ',
+                                    style: TextStyle(
+                                      color:
+                                          AppColors.deepBlue, // màu xanh dương
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: services!.specialty.name,
+                                    style: TextStyle(
+                                      color: Colors.black, // hoặc giữ mặc định
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: 'Dịch vụ: ',
+                                    style: TextStyle(
+                                      color:
+                                          AppColors.deepBlue, // màu xanh dương
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: services?.name ?? 'Không xác định',
+                                    style: TextStyle(
+                                      color: Colors
+                                          .black, // giữ màu đen hoặc chỉnh tùy thích
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: 'Giá: ',
+                                    style: TextStyle(
+                                      color:
+                                          AppColors.deepBlue, // màu xanh dương
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: services!.price.toString(),
+                                    style: TextStyle(
+                                      color: Colors.black, // màu chữ của giá
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: 'Mô tả: ',
+                                    style: TextStyle(
+                                      color:
+                                          AppColors.deepBlue, // màu xanh dương
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: services!.description,
+                                    style: TextStyle(
+                                      color: Colors.black, // màu chữ của giá
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 20),
                             Row(
                               children: [
                                 Text(services!.averageRating.toString()),
@@ -106,7 +203,7 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                 Text('Đánh giá dịch vụ'),
                               ],
                             ),
-                            SizedBox(height: 5),
+                            SizedBox(height: 15),
                             ListView.builder(
                               padding: EdgeInsets.zero,
                               shrinkWrap: true,
@@ -126,6 +223,7 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(rating.customerName),
+                                      SizedBox(height: 5),
                                       Row(
                                         children: List.generate(5, (index) {
                                           return Icon(
@@ -137,6 +235,7 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                           );
                                         }),
                                       ),
+                                      SizedBox(height: 5),
                                       Text(rating?.comment ?? 'Không xác định'),
                                     ],
                                   ),
