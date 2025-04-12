@@ -3,7 +3,6 @@ import 'package:scroll_date_picker/scroll_date_picker.dart';
 import 'package:intl/intl.dart';
 
 class SelectBirthdayWidget extends StatefulWidget {
-
   final DateTime initialDate;
   final Function(DateTime) onDateSelected;
 
@@ -66,9 +65,11 @@ class _SelectBirthdayWidgetState extends State<SelectBirthdayWidget> {
                     ),
                   ),
                   onDateTimeChanged: (DateTime value) {
-                    setState(() {
-                      _selectedDate = value;
-                    });
+                    if (value != null) {
+                      setState(() {
+                        _selectedDate = value;
+                      });
+                    }
                   },
                 ),
               ),
