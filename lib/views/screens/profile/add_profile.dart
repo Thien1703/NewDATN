@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
+import 'package:health_care/services/local_storage_service.dart';
+import 'package:health_care/viewmodels/profile_viewmodel.dart';
+import 'package:health_care/viewmodels/toast_helper.dart';
+import 'package:health_care/views/widgets/bottomSheet/select_birthday_widget.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
+import 'package:health_care/views/widgets/widget_selectGender.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class AddProfile extends StatefulWidget {
-  const AddProfile({super.key});
+  final VoidCallback? onProfileAdded;
+  const AddProfile({super.key, this.onProfileAdded});
 
   @override
   State<AddProfile> createState() => _AddProfileState();
@@ -29,15 +37,39 @@ class _AddProfileState extends State<AddProfile> {
     super.dispose();
   }
 
-  void _handleSubmit() {
+  void _handleSubmit() async {
     if (_formKey.currentState!.validate()) {
-      // TODO: Gọi API tạo hồ sơ tại đây
-      print('✅ Dữ liệu hợp lệ');
-      print('Họ tên: ${_fullNameController.text}');
-      print('SĐT: ${_phoneController.text}');
-      print('Ngày sinh: ${_birthDateController.text}');
-      print('Giới tính: $_selectedGender');
-      print('Địa chỉ: ${_addressController.text}');
+      final profileVM = Provider.of<ProfileViewModel>(context, listen: false);
+
+      setState(() {
+        isLoading = true;
+      });
+
+      int? customerId = await LocalStorageService.getUserId();
+      if (!mounted) return;
+      if (customerId == null) {
+        showToastError(
+            "Không tìm thấy thông tin người dùng. Vui lòng đăng nhập lại!");
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
+
+      await profileVM.createProfile(
+        context,
+        customerId: customerId,
+        fullName: _fullNameController.text.trim(),
+        phoneNumber: _phoneController.text.trim(),
+        birthDate: _birthDateController.text.trim(),
+        gender: _selectedGender ?? "Nam",
+        address: _addressController.text.trim(),
+      );
+      setState(() {
+        isLoading = false;
+      });
+      // ✅ Kiểm tra lại xem có tạo thành công không bằng cách check toast/flag (hoặc giả sử luôn thành công nếu không muốn xử lý thêm)
+      widget.onProfileAdded?.call(); // Gọi callback để cập nhật danh sách
     }
   }
 
@@ -73,41 +105,30 @@ class _AddProfileState extends State<AddProfile> {
                 ),
                 const SizedBox(height: 15),
                 _customTitle('Ngày sinh'),
-                _buildTextField(
-                  controller: _birthDateController,
-                  hint: 'YYYY-MM-DD',
-                  keyboardType: TextInputType.datetime,
-                  validator: (value) => value == null || value.trim().isEmpty
-                      ? 'Vui lòng nhập ngày sinh'
-                      : null,
+                SelectBirthdayWidget(
+                  initialDate: DateTime.now(),
+                  onDateSelected: (DateTime pickedDate) {
+                    setState(() {
+                      _birthDateController.text =
+                          DateFormat('yyyy-MM-dd').format(pickedDate);
+                    });
+                  },
                 ),
                 const SizedBox(height: 15),
                 _customTitle('Giới tính'),
-                DropdownButtonFormField<String>(
-                  value: _selectedGender,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 10),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    child: WidgetSelectGender(
+                      initialGender: _selectedGender,
+                      onChanged: (String gender) {
+                        setState(() {
+                          _selectedGender = gender;
+                        });
+                      },
                     ),
-                    filled: true,
-                    fillColor: Colors.white,
                   ),
-                  hint: const Text('Chọn giới tính'),
-                  items: ['Nam', 'Nữ'].map((gender) {
-                    return DropdownMenuItem(
-                      value: gender,
-                      child: Text(gender),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedGender = value;
-                    });
-                  },
-                  validator: (value) =>
-                      value == null ? 'Vui lòng chọn giới tính' : null,
                 ),
                 const SizedBox(height: 15),
                 _customTitle('Địa chỉ'),
@@ -132,8 +153,6 @@ class _AddProfileState extends State<AddProfile> {
                     ),
                     child: isLoading
                         ? SizedBox(
-                            height: 20,
-                            width: 20,
                             child: CircularProgressIndicator(
                               color: AppColors.ghostWhite,
                               // strokeWidth: 1,

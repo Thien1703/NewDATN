@@ -3,7 +3,7 @@ import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_icons.dart';
 import 'package:intl/intl.dart';
 
-class WidgetProfileCard extends StatelessWidget {
+class WidgetProfileCard extends StatefulWidget {
   final Map<String, dynamic> profile;
   final Function(int)? onTap;
 
@@ -13,6 +13,11 @@ class WidgetProfileCard extends StatelessWidget {
     this.onTap,
   });
 
+  @override
+  State<WidgetProfileCard> createState() => _WidgetProfileCardState();
+}
+
+class _WidgetProfileCardState extends State<WidgetProfileCard> {
   String formatBirthDate(String? birthDate) {
     if (birthDate == null || birthDate.isEmpty) return 'Chưa có ngày sinh';
     try {
@@ -27,10 +32,10 @@ class WidgetProfileCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (profile['id'] != null) {
-          int customerId = profile['id'];
-          if (onTap != null) {
-            onTap!(customerId);
+        if (widget.profile['id'] != null) {
+          int customerId = widget.profile['id'];
+          if (widget.onTap != null) {
+            widget.onTap!(customerId);
           }
         }
       },
@@ -46,19 +51,19 @@ class WidgetProfileCard extends StatelessWidget {
             children: [
               _customRow(
                 image: AppIcons.user1,
-                titleOfImage: profile['fullName'] ?? 'Chưa có tên',
+                titleOfImage: widget.profile['fullName'] ?? 'Chưa có tên',
               ),
               _customRow(
                 image: AppIcons.call,
-                titleOfImage: profile['phoneNumber'] ?? 'Chưa có SĐT',
+                titleOfImage: widget.profile['phoneNumber'] ?? 'Chưa có SĐT',
               ),
               _customRow(
                 image: AppIcons.calendar,
-                titleOfImage: formatBirthDate(profile['birthDate']),
+                titleOfImage: formatBirthDate(widget.profile['birthDate']),
               ),
               _customRow(
                 image: AppIcons.location,
-                titleOfImage: profile['address'] ?? 'Chưa có địa chỉ',
+                titleOfImage: widget.profile['address'] ?? 'Chưa có địa chỉ',
               ),
             ],
           ),

@@ -164,18 +164,12 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                   )
                 : ListView(
                     children: [
-                      // Text('Customer ID: ${widget.customerId}'),
-                      // Text("Clinic ID: ${widget.clinicId}"),
-                      // Text("Dịch vụ đã chọn: ${widget.selectedServiceIds}"),
-                      // Text("Ngày khám: ${widget.date}"),
-                      // Text("Giờ khám: ${widget.time}"),
-                      // Text("Thanh toán: ${widget.paymentId}"),
                       HospitalInfoWidget(
                         clinicId: widget.clinicId,
                       ),
                       const SectionTitle(title: 'Thông tin bệnh nhân'),
-                      const WidgetCustomerinforCard(),
-                      // const WidgetProfileCard(profile: selectedProfile);
+                       WidgetCustomerinforCard(),
+                       
                       const SectionTitle(title: 'Thông tin dịch vụ'),
                       Card(
                         child: Container(

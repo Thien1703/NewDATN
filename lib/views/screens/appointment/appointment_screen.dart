@@ -42,6 +42,7 @@ class _AppointmentScreen extends State<AppointmentScreen> {
         selectedServiceId: [],
         date: 'Chưa chọn ngày', // Giá trị mặc định
         time: 'Chưa chọn giờ', // Giá trị mặc định
+
       ),
       ConfirmBooking(
         onNavigateToScreen: navigateToScreen,

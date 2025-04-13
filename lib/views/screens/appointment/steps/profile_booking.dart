@@ -14,13 +14,13 @@ class ProfileBooking extends StatefulWidget {
     int? customerId,
     String? date, // ✅ Thêm ngày khám
     String? time, // ✅ Thêm giờ khám
+    // Map<String, dynamic>? selectedProfile,
   }) onNavigateToScreen;
 
   final int clinicId;
   final List<int> selectedServiceId;
   final String date; // Thêm ngày khám
   final String time; // Thêm giờ khám
-
   const ProfileBooking({
     super.key,
     required this.onNavigateToScreen,
@@ -63,6 +63,15 @@ class _ProfileBooking extends State<ProfileBooking> {
   // }
 
   void _handleProfileTap(int customerId) {
+    // final selectedProfile = _profiles.firstWhere(
+    //   (profile) => profile['id'] == customerId,
+    //   orElse: () => {},
+    // );
+
+    // if (selectedProfile.isEmpty) {
+    //   print("Không tìm thấy hồ sơ!");
+    //   return;
+    // }
     print("ID khách hàng: $customerId");
     print(
         "Dữ liệu nhận từ ExamInfoBooking: Clinic ID: ${widget.clinicId}, Dịch vụ: ${widget.selectedServiceId}");
@@ -74,6 +83,7 @@ class _ProfileBooking extends State<ProfileBooking> {
       serviceIds: widget.selectedServiceId,
       date: widget.date,
       time: widget.time,
+      // selectedProfile: selectedProfile,
     );
   }
 
@@ -83,13 +93,6 @@ class _ProfileBooking extends State<ProfileBooking> {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       child: ListView(
         children: [
-          // Text("Clinic ID: ${widget.clinicId}"),
-          // Text("Danh sách dịch vụ đã chọn:${widget.selectedServiceId}"),
-          // Text("Ngày khám: ${widget.date}"), // Hiển thị ngày khám
-          // Text("Giờ khám: ${widget.time}"), // Hiển thị giờ khám
-          // Text("Thanh toán: ${widget.paymentId}"),
-          /// Tiêu đề và nút chỉnh sửa
-          /// Tiêu đề và nút chỉnh sửa
           Padding(
             padding: const EdgeInsets.all(10), // Padding giống với Card
             child: Row(
@@ -113,7 +116,10 @@ class _ProfileBooking extends State<ProfileBooking> {
                       //   ),
                       // ),
                       MaterialPageRoute(
-                        builder: (context) => AddProfile(),
+                        builder: (context) => AddProfile(
+                          onProfileAdded:
+                              _fetchAllProfiles, // Gọi lại để load danh sách mới
+                        ),
                       ),
                     );
                   },
@@ -151,7 +157,7 @@ class _ProfileBooking extends State<ProfileBooking> {
                     final profile = _profiles[index];
                     return WidgetProfileCard(
                       profile: profile,
-                      onTap: _handleProfileTap,
+                      // onTap: {}
                     );
                   },
                 ),
