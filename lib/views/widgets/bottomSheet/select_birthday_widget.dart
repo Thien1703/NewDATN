@@ -108,7 +108,7 @@ class _SelectBirthdayWidgetState extends State<SelectBirthdayWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              DateFormat('yyyy-MM-dd').format(_selectedDate),
+              DateFormat('dd-MM-yyyy').format(_selectedDate),
               style: const TextStyle(fontSize: 16),
             ),
             const Icon(Icons.calendar_today),
