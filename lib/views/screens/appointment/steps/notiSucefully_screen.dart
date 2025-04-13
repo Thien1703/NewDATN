@@ -7,6 +7,7 @@ import 'package:health_care/views/widgets/bottomSheet/showCustomer.dart';
 import 'package:health_care/views/widgets/widget_lineBold.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:scroll_date_picker/scroll_date_picker.dart';
 
 class NotiSucefully extends StatefulWidget {
   const NotiSucefully({super.key, required this.appointmentId});
@@ -31,6 +32,11 @@ class _NotiSucefullyState extends State<NotiSucefully> {
     setState(() {
       appointmentServices = services;
     });
+  }
+
+  String formatCurrency(int amount) {
+    final formatter = NumberFormat("#,###", "vi_VN");
+    return "${formatter.format(amount)}VNĐ";
   }
 
   @override
@@ -188,96 +194,125 @@ class _NotiSucefullyState extends State<NotiSucefully> {
                                 ),
                                 const WidgetLineBold(),
                                 Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Image.network(
-                                                appointment.clinic.image,
-                                                width: 80,
-                                                height: 60,
-                                                fit: BoxFit.cover,
-                                              ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Image.network(
+                                              appointment.clinic.image,
+                                              width: 80,
+                                              height: 60,
+                                              fit: BoxFit.cover,
                                             ),
-                                            const SizedBox(width: 20),
-                                            Expanded(
-                                              child: Text(
-                                                appointment.clinic.name,
-                                                softWrap: true,
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        _buildRow(
-                                          'Ngày khám',
-                                          '${appointment.date.split("-")[2]}-${appointment.date.split("-")[1]}-${appointment.date.split("-")[0]}',
-                                        ),
-                                        _buildRow('Giờ khám',
-                                            appointment.time.substring(0, 5)),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              top: 20, bottom: 10),
-                                          child: Text(
-                                            'THÔNG TIN BỆNH NHÂN',
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400),
                                           ),
-                                        ),
-                                        _buildRow('Họ và tên',
-                                            appointment.customer.fullName),
-                                        _buildRow(
-                                          'Ngày sinh',
-                                          (appointment.customer.birthDate !=
-                                                      null &&
-                                                  appointment.customer.birthDate
-                                                      .isNotEmpty)
-                                              ? DateFormat('dd/MM/yyyy').format(
-                                                  DateTime.tryParse(appointment
-                                                          .customer
-                                                          .birthDate) ??
-                                                      DateTime(1970, 1, 1))
-                                              : 'Chưa cập nhật',
-                                        ),
-                                        _buildRow('Giới tính',
-                                            appointment.customer.gender),
-                                        _buildRow('Số điện thoại',
-                                            appointment.customer.phoneNumber),
-                                        SizedBox(height: 10),
-                                        Align(
-                                          alignment: Alignment.center,
-                                          child: InkWell(
-                                            onTap: () {
-                                              showModalBottomSheet(
-                                                context: context,
-                                                builder: (context) =>
-                                                    Showcustomer(),
-                                              );
-                                            },
+                                          const SizedBox(width: 20),
+                                          Expanded(
                                             child: Text(
-                                              'Xem chi tiết',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: AppColors.deepBlue,
+                                              appointment.clinic.name,
+                                              softWrap: true,
+                                              style: const TextStyle(
+                                                fontSize: 16,
                                                 fontWeight: FontWeight.w500,
                                               ),
                                             ),
                                           ),
+                                        ],
+                                      ),
+                                      _buildRow(
+                                        'Ngày khám',
+                                        '${appointment.date.split("-")[2]}-${appointment.date.split("-")[1]}-${appointment.date.split("-")[0]}',
+                                      ),
+                                      _buildRow('Giờ khám',
+                                          appointment.time.substring(0, 5)),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 20, bottom: 10),
+                                        child: Text(
+                                          'THÔNG TIN BỆNH NHÂN',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400),
                                         ),
-                                      ],
-                                    )),
+                                      ),
+                                      _buildRow('Họ và tên',
+                                          appointment.customer.fullName),
+                                      _buildRow(
+                                        'Ngày sinh',
+                                        (appointment.customer.birthDate !=
+                                                    null &&
+                                                appointment.customer.birthDate
+                                                    .isNotEmpty)
+                                            ? DateFormat('dd/MM/yyyy').format(
+                                                DateTime.tryParse(appointment
+                                                        .customer.birthDate) ??
+                                                    DateTime(1970, 1, 1))
+                                            : 'Chưa cập nhật',
+                                      ),
+                                      _buildRow('Giới tính',
+                                          appointment.customer.gender),
+                                      _buildRow('Số điện thoại',
+                                          appointment.customer.phoneNumber),
+                                      SizedBox(height: 10),
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: InkWell(
+                                          onTap: () {
+                                            showModalBottomSheet(
+                                              context: context,
+                                              builder: (context) =>
+                                                  Showcustomer(),
+                                            );
+                                          },
+                                          child: Text(
+                                            'Xem chi tiết',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: AppColors.deepBlue,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Container(
+                            padding: EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: appointmentServices!.length,
+                              itemBuilder: (context, index) {
+                                final appServices = appointmentServices![index];
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildRow(
+                                        'Dịch vụ', appServices!.service!.name),
+                                    _buildRow(
+                                        'Giá',
+                                        formatCurrency(appServices!
+                                                .service!.price
+                                                .toInt() ??
+                                            0))
+                                  ],
+                                );
+                              },
                             ),
                           ),
                           Padding(
@@ -312,7 +347,7 @@ class _NotiSucefullyState extends State<NotiSucefully> {
                           ),
                           _buildtitleRow(
                               icon: Icons.event_note_outlined,
-                              title: 'Quy trình hủy lịch/hoàn tiền',
+                              title: 'Quy trình hủy lịch',
                               onTap: () {}),
                           SizedBox(height: 20),
                         ],
