@@ -88,13 +88,13 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30),
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
                           ),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.1),
-                              offset: Offset(0, 4),
+                              offset: Offset(0, 2),
                               blurRadius: 10,
                               spreadRadius: 1,
                             )

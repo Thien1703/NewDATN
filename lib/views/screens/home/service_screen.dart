@@ -184,7 +184,7 @@ class _ServiceScreen extends State<ServiceScreen> {
                                       crossAxisCount: 2,
                                       crossAxisSpacing: 15,
                                       mainAxisSpacing: 15,
-                                      childAspectRatio: 0.9,
+                                      childAspectRatio: 0.85,
                                     ),
                                     itemBuilder: (context, index) {
                                       final service = filteredServices![index];
@@ -210,12 +210,12 @@ class _ServiceScreen extends State<ServiceScreen> {
                                                             16)),
                                                 child: Image.network(
                                                   service.image,
-                                                  height: 110,
+                                                  height: 120,
                                                   width: double.infinity,
                                                   fit: BoxFit.cover,
                                                   errorBuilder: (_, __, ___) =>
                                                       Container(
-                                                    height: 110,
+                                                    height: 120,
                                                     width: double.infinity,
                                                     color: Colors.grey[300],
                                                     child: Center(
