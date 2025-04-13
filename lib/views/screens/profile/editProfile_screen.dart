@@ -68,7 +68,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           try {
             DateTime parsedDate = DateTime.parse(birthDateStr);
             _selectedDate = parsedDate;
-            _dobController.text = DateFormat('yyyy/MM/dd').format(parsedDate);
+            _dobController.text = DateFormat('dd/MM/yyyy').format(parsedDate);
           } catch (e) {
             print('Lỗi khi parse ngày sinh: $e');
             _dobController.text = ''; // Hiển thị rỗng nếu xảy ra lỗi

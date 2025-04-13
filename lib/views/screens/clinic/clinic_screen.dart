@@ -120,7 +120,7 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 color: Colors.white,
-                                shadowColor: Colors.black.withOpacity(0.3),
+                                shadowColor: Colors.black,
                                 child: Padding(
                                   padding: EdgeInsets.all(15),
                                   child: Column(
