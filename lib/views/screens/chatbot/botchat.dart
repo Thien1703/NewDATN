@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ChatBotScreen extends StatefulWidget {
+  const ChatBotScreen({super.key});
+
   @override
   _ChatBotScreenState createState() => _ChatBotScreenState();
 }
@@ -173,7 +175,7 @@ class ChatMessage extends StatelessWidget {
   final String text;
   final bool isUser;
 
-  const ChatMessage({required this.text, required this.isUser});
+  const ChatMessage({super.key, required this.text, required this.isUser});
 
   @override
   Widget build(BuildContext context) {

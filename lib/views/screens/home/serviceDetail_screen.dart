@@ -48,7 +48,7 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
       iconBack: true,
       title: services?.name ?? 'Không xác định',
       body: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           width: double.infinity,
           child: isLoading
               ? Center(child: CircularProgressIndicator())
@@ -236,7 +236,7 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                         }),
                                       ),
                                       SizedBox(height: 5),
-                                      Text(rating?.comment ?? 'Không xác định'),
+                                      Text(rating.comment ?? 'Không xác định'),
                                     ],
                                   ),
                                 );

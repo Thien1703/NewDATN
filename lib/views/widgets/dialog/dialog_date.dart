@@ -12,6 +12,8 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,6 +24,8 @@ class MyApp extends StatelessWidget {
 }
 
 class BookingScreen extends StatefulWidget {
+  const BookingScreen({super.key});
+
   @override
   _BookingScreenState createState() => _BookingScreenState();
 }
@@ -251,8 +255,8 @@ class _BookingScreenState extends State<BookingScreen> {
       body: Center(
         child: ElevatedButton(
           onPressed: () => _showBottomSheet(context),
-          child: Text('Chọn ngày'),
           style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+          child: Text('Chọn ngày'),
         ),
       ),
     );

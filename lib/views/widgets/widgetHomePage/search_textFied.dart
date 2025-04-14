@@ -3,8 +3,8 @@ import 'package:health_care/common/app_colors.dart';
 
 class SearchTextField extends StatelessWidget {
   const SearchTextField({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
