@@ -65,11 +65,9 @@ class _SelectBirthdayWidgetState extends State<SelectBirthdayWidget> {
                     ),
                   ),
                   onDateTimeChanged: (DateTime value) {
-                    if (value != null) {
-                      setState(() {
-                        _selectedDate = value;
-                      });
-                    }
+                    setState(() {
+                      _selectedDate = value;
+                    });
                   },
                 ),
               ),
@@ -108,7 +106,7 @@ class _SelectBirthdayWidgetState extends State<SelectBirthdayWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              DateFormat('yyyy-MM-dd').format(_selectedDate),
+              DateFormat('dd-MM-yyyy').format(_selectedDate),
               style: const TextStyle(fontSize: 16),
             ),
             const Icon(Icons.calendar_today),

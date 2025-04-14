@@ -4,12 +4,13 @@ import 'package:health_care/models/clinic.dart';
 import 'package:health_care/models/service.dart';
 import 'package:health_care/viewmodels/api/clinic_api.dart';
 import 'package:health_care/viewmodels/api/service_api.dart';
+import 'package:health_care/viewmodels/profile_viewmodel.dart';
 import 'package:health_care/views/screens/appointment/steps/notiSucefully_screen.dart';
 import 'package:health_care/views/widgets/appointment/widget_hospital_info_card.dart';
 import 'package:health_care/views/widgets/appointment/widget_customPricePayment.dart';
 import 'package:health_care/views/widgets/appointment/widget_customButton.dart';
 import 'package:health_care/views/widgets/widget_lineBold.dart';
-import 'package:health_care/views/widgets/widget_userProfile_card.dart';
+import 'package:health_care/views/widgets/widget_customerInfor_card.dart';
 import 'package:health_care/models/appointment/appointment_Create.dart';
 import 'package:health_care/viewmodels/api/appointment_api.dart';
 import 'package:health_care/viewmodels/api/appointmentService_api.dart';
@@ -38,6 +39,7 @@ class ConfirmBooking extends StatefulWidget {
 }
 
 class _ConfirmBookingState extends State<ConfirmBooking> {
+  Map<String, dynamic>? selectedProfile;
   bool isLoading = false;
   Clinic? clinices;
   List<Service>? services;
@@ -47,13 +49,24 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     super.initState();
     fetchClinics();
     fetchServices();
+    _loadProfile();
+  }
+
+  Future<void> _loadProfile() async {
+    final profile = await ProfileViewModel().getProfileById(widget.customerId);
+    if (mounted) {
+      setState(() {
+        selectedProfile = profile;
+        isLoading = false;
+      });
+    }
   }
 
   void fetchServices() async {
     List<Service>? fetchedServices =
         await ServiceApi.getServiceByIds(widget.selectedServiceIds);
 
-    if (fetchedServices != null) {
+    if (fetchedServices != null && mounted) {
       setState(() {
         services = fetchedServices;
       });
@@ -62,7 +75,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
 
   void fetchClinics() async {
     Clinic? data = await ClinicApi.getClinicById(widget.clinicId);
-    if (data != null) {
+    if (data != null && mounted) {
       setState(() {
         clinices = data;
       });
@@ -70,6 +83,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
   }
 
   Future<void> _bookAppointment() async {
+    if (!mounted) return;
     setState(() => isLoading = true);
 
     // Gửi yêu cầu tạo lịch hẹn
@@ -81,7 +95,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
       time: widget.time,
       status: "pending",
     );
-
+    if (!mounted) return;
     int? appointmentId = await AppointmentApi.createAppointment(newBooking);
 
     if (appointmentId == null) {
@@ -98,7 +112,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
       appointmentId,
       widget.selectedServiceIds,
     );
-
+    if (!mounted) return;
     setState(() => isLoading = false);
 
     if (serviceAdded) {
@@ -115,6 +129,12 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
             content: Text("❌ Thêm dịch vụ thất bại, vui lòng thử lại!")),
       );
     }
+  }
+
+  @override
+  void dispose() {
+    // Cancel any ongoing asynchronous operations if needed.
+    super.dispose();
   }
 
   String formatCurrency(int amount) {
@@ -142,17 +162,11 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                   )
                 : ListView(
                     children: [
-                      // Text('Customer ID: ${widget.customerId}'),
-                      // Text("Clinic ID: ${widget.clinicId}"),
-                      // Text("Dịch vụ đã chọn: ${widget.selectedServiceIds}"),
-                      // Text("Ngày khám: ${widget.date}"),
-                      // Text("Giờ khám: ${widget.time}"),
-                      // Text("Thanh toán: ${widget.paymentId}"),
                       HospitalInfoWidget(
                         clinicId: widget.clinicId,
                       ),
                       const SectionTitle(title: 'Thông tin bệnh nhân'),
-                      const WidgetUserprofileCard(),
+                      WidgetCustomerinforCard(),
                       const SectionTitle(title: 'Thông tin dịch vụ'),
                       Card(
                         child: Container(

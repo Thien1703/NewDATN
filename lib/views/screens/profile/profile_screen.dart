@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/config/app_config.dart';
 import 'package:health_care/views/screens/profile/inforProfile_screen.dart';
-import 'package:health_care/views/screens/profile/qr_customer.dart';
 import 'package:health_care/views/widgets/bottomSheet/logOut_bottomSheet.dart';
 
 class ProfileScreen extends StatefulWidget {

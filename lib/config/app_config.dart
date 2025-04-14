@@ -75,31 +75,9 @@ class AppConfig {
 
     if (response.statusCode == 200) {
       if (data['status'] == 0) {
-        String? otp;
-        String? verifyResult;
-        String? errorMessage;
-
-        do {
-          otp = await showOtpDialog(context, errorMessage: errorMessage);
-
-          if (otp == null) {
-            return "Bạn đã hủy xác thực OTP.";
-          }
-
-          if (otp.isEmpty) {
-            errorMessage = "Bạn chưa nhập OTP.";
-            continue;
-          }
-
-          verifyResult =
-              await verifyOtp(fullName, phoneNumber, email, password, otp);
-
-          if (verifyResult != null) {
-            errorMessage = "Bạn nhập sai OTP. Vui lòng nhập đúng.";
-          }
-        } while (verifyResult != null);
-
-        return null; // ✅ Thành công
+        if (!context.mounted) return "Đã xảy ra lỗi khi xác thực.";
+        return await _handleOtpVerification(
+            context, fullName, phoneNumber, email, password);
       } else {
         return data['message'] ?? "Lỗi không xác định từ server.";
       }
@@ -113,6 +91,42 @@ class AppConfig {
     } else {
       return "Lỗi máy chủ: ${response.statusCode}";
     }
+    return null;
+  }
+
+  static Future<String?> _handleOtpVerification(
+    BuildContext context,
+    String fullName,
+    String phoneNumber,
+    String email,
+    String password,
+  ) async {
+    String? otp;
+    String? verifyResult;
+    String? errorMessage;
+
+    do {
+      if (!context.mounted) return "Đã xảy ra lỗi khi xác thực.";
+      otp = await showOtpDialog(context, errorMessage: errorMessage);
+
+      if (otp == null) {
+        return "Bạn đã hủy xác thực OTP.";
+      }
+
+      if (otp.isEmpty) {
+        errorMessage = "Bạn chưa nhập OTP.";
+        continue;
+      }
+
+      verifyResult =
+          await verifyOtp(fullName, phoneNumber, email, password, otp);
+
+      if (verifyResult != null) {
+        errorMessage = "Bạn nhập sai OTP. Vui lòng nhập đúng.";
+      }
+    } while (verifyResult != null);
+
+    return null; // ✅ Thành công
   }
 
   static Future<String?> verifyOtp(String fullName, String phoneNumber,
@@ -158,6 +172,7 @@ class AppConfig {
     String otp = "";
     String? localError = errorMessage;
 
+    if (!context.mounted) return null;
     return await showDialog<String>(
       context: context,
       barrierDismissible: false,
@@ -234,6 +249,7 @@ class AppConfig {
       if (response.statusCode == 200 && data['status'] == 0) {
         print("✅Gửi OTP tới cho email: $email");
 
+        if (!context.mounted) return "Đã xảy ra lỗi khi xác thực.";
         final otp = await Navigator.push<String>(
           context,
           MaterialPageRoute(
@@ -246,15 +262,7 @@ class AppConfig {
           ),
         );
 
-        // if (otp == null) {
-        //   print("🛑 Người dùng đã thoát màn hình OTP.");
-        //   return null;
-        // }
         if (otp == null) return "cancelled";
-        // if (otp.isEmpty) {
-        //   errorMessage = "Bạn chưa nhập OTP.";
-        //   continue;
-        // }
 
         return otp; // ✅ OTP hợp lệ
       } else {
@@ -281,7 +289,7 @@ class AppConfig {
       );
 
       final data = jsonDecode(utf8.decode(response.bodyBytes));
-      print("📥 Response: ${response.statusCode} - ${data}");
+      print("📥 Response: ${response.statusCode} - $data");
 
       if (response.statusCode == 200 && data['status'] == 0) {
         print("✅ OTP xác thực thành công cho $email");

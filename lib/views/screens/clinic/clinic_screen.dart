@@ -3,7 +3,6 @@ import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/clinic.dart';
 import 'package:health_care/viewmodels/api/clinic_api.dart';
 import 'package:health_care/views/screens/chat/chat_screen.dart';
-import 'package:health_care/views/screens/clinic/clinic_detail_screen.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/views/screens/appointment/appointment_screen.dart';
 
@@ -110,7 +109,7 @@ class _ClinicScreenState extends State<ClinicScreen> {
                         ? ListView.builder(
                             padding: EdgeInsets.only(top: 10),
                             shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),  
+                            physics: NeverScrollableScrollPhysics(),
                             itemCount: filteredClinics!.length,
                             itemBuilder: (context, index) {
                               final clinic = filteredClinics![index];
@@ -121,7 +120,7 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 color: Colors.white,
-                                shadowColor: Colors.black.withOpacity(0.3),
+                                shadowColor: Colors.black,
                                 child: Padding(
                                   padding: EdgeInsets.all(15),
                                   child: Column(
@@ -201,7 +200,7 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                       SizedBox(height: 10),
                                       Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Align(
                                             alignment: Alignment.topRight,
@@ -217,7 +216,7 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                                       width: 1),
                                                 ),
                                                 padding: EdgeInsets.symmetric(
-                                                    horizontal: 30,
+                                                    horizontal: 20,
                                                     vertical: 10),
                                               ),
                                               onPressed: () {
@@ -232,7 +231,7 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                                                   clinic.name)),
                                                 );
                                               },
-                                              child: Text('Đặt lịch ngay',
+                                              child: Text('Chat phòng khám',
                                                   style: TextStyle(
                                                       fontSize: 17,
                                                       fontWeight:
@@ -266,7 +265,7 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                                   ),
                                                 );
                                               },
-                                              child: Text('Đặt lịch ngay',
+                                              child: Text('Đặt lịch',
                                                   style: TextStyle(
                                                       fontSize: 17,
                                                       fontWeight:

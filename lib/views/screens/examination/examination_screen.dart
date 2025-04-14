@@ -66,7 +66,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
   List<Appointment> get filteredAppointments => _selectedStatus == 'Tất cả'
       ? appointments ?? []
       : (appointments ?? [])
-          .where((item) => item.status?.toUpperCase() == _selectedStatus)
+          .where((item) => item.status.toUpperCase() == _selectedStatus)
           .toList();
   bool _shouldShowRating(Appointment appointment) {
     if (appointment.status != "COMPLETED") return false;

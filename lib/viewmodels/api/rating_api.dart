@@ -117,4 +117,50 @@ class RatingApi {
       return null;
     }
   }
+
+  static Future<List<Rating>?> getRatingByService(int serviceId) async {
+    final url = Uri.parse('${AppConfig.baseUrl}/rating/get-by-service');
+
+    String? token = await LocalStorageService.getToken();
+    if (token == null) {
+      print('❌ Token không hợp lệ.');
+      return null;
+    }
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          "serviceId": serviceId,
+        }),
+      );
+
+      print('📥 API response: ${response.statusCode} - ${response.body}');
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+
+        if (responseBody['status'] == 0 && responseBody['data'] is List) {
+          List<dynamic> data = responseBody['data'];
+          List<Rating> ratings =
+              data.map((item) => Rating.fromJson(item)).toList();
+          return ratings;
+        } else {
+          print('⚠️ Dữ liệu không đúng định dạng hoặc status khác 0');
+          return null;
+        }
+      } else {
+        print('❌ HTTP Error: ${response.statusCode}');
+        print('❌ Response: ${response.body}');
+        return null;
+      }
+    } catch (e) {
+      print('❌ Lỗi exception: $e');
+      return null;
+    }
+  }
 }

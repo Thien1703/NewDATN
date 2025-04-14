@@ -5,6 +5,8 @@ import 'package:health_care/views/screens/tools/BMR/bmr_result_screen.dart';
 import '../gender_enum.dart';
 
 class MeasurebmrScreen extends StatefulWidget {
+  const MeasurebmrScreen({super.key});
+
   @override
   _MeasurebmrScreenState createState() => _MeasurebmrScreenState();
 }
@@ -111,8 +113,6 @@ class _MeasurebmrScreenState extends State<MeasurebmrScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: isFormValid ? _showResult : null,
-                  child: Text('Xem kết quả',
-                      style: TextStyle(fontSize: 16, color: Colors.white)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isFormValid
                         ? AppColors.deepBlue
@@ -121,6 +121,8 @@ class _MeasurebmrScreenState extends State<MeasurebmrScreen> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30)),
                   ),
+                  child: Text('Xem kết quả',
+                      style: TextStyle(fontSize: 16, color: Colors.white)),
                 ),
               ),
             ],

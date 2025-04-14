@@ -9,10 +9,10 @@ class WidgetSelectProvince extends StatefulWidget {
   final ValueChanged<Province> onChanged;
 
   const WidgetSelectProvince({
-    Key? key,
+    super.key,
     this.initialProvince,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   _WidgetSelectProvinceState createState() => _WidgetSelectProvinceState();
