@@ -116,7 +116,7 @@ class _HomePage extends State<HomePage> {
                           )),
                       child: Container(
                         width: double.infinity,
-                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        margin: EdgeInsets.only(left: 10, right: 10, bottom: 3),
                         padding:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
@@ -150,8 +150,8 @@ class _HomePage extends State<HomePage> {
                     0xFFF0F2F5,
                   ),
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
                   ),
                 ),
                 child: customers == null && specialties == null
@@ -340,7 +340,7 @@ class _HomePage extends State<HomePage> {
                                 Text(
                                   'Danh mục chuyên khoa',
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 17,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 SizedBox(height: 15),
@@ -390,12 +390,13 @@ class _HomePage extends State<HomePage> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.center,
                                                 children: [
+                                                  SizedBox(width: 5),
                                                   Image.network(
                                                     specialty.image,
-                                                    width: 45,
+                                                    width: 40,
                                                     color: AppColors.deepBlue,
                                                   ),
-                                                  SizedBox(width: 5),
+                                                  SizedBox(width: 10),
                                                   Text(
                                                     specialty.name,
                                                     style: TextStyle(
