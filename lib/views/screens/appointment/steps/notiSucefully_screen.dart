@@ -245,10 +245,8 @@ class _NotiSucefullyState extends State<NotiSucefully> {
                                           appointment.customer.fullName),
                                       _buildRow(
                                         'Ngày sinh',
-                                        (appointment.customer.birthDate !=
-                                                    null &&
-                                                appointment.customer.birthDate
-                                                    .isNotEmpty)
+                                        (appointment
+                                                .customer.birthDate.isNotEmpty)
                                             ? DateFormat('dd/MM/yyyy').format(
                                                 DateTime.tryParse(appointment
                                                         .customer.birthDate) ??
@@ -303,10 +301,10 @@ class _NotiSucefullyState extends State<NotiSucefully> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     _buildRow(
-                                        'Dịch vụ', appServices!.service!.name),
+                                        'Dịch vụ', appServices.service!.name),
                                     _buildRow(
                                         'Giá',
-                                        formatCurrency(appServices!
+                                        formatCurrency(appServices
                                                 .service!.price
                                                 .toInt() ??
                                             0))

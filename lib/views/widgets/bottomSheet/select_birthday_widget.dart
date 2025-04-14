@@ -65,11 +65,9 @@ class _SelectBirthdayWidgetState extends State<SelectBirthdayWidget> {
                     ),
                   ),
                   onDateTimeChanged: (DateTime value) {
-                    if (value != null) {
-                      setState(() {
-                        _selectedDate = value;
-                      });
-                    }
+                    setState(() {
+                      _selectedDate = value;
+                    });
                   },
                 ),
               ),

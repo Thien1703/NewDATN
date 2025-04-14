@@ -4,8 +4,7 @@ import 'package:health_care/common/app_colors.dart';
 class CircleButton extends StatelessWidget {
   final IconData icon;
   final GestureTapCallback onPressed;
-  const CircleButton({Key? key, required this.icon, required this.onPressed})
-      : super(key: key);
+  const CircleButton({super.key, required this.icon, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

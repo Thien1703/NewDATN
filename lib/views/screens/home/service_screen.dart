@@ -7,7 +7,7 @@ import 'package:health_care/models/service.dart';
 import 'package:health_care/views/screens/clinic/clinic_screen.dart';
 
 class ServiceScreen extends StatefulWidget {
-  ServiceScreen({super.key, required this.specialtyId});
+  const ServiceScreen({super.key, required this.specialtyId});
   final int specialtyId;
 
   @override
@@ -101,7 +101,7 @@ class _ServiceScreen extends State<ServiceScreen> {
                                 ),
                                 SizedBox(height: 10),
                                 Text(
-                                  'Cùng phòng khám đa khoa FPT tìm hiểu các dịch vụ về ${specialtyName}',
+                                  'Cùng phòng khám đa khoa FPT tìm hiểu các dịch vụ về $specialtyName',
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,

@@ -6,7 +6,6 @@ import 'package:health_care/viewmodels/api/clinic_api.dart';
 import 'package:health_care/viewmodels/api/service_api.dart';
 import 'package:health_care/viewmodels/profile_viewmodel.dart';
 import 'package:health_care/views/screens/appointment/steps/notiSucefully_screen.dart';
-import 'package:health_care/views/screens/profile/widget_profile_card.dart';
 import 'package:health_care/views/widgets/appointment/widget_hospital_info_card.dart';
 import 'package:health_care/views/widgets/appointment/widget_customPricePayment.dart';
 import 'package:health_care/views/widgets/appointment/widget_customButton.dart';
@@ -53,9 +52,8 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     _loadProfile();
   }
 
-    Future<void> _loadProfile() async {
-    final profile =
-        await ProfileViewModel().getProfileById(widget.customerId);
+  Future<void> _loadProfile() async {
+    final profile = await ProfileViewModel().getProfileById(widget.customerId);
     if (mounted) {
       setState(() {
         selectedProfile = profile;
@@ -168,8 +166,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                         clinicId: widget.clinicId,
                       ),
                       const SectionTitle(title: 'Thông tin bệnh nhân'),
-                       WidgetCustomerinforCard(),
-                       
+                      WidgetCustomerinforCard(),
                       const SectionTitle(title: 'Thông tin dịch vụ'),
                       Card(
                         child: Container(
