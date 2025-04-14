@@ -58,9 +58,7 @@ class _SearchScreenState extends State<SearchScreen> {
       );
     });
 
-    if (mapController != null) {
-      mapController.animateCamera(CameraUpdate.newLatLng(currentLatLng));
-    }
+    mapController.animateCamera(CameraUpdate.newLatLng(currentLatLng));
   }
 
   void _loadCustomMarker() async {

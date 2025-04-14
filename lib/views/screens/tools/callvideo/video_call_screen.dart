@@ -1,5 +1,6 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
+import 'package:health_care/common/app_colors.dart';
 
 class VideoCallScreen extends StatefulWidget {
   final String channelName;
@@ -132,7 +133,20 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Channel: ${widget.channelName}')),
+      appBar: AppBar(
+        title: Text('Mã phòng khám: ${widget.channelName}',
+            style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.white)),
+        centerTitle: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(20),
+          ),
+        ),
+        backgroundColor: AppColors.deepBlue,
+      ),
       body: SafeArea(
         child: Column(
           children: [

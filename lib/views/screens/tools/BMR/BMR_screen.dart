@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
-import 'package:health_care/views/screens/tools/BMI/measureBMI_Screen.dart';
 import 'package:health_care/views/screens/tools/BMR/measureBMR_Screen.dart';
 
 class BmrScreen extends StatefulWidget {

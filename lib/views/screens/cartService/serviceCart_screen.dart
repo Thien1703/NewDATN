@@ -240,7 +240,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                         ),
                                       ),
                                     );
-                                  }).toList(),
+                                  }),
                                 ],
                               ),
                             ),
@@ -410,7 +410,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                 ],
                               );
                             },
-                          ).toList(),
+                          ),
                         ],
                       ),
                     ),
@@ -447,7 +447,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                           TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
                     ),
                     Text(
-                      '${formatCurrency(getTotalPrice())}',
+                      formatCurrency(getTotalPrice()),
                       style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

@@ -87,7 +87,7 @@ class _HomeScreensState extends State<HomeScreens> {
             shape: CircularNotchedRectangle(),
             notchMargin: 8.0,
             color: Colors.white,
-            child: Container(
+            child: SizedBox(
               height: screenHeight *
                   0.08, // Tự động điều chỉnh theo chiều cao màn hình
               child: Row(
