@@ -78,4 +78,10 @@ class ProfileViewModel with ChangeNotifier {
   Future<Map<String, dynamic>?> getProfileById(int id) async {
     return await ProfileConfig.getProfileById(id);
   }
+
+  /// Lấy danh sách hồ sơ theo customerId
+  Future<List<Map<String, dynamic>>?> getProfilesByCustomerId(
+      int customerId) async {
+    return await ProfileConfig.getProfilesByCustomerId(customerId);
+  }
 }

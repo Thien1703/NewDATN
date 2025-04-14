@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:health_care/viewmodels/toast_helper.dart';
+import 'package:health_care/viewmodels/user_provider.dart';
 import 'package:health_care/views/screens/auth/Login/login_screen.dart';
+import 'package:provider/provider.dart';
 import '../services/local_storage_service.dart';
 import '../views/screens/home/home_screens.dart';
 import '../config/app_config.dart';
@@ -22,6 +24,20 @@ class AuthViewModel with ChangeNotifier {
       String? token = await LocalStorageService.getToken();
       print("Token đã lưu sau khi đăng nhập: $token");
 
+// 🔹 Lấy customerId từ API
+      int? customerId = await AppConfig.getMyUserId();
+      if (customerId != null) {
+        await LocalStorageService.saveUserId(customerId);
+        if (!context.mounted) return;
+
+        // 🔹 Lưu customerId vào Provider
+        Provider.of<UserProvider>(context, listen: false)
+            .setCustomerId(customerId);
+        print("Đã lưu customerId vào Provider: $customerId");
+      } else {
+        showToastError("Không thể lấy ID người dùng!");
+        return;
+      }
       // Chuyển sang màn hình Home
       Navigator.pushReplacement(
         context,

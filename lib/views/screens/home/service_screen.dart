@@ -7,8 +7,8 @@ import 'package:health_care/models/service.dart';
 import 'package:health_care/views/screens/clinic/clinic_screen.dart';
 
 class ServiceScreen extends StatefulWidget {
-  ServiceScreen({super.key, required this.specialtyId});
   final int specialtyId;
+  const ServiceScreen({super.key, required this.specialtyId});
 
   @override
   State<ServiceScreen> createState() => _ServiceScreen();

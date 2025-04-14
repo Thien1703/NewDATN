@@ -14,7 +14,6 @@ class ProfileBooking extends StatefulWidget {
     int? customerId,
     String? date, // ✅ Thêm ngày khám
     String? time, // ✅ Thêm giờ khám
-    // Map<String, dynamic>? selectedProfile,
   }) onNavigateToScreen;
 
   final int clinicId;
@@ -63,15 +62,6 @@ class _ProfileBooking extends State<ProfileBooking> {
   // }
 
   void _handleProfileTap(int customerId) {
-    // final selectedProfile = _profiles.firstWhere(
-    //   (profile) => profile['id'] == customerId,
-    //   orElse: () => {},
-    // );
-
-    // if (selectedProfile.isEmpty) {
-    //   print("Không tìm thấy hồ sơ!");
-    //   return;
-    // }
     print("ID khách hàng: $customerId");
     print(
         "Dữ liệu nhận từ ExamInfoBooking: Clinic ID: ${widget.clinicId}, Dịch vụ: ${widget.selectedServiceId}");
