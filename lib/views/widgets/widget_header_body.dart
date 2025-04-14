@@ -8,6 +8,7 @@ class WidgetHeaderBody extends StatelessWidget {
   final Widget? selectedIcon;
   final bool iconBack;
   final Color? color;
+  final bool iconShare;
 
   const WidgetHeaderBody({
     super.key,
@@ -17,6 +18,7 @@ class WidgetHeaderBody extends StatelessWidget {
     this.onBackPressed,
     this.selectedIcon,
     this.color,
+    this.iconShare = false,
   });
 
   @override
@@ -50,6 +52,7 @@ class WidgetHeaderBody extends StatelessWidget {
             iconBack: iconBack,
             title: title,
             onBackPressed: onBackPressed,
+            iconShare: iconShare,
           ),
           if (selectedIcon != null) const SizedBox(height: 5),
           AnimatedSwitcher(
@@ -66,23 +69,25 @@ class HeaderRow extends StatelessWidget {
   final String title;
   final VoidCallback? onBackPressed;
   final bool iconBack;
+  final bool iconShare;
 
   const HeaderRow({
     super.key,
     required this.title,
     this.onBackPressed,
     required this.iconBack,
+    required this.iconShare,
   });
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         SizedBox(
-            width: 48, // Đảm bảo khoảng trống luôn có
             child: iconBack
                 ? IconButton(
-                    icon: const Icon(Icons.arrow_back,
+                    icon: const Icon(Icons.arrow_back_ios,
                         color: Colors.white, size: 24),
                     onPressed:
                         onBackPressed ?? () => Navigator.of(context).pop(),
@@ -105,7 +110,25 @@ class HeaderRow extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(width: 48), // Giữ cân bằng với icon back bên trái
+        SizedBox(
+          child: iconShare
+              ? IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.ios_share_outlined,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                )
+              : IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.ios_share_outlined,
+                    color: AppColors.deepBlue,
+                    size: 24,
+                  ),
+                ),
+        )
       ],
     );
   }
