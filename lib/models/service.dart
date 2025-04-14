@@ -46,7 +46,7 @@ class Service {
           ? utf8.decode(json['description'].toString().runes.toList())
           : "Chưa cập nhật",
       price: json['price'] != null ? (json['price'] as num).toDouble() : 0.0,
-      image: json['image'] ?? "assets/images/imageError.png",
+      image: json['image'] ?? "assets/images/imageOnErrror.png",
       averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0.0,
       reviewCount: json['reviewCount'] ?? 0,
     );
