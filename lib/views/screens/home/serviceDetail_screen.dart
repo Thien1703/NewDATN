@@ -52,6 +52,7 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final media = MediaQuery.of(context).size;
 
     return isLoading
         ? Scaffold(
@@ -63,7 +64,7 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
             body: CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  toolbarHeight: 80,
+                  toolbarHeight: media.height * 0.1,
                   automaticallyImplyLeading: false,
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,7 +104,6 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                           ]),
                       width: double.infinity,
                       padding: EdgeInsets.only(top: 5, bottom: 10),
-
                       child: Container(
                         margin: EdgeInsets.symmetric(horizontal: 40),
                         child: Center(
@@ -436,7 +436,6 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                           color: Colors.black,
                                         ),
                                       ),
-
                                       Padding(
                                         padding: EdgeInsets.only(bottom: 10),
                                         child: Icon(
@@ -445,7 +444,6 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                           size: 30,
                                         ),
                                       )
-
                                     ],
                                   ),
 
@@ -538,95 +536,104 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                   //         color: Colors.grey)),
                                   SizedBox(height: 10),
                                   // Hiển thị danh sách các đánh giá (nếu có)
-                                  ratings != null && ratings!.isNotEmpty
-                                      ? ListView.builder(
-                                          padding: EdgeInsets.zero,
-                                          shrinkWrap: true,
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          itemCount: ratings!.length,
-                                          itemBuilder: (context, index) {
-                                            final rating = ratings![index];
-                                            return Container(
-                                              margin: EdgeInsets.only(left: 10),
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Image.asset(
-                                                    'assets/images/iconProfile.jpg',
-                                                    width: 50,
-                                                  ),
-                                                  SizedBox(width: 15),
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        rating.customerName,
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 16,
-                                                          color: Colors.black,
-                                                        ),
-                                                      ),
-                                                      SizedBox(height: 3),
-                                                      Row(
+                                  Container(
+                                    child: ratings != null &&
+                                            ratings!.isNotEmpty
+                                        ? ListView.builder(
+                                            padding: EdgeInsets.zero,
+                                            shrinkWrap: true,
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            itemCount: ratings!.length,
+                                            itemBuilder: (context, index) {
+                                              final rating = ratings![index];
+                                              return Container(
+                                                margin:
+                                                    EdgeInsets.only(left: 10),
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Image.asset(
+                                                      'assets/images/iconProfile.jpg',
+                                                      width: 50,
+                                                    ),
+                                                    SizedBox(width: 15),
+                                                    Expanded(
+                                                      child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
-                                                                .center,
+                                                                .start,
                                                         children: [
                                                           Text(
-                                                            '${rating.stars.toString()}.0',
+                                                            rating.customerName,
                                                             style: TextStyle(
-                                                              color: Colors
-                                                                  .black
-                                                                  .withOpacity(
-                                                                      0.6),
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold,
-                                                              fontSize: 15,
+                                                              fontSize: 16,
+                                                              color:
+                                                                  Colors.black,
                                                             ),
                                                           ),
-                                                          Icon(
-                                                            Icons
-                                                                .star_rate_rounded,
-                                                            color: const Color(
-                                                                0xFFE0AA08),
-                                                            size: 20,
-                                                          )
+                                                          SizedBox(height: 3),
+                                                          Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                '${rating.stars.toString()}.0',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black
+                                                                      .withOpacity(
+                                                                          0.6),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 15,
+                                                                ),
+                                                              ),
+                                                              Icon(
+                                                                Icons
+                                                                    .star_rate_rounded,
+                                                                color: const Color(
+                                                                    0xFFE0AA08),
+                                                                size: 20,
+                                                              )
+                                                            ],
+                                                          ),
+                                                          SizedBox(height: 3),
+                                                          Text(
+                                                            rating.comment ??
+                                                                'Không xác định',
+                                                            style: TextStyle(
+                                                              fontSize: 14,
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.7),
+                                                            ),
+                                                            softWrap: true,
+                                                          ),
+                                                          SizedBox(height: 10),
                                                         ],
                                                       ),
-                                                      SizedBox(height: 3),
-                                                      Flexible(
-                                                        child: Text(
-                                                          rating.comment ??
-                                                              'Không xác định',
-                                                          style: TextStyle(
-                                                            fontSize: 14,
-                                                            color: Colors.black
-                                                                .withOpacity(
-                                                                    0.7),
-                                                          ),
-                                                          softWrap: true,
-                                                        ),
-                                                      ),
-                                                      SizedBox(height: 10),
-                                                    ],
-                                                  )
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        )
-                                      : Text(
-                                          'Chưa có đánh giá nào',
-                                          style: TextStyle(
-                                              fontSize: 16, color: Colors.grey),
-                                        ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        : Text(
+                                            'Chưa có đánh giá nào',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.grey),
+                                          ),
+                                  ),
                                   SizedBox(height: 20),
                                 ],
                               ),
