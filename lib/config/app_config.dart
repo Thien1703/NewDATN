@@ -91,6 +91,7 @@ class AppConfig {
     } else {
       return "Lỗi máy chủ: ${response.statusCode}";
     }
+    return null;
   }
 
   static Future<String?> _handleOtpVerification(
@@ -288,7 +289,7 @@ class AppConfig {
       );
 
       final data = jsonDecode(utf8.decode(response.bodyBytes));
-      print("📥 Response: ${response.statusCode} - ${data}");
+      print("📥 Response: ${response.statusCode} - $data");
 
       if (response.statusCode == 200 && data['status'] == 0) {
         print("✅ OTP xác thực thành công cho $email");

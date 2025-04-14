@@ -52,6 +52,7 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return isLoading
         ? Scaffold(
             body: Center(
@@ -102,6 +103,7 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                           ]),
                       width: double.infinity,
                       padding: EdgeInsets.only(top: 5, bottom: 10),
+
                       child: Container(
                         margin: EdgeInsets.symmetric(horizontal: 40),
                         child: Center(
@@ -434,6 +436,7 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                           color: Colors.black,
                                         ),
                                       ),
+
                                       Padding(
                                         padding: EdgeInsets.only(bottom: 10),
                                         child: Icon(
@@ -442,6 +445,7 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                           size: 30,
                                         ),
                                       )
+
                                     ],
                                   ),
 

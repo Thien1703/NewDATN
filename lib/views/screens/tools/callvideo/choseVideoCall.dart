@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/views/screens/auth/Login/login_screen.dart';
 import 'package:health_care/views/screens/auth/Login/register_screen.dart';
+import 'package:health_care/views/screens/tools/callvideo/listDoctorOnline.dart';
+import 'package:health_care/views/screens/tools/callvideo/schedule_call_screen.dart';
 
-class chooseSigninRes extends StatelessWidget {
-  const chooseSigninRes({super.key});
+class chooseCallVideo extends StatelessWidget {
+  const chooseCallVideo({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,7 @@ class chooseSigninRes extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()));
+                  MaterialPageRoute(builder: (context) => DoctorOnlineList()));
             },
             child: Container(
               height: 53,
@@ -51,7 +53,7 @@ class chooseSigninRes extends StatelessWidget {
               ),
               child: const Center(
                 child: Text(
-                  'Đăng nhập',
+                  'Đặt lịch ngay',
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -68,7 +70,7 @@ class chooseSigninRes extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const RegisterScreen()));
+                      builder: (context) => ScheduleCallScreen()));
             },
             child: Container(
               height: 53,
@@ -79,7 +81,7 @@ class chooseSigninRes extends StatelessWidget {
               ),
               child: const Center(
                 child: Text(
-                  'Đăng ký',
+                  'Vào phòng khám',
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -90,7 +92,7 @@ class chooseSigninRes extends StatelessWidget {
           ),
           const Spacer(),
           const Text(
-            'Login with Social Media',
+            'Chào mừng bạn đến với phòng khám online',
             style: TextStyle(fontSize: 17, color: Colors.white),
           ), //
           const SizedBox(

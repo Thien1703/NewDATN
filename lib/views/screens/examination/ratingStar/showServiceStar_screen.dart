@@ -125,8 +125,7 @@ class _ShowservicestarScreenState extends State<ShowservicestarScreen> {
                                 Row(
                                   children: [
                                     Image.network(
-                                      (item.service!.image != null &&
-                                              item.service!.image.isNotEmpty)
+                                      (item.service!.image.isNotEmpty)
                                           ? item.service!.image
                                           : 'https://via.placeholder.com/100x100.png?text=No+Image',
                                       width: 100,
@@ -204,7 +203,7 @@ class _ShowservicestarScreenState extends State<ShowservicestarScreen> {
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 20),
                     child: _isSubmitting
-                        ? Container(
+                        ? SizedBox(
                             width: 100,
                             child: const CircularProgressIndicator(),
                           )

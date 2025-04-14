@@ -95,8 +95,7 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
                                         _buildInfoRow(
                                           "Giá",
                                           formatCurrency(
-                                              item.service?.price?.toInt() ??
-                                                  0),
+                                              item.service?.price.toInt() ?? 0),
                                           Colors.green,
                                         ),
                                         _buildInfoRow(
@@ -540,7 +539,7 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
                           });
                         },
                       ),
-                      Container(
+                      SizedBox(
                         width: double.infinity,
                         child: OutlinedButton(
                           onPressed: (tempSelectedValue == null || isLoading)
