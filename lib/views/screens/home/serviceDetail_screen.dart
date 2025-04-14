@@ -7,6 +7,7 @@ import 'package:health_care/viewmodels/api/clinic_api.dart';
 import 'package:health_care/viewmodels/api/rating_api.dart';
 import 'package:health_care/viewmodels/api/service_api.dart';
 import 'package:health_care/views/screens/clinic/clinic_screen.dart';
+import 'package:scroll_date_picker/scroll_date_picker.dart';
 
 class ServicedetailScreen extends StatefulWidget {
   const ServicedetailScreen({super.key, required this.serviceId});
@@ -138,12 +139,12 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                             ? Image.network(
                                 services!.image!,
                                 width: double.maxFinite,
-                                fit: BoxFit.cover,
+                                fit: BoxFit.fill,
                               )
                             : Image.asset(
                                 services!.image!,
                                 width: double.maxFinite,
-                                fit: BoxFit.cover,
+                                fit: BoxFit.fill,
                               ),
                   ),
                 ),
@@ -445,102 +446,92 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                   ),
 
                                   // Đếm số lượt đánh giá cho từng mức sao
-                                  ratings != null && ratings!.isNotEmpty
-                                      ? Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: List.generate(5, (index) {
-                                            int starRating =
-                                                5 - index; // 5, 4, 3, 2, 1 sao
-                                            int count = ratings!
-                                                .where((rating) =>
-                                                    rating.stars == starRating)
-                                                .length;
-                                            int totalReviews = ratings!.length;
+                                  // ratings != null && ratings!.isNotEmpty
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: List.generate(5, (index) {
+                                      int starRating =
+                                          5 - index; // 5, 4, 3, 2, 1 sao
+                                      int count = ratings!
+                                          .where((rating) =>
+                                              rating.stars == starRating)
+                                          .length;
+                                      int totalReviews = ratings!.length;
 
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 6),
-                                              child: Row(
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 6),
+                                        child: Row(
+                                          children: [
+                                            // Các ngôi sao
+                                            Row(
+                                              children:
+                                                  List.generate(5, (starIndex) {
+                                                return Icon(
+                                                  Icons.star_rate_rounded,
+                                                  color: starIndex < starRating
+                                                      ? const Color(0xFFE0AA08)
+                                                      : Colors.grey.shade400,
+                                                  size: 23,
+                                                );
+                                              }),
+                                            ),
+                                            SizedBox(width: 10),
+
+                                            // Thanh phần trăm đánh giá
+                                            Expanded(
+                                              child: Stack(
                                                 children: [
-                                                  // Các ngôi sao
-                                                  Row(
-                                                    children: List.generate(5,
-                                                        (starIndex) {
-                                                      return Icon(
-                                                        Icons.star_rate_rounded,
-                                                        color: starIndex <
-                                                                starRating
-                                                            ? const Color(
-                                                                0xFFE0AA08)
-                                                            : Colors
-                                                                .grey.shade400,
-                                                        size: 23,
-                                                      );
-                                                    }),
-                                                  ),
-                                                  SizedBox(width: 10),
-
-                                                  // Thanh phần trăm đánh giá
-                                                  Expanded(
-                                                    child: Stack(
-                                                      children: [
-                                                        Container(
-                                                          height: 8,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Colors
-                                                                .grey.shade300,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
-                                                          ),
-                                                        ),
-                                                        FractionallySizedBox(
-                                                          widthFactor:
-                                                              totalReviews == 0
-                                                                  ? 0
-                                                                  : count /
-                                                                      totalReviews,
-                                                          child: Container(
-                                                            height: 8,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Color(
-                                                                  0xFFE0AA08),
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-
-                                                  SizedBox(width: 10),
-                                                  Text(
-                                                    '$count',
-                                                    style: TextStyle(
-                                                      fontSize: 13,
+                                                  Container(
+                                                    height: 8,
+                                                    decoration: BoxDecoration(
                                                       color:
-                                                          Colors.grey.shade700,
+                                                          Colors.grey.shade300,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
                                                     ),
-                                                    textAlign: TextAlign.end,
                                                   ),
-                                                  SizedBox(width: 10),
+                                                  FractionallySizedBox(
+                                                    widthFactor: totalReviews ==
+                                                            0
+                                                        ? 0
+                                                        : count / totalReviews,
+                                                    child: Container(
+                                                      height: 8,
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            Color(0xFFE0AA08),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
-                                            );
-                                          }),
-                                        )
-                                      : Text('Chưa có đánh giá nào',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.grey)),
+                                            ),
+
+                                            SizedBox(width: 10),
+                                            Text(
+                                              '$count',
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.grey.shade700,
+                                              ),
+                                              textAlign: TextAlign.end,
+                                            ),
+                                            SizedBox(width: 10),
+                                          ],
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                  // : Text('Chưa có đánh giá nào',
+                                  //     style: TextStyle(
+                                  //         fontSize: 16,
+                                  //         color: Colors.grey)),
                                   SizedBox(height: 10),
                                   // Hiển thị danh sách các đánh giá (nếu có)
                                   ratings != null && ratings!.isNotEmpty
@@ -606,15 +597,20 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                                         ],
                                                       ),
                                                       SizedBox(height: 3),
-                                                      Text(
-                                                        rating.comment ??
-                                                            'Không xác định',
-                                                        style: TextStyle(
-                                                          fontSize: 14,
-                                                          color: Colors.black
-                                                              .withOpacity(0.7),
+                                                      Flexible(
+                                                        child: Text(
+                                                          rating.comment ??
+                                                              'Không xác định',
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.7),
+                                                          ),
+                                                          softWrap: true,
                                                         ),
                                                       ),
+                                                      SizedBox(height: 10),
                                                     ],
                                                   )
                                                 ],

@@ -18,7 +18,6 @@ class _ServiceScreen extends State<ServiceScreen> {
   List<Service> services = [];
   List<Service>? filteredServices;
   TextEditingController searchController = TextEditingController();
-  String specialtyName = 'Dich vụ';
   bool isLoading = true;
 
   @override
@@ -54,7 +53,7 @@ class _ServiceScreen extends State<ServiceScreen> {
   Widget build(BuildContext context) {
     return WidgetHeaderBody(
       iconBack: true,
-      title: specialtyName,
+      title: 'Dịch vụ',
       color: AppColors.ghostWhite,
       iconShare: true,
       body: Container(
@@ -105,7 +104,7 @@ class _ServiceScreen extends State<ServiceScreen> {
                                     ),
                                     SizedBox(width: 10),
                                     Text(
-                                      specialtyName,
+                                      services!.first.specialty.name,
                                       style: TextStyle(
                                         fontSize: 28,
                                         fontWeight: FontWeight.bold,
@@ -145,7 +144,7 @@ class _ServiceScreen extends State<ServiceScreen> {
                                     SizedBox(width: 10),
                                     Expanded(
                                       child: Text(
-                                        'Cùng phòng khám đa khoa FPT tìm hiểu các dịch vụ về ${specialtyName}',
+                                        'Cùng phòng khám đa khoa FPT tìm hiểu các dịch vụ về ${services!.first.specialty.name}',
                                         style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.w600,
