@@ -49,6 +49,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (value == null || value.trim().isEmpty) {
       return 'Vui lòng nhập họ và tên';
     }
+
+    // Regex: chỉ cho phép chữ cái và khoảng trắng (bao gồm tên có dấu tiếng Việt)
+    final regex = RegExp(r"^[a-zA-ZÀ-ỹ\s]+$");
+
+    if (!regex.hasMatch(value.trim())) {
+      return 'Họ và tên không được chứa số hoặc ký tự đặc biệt';
+    }
+
     return null;
   }
 
@@ -67,9 +75,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (value == null || value.trim().isEmpty) {
       return 'Vui lòng nhập số điện thoại';
     }
-    if (!RegExp(r'^0[0-9]{9}$').hasMatch(value)) {
-      return 'Số điện thoại không hợp lệ';
+
+    final trimmed = value.trim();
+
+    // Kiểm tra độ dài 10 số và bắt đầu bằng các đầu số hợp lệ
+    final validPhoneRegex = RegExp(r'^(03|05|07|08|09)[0-9]{8}$');
+
+    if (!validPhoneRegex.hasMatch(trimmed)) {
+      return 'Vui lòng nhập đúng định dạng số điện thoại';
     }
+
     return null;
   }
 
@@ -77,10 +92,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (value == null || value.trim().isEmpty) {
       return 'Vui lòng nhập mật khẩu';
     }
-    final regex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$');
-    if (!regex.hasMatch(value)) {
-      return 'Mật khẩu phải có ít nhất 6 ký tự, gồm chữ hoa, chữ thường và số';
+
+    // Kiểm tra không được chứa khoảng trắng
+    if (value.contains(' ')) {
+      return 'Mật khẩu không được chứa khoảng trắng';
     }
+
+    // Regex: ít nhất 8 ký tự, gồm ít nhất 1 chữ hoa và 1 chữ số (ký tự đặc biệt thì có thể có hoặc không)
+    final regex = RegExp(r'^(?=.*[A-Z])(?=.*\d).{8,}$');
+
+    if (!regex.hasMatch(value)) {
+      return 'Mật khẩu phải từ 8 ký tự trở lên, gồm ít nhất 1 chữ hoa và 1 số ';
+    }
+
     return null;
   }
 
