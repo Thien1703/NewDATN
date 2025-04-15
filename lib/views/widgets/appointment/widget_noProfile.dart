@@ -27,7 +27,7 @@ class WidgetNoprofile extends StatelessWidget {
                   color: AppColors.neutralDarkGreen2),
             ),
           ),
-          Container(
+          SizedBox(
             width: 145,
             child: OutlinedButton(
                 style: OutlinedButton.styleFrom(
@@ -36,8 +36,10 @@ class WidgetNoprofile extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)))),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CreateProfileBooking()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CreateProfileBooking()));
                 },
                 child: Row(
                   children: [

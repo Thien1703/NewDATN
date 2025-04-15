@@ -200,7 +200,7 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                       SizedBox(height: 10),
                                       Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Align(
                                             alignment: Alignment.topRight,
@@ -215,7 +215,7 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                                       width: 1),
                                                 ),
                                                 padding: EdgeInsets.symmetric(
-                                                    horizontal: 30,
+                                                    horizontal: 20,
                                                     vertical: 10),
                                               ),
                                               onPressed: () {

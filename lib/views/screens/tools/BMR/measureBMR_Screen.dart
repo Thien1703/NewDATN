@@ -113,8 +113,6 @@ class _MeasurebmrScreenState extends State<MeasurebmrScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: isFormValid ? _showResult : null,
-                  child: Text('Xem kết quả',
-                      style: TextStyle(fontSize: 16, color: Colors.white)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isFormValid
                         ? AppColors.deepBlue
@@ -123,6 +121,8 @@ class _MeasurebmrScreenState extends State<MeasurebmrScreen> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30)),
                   ),
+                  child: Text('Xem kết quả',
+                      style: TextStyle(fontSize: 16, color: Colors.white)),
                 ),
               ),
             ],

@@ -18,7 +18,7 @@ class SearchHome extends StatefulWidget {
 }
 
 class _SearchHome extends State<SearchHome> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   List<Specialty>? specialties;
   List<Service>? services;

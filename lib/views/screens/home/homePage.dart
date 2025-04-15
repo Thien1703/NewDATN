@@ -13,8 +13,7 @@ import 'package:health_care/views/screens/tools/BMI/BMI_screen.dart';
 import 'package:health_care/views/screens/home/service_screen.dart';
 import 'package:health_care/views/screens/notification/notification_screen.dart';
 import 'package:health_care/views/screens/tools/BMR/BMR_screen.dart';
-import 'package:health_care/views/screens/chat/chat_screen.dart';
-import 'package:health_care/views/screens/chat/clinic_chat_screen.dart';
+import 'package:health_care/views/screens/tools/callvideo/choseVideoCall.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
@@ -117,7 +116,7 @@ class _HomePage extends State<HomePage> {
                           )),
                       child: Container(
                         width: double.infinity,
-                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        margin: EdgeInsets.only(left: 10, right: 10, bottom: 3),
                         padding:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
@@ -151,8 +150,8 @@ class _HomePage extends State<HomePage> {
                     0xFFF0F2F5,
                   ),
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
                   ),
                 ),
                 child: customers == null && specialties == null
@@ -243,68 +242,73 @@ class _HomePage extends State<HomePage> {
                               ],
                             ),
                           ),
-                          // SizedBox(height: 20),
-                          // GestureDetector(
-                          //   onTap: () => _launchURL(
-                          //       'https://zalo.me/0917107881'), // Link Zalo hoặc Fanpage
-                          //   child: Container(
-                          //     margin: EdgeInsets.symmetric(
-                          //         horizontal: 16), // Căn lề
-                          //     padding: EdgeInsets.symmetric(
-                          //         vertical: 12, horizontal: 16),
-                          //     decoration: BoxDecoration(
-                          //       gradient: LinearGradient(
-                          //         colors: [
-                          //           Color(0xFF0077FF),
-                          //           Color(0xFF00A2FF)
-                          //         ], // Gradient xanh
-                          //         begin: Alignment.topLeft,
-                          //         end: Alignment.bottomRight,
-                          //       ),
-                          //       borderRadius: BorderRadius.circular(20),
-                          //     ),
-                          //     child: Row(
-                          //       mainAxisAlignment:
-                          //           MainAxisAlignment.spaceBetween,
-                          //       children: [
-                          //         Row(
-                          //           children: [
-                          //             Image.asset(
-                          //               'assets/icons/chat_icon.png', // Thay bằng icon chat của bạn
-                          //               width: 40,
-                          //               height: 40,
-                          //             ),
-                          //             SizedBox(width: 10),
-                          //             Text(
-                          //               'Đặt khám online với\n      Bác Sĩ',
-                          //               style: TextStyle(
-                          //                 color: Colors.white,
-                          //                 fontSize: 16,
-                          //                 fontWeight: FontWeight.bold,
-                          //               ),
-                          //             ),
-                          //           ],
-                          //         ),
-                          //         Container(
-                          //           padding: EdgeInsets.symmetric(
-                          //               vertical: 6, horizontal: 12),
-                          //           decoration: BoxDecoration(
-                          //             color: Colors.white,
-                          //             borderRadius: BorderRadius.circular(15),
-                          //           ),
-                          //           child: Text(
-                          //             'Đặt ngay',
-                          //             style: TextStyle(
-                          //               color: Colors.blueAccent,
-                          //               fontSize: 14,
-                          //               fontWeight: FontWeight.bold,
-                          //             ),
-                          //           ),
-                          //         )
-                          //       ],
-                          //     ),
-                          //   ),
-                          // ),
+                          SizedBox(height: 20),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => chooseCallVideo(),
+                                  ));
+                            }, // Link Zalo hoặc Fanpage
+                            child: Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 16), // Căn lề
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 16),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xFF0077FF),
+                                    Color(0xFF00A2FF)
+                                  ], // Gradient xanh
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        'assets/icons/chat_icon.png', // Thay bằng icon chat của bạn
+                                        width: 40,
+                                        height: 40,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        'Đặt khám online với\n      Bác Sĩ',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 6, horizontal: 12),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Text(
+                                      'Đặt ngay',
+                                      style: TextStyle(
+                                        color: Colors.blueAccent,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
                           CarouselSlider(
                             items: imgList
                                 .map(
@@ -336,7 +340,7 @@ class _HomePage extends State<HomePage> {
                                 Text(
                                   'Danh mục chuyên khoa',
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 17,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 SizedBox(height: 15),
@@ -386,12 +390,13 @@ class _HomePage extends State<HomePage> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.center,
                                                 children: [
+                                                  SizedBox(width: 5),
                                                   Image.network(
                                                     specialty.image,
-                                                    width: 45,
+                                                    width: 40,
                                                     color: AppColors.deepBlue,
                                                   ),
-                                                  SizedBox(width: 5),
+                                                  SizedBox(width: 10),
                                                   Text(
                                                     specialty.name,
                                                     style: TextStyle(

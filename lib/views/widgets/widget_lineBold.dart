@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:health_care/common/app_colors.dart';
 
 class WidgetLineBold extends StatelessWidget {
   const WidgetLineBold({

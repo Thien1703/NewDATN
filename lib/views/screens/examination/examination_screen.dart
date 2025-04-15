@@ -66,7 +66,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
   List<Appointment> get filteredAppointments => _selectedStatus == 'Tất cả'
       ? appointments ?? []
       : (appointments ?? [])
-          .where((item) => item.status?.toUpperCase() == _selectedStatus)
+          .where((item) => item.status.toUpperCase() == _selectedStatus)
           .toList();
   bool _shouldShowRating(Appointment appointment) {
     if (appointment.status != "COMPLETED") return false;
@@ -192,7 +192,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
         margin: EdgeInsets.only(bottom: 15, right: 10, left: 10),
         color: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Padding(
           padding: EdgeInsets.all(15),
@@ -208,31 +208,39 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                       appointment.clinic.name,
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 19,
+                        fontWeight: FontWeight.w800,
                       ),
                       softWrap: true,
                     ),
                   ),
-                  SizedBox(width: 50),
+                  SizedBox(width: 40),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
                       appointment.clinic.image,
-                      width: 55,
-                      height: 55,
+                      width: 65,
+                      height: 65,
                       fit: BoxFit.cover,
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 5),
+              SizedBox(height: 10),
               _buildLabelRow(
-                  label: "Giờ khám", value: appointment.time.substring(0, 5)),
+                  icon: Icons.person,
+                  label: 'Bệnh nhân',
+                  value: appointment.customer.fullName),
               _buildLabelRow(
-                  label: "Ngày khám", value: formatDate(appointment.date)),
+                  icon: Icons.date_range_rounded,
+                  label: "Ngày khám",
+                  value: formatDate(appointment.date)),
               _buildLabelRow(
-                  label: 'Bệnh nhân', value: appointment.customer.fullName),
+                icon: Icons.access_time_filled_rounded,
+                label: "Giờ khám",
+                value: appointment.time.substring(0, 5),
+                colorLabel: true,
+              ),
               SizedBox(height: 10),
               Align(
                 alignment: Alignment.topRight,
@@ -339,23 +347,37 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
     );
   }
 
-  Widget _buildLabelRow({required String label, required String value}) {
+  Widget _buildLabelRow({
+    required IconData icon,
+    required String label,
+    required String value,
+    bool? colorLabel,
+  }) {
     return Container(
-      margin: EdgeInsets.only(top: 5),
+      margin: EdgeInsets.only(top: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: TextStyle(
-                fontSize: 14.5,
-                color: Color(0xFF757575),
-                fontWeight: FontWeight.normal,
-              )),
+          Row(
+            children: [
+              Icon(
+                icon,
+                color: Color(0xFF929191),
+              ),
+              SizedBox(width: 5),
+              Text(label,
+                  style: TextStyle(
+                    fontSize: 14.5,
+                    color: Color(0xFF929191),
+                    fontWeight: FontWeight.normal,
+                  )),
+            ],
+          ),
           Text(
             value,
             style: TextStyle(
-              color: Colors.black,
-              fontSize: 16,
+              color: colorLabel != null ? AppColors.deepBlue : Colors.black,
+              fontSize: 17,
               fontWeight: FontWeight.w700,
             ),
           ),

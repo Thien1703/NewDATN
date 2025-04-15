@@ -115,9 +115,7 @@ class WebSocketService {
             print('📥 Nhận tin nhắn riêng: $message');
 
             // Kiểm tra nếu widget vẫn còn trong cây widget trước khi gọi setState
-            if (onMessageReceived != null) {
-              onMessageReceived(message);
-            }
+            onMessageReceived(message);
           } catch (e) {
             print('❌ Lỗi JSON private chat: $e');
           }

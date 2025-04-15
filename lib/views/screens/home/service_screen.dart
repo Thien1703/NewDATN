@@ -18,7 +18,6 @@ class _ServiceScreen extends State<ServiceScreen> {
   List<Service> services = [];
   List<Service>? filteredServices;
   TextEditingController searchController = TextEditingController();
-  String specialtyName = 'Dich vụ';
   bool isLoading = true;
 
   @override
@@ -33,9 +32,9 @@ class _ServiceScreen extends State<ServiceScreen> {
       setState(() {
         services = data;
         filteredServices = data;
-        if (services.isNotEmpty) {
-          specialtyName = services.first.specialty.name;
-        }
+        // if (services.isNotEmpty) {
+        //   specialtyName = services.first.specialty.name;
+        // }
         isLoading = false;
       });
     }
@@ -54,10 +53,11 @@ class _ServiceScreen extends State<ServiceScreen> {
   Widget build(BuildContext context) {
     return WidgetHeaderBody(
       iconBack: true,
-      title: specialtyName,
+      title: 'Dịch vụ',
       color: AppColors.ghostWhite,
+      iconShare: true,
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20),
+        margin: EdgeInsets.symmetric(horizontal: 10),
         child: isLoading
             ? Container(
                 width: double.infinity,
@@ -92,117 +92,169 @@ class _ServiceScreen extends State<ServiceScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  specialtyName,
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
+                                Row(
+                                  children: [
+                                    Container(
+                                      height: 30,
+                                      width: 7,
+                                      decoration: BoxDecoration(
+                                        color:
+                                            AppColors.deepBlue.withOpacity(0.6),
+                                      ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text(
+                                      services!.first.specialty.name,
+                                      style: TextStyle(
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.deepBlue,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 5),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 15),
+                                  child: Text(
+                                    services.first.specialty.description,
+                                    textAlign: TextAlign.justify,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.black.withOpacity(0.8),
+                                    ),
                                   ),
                                 ),
-                                SizedBox(height: 10),
-                                Text(
-                                  'Cùng phòng khám đa khoa FPT tìm hiểu các dịch vụ về ${specialtyName}',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
+                                SizedBox(height: 20),
+                                Row(
+                                  children: [
+                                    Container(
+                                      height: 30,
+                                      width: 7,
+                                      decoration: BoxDecoration(
+                                        color:
+                                            AppColors.deepBlue.withOpacity(0.6),
+                                      ),
+                                    ),
+                                    // Icon(
+                                    //   Icons.fiber_manual_record,
+                                    //   size: 10,
+                                    //   color: AppColors.deepBlue,
+                                    // ),
+                                    SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(
+                                        'Cùng phòng khám đa khoa FPT tìm hiểu các dịch vụ về ${services!.first.specialty.name}',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.deepBlue,
+                                        ),
+                                        softWrap: true,
+                                      ),
+                                    )
+                                  ],
+                                )
                               ],
                             ),
                           ),
 
                           // Display the filtered services
-                          filteredServices == null || filteredServices!.isEmpty
-                              ? Padding(
-                                  padding: const EdgeInsets.only(top: 10),
-                                  child: Text(
-                                    'Chưa có dịch vụ nào',
-                                    style: TextStyle(
-                                        color: Colors.black54, fontSize: 16),
-                                  ),
-                                )
-                              : GridView.builder(
-                                  padding: EdgeInsets.zero,
-                                  shrinkWrap: true,
-                                  physics:
-                                      NeverScrollableScrollPhysics(), // Disable scroll for GridView
-                                  itemCount: filteredServices!.length,
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 12,
-                                    mainAxisSpacing: 12,
-                                    childAspectRatio: 0.9,
-                                  ),
-                                  itemBuilder: (context, index) {
-                                    final service = filteredServices![index];
-                                    return InkWell(
-                                      onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                ServicedetailScreen(
-                                                    serviceId: service.id),
-                                          )),
-                                      child: Card(
-                                        elevation: 3,
-                                        color: Colors.white,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.vertical(
-                                                      top: Radius.circular(16)),
-                                              child: Image.network(
-                                                service.image,
-                                                height: 100,
-                                                width: double.infinity,
-                                                fit: BoxFit.cover,
-                                                errorBuilder: (_, __, ___) =>
-                                                    Container(
-                                                  height: 100,
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 15),
+                            child: filteredServices == null ||
+                                    filteredServices!.isEmpty
+                                ? Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Text(
+                                      'Chưa có dịch vụ nào',
+                                      style: TextStyle(
+                                          color: Colors.black54, fontSize: 16),
+                                    ),
+                                  )
+                                : GridView.builder(
+                                    padding: EdgeInsets.zero,
+                                    shrinkWrap: true,
+                                    physics:
+                                        NeverScrollableScrollPhysics(), // Disable scroll for GridView
+                                    itemCount: filteredServices!.length,
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 15,
+                                      mainAxisSpacing: 15,
+                                      childAspectRatio: 0.85,
+                                    ),
+                                    itemBuilder: (context, index) {
+                                      final service = filteredServices![index];
+                                      return InkWell(
+                                        onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ServicedetailScreen(
+                                                      serviceId: service.id),
+                                            )),
+                                        child: Card(
+                                          elevation: 3,
+                                          color: Colors.white,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.vertical(
+                                                        top: Radius.circular(
+                                                            16)),
+                                                child: Image.network(
+                                                  service.image,
+                                                  height: 120,
                                                   width: double.infinity,
-                                                  color: Colors.grey[300],
-                                                  child: Center(
-                                                    child: Icon(
-                                                      Icons.broken_image,
-                                                      color: Colors.grey,
-                                                      size: 50,
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder: (_, __, ___) =>
+                                                      Container(
+                                                    height: 120,
+                                                    width: double.infinity,
+                                                    color: Colors.grey[300],
+                                                    child: Center(
+                                                      child: Icon(
+                                                        Icons.image,
+                                                        color: Colors.grey,
+                                                        size: 80,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    service.name,
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(5.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      service.name,
+                                                      style: TextStyle(
+                                                        fontSize: 13,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 2,
                                                     ),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    maxLines: 2,
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                ),
-
+                                      );
+                                    },
+                                  ),
+                          ),
                           SizedBox(height: 24),
 
                           // Book appointment button
