@@ -65,10 +65,11 @@ class AuthViewModel with ChangeNotifier {
     if (errorMessage == null) {
       // Hiển thị thông báo OTP đã gửi
       showToastSuccess("Đăng ký tài khoản thành công!");
+
       // Chuyển sang màn hình Home
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreens()),
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
       );
     } else {
       showToastError(errorMessage);

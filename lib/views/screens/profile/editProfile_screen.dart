@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:health_care/config/app_config.dart';
+import 'package:health_care/utils/validators.dart';
+import 'package:health_care/views/widgets/bottomSheet/select_birthday_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/viewmodels/auth_viewmodel.dart';
@@ -36,21 +38,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     _loadUserProfile();
-  }
-
-  String? _validateName(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Vui lòng nhập họ và tên';
-    }
-
-    // Regex: chỉ cho phép chữ cái (bao gồm tiếng Việt có dấu) và khoảng trắng
-    final nameRegex = RegExp(r"^[a-zA-ZÀ-ỹ\s]+$");
-
-    if (!nameRegex.hasMatch(value.trim())) {
-      return 'Họ và tên không được chứa số hoặc ký tự đặc biệt';
-    }
-
-    return null;
   }
 
   Future<void> _loadUserProfile() async {
@@ -211,8 +198,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   _customTitle(title: 'Họ và tên'),
                   _customTextField(
                     controller: _nameController,
-                    labelText: 'Nhập họ và tên',
-                    validator: _validateName,
+                    hint: 'Nhập họ và tên',
+                    validator: Validators.validateFullName,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -243,6 +230,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           }
                         },
                       ),
+                      // SelectBirthdayWidget(
+                      //   initialDate: DateTime.now(),
+                      //   onDateSelected: (DateTime pickedDate) {
+                      //     setState(() {
+                      //       _dobController.text =
+                      //           DateFormat('yyyy-MM-dd').format(pickedDate);
+                      //     });
+                      //   },
+                      // ),
                     ],
                   ),
                   Column(
@@ -263,8 +259,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   _customTitle(title: 'Địa chỉ'),
                   _customTextField(
-                      controller: _addressController,
-                      labelText: 'Nhập địa chỉ'),
+                      controller: _addressController, hint: 'Nhập địa chỉ'),
                   Container(
                     margin: const EdgeInsets.only(top: 12, bottom: 20),
                     height: 55,
@@ -325,32 +320,24 @@ Widget _customTitle({required String title}) {
 
 Widget _customTextField({
   required TextEditingController controller,
-  required String labelText,
-  double width = double.infinity,
+  required String hint,
+  // double width = double.infinity,
   String? Function(String?)? validator,
+  TextInputType keyboardType = TextInputType.text,
 }) {
   return TextFormField(
     controller: controller,
+    keyboardType: keyboardType,
     validator: validator,
     decoration: InputDecoration(
-      // labelText: labelText,
+      labelText: hint,
       // filled: true,
       // fillColor: Colors.white,
-      // floatingLabelBehavior: FloatingLabelBehavior.never,
-      // labelStyle: const TextStyle(fontSize: 14),
+      floatingLabelBehavior: FloatingLabelBehavior.never,
+      contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      // contentPadding:
-      //     const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-      // focusedBorder: OutlineInputBorder(
-      //   borderRadius: const BorderRadius.all(Radius.circular(15)),
-      //   borderSide: BorderSide(color: AppColors.accent, width: 1),
-      // ),
-      // enabledBorder: OutlineInputBorder(
-      //   borderRadius: const BorderRadius.all(Radius.circular(10)),
-      //   borderSide: BorderSide(color: AppColors.neutralGrey2, width: 1),
-      // ),
     ),
   );
 }
