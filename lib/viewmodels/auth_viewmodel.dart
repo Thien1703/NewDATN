@@ -114,8 +114,8 @@ class AuthViewModel with ChangeNotifier {
   }
 
   /// Cập nhật hồ sơ
-  Future<bool> updateProfile(BuildContext context,
-      Map<String, dynamic> profileData, File? avatar) async {
+  Future<bool> updateProfile(
+      BuildContext context, Map<String, dynamic> profileData) async {
     // 🔹 Lấy userId từ local storage
     int? userId = await LocalStorageService.getUserId();
 

@@ -104,7 +104,8 @@ class _WidgetSelectGenderState extends State<WidgetSelectGender> {
               color: isSelected ? AppColors.accent : AppColors.neutralGrey2,
               width: 1.5,
             ),
-            backgroundColor: isSelected ? AppColors.accent.withOpacity(0.2) : Colors.white,
+            backgroundColor:
+                isSelected ? AppColors.accent.withOpacity(0.2) : Colors.white,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
