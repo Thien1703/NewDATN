@@ -4,7 +4,6 @@ import 'package:health_care/services/local_storage_service.dart';
 import 'package:health_care/utils/validators.dart';
 import 'package:health_care/viewmodels/profile_viewmodel.dart';
 import 'package:health_care/viewmodels/toast_helper.dart';
-import 'package:health_care/views/widgets/bottomSheet/select_birthday_widget.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/views/widgets/widget_selectGender.dart';
 import 'package:intl/intl.dart';
@@ -28,6 +27,7 @@ class _AddProfileState extends State<AddProfile> {
 
   String? _selectedGender;
   bool isLoading = false;
+  DateTime _selectedDate = DateTime.now();
 
   @override
   void dispose() {
@@ -102,13 +102,41 @@ class _AddProfileState extends State<AddProfile> {
                 ),
                 const SizedBox(height: 15),
                 _customTitle('Ngày sinh'),
-                SelectBirthdayWidget(
-                  initialDate: DateTime.now(),
-                  onDateSelected: (DateTime pickedDate) {
-                    setState(() {
-                      _birthDateController.text =
-                          DateFormat('yyyy-MM-dd').format(pickedDate);
-                    });
+                // SelectBirthdayWidget(
+                //   initialDate: DateTime.now(),
+                //   onDateSelected: (DateTime pickedDate) {
+                //     setState(() {
+                //       _birthDateController.text =
+                //           DateFormat('yyyy-MM-dd').format(pickedDate);
+                //     });
+                //   },
+                // ),
+                TextFormField(
+                  controller: _birthDateController,
+                  validator: (value) => value == null || value.trim().isEmpty
+                      ? 'Vui lòng chọn ngày sinh'
+                      : null,
+                  decoration: InputDecoration(
+                    hintText: 'Chọn ngày sinh',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  readOnly: true,
+                  onTap: () async {
+                    final DateTime? picked = await showDatePicker(
+                      context: context,
+                      initialDate: _selectedDate,
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime.now(),
+                    );
+                    if (picked != null && picked != _selectedDate) {
+                      setState(() {
+                        _selectedDate = picked;
+                        _birthDateController.text =
+                            DateFormat('yyyy-MM-dd').format(picked);
+                      });
+                    }
                   },
                 ),
                 const SizedBox(height: 15),
@@ -193,7 +221,8 @@ class _AddProfileState extends State<AddProfile> {
       keyboardType: keyboardType,
       validator: validator,
       decoration: InputDecoration(
-        labelText: hint,
+        // labelText: hintText,
+        hintText: hint,
         // filled: true,
         // fillColor: Colors.white,
         floatingLabelBehavior: FloatingLabelBehavior.never,
