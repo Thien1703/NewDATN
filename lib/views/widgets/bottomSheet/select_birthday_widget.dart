@@ -22,7 +22,7 @@ class _SelectBirthdayWidgetState extends State<SelectBirthdayWidget> {
   @override
   void initState() {
     super.initState();
-    _selectedDate = widget.initialDate ?? DateTime.now();
+    _selectedDate = widget.initialDate;
   }
 
   void _openDatePicker() {
@@ -97,10 +97,10 @@ class _SelectBirthdayWidgetState extends State<SelectBirthdayWidget> {
     return InkWell(
       onTap: _openDatePicker,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(15),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

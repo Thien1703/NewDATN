@@ -159,4 +159,35 @@ class ProfileConfig {
       return null;
     }
   }
+
+  // Lấy danh sách hồ sơ theo customerId
+  static Future<List<Map<String, dynamic>>?> getProfilesByCustomerId(
+      int customerId) async {
+    final url = Uri.parse('$baseUrl/profile/get-by-customer-id');
+    final token = await LocalStorageService.getToken();
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({'customerId': customerId}),
+      );
+
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
+
+      if (response.statusCode == 200 && data['status'] == 0) {
+        final List<dynamic> profiles = data['data'];
+        return profiles.cast<Map<String, dynamic>>();
+      } else {
+        print('⚠️ Lỗi khi lấy hồ sơ theo customerId: ${data['message']}');
+        return null;
+      }
+    } catch (e) {
+      print('❌ Lỗi khi gọi API get-by-customer-id: $e');
+      return null;
+    }
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/services/local_storage_service.dart';
+import 'package:health_care/utils/validators.dart';
 import 'package:health_care/viewmodels/profile_viewmodel.dart';
 import 'package:health_care/viewmodels/toast_helper.dart';
 import 'package:health_care/views/widgets/bottomSheet/select_birthday_widget.dart';
@@ -89,9 +90,7 @@ class _AddProfileState extends State<AddProfile> {
                 _buildTextField(
                   controller: _fullNameController,
                   hint: 'Nhập họ và tên',
-                  validator: (value) => value == null || value.trim().isEmpty
-                      ? 'Vui lòng nhập họ và tên'
-                      : null,
+                  validator: Validators.validateFullName,
                 ),
                 const SizedBox(height: 15),
                 _customTitle('Số điện thoại'),
@@ -99,9 +98,7 @@ class _AddProfileState extends State<AddProfile> {
                   controller: _phoneController,
                   hint: 'Nhập số điện thoại',
                   keyboardType: TextInputType.phone,
-                  validator: (value) => value == null || value.trim().isEmpty
-                      ? 'Vui lòng nhập số điện thoại'
-                      : null,
+                  validator: Validators.validatePhoneNumber,
                 ),
                 const SizedBox(height: 15),
                 _customTitle('Ngày sinh'),
@@ -197,13 +194,13 @@ class _AddProfileState extends State<AddProfile> {
       validator: validator,
       decoration: InputDecoration(
         labelText: hint,
-        filled: true,
-        fillColor: Colors.white,
+        // filled: true,
+        // fillColor: Colors.white,
         floatingLabelBehavior: FloatingLabelBehavior.never,
         contentPadding:
-            const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(15),
         ),
       ),
     );

@@ -211,8 +211,7 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                                   borderRadius:
                                                       BorderRadius.circular(10),
                                                   side: BorderSide(
-                                                      color: Colors.black
-                                                          .withOpacity(0.3),
+                                                      color: Colors.black,
                                                       width: 1),
                                                 ),
                                                 padding: EdgeInsets.symmetric(
