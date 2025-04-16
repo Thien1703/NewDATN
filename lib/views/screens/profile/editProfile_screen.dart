@@ -208,7 +208,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       SizedBox(height: 5),
                       TextFormField(
                         controller: _dobController,
+                        validator: (value) =>
+                            value == null || value.trim().isEmpty
+                                ? 'Vui lòng nhập địa chỉ'
+                                : null,
                         decoration: InputDecoration(
+                          hintText: 'Chọn ngày sinh',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
@@ -259,19 +264,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   _customTitle(title: 'Địa chỉ'),
                   _customTextField(
-                      controller: _addressController, hint: 'Nhập địa chỉ'),
+                    controller: _addressController,
+                    hint: 'Nhập địa chỉ',
+                    validator: (value) => value == null || value.trim().isEmpty
+                        ? 'Vui lòng nhập địa chỉ'
+                        : null,
+                  ),
                   Container(
                     margin: const EdgeInsets.only(top: 12, bottom: 20),
                     height: 55,
                     width: double.infinity,
                     child: GestureDetector(
-                      onTap: _nameController.text.isNotEmpty &&
-                              _dobController.text.isNotEmpty &&
-                              _addressController.text.isNotEmpty &&
-                              selectedGender != null &&
-                              !isLoading
-                          ? _handleUpdateProfile
-                          : null,
+                      onTap: isLoading ? null : _handleUpdateProfile,
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
@@ -321,8 +325,7 @@ Widget _customTitle({required String title}) {
 Widget _customTextField({
   required TextEditingController controller,
   required String hint,
-  // double width = double.infinity,
-  String? Function(String?)? validator,
+  required String? Function(String?) validator,
   TextInputType keyboardType = TextInputType.text,
 }) {
   return TextFormField(
@@ -330,7 +333,7 @@ Widget _customTextField({
     keyboardType: keyboardType,
     validator: validator,
     decoration: InputDecoration(
-      labelText: hint,
+      hintText: hint,
       // filled: true,
       // fillColor: Colors.white,
       floatingLabelBehavior: FloatingLabelBehavior.never,
