@@ -36,7 +36,7 @@ class _UnpaiddetailScreen extends State<UnpaiddetailScreen> {
           ? Container(
               color: const Color(0xFFECECEC),
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 10),
+                margin: EdgeInsets.symmetric(horizontal: 15),
                 child: Column(
                   children: [
                     SizedBox(height: 10),
@@ -48,19 +48,18 @@ class _UnpaiddetailScreen extends State<UnpaiddetailScreen> {
                             'Đã hủy lịch khám',
                             style: TextStyle(
                               color: Colors.red,
-                              fontSize: 18,
+                              fontSize: 17,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           Icon(
                             Icons.check_circle_outline_outlined,
-                            size: 31,
+                            size: 28,
                             color: Colors.red,
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 5),
                     _buildContainer(
                       Column(
                         children: [
@@ -86,6 +85,7 @@ class _UnpaiddetailScreen extends State<UnpaiddetailScreen> {
                                         fontSize: 17,
                                         fontWeight: FontWeight.w600,
                                       ),
+                                      textAlign: TextAlign.end,
                                     ),
                                   ],
                                 ),
@@ -100,7 +100,7 @@ class _UnpaiddetailScreen extends State<UnpaiddetailScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
                     InkWell(
                       onTap: () {
                         Navigator.push(
@@ -116,12 +116,13 @@ class _UnpaiddetailScreen extends State<UnpaiddetailScreen> {
                       child: Container(
                         width: double.infinity,
                         margin: EdgeInsets.symmetric(horizontal: 15),
-                        padding: EdgeInsets.symmetric(vertical: 8),
+                        padding: EdgeInsets.symmetric(vertical: 5),
                         decoration: BoxDecoration(
                           border: Border.all(
                             width: 1,
                             color: Colors.black.withOpacity(0.4),
                           ),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: Center(
                           child: Text(
@@ -160,7 +161,7 @@ class _UnpaiddetailScreen extends State<UnpaiddetailScreen> {
           Text(
             value,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: FontWeight.w400,
             ),
           ),
@@ -170,7 +171,7 @@ class _UnpaiddetailScreen extends State<UnpaiddetailScreen> {
               label,
               textAlign: TextAlign.right,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 15,
                 fontWeight: FontWeight.w500,
               ),
               softWrap: true,
@@ -185,15 +186,15 @@ class _UnpaiddetailScreen extends State<UnpaiddetailScreen> {
   Widget _buildContainer(Widget child) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(15),
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
               color: Colors.grey.withOpacity(0.3),
-              blurRadius: 5,
+              blurRadius: 10,
               spreadRadius: 1),
         ],
       ),

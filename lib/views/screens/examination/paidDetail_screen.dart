@@ -61,7 +61,7 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
                   children: [
                     Expanded(
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: SingleChildScrollView(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,7 +176,7 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
         children: [
           Text(
             appointment.clinic.name,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 20),
@@ -198,12 +198,12 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
               QrImageView(data: appointment.id.toString(), size: 120),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 20),
           _buildStatusBadge(
               getStatusText(widget.status), getStatusColor(widget.status)),
           appointment.status == 'CANCELLED'
               ? Padding(
-                  padding: EdgeInsets.only(top: 5),
+                  padding: EdgeInsets.only(top: 10),
                   child: Text(
                     'Đã hủy. Lịch khám đã được hủy bởi bạn. Để được hộ trợ vui lòng liên hệ ',
                     style: TextStyle(
@@ -310,7 +310,7 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
   Widget _buildContainer(Widget child) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(25),
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -545,7 +545,7 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
                           onPressed: (tempSelectedValue == null || isLoading)
                               ? null
                               : () async {
-                                  setState(() {
+                                  setStateModal(() {
                                     isLoading = true;
                                   });
                                   bool? success =
@@ -554,7 +554,7 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
                                     tempSelectedValue!,
                                   );
 
-                                  setState(() {
+                                  setStateModal(() {
                                     isLoading = false;
                                   });
                                   if (mounted) {

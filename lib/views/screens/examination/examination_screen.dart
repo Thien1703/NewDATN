@@ -189,7 +189,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
       },
       child: Card(
         elevation: 5,
-        margin: EdgeInsets.only(bottom: 15, right: 10, left: 10),
+        margin: EdgeInsets.only(bottom: 15, right: 15, left: 15),
         color: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -200,7 +200,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildStatusRow(appointment.status),
-              SizedBox(height: 10),
+              SizedBox(height: 5),
               Row(
                 children: [
                   Expanded(
@@ -208,13 +208,13 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                       appointment.clinic.name,
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 19,
+                        fontSize: 18,
                         fontWeight: FontWeight.w800,
                       ),
                       softWrap: true,
                     ),
                   ),
-                  SizedBox(width: 40),
+                  SizedBox(width: 30),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
@@ -226,7 +226,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 5),
               _buildLabelRow(
                   icon: Icons.person,
                   label: 'Bệnh nhân',

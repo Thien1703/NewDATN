@@ -7,7 +7,6 @@ import 'package:health_care/viewmodels/api/clinic_api.dart';
 import 'package:health_care/viewmodels/api/rating_api.dart';
 import 'package:health_care/viewmodels/api/service_api.dart';
 import 'package:health_care/views/screens/clinic/clinic_screen.dart';
-import 'package:scroll_date_picker/scroll_date_picker.dart';
 
 class ServicedetailScreen extends StatefulWidget {
   const ServicedetailScreen({super.key, required this.serviceId});
@@ -86,7 +85,7 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                     ],
                   ),
                   bottom: PreferredSize(
-                    preferredSize: Size.fromHeight(20),
+                    preferredSize: Size.fromHeight(50),
                     child: Container(
                       decoration: BoxDecoration(
                           color: Colors.white,
@@ -124,30 +123,40 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                   backgroundColor: AppColors.deepBlue,
                   expandedHeight: 300,
                   flexibleSpace: FlexibleSpaceBar(
-                    background: services!.image == null
-                        ? Container(
-                            height: double.maxFinite,
-                            color: Colors.grey[300],
-                            child: Center(
-                              child: Icon(
-                                Icons.image,
-                                color: Colors.grey,
-                                size: 80,
-                              ),
-                            ),
-                          )
-                        : services!.image!
-                                .startsWith('http') // Check if it's a URL
-                            ? Image.network(
-                                services!.image!,
-                                width: double.maxFinite,
-                                fit: BoxFit.fill,
-                              )
-                            : Image.asset(
-                                services!.image!,
-                                width: double.maxFinite,
-                                fit: BoxFit.fill,
-                              ),
+                    background: Image.network(
+                      services!.image,
+                      width: double.maxFinite,
+                      fit: BoxFit.fill,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          'assets/images/imageOnErrror.png',
+                          fit: BoxFit.fill,
+                        );
+                      },
+                    ),
+                    // background: services!.image == null
+                    //     ? Container(
+                    //         height: double.maxFinite,
+                    //         color: Colors.grey[300],
+                    //         child: Center(
+                    //           child: Icon(
+                    //             Icons.image,
+                    //             color: Colors.grey,
+                    //             size: 80,
+                    //           ),
+                    //         ),
+                    //       )
+                    //     : services!.image!.startsWith('http')
+                    //         ? Image.network(
+                    //             services!.image!,
+                    //             width: double.maxFinite,
+                    //             fit: BoxFit.fill,
+                    //           )
+                    //         : Image.asset(
+                    //             services!.image!,
+                    //             width: double.maxFinite,
+                    //             fit: BoxFit.fill,
+                    //           ),
                   ),
                 ),
                 SliverToBoxAdapter(
@@ -256,8 +265,10 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                     height: 10,
                                   ),
                                   Container(
+                                      margin:
+                                          EdgeInsets.symmetric(horizontal: 5),
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 15),
+                                          horizontal: 15, vertical: 15),
                                       decoration: BoxDecoration(
                                         border: Border.all(
                                             color: Colors.black, width: 1),
@@ -298,7 +309,7 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                                                 .start,
                                                         children: [
                                                           Text(
-                                                            clinic!.name,
+                                                            clinic.name,
                                                             style: TextStyle(
                                                               fontSize: 16,
                                                               fontWeight:
@@ -381,7 +392,7 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 20),
+                          SizedBox(height: 10),
                           Container(
                             decoration:
                                 BoxDecoration(color: Colors.white, boxShadow: [
@@ -394,7 +405,7 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                             ]),
                             child: Container(
                               margin: EdgeInsets.symmetric(
-                                  horizontal: 13, vertical: 15),
+                                  horizontal: 20, vertical: 15),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -408,7 +419,7 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                         ),
                                       ),
                                       Text(
-                                        '(${services!.reviewCount} đánh giá)',
+                                        ' (${services!.reviewCount} đánh giá)',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           color: Colors.black.withOpacity(0.6),
@@ -421,7 +432,7 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                     child: Text(
                                       'Trung bình',
                                       style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 15,
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
@@ -431,7 +442,7 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                       Text(
                                         services!.averageRating.toString(),
                                         style: TextStyle(
-                                          fontSize: 19,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.w700,
                                           color: Colors.black,
                                         ),
@@ -441,7 +452,7 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                         child: Icon(
                                           Icons.star_rate_rounded,
                                           color: const Color(0xFFE0AA08),
-                                          size: 30,
+                                          size: 25,
                                         ),
                                       )
                                     ],
@@ -475,11 +486,11 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                                   color: starIndex < starRating
                                                       ? const Color(0xFFE0AA08)
                                                       : Colors.grey.shade400,
-                                                  size: 23,
+                                                  size: 20,
                                                 );
                                               }),
                                             ),
-                                            SizedBox(width: 10),
+                                            SizedBox(width: 20),
 
                                             // Thanh phần trăm đánh giá
                                             Expanded(
@@ -515,11 +526,11 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                               ),
                                             ),
 
-                                            SizedBox(width: 10),
+                                            SizedBox(width: 20),
                                             Text(
                                               '$count',
                                               style: TextStyle(
-                                                fontSize: 13,
+                                                fontSize: 15,
                                                 color: Colors.grey.shade700,
                                               ),
                                               textAlign: TextAlign.end,
@@ -630,8 +641,10 @@ class _ServicedetailScreen extends State<ServicedetailScreen> {
                                         : Text(
                                             'Chưa có đánh giá nào',
                                             style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.grey),
+                                              fontSize: 15,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w500,
+                                            ),
                                           ),
                                   ),
                                   SizedBox(height: 20),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Import để sử dụng SystemNavigator.pop()
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/customer.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
@@ -56,49 +57,64 @@ class _HomeScreensState extends State<HomeScreens> {
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
-    return SafeArea(
-      child: Scaffold(
-        drawer: _selectedIndex == 0
-            ? BuildDraw(fullName: customers?.fullName ?? 'Không xác định')
-            : null,
-        extendBody: _selectedIndex == 0,
-        body: _screens[_selectedIndex],
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: AppColors.deepBlue,
-          shape: CircleBorder(),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ClinicScreen()),
-            );
-          },
-          child: Icon(Icons.add, size: 30, color: Colors.white),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              blurRadius: 2,
-              spreadRadius: 2,
-            )
-          ]),
-          child: BottomAppBar(
-            shape: CircularNotchedRectangle(),
-            notchMargin: 8.0,
-            color: Colors.white,
-            child: SizedBox(
-              height: screenHeight *
-                  0.08, // Tự động điều chỉnh theo chiều cao màn hình
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildBottomBarItem(Icons.home, 'Trang chủ', 0),
-                  _buildBottomBarItem(Icons.local_hospital, 'Lịch khám', 1),
-                  SizedBox(width: 50), // Chừa chỗ cho FAB
-                  _buildBottomBarItem(Icons.speed_outlined, 'Công cụ', 3),
-                  _buildBottomBarItem(Icons.person, 'Tài khoản', 4),
-                ],
+    return WillPopScope(
+      onWillPop: () async {
+        if (_selectedIndex != 0) {
+          // Nếu không phải màn Trang chủ, chuyển về Trang chủ
+          setState(() {
+            _selectedIndex = 0;
+          });
+          return false; // Không thoát app
+        } else {
+          // Nếu đã ở màn Trang chủ, thoát app
+          SystemNavigator.pop();
+          return false;
+        }
+      },
+      child: SafeArea(
+        child: Scaffold(
+          drawer: _selectedIndex == 0
+              ? BuildDraw(fullName: customers?.fullName ?? 'Không xác định')
+              : null,
+          extendBody: _selectedIndex == 0,
+          body: _screens[_selectedIndex],
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: AppColors.deepBlue,
+            shape: const CircleBorder(),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ClinicScreen()),
+              );
+            },
+            child: const Icon(Icons.add, size: 30, color: Colors.white),
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          bottomNavigationBar: Container(
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                blurRadius: 2,
+                spreadRadius: 2,
+              )
+            ]),
+            child: BottomAppBar(
+              shape: const CircularNotchedRectangle(),
+              notchMargin: 8.0,
+              color: Colors.white,
+              child: SizedBox(
+                height: screenHeight * 0.08,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildBottomBarItem(Icons.home, 'Trang chủ', 0),
+                    _buildBottomBarItem(Icons.local_hospital, 'Lịch khám', 1),
+                    const SizedBox(width: 50),
+                    _buildBottomBarItem(Icons.speed_outlined, 'Công cụ', 3),
+                    _buildBottomBarItem(Icons.person, 'Tài khoản', 4),
+                  ],
+                ),
               ),
             ),
           ),

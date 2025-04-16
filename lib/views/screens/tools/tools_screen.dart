@@ -61,8 +61,8 @@ class _ToolsScreen extends State<ToolsScreen> {
                     MaterialPageRoute(builder: (context) => const BmrScreen()),
                   );
                 }),
-                _buildSelected('assets/images/image3.jpg', () {}),
-                _buildSelected('assets/images/image4.jpg', () {}),
+                // _buildSelected('assets/images/image3.jpg', () {}),
+                // _buildSelected('assets/images/image4.jpg', () {}),
                 _buildSelected('assets/images/callvideo.png', () {
                   Navigator.push(
                     context,
