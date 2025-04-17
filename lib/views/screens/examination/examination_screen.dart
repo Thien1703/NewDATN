@@ -109,7 +109,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                       )
                     : filteredAppointments.isNotEmpty
                         ? ListView.builder(
-                            padding: EdgeInsets.only(top: 10),
+                            padding: EdgeInsets.only(top: 15),
                             itemCount: filteredAppointments.length,
                             itemBuilder: (context, index) {
                               final appointment =
@@ -154,12 +154,19 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
         margin: EdgeInsets.symmetric(horizontal: 5),
         padding: EdgeInsets.symmetric(vertical: 7, horizontal: 15),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.deepBlue : Color(0xFFF0F2F5),
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(
-              color: isSelected ? AppColors.deepBlue : Color(0xFFF0F2F5),
-              width: 1),
-        ),
+            color: isSelected ? AppColors.deepBlue : Color(0xFFF0F2F5),
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(
+                color: isSelected ? AppColors.deepBlue : Color(0xFFF0F2F5),
+                width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                offset: Offset(0, 1),
+                blurRadius: 1,
+                spreadRadius: 1,
+              )
+            ]),
         child: Text(label,
             style: TextStyle(color: isSelected ? Colors.white : Colors.black)),
       ),
@@ -195,7 +202,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
           borderRadius: BorderRadius.circular(20),
         ),
         child: Padding(
-          padding: EdgeInsets.all(15),
+          padding: EdgeInsets.only(left: 15, right: 15, bottom: 10, top: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -208,7 +215,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                       appointment.clinic.name,
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 18,
+                        fontSize: 17.5,
                         fontWeight: FontWeight.w800,
                       ),
                       softWrap: true,
@@ -219,8 +226,8 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
                       appointment.clinic.image,
-                      width: 65,
-                      height: 65,
+                      width: 70,
+                      height: 70,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -228,9 +235,12 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
               ),
               SizedBox(height: 5),
               _buildLabelRow(
-                  icon: Icons.person,
-                  label: 'Bệnh nhân',
-                  value: appointment.customer.fullName),
+                icon: Icons.person,
+                label: 'Bệnh nhân',
+                value: appointment.customerProfile == null
+                    ? appointment.customer.fullName
+                    : appointment.customerProfile!.fullName,
+              ),
               _buildLabelRow(
                   icon: Icons.date_range_rounded,
                   label: "Ngày khám",
@@ -363,11 +373,12 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
               Icon(
                 icon,
                 color: Color(0xFF929191),
+                size: 22,
               ),
               SizedBox(width: 5),
               Text(label,
                   style: TextStyle(
-                    fontSize: 14.5,
+                    fontSize: 15,
                     color: Color(0xFF929191),
                     fontWeight: FontWeight.normal,
                   )),
@@ -376,8 +387,10 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
           Text(
             value,
             style: TextStyle(
-              color: colorLabel != null ? AppColors.deepBlue : Colors.black,
-              fontSize: 17,
+              color: colorLabel != null
+                  ? AppColors.deepBlue
+                  : Colors.black.withOpacity(0.9),
+              fontSize: 16,
               fontWeight: FontWeight.w700,
             ),
           ),

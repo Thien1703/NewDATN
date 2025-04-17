@@ -21,6 +21,7 @@ class ConfirmBooking extends StatefulWidget {
     super.key,
     required this.onNavigateToScreen,
     required this.customerId,
+    required this.customerProfileId,
     required this.clinicId,
     required this.selectedServiceIds,
     required this.date,
@@ -29,6 +30,7 @@ class ConfirmBooking extends StatefulWidget {
 
   final Function(int, String) onNavigateToScreen;
   final int customerId;
+  final int customerProfileId;
   final int clinicId;
   final List<int> selectedServiceIds;
   final String date;
@@ -93,6 +95,10 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
       customerId: widget.customerId,
       date: widget.date,
       time: widget.time,
+      customerProfileId:
+          widget.customerProfileId == 0 || widget.customerProfileId == null
+              ? null
+              : widget.customerProfileId,
       status: "pending",
     );
     if (!mounted) return;

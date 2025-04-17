@@ -14,6 +14,7 @@ class ProfileBooking extends StatefulWidget {
     int? clinicId,
     List<int>? serviceIds,
     int? customerId,
+    int? customerProfileId,
     String? date, // ✅ Thêm ngày khám
     String? time, // ✅ Thêm giờ khám
   }) onNavigateToScreen;
@@ -70,19 +71,26 @@ class _ProfileBooking extends State<ProfileBooking> {
   //   _profileCardKey.currentState?.fetchUserProfile();
   // }
 
-  void _handleProfileTap(int customerId) {
-    print("ID khách hàng: $customerId");
-    print(
-        "Dữ liệu nhận từ ExamInfoBooking: Clinic ID: ${widget.clinicId}, Dịch vụ: ${widget.selectedServiceId}");
+  void _handleProfileTap(int customerId, int? customerProfileId) {
+    print('customerId: $customerId');
+    print('customerProfileId: $customerProfileId');
+
+    final customerIdFromProvider =
+        Provider.of<UserProvider>(context, listen: false).customerId;
+    if (customerIdFromProvider == null) {
+      print("Không tìm thấy customerId trong Provider");
+      return;
+    }
+
     widget.onNavigateToScreen(
       2,
       'Xác nhận thông tin',
       customerId: customerId,
+      customerProfileId: customerProfileId,
       clinicId: widget.clinicId,
       serviceIds: widget.selectedServiceId,
       date: widget.date,
       time: widget.time,
-      // selectedProfile: selectedProfile,
     );
   }
 
@@ -141,7 +149,9 @@ class _ProfileBooking extends State<ProfileBooking> {
           ),
           WidgetCustomerinforCard(
             key: _profileCardKey, // ✅ Thêm key để truy cập state
-            onTap: _handleProfileTap,
+            onTap: (customerId) {
+              _handleProfileTap(customerId, null);
+            },
           ),
           const SizedBox(height: 10),
           _isLoading
@@ -156,7 +166,9 @@ class _ProfileBooking extends State<ProfileBooking> {
                     final profile = _profiles[index];
                     return WidgetProfileCard(
                       profile: profile,
-                      // onTap: {}
+                      onTap: (customerId, customerProfileId) {
+                        _handleProfileTap(customerId, customerProfileId);
+                      },
                     );
                   },
                 ),

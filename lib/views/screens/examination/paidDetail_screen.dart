@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/appointment/appointment_service.dart';
+import 'package:health_care/models/customerProfile.dart';
 import 'package:health_care/viewmodels/api/appointmentService_api.dart';
 import 'package:health_care/viewmodels/api/appointment_api.dart';
 import 'package:health_care/views/screens/clinic/clinic_screen.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
 import 'package:health_care/views/widgets/bottomSheet/header_bottomSheet.dart';
 import 'package:health_care/views/widgets/bottomSheet/showCustomer.dart';
+import 'package:health_care/views/widgets/bottomSheet/showCustomerProfile.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/views/widgets/widget_lineBold.dart';
 import 'package:intl/intl.dart';
@@ -252,27 +254,57 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
 
   Widget _buildPatientInfo() {
     final customer = appointmentServices!.first.appointment.customer;
+    final customerProfile =
+        appointmentServices!.first.appointment.customerProfile;
+
+    // Kiểm tra nếu customerProfile là null, hiển thị thông tin của customer
     return _buildContainer(
       Column(
         children: [
-          _buildInfoRow(
-              'Mã bệnh nhân', customer.id.toString(), AppColors.deepBlue),
-          _buildInfoRow('Họ và tên', customer.fullName, Colors.black),
-          _buildInfoRow('Số điện thoại', customer.phoneNumber, Colors.black),
-          const WidgetLineBold(),
-          InkWell(
-            onTap: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (context) => Showcustomer(),
-              );
-            },
-            child: const Text('Chi tiết',
-                style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.deepBlue)),
-          ),
+          // Hiển thị thông tin của customer nếu customerProfile là null
+          if (customerProfile == null) ...[
+            _buildInfoRow(
+                'Mã bệnh nhân', customer.id.toString(), AppColors.deepBlue),
+            _buildInfoRow('Họ và tên', customer.fullName, Colors.black),
+            _buildInfoRow('Số điện thoại', customer.phoneNumber, Colors.black),
+            const WidgetLineBold(),
+            InkWell(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) => Showcustomer(),
+                );
+              },
+              child: const Text('Chi tiết',
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.deepBlue)),
+            ),
+          ]
+          // Nếu customerProfile không phải null, hiển thị thông tin của customerProfile
+          else ...[
+            _buildInfoRow('Mã bệnh nhân', customerProfile.id.toString(),
+                AppColors.deepBlue),
+            _buildInfoRow('Họ và tên', customerProfile.fullName, Colors.black),
+            _buildInfoRow(
+                'Số điện thoại', customerProfile.phoneNumber, Colors.black),
+            const WidgetLineBold(),
+            InkWell(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) => ShowcustomerProfile(
+                      customerProfileId: customerProfile.id),
+                );
+              },
+              child: const Text('Chi tiết',
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.deepBlue)),
+            ),
+          ],
         ],
       ),
     );

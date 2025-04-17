@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 
 class WidgetProfileCard extends StatefulWidget {
   final Map<String, dynamic> profile;
-  final Function(int)? onTap;
+  final Function(int customerId, int customerProfileId)? onTap;
 
   const WidgetProfileCard({
     super.key,
@@ -32,11 +32,14 @@ class _WidgetProfileCardState extends State<WidgetProfileCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (widget.profile['id'] != null) {
-          int customerId = widget.profile['id'];
-          if (widget.onTap != null) {
-            widget.onTap!(customerId);
-          }
+        // Lấy customerId và customerProfileId từ profile
+        int customerProfileId = widget.profile['id'];
+        int customerId = widget.profile['customerId'] ??
+            customerProfileId; // Nếu không có customerId thì dùng id làm customerId
+
+        // Kiểm tra và gọi onTap nếu có
+        if (widget.onTap != null) {
+          widget.onTap!(customerId, customerProfileId);
         }
       },
       child: Card(
@@ -49,6 +52,11 @@ class _WidgetProfileCardState extends State<WidgetProfileCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              _customRow(
+                image: AppIcons.user1,
+                titleOfImage:
+                    widget.profile['customerId'].toString() ?? 'Chưa có id',
+              ),
               _customRow(
                 image: AppIcons.user1,
                 titleOfImage: widget.profile['fullName'] ?? 'Chưa có tên',
