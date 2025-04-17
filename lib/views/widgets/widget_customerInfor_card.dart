@@ -73,13 +73,21 @@ class WidgetCustomerinforCardState extends State<WidgetCustomerinforCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _customRow(
-                                image: AppIcons.user1,
-                                titleOfImage:
-                                    userInfo!['fullName'] ?? 'Chưa có tên'),
+                              image: AppIcons.user1,
+                              titleOfImage:
+                                  userInfo!['fullName'] ?? 'Chưa có tên',
+                              onEdit: () {
+                                // TODO: handle edit full name
+                              },
+                              onDelete: () {
+                                // TODO: handle delete phone number
+                              },
+                            ),
                             _customRow(
-                                image: AppIcons.call,
-                                titleOfImage:
-                                    userInfo!['phoneNumber'] ?? 'Chưa có SĐT'),
+                              image: AppIcons.call,
+                              titleOfImage:
+                                  userInfo!['phoneNumber'] ?? 'Chưa có SĐT',
+                            ),
                             _customRow(
                                 image: AppIcons.calendar,
                                 titleOfImage:
@@ -102,33 +110,49 @@ Widget _customRow({
   required String image,
   required String titleOfImage,
   VoidCallback? onEdit,
+  VoidCallback? onDelete,
 }) {
   return Container(
     margin: EdgeInsets.only(bottom: 5),
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            Image.asset(
-              image,
-              color: AppColors.deepBlue,
-              width: 25,
-            ),
-            SizedBox(width: 10),
-            Text(
-              titleOfImage,
-              style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.deepBlue),
-            ),
-          ],
+        Image.asset(
+          image,
+          color: AppColors.deepBlue,
+          width: 25,
+        ),
+        SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            titleOfImage,
+            style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: AppColors.deepBlue),
+            softWrap: true,
+            overflow: TextOverflow.visible,
+          ),
         ),
         if (onEdit != null)
-          IconButton(
-            icon: Icon(Icons.add, size: 18, color: AppColors.deepBlue),
+          TextButton(
             onPressed: onEdit,
+            style: TextButton.styleFrom(
+              minimumSize: Size(30, 30),
+              padding: EdgeInsets.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: Icon(Icons.edit, size: 20, color: AppColors.deepBlue),
+          ),
+        SizedBox(width: 10),
+        if (onDelete != null)
+          TextButton(
+            onPressed: onDelete,
+            style: TextButton.styleFrom(
+              minimumSize: Size(30, 30),
+              padding: EdgeInsets.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: Icon(Icons.delete, size: 20, color: Colors.red),
           ),
       ],
     ),

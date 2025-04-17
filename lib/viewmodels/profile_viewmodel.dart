@@ -43,7 +43,6 @@ class ProfileViewModel with ChangeNotifier {
     required String phoneNumber,
     required String birthDate,
     required String gender,
-    required String cccd,
     required String address,
     String? avatar,
   }) async {
@@ -54,7 +53,6 @@ class ProfileViewModel with ChangeNotifier {
       phoneNumber: phoneNumber,
       birthDate: birthDate,
       gender: gender,
-      cccd: cccd,
       address: address,
       avatar: avatar,
     );

@@ -80,25 +80,24 @@ class _WidgetProfileCardState extends State<WidgetProfileCard> {
     return Container(
       margin: const EdgeInsets.only(bottom: 5),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              Image.asset(
-                image,
+          Image.asset(
+            image,
+            color: AppColors.deepBlue,
+            width: 25,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              titleOfImage,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
                 color: AppColors.deepBlue,
-                width: 25,
               ),
-              const SizedBox(width: 10),
-              Text(
-                titleOfImage,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.deepBlue,
-                ),
-              ),
-            ],
+              softWrap: true,
+              overflow: TextOverflow.visible,
+            ),
           ),
           if (onEdit != null)
             IconButton(

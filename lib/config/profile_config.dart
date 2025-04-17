@@ -60,7 +60,6 @@ class ProfileConfig {
     required String phoneNumber,
     required String birthDate,
     required String gender,
-    required String cccd,
     required String address,
     String? avatar,
   }) async {
@@ -74,7 +73,6 @@ class ProfileConfig {
       'phoneNumber': phoneNumber,
       'birthDate': birthDate,
       'gender': gender,
-      'cccd': cccd,
       'address': address,
       if (avatar != null) 'avatar': avatar,
     };

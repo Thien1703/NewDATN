@@ -93,7 +93,7 @@ class _ProfileBooking extends State<ProfileBooking> {
       child: ListView(
         children: [
           Padding(
-            padding: const EdgeInsets.all(10), // Padding giống với Card
+            padding: const EdgeInsets.all(5), // Padding giống với Card
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
