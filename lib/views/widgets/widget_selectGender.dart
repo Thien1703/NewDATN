@@ -30,13 +30,13 @@ class _WidgetSelectGenderState extends State<WidgetSelectGender> {
     return InkWell(
       onTap: () => _showGenderSelectionSheet(context),
       child: Container(
-        width: 160,
-        height: 43,
+        width: 120,
+        height: 52,
         padding: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(color: AppColors.neutralGrey2, width: 1),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          border: Border.all(color: Colors.grey, width: 1.2),
+          borderRadius: const BorderRadius.all(Radius.circular(15)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

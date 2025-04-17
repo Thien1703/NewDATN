@@ -87,6 +87,7 @@ class LocalStorageService {
       final isLogged = token != null;
       print("🔍 Đã đăng nhập chưa? $isLogged");
       return isLogged;
+
     } catch (e) {
       print("❌ Lỗi khi kiểm tra đăng nhập: $e");
       return false;

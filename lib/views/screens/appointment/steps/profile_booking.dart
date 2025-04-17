@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/viewmodels/profile_viewmodel.dart';
+import 'package:health_care/viewmodels/user_provider.dart';
 import 'package:health_care/views/screens/profile/add_profile.dart';
 import 'package:health_care/views/screens/profile/widget_profile_card.dart';
 import 'package:health_care/views/widgets/widget_customerInfor_card.dart';
+import 'package:provider/provider.dart';
 
 class ProfileBooking extends StatefulWidget {
   final Function(
@@ -14,7 +16,6 @@ class ProfileBooking extends StatefulWidget {
     int? customerId,
     String? date, // ✅ Thêm ngày khám
     String? time, // ✅ Thêm giờ khám
-    // Map<String, dynamic>? selectedProfile,
   }) onNavigateToScreen;
 
   final int clinicId;
@@ -48,7 +49,14 @@ class _ProfileBooking extends State<ProfileBooking> {
   }
 
   Future<void> _fetchAllProfiles() async {
-    final profiles = await _profileViewModel.getAllProfiles();
+    final customerId =
+        Provider.of<UserProvider>(context, listen: false).customerId;
+    if (customerId == null) {
+      print("Không tìm thấy customerId trong Provider");
+      return;
+    }
+    final profiles =
+        await _profileViewModel.getProfilesByCustomerId(customerId);
     if (mounted) {
       setState(() {
         _profiles = profiles ?? [];
@@ -63,15 +71,6 @@ class _ProfileBooking extends State<ProfileBooking> {
   // }
 
   void _handleProfileTap(int customerId) {
-    // final selectedProfile = _profiles.firstWhere(
-    //   (profile) => profile['id'] == customerId,
-    //   orElse: () => {},
-    // );
-
-    // if (selectedProfile.isEmpty) {
-    //   print("Không tìm thấy hồ sơ!");
-    //   return;
-    // }
     print("ID khách hàng: $customerId");
     print(
         "Dữ liệu nhận từ ExamInfoBooking: Clinic ID: ${widget.clinicId}, Dịch vụ: ${widget.selectedServiceId}");
