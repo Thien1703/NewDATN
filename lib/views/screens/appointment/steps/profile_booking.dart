@@ -3,7 +3,7 @@ import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/viewmodels/profile_viewmodel.dart';
 import 'package:health_care/viewmodels/user_provider.dart';
 import 'package:health_care/views/screens/profile/add_profile.dart';
-import 'package:health_care/views/screens/profile/widget_profile_card.dart';
+import 'package:health_care/views/widgets/widget_profile_card.dart';
 import 'package:health_care/views/widgets/widget_customerInfor_card.dart';
 import 'package:provider/provider.dart';
 
