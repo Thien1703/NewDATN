@@ -45,10 +45,10 @@ class _ProfileBooking extends State<ProfileBooking> {
   void initState() {
     super.initState();
     _profileViewModel = ProfileViewModel();
-    _fetchAllProfiles();
+    _fetchAllProfileByCustomerId();
   }
 
-  Future<void> _fetchAllProfiles() async {
+  Future<void> _fetchAllProfileByCustomerId() async {
     final customerId =
         Provider.of<UserProvider>(context, listen: false).customerId;
     if (customerId == null) {
@@ -66,9 +66,9 @@ class _ProfileBooking extends State<ProfileBooking> {
   }
 
   /// Hàm cập nhật thông tin user
-  // void _fetchUserProfile() {
-  //   _profileCardKey.currentState?.fetchUserProfile();
-  // }
+  void _fetchUserProfile() {
+    _profileCardKey.currentState?.fetchUserProfile();
+  }
 
   void _handleProfileTap(int customerId) {
     print("ID khách hàng: $customerId");
@@ -93,7 +93,7 @@ class _ProfileBooking extends State<ProfileBooking> {
       child: ListView(
         children: [
           Padding(
-            padding: const EdgeInsets.all(10), // Padding giống với Card
+            padding: const EdgeInsets.all(5), // Padding giống với Card
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -108,16 +108,10 @@ class _ProfileBooking extends State<ProfileBooking> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      // MaterialPageRoute(
-                      //   builder: (context) => EditProfileScreen(
-                      //     onProfileUpdated:
-                      //         _fetchUserProfile, // Gọi lại hàm này để cập nhật UI
-                      //   ),
-                      // ),
                       MaterialPageRoute(
                         builder: (context) => AddProfile(
                           onProfileAdded:
-                              _fetchAllProfiles, // Gọi lại để load danh sách mới
+                              _fetchAllProfileByCustomerId, // Gọi lại để load danh sách mới
                         ),
                       ),
                     );
@@ -142,6 +136,7 @@ class _ProfileBooking extends State<ProfileBooking> {
           WidgetCustomerinforCard(
             key: _profileCardKey, // ✅ Thêm key để truy cập state
             onTap: _handleProfileTap,
+            onProfileUpdated: _fetchUserProfile,
           ),
           const SizedBox(height: 10),
           _isLoading
@@ -156,6 +151,7 @@ class _ProfileBooking extends State<ProfileBooking> {
                     final profile = _profiles[index];
                     return WidgetProfileCard(
                       profile: profile,
+                      onProfileUpdated: _fetchAllProfileByCustomerId,
                       // onTap: {}
                     );
                   },

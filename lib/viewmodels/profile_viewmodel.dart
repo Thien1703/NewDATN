@@ -35,7 +35,7 @@ class ProfileViewModel with ChangeNotifier {
   }
 
   /// Cập nhật hồ sơ
-  Future<void> updateProfile(
+  Future<void> updateProfileById(
     BuildContext context, {
     required int id,
     required int customerId,
@@ -43,7 +43,6 @@ class ProfileViewModel with ChangeNotifier {
     required String phoneNumber,
     required String birthDate,
     required String gender,
-    required String cccd,
     required String address,
     String? avatar,
   }) async {
@@ -54,7 +53,6 @@ class ProfileViewModel with ChangeNotifier {
       phoneNumber: phoneNumber,
       birthDate: birthDate,
       gender: gender,
-      cccd: cccd,
       address: address,
       avatar: avatar,
     );
@@ -83,5 +81,20 @@ class ProfileViewModel with ChangeNotifier {
   Future<List<Map<String, dynamic>>?> getProfilesByCustomerId(
       int customerId) async {
     return await ProfileConfig.getProfilesByCustomerId(customerId);
+  }
+
+  /// Xóa hồ sơ theo ID
+  Future<void> deleteProfileById(BuildContext context, int id) async {
+    String? errorMessage = await ProfileConfig.deleteProfileById(id);
+
+    if (!context.mounted) return;
+
+    if (errorMessage == null) {
+      showToastSuccess("Xóa hồ sơ thành công!");
+      // Gọi notifyListeners() nếu bạn có ListView hoặc UI cần cập nhật lại
+      notifyListeners();
+    } else {
+      showToastError(errorMessage);
+    }
   }
 }
