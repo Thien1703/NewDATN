@@ -188,4 +188,32 @@ class ProfileConfig {
       return null;
     }
   }
+
+  // Xóa hồ sơ đặt khám theo ID
+  static Future<String?> deleteProfileById(int id) async {
+    final url = Uri.parse('$baseUrl/profile/delete-by-id');
+    final token = await LocalStorageService.getToken();
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({'id': id}),
+      );
+
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
+
+      if (response.statusCode == 200 && data['status'] == 0) {
+        return null; // Xóa thành công
+      } else {
+        return data['message'] ?? 'Xóa hồ sơ thất bại.';
+      }
+    } catch (e) {
+      print('❌ Lỗi khi gọi API delete-by-id: $e');
+      return 'Đã xảy ra lỗi khi xóa hồ sơ.';
+    }
+  }
 }

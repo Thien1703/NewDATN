@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_icons.dart';
 import 'package:health_care/config/app_config.dart';
+import 'package:health_care/views/screens/profile/editProfile_screen.dart';
 import 'package:intl/intl.dart';
 
 class WidgetCustomerinforCard extends StatefulWidget {
+  final Function()? onProfileUpdated;
   final Function(int)? onTap;
-  const WidgetCustomerinforCard({super.key, this.onTap});
+  const WidgetCustomerinforCard({super.key, this.onTap, this.onProfileUpdated});
 
   @override
   WidgetCustomerinforCardState createState() => WidgetCustomerinforCardState();
@@ -77,10 +79,20 @@ class WidgetCustomerinforCardState extends State<WidgetCustomerinforCard> {
                               titleOfImage:
                                   userInfo!['fullName'] ?? 'Chưa có tên',
                               onEdit: () {
-                                // TODO: handle edit full name
-                              },
-                              onDelete: () {
-                                // TODO: handle delete phone number
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditProfileScreen(
+                                      onProfileUpdated: () {
+                                        fetchUserProfile();
+                                        if (widget.onProfileUpdated != null) {
+                                          widget
+                                              .onProfileUpdated!(); // ✅ gọi callback về ProfileBooking
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                );
                               },
                             ),
                             _customRow(
@@ -110,7 +122,6 @@ Widget _customRow({
   required String image,
   required String titleOfImage,
   VoidCallback? onEdit,
-  VoidCallback? onDelete,
 }) {
   return Container(
     margin: EdgeInsets.only(bottom: 5),
@@ -144,16 +155,6 @@ Widget _customRow({
             child: Icon(Icons.edit, size: 20, color: AppColors.deepBlue),
           ),
         SizedBox(width: 10),
-        if (onDelete != null)
-          TextButton(
-            onPressed: onDelete,
-            style: TextButton.styleFrom(
-              minimumSize: Size(30, 30),
-              padding: EdgeInsets.zero,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            child: Icon(Icons.delete, size: 20, color: Colors.red),
-          ),
       ],
     ),
   );

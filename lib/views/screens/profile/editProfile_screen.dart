@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:health_care/config/app_config.dart';
 import 'package:health_care/utils/validators.dart';
-import 'package:health_care/views/widgets/bottomSheet/select_birthday_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/viewmodels/auth_viewmodel.dart';
@@ -64,8 +63,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           try {
             DateTime parsedDate = DateTime.parse(birthDateStr); // ✅ Parse được
             _selectedDate = parsedDate;
-            _dobController.text = DateFormat('yyyy-MM-dd')
-                .format(parsedDate); // ✅ format hiển thị
+            _dobController.text =
+                DateFormat('dd-MM-yyyy').format(parsedDate); // ✅ Hiển thị đẹp
           } catch (e) {
             print('Lỗi khi parse ngày sinh: $e');
             _selectedDate = DateTime.now();
@@ -122,7 +121,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
     Map<String, dynamic> profileData = {
       "fullName": _nameController.text.trim(),
-      "birthDate": _dobController.text.trim(),
+      "birthDate": DateFormat('yyyy-MM-dd').format(_selectedDate),
       "address": _addressController.text.trim(),
       "gender": selectedGender,
     };
@@ -230,7 +229,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             setState(() {
                               _selectedDate = picked;
                               _dobController.text =
-                                  DateFormat('yyyy-MM-dd').format(picked);
+                                  DateFormat('dd-MM-yyyy').format(picked);
                             });
                           }
                         },

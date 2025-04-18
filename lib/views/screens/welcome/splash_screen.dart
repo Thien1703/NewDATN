@@ -24,16 +24,17 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _navigate() async {
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 1));
 
     if (!mounted) return;
 
     bool isFirstTime =
         await LocalStorageService.isFirstTime(); // Hàm kiểm tra lần đầu mở app
     if (isFirstTime) {
+      if (!mounted) return;
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => WelcomeScreen()),
+        MaterialPageRoute(builder: (_) => WelcomeScreen()),
       );
       return;
     }
