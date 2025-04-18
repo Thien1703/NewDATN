@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_icons.dart';
+import 'package:health_care/viewmodels/profile_viewmodel.dart';
+import 'package:health_care/views/screens/profile/confirm_dialog_delete.dart';
 import 'package:health_care/views/screens/profile/edit_profile_another.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class WidgetProfileCard extends StatefulWidget {
   final Map<String, dynamic> profile;
@@ -82,7 +85,24 @@ class WidgetProfileCardState extends State<WidgetProfileCard> {
                     ),
                   );
                 },
-                onDelete: () {},
+                onDelete: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => ConfirmDeleteDialog(
+                      onConfirm: () async {
+                        final profileVM = Provider.of<ProfileViewModel>(context,
+                            listen: false);
+                        await profileVM.deleteProfileById(
+                            context, widget.profile['id']);
+
+                        if (widget.onProfileUpdated != null) {
+                          widget
+                              .onProfileUpdated!(); // Cập nhật lại danh sách hồ sơ
+                        }
+                      },
+                    ),
+                  );
+                },
               ),
               _customRow(
                 image: AppIcons.call,
