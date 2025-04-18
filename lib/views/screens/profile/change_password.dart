@@ -52,7 +52,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     final regex = RegExp(r'^(?=.*[A-Z])(?=.*\d).{8,}$');
 
     if (!regex.hasMatch(value)) {
-      return 'Mật khẩu phải từ 8 ký tự trở lên, gồm ít nhất 1 chữ hoa và 1 số ';
+      return 'Mật khẩu phải từ 8 ký tự trở lên, gồm ít nhất 1 chữ hoa và 1 số';
     }
     return null;
   }

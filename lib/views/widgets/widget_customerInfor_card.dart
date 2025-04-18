@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_icons.dart';
 import 'package:health_care/config/app_config.dart';
+import 'package:health_care/views/screens/profile/editProfile_screen.dart';
 import 'package:intl/intl.dart';
 
 class WidgetCustomerinforCard extends StatefulWidget {
+  final Function()? onProfileUpdated;
   final Function(int)? onTap;
-  const WidgetCustomerinforCard({super.key, this.onTap});
+  const WidgetCustomerinforCard({super.key, this.onTap, this.onProfileUpdated});
 
   @override
   WidgetCustomerinforCardState createState() => WidgetCustomerinforCardState();
@@ -73,13 +75,31 @@ class WidgetCustomerinforCardState extends State<WidgetCustomerinforCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _customRow(
-                                image: AppIcons.user1,
-                                titleOfImage:
-                                    userInfo!['fullName'] ?? 'Chưa có tên'),
+                              image: AppIcons.user1,
+                              titleOfImage:
+                                  userInfo!['fullName'] ?? 'Chưa có tên',
+                              onEdit: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditProfileScreen(
+                                      onProfileUpdated: () {
+                                        fetchUserProfile();
+                                        if (widget.onProfileUpdated != null) {
+                                          widget
+                                              .onProfileUpdated!(); // ✅ gọi callback về ProfileBooking
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                             _customRow(
-                                image: AppIcons.call,
-                                titleOfImage:
-                                    userInfo!['phoneNumber'] ?? 'Chưa có SĐT'),
+                              image: AppIcons.call,
+                              titleOfImage:
+                                  userInfo!['phoneNumber'] ?? 'Chưa có SĐT',
+                            ),
                             _customRow(
                                 image: AppIcons.calendar,
                                 titleOfImage:
@@ -106,30 +126,35 @@ Widget _customRow({
   return Container(
     margin: EdgeInsets.only(bottom: 5),
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            Image.asset(
-              image,
-              color: AppColors.deepBlue,
-              width: 25,
-            ),
-            SizedBox(width: 10),
-            Text(
-              titleOfImage,
-              style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.deepBlue),
-            ),
-          ],
+        Image.asset(
+          image,
+          color: AppColors.deepBlue,
+          width: 25,
+        ),
+        SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            titleOfImage,
+            style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: AppColors.deepBlue),
+            softWrap: true,
+            overflow: TextOverflow.visible,
+          ),
         ),
         if (onEdit != null)
-          IconButton(
-            icon: Icon(Icons.add, size: 18, color: AppColors.deepBlue),
+          TextButton(
             onPressed: onEdit,
+            style: TextButton.styleFrom(
+              minimumSize: Size(30, 30),
+              padding: EdgeInsets.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: Icon(Icons.edit, size: 20, color: AppColors.deepBlue),
           ),
+        SizedBox(width: 10),
       ],
     ),
   );
