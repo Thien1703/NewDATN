@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 class WidgetProfileCard extends StatefulWidget {
   final Map<String, dynamic> profile;
   final Function(int customerId, int customerProfileId)? onTap;
+  final VoidCallback? onProfileUpdated;
 
   const WidgetProfileCard({
     super.key,

@@ -160,6 +160,7 @@ class _ProfileBooking extends State<ProfileBooking> {
                     final profile = _profiles[index];
                     return WidgetProfileCard(
                       profile: profile,
+                      onProfileUpdated: _fetchAllProfileByCustomerId,
                       onTap: (customerId, customerProfileId) {
                         _handleProfileTap(customerId, customerProfileId);
                       },
