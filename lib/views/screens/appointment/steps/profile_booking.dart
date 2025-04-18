@@ -164,6 +164,9 @@ class _ProfileBooking extends State<ProfileBooking> {
                       profile: profile,
                       onProfileUpdated: _fetchAllProfileByCustomerId,
                       // onTap: {}
+                      onTap: (customerId, customerProfileId) {
+                        _handleProfileTap(customerId, customerProfileId);
+                      },
                     );
                   },
                 ),
