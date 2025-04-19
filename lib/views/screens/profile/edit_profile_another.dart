@@ -136,6 +136,7 @@ class _EditProfileAnotherState extends State<EditProfileAnother> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
+                    suffixIcon: const Icon(Icons.calendar_today),
                   ),
                   readOnly: true,
                   onTap: () async {

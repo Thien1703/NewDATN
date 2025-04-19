@@ -216,6 +216,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
+                          suffixIcon: const Icon(Icons.calendar_today),
                         ),
                         readOnly: true,
                         onTap: () async {

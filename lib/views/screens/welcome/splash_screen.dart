@@ -40,6 +40,13 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     bool isLoggedIn = await LocalStorageService.isLoggedIn();
+    print("🟢 isLoggedIn: $isLoggedIn");
+    if (!mounted) return;
+    if (!isLoggedIn) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => chooseSigninRes()));
+      return;
+    }
     // 🔹 Lấy customerId từ API
     int? customerId = await AppConfig.getMyUserId();
     if (customerId != null) {
@@ -57,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (_) => isLoggedIn ? HomeScreens() : chooseSigninRes(),
+        builder: (_) => HomeScreens(),
       ),
     );
   }
