@@ -113,6 +113,23 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
   }
 
   Widget _renderRemoteViews() {
+    if (_remoteUids.isEmpty) {
+      return Center(child: Text('Đang chờ người bên kia...'));
+    }
+
+    if (_remoteUids.length == 1) {
+      return SizedBox.expand(
+        child: AgoraVideoView(
+          controller: VideoViewController.remote(
+            rtcEngine: _agoraEngine,
+            canvas: VideoCanvas(uid: _remoteUids[0]),
+            connection: RtcConnection(channelId: widget.channelName),
+          ),
+        ),
+      );
+    }
+
+    // Nếu nhiều người thì chia theo GridView
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -123,8 +140,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
         controller: VideoViewController.remote(
           rtcEngine: _agoraEngine,
           canvas: VideoCanvas(uid: _remoteUids[index]),
-          connection: RtcConnection(
-              channelId: widget.channelName), // Sửa thành RtcConnection
+          connection: RtcConnection(channelId: widget.channelName),
         ),
       ),
     );

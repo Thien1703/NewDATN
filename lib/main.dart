@@ -24,12 +24,12 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // ✅ Yêu cầu quyền cameracamera
+  // ✅ cameracamera
   if (await Permission.camera.isDenied) {
     await Permission.camera.request();
   }
 
-  // ✅ Yêu cầu quyền míc cờ rô
+  // ✅ micro
   if (await Permission.microphone.isDenied) {
     await Permission.microphone.request();
   }
