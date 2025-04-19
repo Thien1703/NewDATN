@@ -182,7 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ? const CircularProgressIndicator(
                                       color: Colors.white)
                                   : const Text(
-                                      'Tiếp tục',
+                                      'Đăng nhập',
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,

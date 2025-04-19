@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/customer.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/views/widgets/bottomSheet/header_bottomSheet.dart';
@@ -12,6 +13,7 @@ class Showcustomer extends StatefulWidget {
 
 class _Showcustomer extends State<Showcustomer> {
   Customer? customers;
+
   @override
   void initState() {
     super.initState();
@@ -30,78 +32,93 @@ class _Showcustomer extends State<Showcustomer> {
     return HeaderBottomSheet(
       title: 'Thông tin bệnh nhân',
       body: customers == null
-          ? CircularProgressIndicator()
-          : Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 10),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          blurRadius: 1,
-                          spreadRadius: 1,
-                        )
-                      ]),
-                  child: Column(
-                    children: [
-                      _buildLabelRow('Mã bệnh nhân',
-                          customers?.id.toString() ?? 'Chưa cập nhật'),
-                      _buildLabelRow(
-                          'Họ và tên', customers?.fullName ?? 'Chưa cập nhật'),
-                      _buildLabelRow('Điện thoại',
-                          customers?.phoneNumber ?? 'Chưa cập nhật'),
-                      _buildLabelRow(
-                        'Ngày sinh',
-                        customers?.birthDate != null &&
-                                customers!.birthDate.isNotEmpty &&
-                                customers!.birthDate.toLowerCase() != 'null'
-                            ? DateFormat('dd/MM/yyyy').format(
-                                DateTime.tryParse(customers!.birthDate) ??
-                                    DateTime(1900))
-                            : 'Chưa cập nhật',
-                      ),
-                      _buildLabelRow(
-                          'Giới tính', customers?.gender ?? 'Chưa cập nhật'),
-                      _buildLabelRow(
-                          'Địa chỉ', customers?.address ?? 'Chưa cập nhật'),
-                      _buildLabelRow(
-                          'Email', customers?.email ?? 'Chưa cập nhật'),
-                    ],
+          ? Center(child: CircularProgressIndicator())
+          : LayoutBuilder(
+              builder: (context, constraints) {
+                return ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.85,
                   ),
-                ),
-                SizedBox(height: 5),
-                InkWell(
-                  onTap: () => Navigator.pop(context),
-                  child: Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.symmetric(
-                      vertical: 10,
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
-                            blurRadius: 1,
-                            spreadRadius: 1,
-                          )
-                        ]),
-                    child: Text(
-                      'Đóng',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5  ),
+                                blurRadius: 1,
+                                spreadRadius: 1,
+                              )
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              _buildLabelRow('Mã bệnh nhân',
+                                  customers?.id.toString() ?? 'Chưa cập nhật'),
+                              _buildLabelRow('Họ và tên',
+                                  customers?.fullName ?? 'Chưa cập nhật'),
+                              _buildLabelRow('Điện thoại',
+                                  customers?.phoneNumber ?? 'Chưa cập nhật'),
+                              _buildLabelRow(
+                                'Ngày sinh',
+                                customers?.birthDate != null &&
+                                        customers!.birthDate.isNotEmpty &&
+                                        customers!.birthDate.toLowerCase() !=
+                                            'null'
+                                    ? DateFormat('dd/MM/yyyy').format(
+                                        DateTime.tryParse(
+                                                customers!.birthDate) ??
+                                            DateTime(1900))
+                                    : 'Chưa cập nhật',
+                              ),
+                              _buildLabelRow('Giới tính',
+                                  customers?.gender ?? 'Chưa cập nhật'),
+                              _buildLabelRow('Địa chỉ',
+                                  customers?.address ?? 'Chưa cập nhật'),
+                              _buildLabelRow(
+                                  'Email', customers?.email ?? 'Chưa cập nhật'),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        InkWell(
+                          onTap: () => Navigator.pop(context),
+                          child: Container(
+                            width: double.infinity,
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            decoration: BoxDecoration(
+                              color: AppColors.deepBlue,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.1),
+                                  blurRadius: 1,
+                                  spreadRadius: 1,
+                                )
+                              ],
+                            ),
+                            child: Text(
+                              'Đóng',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: AppColors.ghostWhite,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ],
+                );
+              },
             ),
     );
   }
@@ -110,25 +127,34 @@ class _Showcustomer extends State<Showcustomer> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w400,
-              color: const Color.fromARGB(255, 99, 99, 99),
+          IntrinsicWidth(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
+                color: AppColors.neutralDark,
+              ),
             ),
           ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: value == 'Chưa cập nhật' ? 15 : 17,
-              fontWeight:
-                  value == 'Chưa cập nhật' ? FontWeight.w400 : FontWeight.w600,
-              color: value == 'Chưa cập nhật'
-                  ? const Color.fromARGB(255, 163, 163, 163)
-                  : Colors.black,
+          SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: value == 'Chưa cập nhật' ? 15 : 17,
+                fontWeight: value == 'Chưa cập nhật'
+                    ? FontWeight.w400
+                    : FontWeight.w600,
+                color: value == 'Chưa cập nhật'
+                    ? const Color.fromARGB(255, 163, 163, 163)
+                    : Colors.black,
+              ),
+              textAlign: TextAlign.right,
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

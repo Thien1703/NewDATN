@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 
 class AddProfile extends StatefulWidget {
   final VoidCallback? onProfileAdded;
+
   const AddProfile({super.key, this.onProfileAdded});
 
   @override
@@ -20,10 +21,13 @@ class AddProfile extends StatefulWidget {
 class _AddProfileState extends State<AddProfile> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _fullNameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _birthDateController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
+  final _fullNameController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _birthDateController = TextEditingController();
+  final _addressController = TextEditingController();
+
+  final _focusPhone = FocusNode();
+  final _focusAddress = FocusNode();
 
   String? _selectedGender;
   bool isLoading = false;
@@ -35,25 +39,24 @@ class _AddProfileState extends State<AddProfile> {
     _phoneController.dispose();
     _birthDateController.dispose();
     _addressController.dispose();
+    _focusPhone.dispose();
+    _focusAddress.dispose();
     super.dispose();
   }
 
   void _handleSubmit() async {
     if (_formKey.currentState!.validate()) {
-      final profileVM = Provider.of<ProfileViewModel>(context, listen: false);
+      setState(() => isLoading = true);
 
-      setState(() {
-        isLoading = true;
-      });
-
+      final profileVM = context.read<ProfileViewModel>();
       int? customerId = await LocalStorageService.getUserId();
+
       if (!mounted) return;
+
       if (customerId == null) {
         showToastError(
             "Không tìm thấy thông tin người dùng. Vui lòng đăng nhập lại!");
-        setState(() {
-          isLoading = false;
-        });
+        setState(() => isLoading = false);
         return;
       }
 
@@ -62,15 +65,16 @@ class _AddProfileState extends State<AddProfile> {
         customerId: customerId,
         fullName: _fullNameController.text.trim(),
         phoneNumber: _phoneController.text.trim(),
-        birthDate: _birthDateController.text.trim(),
+        birthDate: DateFormat('yyyy-MM-dd')
+            .format(_selectedDate), // 👉 Format để gửi backend
         gender: _selectedGender ?? "Nam",
         address: _addressController.text.trim(),
       );
-      setState(() {
-        isLoading = false;
-      });
-      // ✅ Kiểm tra lại xem có tạo thành công không bằng cách check toast/flag (hoặc giả sử luôn thành công nếu không muốn xử lý thêm)
-      widget.onProfileAdded?.call(); // Gọi callback để cập nhật danh sách
+
+      if (mounted) {
+        setState(() => isLoading = false);
+        widget.onProfileAdded?.call();
+      }
     }
   }
 
@@ -80,120 +84,90 @@ class _AddProfileState extends State<AddProfile> {
       iconBack: true,
       title: 'Thêm hồ sơ đặt khám',
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                _customTitle('Họ và tên'),
-                _buildTextField(
-                  controller: _fullNameController,
-                  hint: 'Nhập họ và tên',
-                  validator: Validators.validateFullName,
-                ),
-                const SizedBox(height: 15),
-                _customTitle('Số điện thoại'),
-                _buildTextField(
-                  controller: _phoneController,
-                  hint: 'Nhập số điện thoại',
-                  keyboardType: TextInputType.phone,
-                  validator: Validators.validatePhoneNumber,
-                ),
-                const SizedBox(height: 15),
-                _customTitle('Ngày sinh'),
-                // SelectBirthdayWidget(
-                //   initialDate: DateTime.now(),
-                //   onDateSelected: (DateTime pickedDate) {
-                //     setState(() {
-                //       _birthDateController.text =
-                //           DateFormat('yyyy-MM-dd').format(pickedDate);
-                //     });
-                //   },
-                // ),
-                TextFormField(
-                  controller: _birthDateController,
-                  validator: (value) => value == null || value.trim().isEmpty
-                      ? 'Vui lòng chọn ngày sinh'
-                      : null,
-                  decoration: InputDecoration(
-                    hintText: 'Chọn ngày sinh',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                  readOnly: true,
-                  onTap: () async {
-                    final DateTime? picked = await showDatePicker(
-                      context: context,
-                      initialDate: _selectedDate,
-                      firstDate: DateTime(1900),
-                      lastDate: DateTime.now(),
-                    );
-                    if (picked != null && picked != _selectedDate) {
-                      setState(() {
-                        _selectedDate = picked;
-                        _birthDateController.text =
-                            DateFormat('yyyy-MM-dd').format(picked);
-                      });
-                    }
-                  },
-                ),
-                const SizedBox(height: 15),
-                _customTitle('Giới tính'),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    child: WidgetSelectGender(
-                      initialGender: _selectedGender,
-                      onChanged: (String gender) {
-                        setState(() {
-                          _selectedGender = gender;
-                        });
-                      },
-                    ),
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              _customTitle('Họ và tên'),
+              _buildTextField(
+                controller: _fullNameController,
+                hint: 'Nhập họ và tên',
+                validator: Validators.validateFullName,
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) =>
+                    FocusScope.of(context).requestFocus(_focusPhone),
+              ),
+              const SizedBox(height: 15),
+              _customTitle('Số điện thoại'),
+              _buildTextField(
+                controller: _phoneController,
+                hint: 'Nhập số điện thoại',
+                validator: Validators.validatePhoneNumber,
+                keyboardType: TextInputType.phone,
+                focusNode: _focusPhone,
+                textInputAction: TextInputAction.done,
+              ),
+              const SizedBox(height: 15),
+              _customTitle('Ngày sinh'),
+              _buildDatePickerField(),
+              const SizedBox(height: 15),
+              _customTitle('Giới tính'),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                  child: WidgetSelectGender(
+                    initialGender: _selectedGender,
+                    onChanged: (gender) =>
+                        setState(() => _selectedGender = gender),
                   ),
                 ),
-                const SizedBox(height: 15),
-                _customTitle('Địa chỉ'),
-                _buildTextField(
-                  controller: _addressController,
-                  hint: 'Nhập địa chỉ',
-                  validator: (value) => value == null || value.trim().isEmpty
-                      ? 'Vui lòng nhập địa chỉ'
-                      : null,
-                ),
-                const SizedBox(height: 25),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _handleSubmit,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      backgroundColor: AppColors.deepBlue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
+              ),
+              const SizedBox(height: 15),
+              _customTitle('Địa chỉ'),
+              _buildTextField(
+                controller: _addressController,
+                hint: 'Nhập địa chỉ',
+                validator: (value) => value == null || value.trim().isEmpty
+                    ? 'Vui lòng nhập địa chỉ'
+                    : null,
+                focusNode: _focusAddress,
+              ),
+              const SizedBox(height: 25),
+              SizedBox(
+                width: double.infinity,
+                height: 55,
+                child: GestureDetector(
+                  onTap: isLoading ? null : _handleSubmit,
+                  child: AbsorbPointer(
+                    absorbing: isLoading,
+                    child: Container(
+                      height: 55,
+                      decoration: BoxDecoration(
+                        color: AppColors.deepBlue,
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                    ),
-                    child: isLoading
-                        ? SizedBox(
-                            child: CircularProgressIndicator(
-                              color: AppColors.ghostWhite,
-                              // strokeWidth: 1,
-                            ),
-                          )
-                        : const Text(
-                            'Thêm hồ sơ',
-                            style: TextStyle(
+                      alignment: Alignment.center,
+                      child: isLoading
+                          ? const SizedBox(
+                              child: CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                          : const Text(
+                              'Thêm hồ sơ',
+                              style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
+                                color: Colors.white,
+                              ),
+                            ),
+                    ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -215,22 +189,54 @@ class _AddProfileState extends State<AddProfile> {
     required String hint,
     required String? Function(String?) validator,
     TextInputType keyboardType = TextInputType.text,
+    FocusNode? focusNode,
+    TextInputAction? textInputAction,
+    void Function(String)? onFieldSubmitted,
   }) {
     return TextFormField(
       controller: controller,
+      focusNode: focusNode,
       keyboardType: keyboardType,
+      textInputAction: textInputAction,
       validator: validator,
+      onFieldSubmitted: onFieldSubmitted,
       decoration: InputDecoration(
-        // labelText: hintText,
         hintText: hint,
-        // filled: true,
-        // fillColor: Colors.white,
-        floatingLabelBehavior: FloatingLabelBehavior.never,
         contentPadding:
             const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+      ),
+    );
+  }
+
+  Widget _buildDatePickerField() {
+    return TextFormField(
+      controller: _birthDateController,
+      readOnly: true,
+      validator: (value) => value == null || value.trim().isEmpty
+          ? 'Vui lòng chọn ngày sinh'
+          : null,
+      onTap: () async {
+        final picked = await showDatePicker(
+          context: context,
+          initialDate: _selectedDate,
+          firstDate: DateTime(1900),
+          lastDate: DateTime.now(),
+        );
+        if (picked != null && picked != _selectedDate) {
+          setState(() {
+            _selectedDate = picked;
+            _birthDateController.text =
+                DateFormat('dd-MM-yyyy').format(picked); // Format hiển thị
+          });
+        }
+      },
+      decoration: InputDecoration(
+        hintText: 'Chọn ngày sinh',
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+        suffixIcon: const Icon(Icons.calendar_today),
       ),
     );
   }

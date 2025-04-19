@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/views/screens/tools/callvideo/video_call_screen.dart';
 
@@ -58,6 +59,25 @@ class ScheduleCallScreen extends StatelessWidget {
                             border: OutlineInputBorder(),
                             prefixIcon: Icon(Icons.meeting_room),
                           ),
+                          keyboardType:
+                              TextInputType.number, // Cho phép nhập số
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(
+                                4), // Giới hạn 4 ký tự
+                            FilteringTextInputFormatter
+                                .digitsOnly, // Chỉ cho phép nhập chữ số
+                          ],
+                          onChanged: (value) {
+                            // Kiểm tra nếu mã có 4 chữ số và hợp lệ
+                            if (value.length == 4 &&
+                                RegExp(r'^\d{4}$').hasMatch(value)) {
+                              // Mã hợp lệ
+                              print("Mã phòng khám hợp lệ: $value");
+                            } else if (value.length > 4) {
+                              // Nếu nhập quá 4 chữ số
+                              _channelController.text = value.substring(0, 4);
+                            }
+                          },
                         ),
                         const SizedBox(height: 20),
                         SizedBox(
