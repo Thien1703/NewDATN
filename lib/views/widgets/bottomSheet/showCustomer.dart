@@ -40,12 +40,10 @@ class _Showcustomer extends State<Showcustomer> {
                     maxHeight: MediaQuery.of(context).size.height * 0.85,
                   ),
                   child: SingleChildScrollView(
-                    // padding: EdgeInsets.only(bottom: 20),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(top: 10),
                           padding: EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
@@ -96,7 +94,7 @@ class _Showcustomer extends State<Showcustomer> {
                             padding: EdgeInsets.symmetric(vertical: 10),
                             decoration: BoxDecoration(
                               color: AppColors.deepBlue,
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(10),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.grey.withOpacity(0.1),
