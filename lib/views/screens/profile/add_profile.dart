@@ -116,7 +116,6 @@ class _AddProfileState extends State<AddProfile> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: SizedBox(
-                  // width: MediaQuery.of(context).size.width * 0.35,
                   child: WidgetSelectGender(
                     initialGender: _selectedGender,
                     onChanged: (gender) =>
@@ -137,31 +136,35 @@ class _AddProfileState extends State<AddProfile> {
               const SizedBox(height: 25),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: isLoading ? null : _handleSubmit,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    backgroundColor: AppColors.deepBlue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
+                height: 55,
+                child: GestureDetector(
+                  onTap: isLoading ? null : _handleSubmit,
+                  child: AbsorbPointer(
+                    absorbing: isLoading,
+                    child: Container(
+                      height: 55,
+                      decoration: BoxDecoration(
+                        color: AppColors.deepBlue,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      alignment: Alignment.center,
+                      child: isLoading
+                          ? const SizedBox(
+                              child: CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                          : const Text(
+                              'Thêm hồ sơ',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
                   ),
-                  child: isLoading
-                      ? const SizedBox(
-                          child: CircularProgressIndicator(
-                            // strokeWidth: 2,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        )
-                      : const Text(
-                          'Thêm hồ sơ',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
                 ),
               ),
             ],
