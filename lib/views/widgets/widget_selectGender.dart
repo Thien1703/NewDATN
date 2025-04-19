@@ -57,7 +57,7 @@ class _WidgetSelectGenderState extends State<WidgetSelectGender> {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

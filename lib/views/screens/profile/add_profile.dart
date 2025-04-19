@@ -116,7 +116,7 @@ class _AddProfileState extends State<AddProfile> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.35,
+                  // width: MediaQuery.of(context).size.width * 0.35,
                   child: WidgetSelectGender(
                     initialGender: _selectedGender,
                     onChanged: (gender) =>

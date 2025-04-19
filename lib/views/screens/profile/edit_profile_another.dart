@@ -43,7 +43,7 @@ class _EditProfileAnotherState extends State<EditProfileAnother> {
     final profile = await Provider.of<ProfileViewModel>(context, listen: false)
         .getProfileById(widget.id);
 
-    if (profile != null) {
+    if (profile != null && mounted) {
       setState(() {
         _fullNameController.text = profile['fullName'] ?? '';
         _phoneController.text = profile['phoneNumber'] ?? '';
@@ -160,7 +160,7 @@ class _EditProfileAnotherState extends State<EditProfileAnother> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.3,
+                    // width: MediaQuery.of(context).size.width * 0.35,
                     child: WidgetSelectGender(
                       initialGender: _selectedGender,
                       onChanged: (String gender) {
