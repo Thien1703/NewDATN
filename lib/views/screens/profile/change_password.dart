@@ -33,24 +33,33 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   String? _validateOldPassword(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Mật khẩu cũ không được trống';
+      return 'Vui lòng nhập mật khẩu cũ';
     }
     return null;
   }
 
   String? _validateNewPassword(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Mật khẩu mới không được trống';
+      return 'Vui lòng nhập mật khẩu mới';
     }
-    if (value.length < 6) {
-      return 'Mật khẩu mới phải có ít nhất 6 ký tự';
+
+    // Kiểm tra không được chứa khoảng trắng
+    if (value.contains(' ')) {
+      return 'Mật khẩu không được chứa khoảng trắng';
+    }
+
+    // Regex: ít nhất 8 ký tự, gồm ít nhất 1 chữ hoa và 1 chữ số (ký tự đặc biệt thì có thể có hoặc không)
+    final regex = RegExp(r'^(?=.*[A-Z])(?=.*\d).{8,}$');
+
+    if (!regex.hasMatch(value)) {
+      return 'Mật khẩu phải từ 8 ký tự trở lên, gồm ít nhất 1 chữ hoa và 1 số';
     }
     return null;
   }
 
   String? _validateConfirmPassword(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Xác nhận mật khẩu không được trống';
+      return 'Vui lòng nhập lại mật khẩu xác nhận';
     }
     if (value != _newPasswordController.text) {
       return 'Mật khẩu xác nhận không khớp';
@@ -94,7 +103,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 _customTitle(title: 'Mật khẩu cũ'),
                 _buildPasswordField(
                   controller: _oldPasswordController,
-                  label: 'Nhập mật khẩu cũ',
+                  hintText: 'Nhập mật khẩu cũ',
                   isVisible: _isOldPasswordVisible,
                   onToggle: () {
                     setState(() {
@@ -107,7 +116,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 _customTitle(title: 'Mật khẩu mới'),
                 _buildPasswordField(
                   controller: _newPasswordController,
-                  label: 'Nhập mật khẩu mới',
+                  hintText: 'Nhập mật khẩu mới',
                   isVisible: _isNewPasswordVisible,
                   onToggle: () {
                     setState(() {
@@ -120,7 +129,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 _customTitle(title: 'Xác nhận mật khẩu'),
                 _buildPasswordField(
                   controller: _confirmPasswordController,
-                  label: 'Nhập lại mật khẩu',
+                  hintText: 'Nhập lại mật khẩu',
                   isVisible: _isConfirmPasswordVisible,
                   onToggle: () {
                     setState(() {
@@ -132,19 +141,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 const SizedBox(height: 15),
                 SizedBox(
                   width: double.infinity,
-                  child: OutlinedButton(
+                  height: 50,
+                  child: ElevatedButton(
                     onPressed: isLoading ? null : _handleChangePassword,
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(
-                          color: !isLoading
-                              ? AppColors.deepBlue
-                              : AppColors.grey4),
-                      backgroundColor:
-                          !isLoading ? AppColors.deepBlue : AppColors.grey4,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.deepBlue,
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(25)),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                     child: isLoading
                         ? CircularProgressIndicator(
@@ -174,14 +178,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       style: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.bold,
-        color: Colors.black,
+        color: AppColors.deepBlue,
       ),
     );
   }
 
   Widget _buildPasswordField({
     required TextEditingController controller,
-    required String label,
+    required String hintText,
     required bool isVisible,
     required VoidCallback onToggle,
     required String? Function(String?) validator,
@@ -193,17 +197,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           controller: controller,
           obscureText: !isVisible,
           decoration: InputDecoration(
-            labelText: label,
-            filled: true,
-            fillColor: Colors.white,
-            floatingLabelBehavior: FloatingLabelBehavior.never,
-            labelStyle:
-                const TextStyle(fontSize: 14, color: AppColors.neutralDark),
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            hintText: hintText,
+            hintStyle: const TextStyle(
+              fontSize: 14,
+              color: Color.fromARGB(255, 108, 108, 108),
+            ),
             border: OutlineInputBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              borderSide: BorderSide(color: AppColors.accent, width: 1),
+              borderRadius: BorderRadius.circular(15),
             ),
             suffixIcon: IconButton(
               icon: Icon(isVisible ? Icons.visibility : Icons.visibility_off),

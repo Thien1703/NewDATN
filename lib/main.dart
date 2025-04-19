@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:health_care/viewmodels/profile_viewmodel.dart';
+import 'package:health_care/viewmodels/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -22,6 +23,16 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // ✅ Yêu cầu quyền cameracamera
+  if (await Permission.camera.isDenied) {
+    await Permission.camera.request();
+  }
+
+  // ✅ Yêu cầu quyền míc cờ rô
+  if (await Permission.microphone.isDenied) {
+    await Permission.microphone.request();
+  }
 
   // ✅ Yêu cầu quyền thông báo nếu chưa được cấp (Android 13+)
   if (await Permission.notification.isDenied) {
@@ -141,6 +152,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
         ChangeNotifierProvider(create: (_) => ProfileViewModel()),
       ],

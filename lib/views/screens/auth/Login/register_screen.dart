@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:health_care/utils/validators.dart';
 import 'package:provider/provider.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/viewmodels/auth_viewmodel.dart';
@@ -43,45 +44,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       setState(() => _isLoading = false);
     }
-  }
-
-  String? _validateFullName(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Vui lòng nhập họ và tên';
-    }
-    return null;
-  }
-
-  String? _validateEmail(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Vui lòng nhập email';
-    }
-    if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
-        .hasMatch(value)) {
-      return 'Email không hợp lệ';
-    }
-    return null;
-  }
-
-  String? _validatePhone(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Vui lòng nhập số điện thoại';
-    }
-    if (!RegExp(r'^0[0-9]{9}$').hasMatch(value)) {
-      return 'Số điện thoại không hợp lệ';
-    }
-    return null;
-  }
-
-  String? _validatePassword(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Vui lòng nhập mật khẩu';
-    }
-    final regex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$');
-    if (!regex.hasMatch(value)) {
-      return 'Mật khẩu phải có ít nhất 6 ký tự, gồm chữ hoa, chữ thường và số';
-    }
-    return null;
   }
 
   void _showTermsDialog() {
@@ -138,7 +100,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           const SizedBox(height: 40),
                           TextFormField(
                             controller: _fullNameController,
-                            validator: _validateFullName,
+                            validator: Validators.validateFullName,
                             decoration: InputDecoration(
                               hintText: 'Họ và tên',
                               hintStyle: const TextStyle(
@@ -158,7 +120,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           const SizedBox(height: 16),
                           TextFormField(
                             controller: _phoneNumberController,
-                            validator: _validatePhone,
+                            validator: Validators.validatePhoneNumber,
                             decoration: InputDecoration(
                               hintText: 'Số điện thoại',
                               hintStyle: const TextStyle(
@@ -178,7 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           const SizedBox(height: 16),
                           TextFormField(
                             controller: _emailController,
-                            validator: _validateEmail,
+                            validator: Validators.validateEmail,
                             decoration: InputDecoration(
                               hintText: 'Email',
                               hintStyle: const TextStyle(
@@ -198,7 +160,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           const SizedBox(height: 16),
                           TextFormField(
                             controller: _passwordController,
-                            validator: _validatePassword,
+                            validator: Validators.validatePassword,
                             obscureText: _obscurePassword,
                             decoration: InputDecoration(
                               hintText: 'Mật khẩu',

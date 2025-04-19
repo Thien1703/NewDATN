@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
-import 'package:health_care/services/local_storage_service.dart';
 import 'package:health_care/utils/validators.dart';
 import 'package:health_care/viewmodels/profile_viewmodel.dart';
-import 'package:health_care/viewmodels/toast_helper.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/views/widgets/widget_selectGender.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class AddProfile extends StatefulWidget {
+class EditProfileAnother extends StatefulWidget {
+  final int id;
+  final int customerId;
   final VoidCallback? onProfileAdded;
-  const AddProfile({super.key, this.onProfileAdded});
+  const EditProfileAnother(
+      {super.key,
+      this.onProfileAdded,
+      required this.id,
+      required this.customerId});
 
   @override
-  State<AddProfile> createState() => _AddProfileState();
+  State<EditProfileAnother> createState() => _EditProfileAnotherState();
 }
 
-class _AddProfileState extends State<AddProfile> {
+class _EditProfileAnotherState extends State<EditProfileAnother> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _fullNameController = TextEditingController();
@@ -30,6 +34,35 @@ class _AddProfileState extends State<AddProfile> {
   DateTime _selectedDate = DateTime.now();
 
   @override
+  void initState() {
+    super.initState();
+    _loadProfileData();
+  }
+
+  Future<void> _loadProfileData() async {
+    final profile = await Provider.of<ProfileViewModel>(context, listen: false)
+        .getProfileById(widget.id);
+
+    if (profile != null) {
+      setState(() {
+        _fullNameController.text = profile['fullName'] ?? '';
+        _phoneController.text = profile['phoneNumber'] ?? '';
+        _birthDateController.text = profile['birthDate'] ?? '';
+        _addressController.text = profile['address'] ?? '';
+        _selectedGender = profile['gender'];
+
+        if (profile['birthDate'] != null &&
+            profile['birthDate'].toString().isNotEmpty) {
+          _selectedDate =
+              DateTime.tryParse(profile['birthDate']) ?? DateTime.now();
+          _birthDateController.text =
+              DateFormat('dd-MM-yyyy').format(_selectedDate); // ✅ Format UI
+        }
+      });
+    }
+  }
+
+  @override
   void dispose() {
     _fullNameController.dispose();
     _phoneController.dispose();
@@ -38,39 +71,30 @@ class _AddProfileState extends State<AddProfile> {
     super.dispose();
   }
 
-  void _handleSubmit() async {
+  Future<void> _handleUpdateProfile() async {
     if (_formKey.currentState!.validate()) {
-      final profileVM = Provider.of<ProfileViewModel>(context, listen: false);
-
       setState(() {
         isLoading = true;
       });
-
-      int? customerId = await LocalStorageService.getUserId();
-      if (!mounted) return;
-      if (customerId == null) {
-        showToastError(
-            "Không tìm thấy thông tin người dùng. Vui lòng đăng nhập lại!");
-        setState(() {
-          isLoading = false;
-        });
-        return;
-      }
-
-      await profileVM.createProfile(
+      final formattedBirthDate = DateFormat('yyyy-MM-dd')
+          .format(_selectedDate); // ✅ Format gửi backend
+      await Provider.of<ProfileViewModel>(context, listen: false)
+          .updateProfileById(
         context,
-        customerId: customerId,
+        id: widget.id,
+        customerId: widget.customerId,
         fullName: _fullNameController.text.trim(),
         phoneNumber: _phoneController.text.trim(),
-        birthDate: _birthDateController.text.trim(),
-        gender: _selectedGender ?? "Nam",
+        birthDate: formattedBirthDate,
         address: _addressController.text.trim(),
+        gender: _selectedGender ?? '',
       );
+
+      widget.onProfileAdded?.call(); // callback để reload lại danh sách
+
       setState(() {
         isLoading = false;
       });
-      // ✅ Kiểm tra lại xem có tạo thành công không bằng cách check toast/flag (hoặc giả sử luôn thành công nếu không muốn xử lý thêm)
-      widget.onProfileAdded?.call(); // Gọi callback để cập nhật danh sách
     }
   }
 
@@ -78,7 +102,7 @@ class _AddProfileState extends State<AddProfile> {
   Widget build(BuildContext context) {
     return WidgetHeaderBody(
       iconBack: true,
-      title: 'Thêm hồ sơ đặt khám',
+      title: 'Chỉnh sửa hồ sơ đặt khám',
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -102,15 +126,6 @@ class _AddProfileState extends State<AddProfile> {
                 ),
                 const SizedBox(height: 15),
                 _customTitle('Ngày sinh'),
-                // SelectBirthdayWidget(
-                //   initialDate: DateTime.now(),
-                //   onDateSelected: (DateTime pickedDate) {
-                //     setState(() {
-                //       _birthDateController.text =
-                //           DateFormat('yyyy-MM-dd').format(pickedDate);
-                //     });
-                //   },
-                // ),
                 TextFormField(
                   controller: _birthDateController,
                   validator: (value) => value == null || value.trim().isEmpty
@@ -133,8 +148,8 @@ class _AddProfileState extends State<AddProfile> {
                     if (picked != null && picked != _selectedDate) {
                       setState(() {
                         _selectedDate = picked;
-                        _birthDateController.text =
-                            DateFormat('yyyy-MM-dd').format(picked);
+                        _birthDateController.text = DateFormat('dd-MM-yyyy')
+                            .format(picked); // ✅ Format UI khi chọn
                       });
                     }
                   },
@@ -168,7 +183,7 @@ class _AddProfileState extends State<AddProfile> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: _handleSubmit,
+                    onPressed: _handleUpdateProfile,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       backgroundColor: AppColors.deepBlue,
@@ -184,7 +199,7 @@ class _AddProfileState extends State<AddProfile> {
                             ),
                           )
                         : const Text(
-                            'Thêm hồ sơ',
+                            'Cập nhật',
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -221,10 +236,7 @@ class _AddProfileState extends State<AddProfile> {
       keyboardType: keyboardType,
       validator: validator,
       decoration: InputDecoration(
-        // labelText: hintText,
         hintText: hint,
-        // filled: true,
-        // fillColor: Colors.white,
         floatingLabelBehavior: FloatingLabelBehavior.never,
         contentPadding:
             const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
