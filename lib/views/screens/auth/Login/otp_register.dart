@@ -3,21 +3,33 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:pinput/pinput.dart';
 
-class OtpScreen extends StatefulWidget {
+class OtpRegisterScreen extends StatefulWidget {
+  final String fullName;
+  final String phoneNumber;
   final String email;
-  final Future<String?> Function(String otp) onOtpSubmit;
+  final String password;
+  final Future<String?> Function({
+    required String otp,
+    required String fullName,
+    required String phoneNumber,
+    required String email,
+    required String password,
+  }) onRegisterOtpSubmit;
 
-  const OtpScreen({
+  const OtpRegisterScreen({
     super.key,
+    required this.fullName,
+    required this.phoneNumber,
     required this.email,
-    required this.onOtpSubmit,
+    required this.password,
+    required this.onRegisterOtpSubmit,
   });
 
   @override
-  State<OtpScreen> createState() => _OtpScreenState();
+  State<OtpRegisterScreen> createState() => _OtpRegisterScreenState();
 }
 
-class _OtpScreenState extends State<OtpScreen> {
+class _OtpRegisterScreenState extends State<OtpRegisterScreen> {
   final TextEditingController _otpController = TextEditingController();
   String? errorText;
   bool isLoading = false;
@@ -48,7 +60,13 @@ class _OtpScreenState extends State<OtpScreen> {
       errorText = null;
     });
 
-    final result = await widget.onOtpSubmit(otp);
+    final result = await widget.onRegisterOtpSubmit(
+      otp: otp,
+      fullName: widget.fullName,
+      phoneNumber: widget.phoneNumber,
+      email: widget.email,
+      password: widget.password,
+    );
 
     if (result == null && context.mounted) {
       Navigator.pop(context, otp);
@@ -97,7 +115,7 @@ class _OtpScreenState extends State<OtpScreen> {
               const SizedBox(height: 8),
               Center(
                 child: Text(
-                  "Nhập mã xác minh chúng tôi gửi vào email của bạn",
+                  "Nhập mã xác minh được gửi tới email của bạn",
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 14, color: Colors.black54),
                 ),

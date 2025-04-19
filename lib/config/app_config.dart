@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:health_care/env.dart';
 import 'package:health_care/services/local_storage_service.dart';
+import 'package:health_care/views/screens/auth/Login/otp_register.dart';
 import 'package:health_care/views/screens/auth/Login/otp_screen.dart';
 import 'package:http/http.dart' as http;
 
@@ -101,32 +102,45 @@ class AppConfig {
     String email,
     String password,
   ) async {
-    String? otp;
-    String? verifyResult;
-    String? errorMessage;
-
-    do {
+    try {
       if (!context.mounted) return "Đã xảy ra lỗi khi xác thực.";
-      otp = await showOtpDialog(context, errorMessage: errorMessage);
+
+      final otp = await Navigator.push<String?>(
+        context,
+        MaterialPageRoute(
+          builder: (_) => OtpRegisterScreen(
+            fullName: fullName,
+            phoneNumber: phoneNumber,
+            email: email,
+            password: password,
+            onRegisterOtpSubmit: ({
+              required String otp,
+              required String fullName,
+              required String phoneNumber,
+              required String email,
+              required String password,
+            }) async {
+              // Gọi API xác thực OTP và trả về lỗi nếu có
+              return await verifyOtp(
+                fullName,
+                phoneNumber,
+                email,
+                password,
+                otp,
+              );
+            },
+          ),
+        ),
+      );
 
       if (otp == null) {
         return "Bạn đã hủy xác thực OTP.";
       }
-
-      if (otp.isEmpty) {
-        errorMessage = "Bạn chưa nhập OTP.";
-        continue;
-      }
-
-      verifyResult =
-          await verifyOtp(fullName, phoneNumber, email, password, otp);
-
-      if (verifyResult != null) {
-        errorMessage = "Bạn nhập sai OTP. Vui lòng nhập đúng.";
-      }
-    } while (verifyResult != null);
-
-    return null; // ✅ Thành công
+      // Nếu người dùng nhập OTP đúng, màn hình OtpRegisterScreen đã pop và trả về => thành công
+      return null;
+    } catch (e) {
+      return "Đã xảy ra lỗi: ${e.toString()}";
+    }
   }
 
   static Future<String?> verifyOtp(String fullName, String phoneNumber,
@@ -163,73 +177,73 @@ class AppConfig {
         return data['message'] ?? "OTP không hợp lệ.";
       }
     } else {
-      return "Lỗi xác thực OTP: ${response.statusCode}";
+      return "Bạn nhập sai OTP. Vui lòng nhập đúng!";
     }
   }
 
-  static Future<String?> showOtpDialog(BuildContext context,
-      {String? errorMessage}) async {
-    String otp = "";
-    String? localError = errorMessage;
+  // static Future<String?> showOtpDialog(BuildContext context,
+  //     {String? errorMessage}) async {
+  //   String otp = "";
+  //   String? localError = errorMessage;
 
-    if (!context.mounted) return null;
-    return await showDialog<String>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: const Text("Nhập mã OTP"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      otp = value;
-                      if (localError != null) {
-                        setState(() => localError = null);
-                      }
-                    },
-                    decoration: const InputDecoration(
-                      hintText: "Nhập mã OTP nhận được",
-                    ),
-                  ),
-                  if (localError != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        localError!,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    ),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text("Hủy"),
-                ),
-                TextButton(
-                  onPressed: () {
-                    if (otp.isEmpty) {
-                      setState(() {
-                        localError = "Bạn chưa nhập OTP.";
-                      });
-                    } else {
-                      Navigator.pop(context, otp);
-                    }
-                  },
-                  child: const Text("Xác nhận"),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
+  //   if (!context.mounted) return null;
+  //   return await showDialog<String>(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     builder: (context) {
+  //       return StatefulBuilder(
+  //         builder: (context, setState) {
+  //           return AlertDialog(
+  //             title: const Text("Nhập mã OTP"),
+  //             content: Column(
+  //               mainAxisSize: MainAxisSize.min,
+  //               children: [
+  //                 TextField(
+  //                   keyboardType: TextInputType.number,
+  //                   onChanged: (value) {
+  //                     otp = value;
+  //                     if (localError != null) {
+  //                       setState(() => localError = null);
+  //                     }
+  //                   },
+  //                   decoration: const InputDecoration(
+  //                     hintText: "Nhập mã OTP nhận được",
+  //                   ),
+  //                 ),
+  //                 if (localError != null)
+  //                   Padding(
+  //                     padding: const EdgeInsets.only(top: 8.0),
+  //                     child: Text(
+  //                       localError!,
+  //                       style: const TextStyle(color: Colors.red),
+  //                     ),
+  //                   ),
+  //               ],
+  //             ),
+  //             actions: [
+  //               TextButton(
+  //                 onPressed: () => Navigator.pop(context),
+  //                 child: const Text("Hủy"),
+  //               ),
+  //               TextButton(
+  //                 onPressed: () {
+  //                   if (otp.isEmpty) {
+  //                     setState(() {
+  //                       localError = "Bạn chưa nhập OTP.";
+  //                     });
+  //                   } else {
+  //                     Navigator.pop(context, otp);
+  //                   }
+  //                 },
+  //                 child: const Text("Xác nhận"),
+  //               ),
+  //             ],
+  //           );
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 // =================== QUÊN MẬT KHẨU ===================
 
   /// Bước 1: Gửi OTP tới email
@@ -289,13 +303,13 @@ class AppConfig {
       );
 
       final data = jsonDecode(utf8.decode(response.bodyBytes));
-      print("📥 Response: ${response.statusCode} - $data");
+      // print("📥 Response: ${response.statusCode} - $data");
 
       if (response.statusCode == 200 && data['status'] == 0) {
         print("✅ OTP xác thực thành công cho $email");
         return null; // ✅ OTP hợp lệ
       } else {
-        return data['message'] ?? 'Xác thực OTP thất bại.';
+        return 'Nhập sai OTP. Vui lòng nhập đúng!';
       }
     } catch (e) {
       print("❌ Lỗi xác thực OTP: $e");
