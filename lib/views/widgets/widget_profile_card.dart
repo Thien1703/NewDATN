@@ -39,11 +39,6 @@ class WidgetProfileCardState extends State<WidgetProfileCard> {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
@@ -67,11 +62,11 @@ class WidgetProfileCardState extends State<WidgetProfileCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _customRow(
-                image: AppIcons.user1,
-                titleOfImage:
-                    widget.profile['customerId'].toString() ?? 'Chưa có id',
-              ),
+              // _customRow(
+              //   image: AppIcons.user1,
+              //   titleOfImage:
+              //       widget.profile['customerId'].toString() ?? 'Chưa có id',
+              // ),
               _customRow(
                 image: AppIcons.user1,
                 titleOfImage: widget.profile['fullName'] ?? 'Chưa có tên',
@@ -83,8 +78,6 @@ class WidgetProfileCardState extends State<WidgetProfileCard> {
                         id: widget.profile['id'],
                         customerId: widget.profile['customerId'],
                         onProfileAdded: () {
-                          // Gọi lại setState để reload sau khi cập nhật xong
-                          setState(() {});
                           // 👇 Gọi callback sau khi chỉnh sửa xong
                           if (widget.onProfileUpdated != null) {
                             widget.onProfileUpdated!();
