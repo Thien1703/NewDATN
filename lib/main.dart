@@ -24,6 +24,16 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // ✅ cameracamera
+  if (await Permission.camera.isDenied) {
+    await Permission.camera.request();
+  }
+
+  // ✅ micro
+  if (await Permission.microphone.isDenied) {
+    await Permission.microphone.request();
+  }
+
   // ✅ Yêu cầu quyền thông báo nếu chưa được cấp (Android 13+)
   if (await Permission.notification.isDenied) {
     await Permission.notification.request();

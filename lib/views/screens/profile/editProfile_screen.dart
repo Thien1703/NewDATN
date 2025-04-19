@@ -216,6 +216,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
+                          suffixIcon: const Icon(Icons.calendar_today),
                         ),
                         readOnly: true,
                         onTap: () async {
@@ -278,8 +279,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
-                          color:
-                              !isLoading ? AppColors.deepBlue : AppColors.grey4,
+                          color: AppColors.deepBlue,
                         ),
                         child: Center(
                           child: isLoading
@@ -333,8 +333,6 @@ Widget _customTextField({
     validator: validator,
     decoration: InputDecoration(
       hintText: hint,
-      // filled: true,
-      // fillColor: Colors.white,
       floatingLabelBehavior: FloatingLabelBehavior.never,
       contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
       border: OutlineInputBorder(

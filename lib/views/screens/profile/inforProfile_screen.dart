@@ -177,12 +177,12 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
             flex: 3,
             child: Text(
               label,
-              style: const TextStyle(color: Color(0xFF808080)),
+              style: const TextStyle(color: AppColors.neutralDark),
             ),
           ),
           const SizedBox(width: 10),
           Expanded(
-            flex: 8,
+            flex: 7,
             child: Text(
               value,
               style: const TextStyle(

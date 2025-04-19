@@ -87,7 +87,7 @@ class AuthViewModel with ChangeNotifier {
         msg: "Bạn đã hủy xác thực OTP.",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.red,
         textColor: Colors.white,
       );
       return null; // Hủy thì không trả về OTP

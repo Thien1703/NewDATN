@@ -43,7 +43,7 @@ class _EditProfileAnotherState extends State<EditProfileAnother> {
     final profile = await Provider.of<ProfileViewModel>(context, listen: false)
         .getProfileById(widget.id);
 
-    if (profile != null) {
+    if (profile != null && mounted) {
       setState(() {
         _fullNameController.text = profile['fullName'] ?? '';
         _phoneController.text = profile['phoneNumber'] ?? '';
@@ -136,6 +136,7 @@ class _EditProfileAnotherState extends State<EditProfileAnother> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
+                    suffixIcon: const Icon(Icons.calendar_today),
                   ),
                   readOnly: true,
                   onTap: () async {
@@ -159,7 +160,7 @@ class _EditProfileAnotherState extends State<EditProfileAnother> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.3,
+                    // width: MediaQuery.of(context).size.width * 0.35,
                     child: WidgetSelectGender(
                       initialGender: _selectedGender,
                       onChanged: (String gender) {
@@ -182,29 +183,34 @@ class _EditProfileAnotherState extends State<EditProfileAnother> {
                 const SizedBox(height: 25),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _handleUpdateProfile,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      backgroundColor: AppColors.deepBlue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
+                  height: 55,
+                  child: GestureDetector(
+                    onTap: isLoading ? null : _handleUpdateProfile,
+                    child: Container(
+                      // padding: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        color: AppColors.deepBlue,
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                    ),
-                    child: isLoading
-                        ? SizedBox(
-                            child: CircularProgressIndicator(
-                              color: AppColors.ghostWhite,
-                              // strokeWidth: 1,
-                            ),
-                          )
-                        : const Text(
-                            'Cập nhật',
-                            style: TextStyle(
+                      alignment: Alignment.center,
+                      child: isLoading
+                          ? SizedBox(
+                              // width: 20,
+                              // height: 20,
+                              child: CircularProgressIndicator(
+                                color: AppColors.ghostWhite,
+                                // strokeWidth: 2,
+                              ),
+                            )
+                          : const Text(
+                              'Cập nhật',
+                              style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
+                                color: Colors.white,
+                              ),
+                            ),
+                    ),
                   ),
                 ),
               ],
