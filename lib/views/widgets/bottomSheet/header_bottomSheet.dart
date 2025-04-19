@@ -15,12 +15,11 @@ class HeaderBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-      // color: Colors.white,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            margin: const EdgeInsets.only(bottom: 15),
+            margin: const EdgeInsets.only(bottom: 10),
             width: 70,
             height: 5,
             decoration: BoxDecoration(
