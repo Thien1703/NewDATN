@@ -183,29 +183,34 @@ class _EditProfileAnotherState extends State<EditProfileAnother> {
                 const SizedBox(height: 25),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _handleUpdateProfile,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      backgroundColor: AppColors.deepBlue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
+                  height: 55,
+                  child: GestureDetector(
+                    onTap: isLoading ? null : _handleUpdateProfile,
+                    child: Container(
+                      // padding: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        color: AppColors.deepBlue,
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                    ),
-                    child: isLoading
-                        ? SizedBox(
-                            child: CircularProgressIndicator(
-                              color: AppColors.ghostWhite,
-                              // strokeWidth: 1,
-                            ),
-                          )
-                        : const Text(
-                            'Cập nhật',
-                            style: TextStyle(
+                      alignment: Alignment.center,
+                      child: isLoading
+                          ? SizedBox(
+                              // width: 20,
+                              // height: 20,
+                              child: CircularProgressIndicator(
+                                color: AppColors.ghostWhite,
+                                // strokeWidth: 2,
+                              ),
+                            )
+                          : const Text(
+                              'Cập nhật',
+                              style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
+                                color: Colors.white,
+                              ),
+                            ),
+                    ),
                   ),
                 ),
               ],
