@@ -11,7 +11,8 @@ import 'package:health_care/views/screens/tools/tools_screen.dart';
 import 'package:health_care/views/widgets/build_Draw.dart';
 
 class HomeScreens extends StatefulWidget {
-  const HomeScreens({super.key});
+  const HomeScreens({super.key, this.inttialIndex = 0});
+  final int inttialIndex;
 
   @override
   State<HomeScreens> createState() => _HomeScreensState();
@@ -24,6 +25,7 @@ class _HomeScreensState extends State<HomeScreens> {
   @override
   void initState() {
     super.initState();
+    _selectedIndex = widget.inttialIndex;
     fetchCustomerProfile();
   }
 
@@ -74,7 +76,11 @@ class _HomeScreensState extends State<HomeScreens> {
       child: SafeArea(
         child: Scaffold(
           drawer: _selectedIndex == 0
-              ? BuildDraw(fullName: customers?.fullName ?? 'Không xác định')
+              ? BuildDraw(
+                  fullName: customers?.fullName ?? 'Không xác định',
+                  image: customers?.avatar ?? 'assets/images/iconProfile.jpg',
+                  phone: customers?.phoneNumber.toString() ?? '0',
+                )
               : null,
           extendBody: _selectedIndex == 0,
           body: _screens[_selectedIndex],

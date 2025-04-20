@@ -45,7 +45,7 @@ class Customer {
       cccd: json["cccd"] ?? "Chưa cập nhật",
       email: json["email"] ?? "Chưa cập nhật",
       address: json["address"] ?? "Chưa cập nhật",
-      avatar: json["avatar"] ?? "assets/images/imageError.png",
+      avatar: json["avatar"] ?? "assets/images/iconProfile.jpg",
     );
   }
 
@@ -79,7 +79,7 @@ class Customer {
       cccd: "Chưa cập nhật",
       email: "Chưa cập nhật",
       address: "Chưa cập nhật",
-      avatar: "assets/images/imageError.png",
+      avatar: "assets/images/iconProfile.jpg",
     );
   }
 }
