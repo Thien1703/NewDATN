@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:health_care/models/customer.dart';
 import 'package:health_care/models/customerProfile.dart';
 import 'package:health_care/viewmodels/api/customerProfile_api.dart';
-import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/views/widgets/bottomSheet/header_bottomSheet.dart';
 import 'package:intl/intl.dart';
 
@@ -72,8 +70,6 @@ class _ShowcustomerProfile extends State<ShowcustomerProfile> {
                           customerProfiles?.gender ?? 'Chưa cập nhật'),
                       _buildLabelRow('Địa chỉ',
                           customerProfiles?.address ?? 'Chưa cập nhật'),
-                      _buildLabelRow(
-                          'Cccd', customerProfiles?.cccd ?? 'Chưa cập nhật'),
                     ],
                   ),
                 ),

@@ -66,11 +66,6 @@ class _ProfileBooking extends State<ProfileBooking> {
     }
   }
 
-  /// Hàm cập nhật thông tin user
-  void _fetchUserProfile() {
-    _profileCardKey.currentState?.fetchUserProfile();
-  }
-
   void _handleProfileTap(int customerId, int? customerProfileId) {
     print('customerId: $customerId');
     print('customerProfileId: $customerProfileId');
@@ -146,6 +141,8 @@ class _ProfileBooking extends State<ProfileBooking> {
             onTap: (customerId) {
               _handleProfileTap(customerId, null);
             },
+            // onTap: _handleProfileTap,
+            // onProfileUpdated: _fetchUserProfile,
           ),
           const SizedBox(height: 10),
           _isLoading
