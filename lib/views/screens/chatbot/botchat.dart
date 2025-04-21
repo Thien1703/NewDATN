@@ -20,7 +20,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   // final String _apiKey = 'AIzaSyBjBLPylpQCrsTkLG4SZJmwAcBQSsi7GCs';
   final String _apiKey = 'AIzaSyBjBLPylpQCrsTkLG4SZJmwAcBQSsi7GCs';
   final String _apiUrl =
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=$_apiKey';
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key';
 
   void _sendMessage() async {
     if (_controller.text.isEmpty) return;
