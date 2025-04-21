@@ -116,7 +116,7 @@ void main() async {
 
 Future<void> _showLocalNotification(
     String type, String message, String? appointmentId) async {
-  final isConfirmed = type == 'CONFIRMED_APPOINTMENT';
+  final isConfirmed = type == 'CANCELED_APPOINTMENT';
 
   const AndroidNotificationDetails androidNotificationDetails =
       AndroidNotificationDetails(
@@ -133,7 +133,7 @@ Future<void> _showLocalNotification(
 
   await localNotificationsPlugin.show(
     DateTime.now().millisecondsSinceEpoch ~/ 1000,
-    isConfirmed ? '✅ Xác nhận lịch hẹn' : '❌ Hủy lịch hẹn',
+    isConfirmed ? '❌ Hủy lịch hẹn'  : '✅ Xác nhận lịch hẹn',
     message,
     notificationDetails,
     payload: appointmentId != null ? "appointmentId:$appointmentId" : null,

@@ -204,7 +204,7 @@ class _ShowservicestarScreenState extends State<ShowservicestarScreen> {
                     margin: EdgeInsets.symmetric(horizontal: 20),
                     child: _isSubmitting
                         ? SizedBox(
-                            width: 100,
+                            width: 20,
                             child: const CircularProgressIndicator(),
                           )
                         : ElevatedButton(

@@ -122,6 +122,7 @@ class _BuildDrawState extends State<BuildDraw> {
                   ),
                   SizedBox(width: 10),
                   Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         widget.fullName,
@@ -158,7 +159,7 @@ class _BuildDrawState extends State<BuildDraw> {
                         builder: (context) => NotificationScreen(),
                       ));
                 }),
-                _buildTitle('Xem chuyên khoa', () {}),
+                // _buildTitle('Xem chuyên khoa', () {}),
                 ExpansionTile(
                   tilePadding: EdgeInsets.zero,
                   title: Text(
@@ -269,7 +270,7 @@ class _BuildDrawState extends State<BuildDraw> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ExaminationScreen(),
+                        builder: (context) =>HomeScreens(inttialIndex: 1,),
                       ));
                 }),
                 _buildTitle(

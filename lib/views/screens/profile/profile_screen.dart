@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/config/app_config.dart';
 import 'package:health_care/views/screens/profile/inforProfile_screen.dart';
+import 'package:health_care/views/screens/profile/termsAndServices_screen.dart';
 import 'package:health_care/views/widgets/bottomSheet/logOut_bottomSheet.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -40,7 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.grey[100],
+      backgroundColor:AppColors.ghostWhite,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -125,6 +126,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               fetchUserProfile(); // Cập nhật lại dữ liệu khi trở về ProfileScreen
             });
           }),
+          const SizedBox(height: 10),
+          _buildMenuItem(Icons.list_alt_outlined, "Điều khoản dịch vụ", () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => const TermsandservicesScreen()));})
         ],
       ),
     );
@@ -159,6 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildMenuItem(IconData icon, String text, [VoidCallback? onTap]) {
     return Card(
+      color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: ListTile(
         leading: Icon(icon, color: AppColors.deepBlue),

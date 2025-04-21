@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class CustomerProfile {
   final int id;
   final int customerId;
@@ -23,12 +25,17 @@ class CustomerProfile {
     return CustomerProfile(
       id: json['id'] ?? 0,
       customerId: json['customerId'] ?? 0,
-      fullName: json['fullName'] ?? "Chưa cập nhật",
+      fullName:  json["fullName"]?.toString().isNotEmpty == true
+          ? utf8.decode(json["fullName"].toString().runes.toList())
+          : "Chưa cập nhật",
+
       phoneNumber: json['phoneNumber'] ?? "Chưa cập nhật",
       birthDate: json['birthDate'] ?? "Chưa cập nhật",
       gender: json['gender'] ?? "Chưa cập nhật",
       cccd: json['cccd'],
-      address: json['address'] ?? "Chưa cập nhật",
+      address:  json["address"]?.toString().isNotEmpty == true
+          ? utf8.decode(json["address"].toString().runes.toList())
+          : "Chưa cập nhật",
     );
   }
 
