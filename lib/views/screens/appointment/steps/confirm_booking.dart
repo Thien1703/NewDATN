@@ -9,6 +9,7 @@ import 'package:health_care/views/screens/appointment/steps/notiSucefully_screen
 import 'package:health_care/views/widgets/appointment/widget_hospital_info_card.dart';
 import 'package:health_care/views/widgets/appointment/widget_customPricePayment.dart';
 import 'package:health_care/views/widgets/appointment/widget_customButton.dart';
+import 'package:health_care/views/widgets/widgetCustomerProfile.dart';
 import 'package:health_care/views/widgets/widget_lineBold.dart';
 import 'package:health_care/views/widgets/widget_customerInfor_card.dart';
 import 'package:health_care/models/appointment/appointment_Create.dart';
@@ -172,7 +173,10 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                         clinicId: widget.clinicId,
                       ),
                       const SectionTitle(title: 'Thông tin bệnh nhân'),
-                      WidgetCustomerinforCard(),
+                      widget.customerProfileId == null
+                          ? WidgetCustomerinforCard()
+                          : WidgetCustomerProfile(
+                              customerProfileId: widget.customerProfileId),
                       const SectionTitle(title: 'Thông tin dịch vụ'),
                       Card(
                         child: Container(

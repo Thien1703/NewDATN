@@ -4,6 +4,7 @@ import 'package:health_care/models/appointment/appointment_service.dart';
 import 'package:health_care/viewmodels/api/appointmentService_api.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
 import 'package:health_care/views/widgets/bottomSheet/showCustomer.dart';
+import 'package:health_care/views/widgets/bottomSheet/showCustomerProfile.dart';
 import 'package:health_care/views/widgets/widget_lineBold.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -250,44 +251,138 @@ class _NotiSucefullyState extends State<NotiSucefully> {
                                                 fontWeight: FontWeight.w400),
                                           ),
                                         ),
-                                        _buildRow('Họ và tên',
-                                            appointment.customer.fullName),
-                                        _buildRow(
-                                          'Ngày sinh',
-                                          (appointment.customer.birthDate
-                                                  .isNotEmpty)
-                                              ? DateFormat('dd/MM/yyyy').format(
-                                                  DateTime.tryParse(appointment
-                                                          .customer
-                                                          .birthDate) ??
-                                                      DateTime(1970, 1, 1))
-                                              : 'Chưa cập nhật',
-                                        ),
-                                        _buildRow('Giới tính',
-                                            appointment.customer.gender),
-                                        _buildRow('Số điện thoại',
-                                            appointment.customer.phoneNumber),
-                                        SizedBox(height: 10),
-                                        Align(
-                                          alignment: Alignment.center,
-                                          child: InkWell(
-                                            onTap: () {
-                                              showModalBottomSheet(
-                                                context: context,
-                                                builder: (context) =>
-                                                    Showcustomer(),
-                                              );
-                                            },
-                                            child: Text(
-                                              'Xem chi tiết',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: AppColors.deepBlue,
-                                                fontWeight: FontWeight.w500,
+                                        appointment.customerProfile?.id == null
+                                            ? Padding(
+                                                padding: EdgeInsets.all(10),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    _buildRow(
+                                                        'Họ và tên',
+                                                        appointment
+                                                            .customer.fullName),
+                                                    _buildRow(
+                                                      'Ngày sinh',
+                                                      (appointment
+                                                              .customer
+                                                              .birthDate
+                                                              .isNotEmpty)
+                                                          ? DateFormat(
+                                                                  'dd/MM/yyyy')
+                                                              .format(DateTime.tryParse(
+                                                                      appointment
+                                                                          .customer
+                                                                          .birthDate) ??
+                                                                  DateTime(1970,
+                                                                      1, 1))
+                                                          : 'Chưa cập nhật',
+                                                    ),
+                                                    _buildRow(
+                                                        'Giới tính',
+                                                        appointment
+                                                            .customer.gender),
+                                                    _buildRow(
+                                                        'Số điện thoại',
+                                                        appointment.customer
+                                                            .phoneNumber),
+                                                    SizedBox(height: 10),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          showModalBottomSheet(
+                                                            context: context,
+                                                            builder: (context) =>
+                                                                Showcustomer(),
+                                                          );
+                                                        },
+                                                        child: Text(
+                                                          'Xem chi tiết',
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            color: AppColors
+                                                                .deepBlue,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                            : Padding(
+                                                padding: EdgeInsets.all(10),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    _buildRow(
+                                                        'Họ và tên',
+                                                        appointment
+                                                                .customerProfile
+                                                                ?.fullName ??
+                                                            'Không xác định'),
+                                                    _buildRow(
+                                                      'Ngày sinh',
+                                                      (appointment
+                                                                  .customerProfile
+                                                                  ?.birthDate
+                                                                  ?.isNotEmpty ==
+                                                              true)
+                                                          ? DateFormat(
+                                                                  'dd/MM/yyyy')
+                                                              .format(DateTime.tryParse(
+                                                                      appointment
+                                                                          .customerProfile!
+                                                                          .birthDate) ??
+                                                                  DateTime(1970,
+                                                                      1, 1))
+                                                          : 'Chưa cập nhật',
+                                                    ),
+                                                    _buildRow(
+                                                        'Giới tính',
+                                                        appointment
+                                                                .customerProfile
+                                                                ?.gender ??
+                                                            'Không xác định'),
+                                                    _buildRow(
+                                                        'Số điện thoại',
+                                                        appointment
+                                                                .customerProfile
+                                                                ?.phoneNumber ??
+                                                            'Không xác định'),
+                                                    SizedBox(height: 10),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          showModalBottomSheet(
+                                                              context: context,
+                                                              builder: (context) => ShowcustomerProfile(
+                                                                  customerProfileId:
+                                                                      appointment
+                                                                          .customerProfile!
+                                                                          .id));
+                                                        },
+                                                        child: Text(
+                                                          'Xem chi tiết',
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            color: AppColors
+                                                                .deepBlue,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                        ),
                                       ],
                                     ),
                                   ),

@@ -173,7 +173,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
     );
   }
 
-  Widget _buildAppointmentCard(Appointment appointment) {
+  Widget  _buildAppointmentCard(Appointment appointment) {
     return InkWell(
       onTap: () {
         appointment.status == "CANCELLED"
