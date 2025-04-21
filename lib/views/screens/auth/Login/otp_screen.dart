@@ -38,7 +38,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
   void _submitOtp() async {
     final otp = _otpController.text.trim();
-    if (otp.isEmpty || otp.length < 4) {
+    if (otp.isEmpty || otp.length < 6) {
       setState(() => errorText = "Vui lòng nhập đầy đủ mã OTP.");
       return;
     }

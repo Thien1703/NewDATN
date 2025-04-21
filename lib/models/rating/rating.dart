@@ -28,7 +28,9 @@ class Rating {
       comment: json['comment'] != null
           ? utf8.decode(json['comment'].toString().runes.toList())
           : null,
-      customerName: json['customerName'],
+      customerName: json['customerName']?.toString().isNotEmpty==true
+      ?utf8.decode(json['customerName'].toString().runes.toList())
+      :"Chua cap nhat",
       status: json['status'] == null ? null : json['status'] == "TRUE",
     );
   }

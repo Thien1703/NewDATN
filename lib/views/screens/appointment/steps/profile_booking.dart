@@ -14,6 +14,7 @@ class ProfileBooking extends StatefulWidget {
     int? clinicId,
     List<int>? serviceIds,
     int? customerId,
+    int? customerProfileId,
     String? date, // ✅ Thêm ngày khám
     String? time, // ✅ Thêm giờ khám
   }) onNavigateToScreen;
@@ -65,24 +66,26 @@ class _ProfileBooking extends State<ProfileBooking> {
     }
   }
 
-  /// Hàm cập nhật thông tin user
-  void _fetchUserProfile() {
-    _profileCardKey.currentState?.fetchUserProfile();
-  }
+  void _handleProfileTap(int customerId, int? customerProfileId) {
+    print('customerId: $customerId');
+    print('customerProfileId: $customerProfileId');
 
-  void _handleProfileTap(int customerId) {
-    print("ID khách hàng: $customerId");
-    print(
-        "Dữ liệu nhận từ ExamInfoBooking: Clinic ID: ${widget.clinicId}, Dịch vụ: ${widget.selectedServiceId}");
+    final customerIdFromProvider =
+        Provider.of<UserProvider>(context, listen: false).customerId;
+    if (customerIdFromProvider == null) {
+      print("Không tìm thấy customerId trong Provider");
+      return;
+    }
+
     widget.onNavigateToScreen(
       2,
       'Xác nhận thông tin',
       customerId: customerId,
+      customerProfileId: customerProfileId,
       clinicId: widget.clinicId,
       serviceIds: widget.selectedServiceId,
       date: widget.date,
       time: widget.time,
-      // selectedProfile: selectedProfile,
     );
   }
 
@@ -135,8 +138,11 @@ class _ProfileBooking extends State<ProfileBooking> {
           ),
           WidgetCustomerinforCard(
             key: _profileCardKey, // ✅ Thêm key để truy cập state
-            onTap: _handleProfileTap,
-            onProfileUpdated: _fetchUserProfile,
+            onTap: (customerId) {
+              _handleProfileTap(customerId, null);
+            },
+            // onTap: _handleProfileTap,
+            // onProfileUpdated: _fetchUserProfile,
           ),
           const SizedBox(height: 10),
           _isLoading
@@ -152,7 +158,9 @@ class _ProfileBooking extends State<ProfileBooking> {
                     return WidgetProfileCard(
                       profile: profile,
                       onProfileUpdated: _fetchAllProfileByCustomerId,
-                      // onTap: {}
+                      onTap: (customerId, customerProfileId) {
+                        _handleProfileTap(customerId, customerProfileId);
+                      },
                     );
                   },
                 ),

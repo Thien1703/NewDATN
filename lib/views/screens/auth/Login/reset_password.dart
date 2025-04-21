@@ -27,11 +27,16 @@ class _ResetPasswordState extends State<ResetPassword> {
       return 'Vui lòng nhập mật khẩu';
     }
 
-    // Regex: ít nhất 6 kí tự, 1 chữ hoa, 1 chữ thường, 1 số
-    final regex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$');
+    // Kiểm tra không được chứa khoảng trắng
+    if (value.contains(' ')) {
+      return 'Mật khẩu không được chứa khoảng trắng';
+    }
+
+    // Regex: ít nhất 8 ký tự, gồm ít nhất 1 chữ hoa và 1 chữ số (ký tự đặc biệt thì có thể có hoặc không)
+    final regex = RegExp(r'^(?=.*[A-Z])(?=.*\d).{8,}$');
 
     if (!regex.hasMatch(value)) {
-      return 'Mật khẩu phải có ít nhất 6 ký tự, gồm chữ hoa, chữ thường và số';
+      return 'Mật khẩu phải từ 8 ký tự trở lên, gồm ít nhất 1 chữ hoa và 1 số ';
     }
 
     return null;
@@ -60,20 +65,24 @@ class _ResetPasswordState extends State<ResetPassword> {
           child: Form(
             key: _formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Tạo mật khẩu mới để hoàn tất quy trình",
-                  style: TextStyle(fontSize: 18, color: AppColors.deepBlue),
+                  'Nhập mật khẩu mới',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.deepBlue,
+                  ),
                 ),
-                SizedBox(height: 15),
                 TextFormField(
                   controller: _newPasswordController,
                   obscureText: _obscureNewPassword,
                   decoration: InputDecoration(
-                    labelText: 'Nhập mật khẩu',
-                    labelStyle: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
+                    hintText: 'Nhập mật khẩu',
+                    hintStyle: const TextStyle(
+                      fontSize: 14,
+                      color: Color.fromARGB(255, 108, 108, 108),
                     ),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -87,19 +96,30 @@ class _ResetPasswordState extends State<ResetPassword> {
                         });
                       },
                     ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
                     errorMaxLines: 2,
                   ),
                   validator: _validateNewPassword,
                 ),
                 SizedBox(height: 20),
+                Text(
+                  '  Xác nhận mật khẩu',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.deepBlue,
+                  ),
+                ),
                 TextFormField(
                   controller: _confirmPasswordController,
                   obscureText: _obscureConfirmPassword,
                   decoration: InputDecoration(
-                    labelText: 'Xác nhận mật khẩu',
-                    labelStyle: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
+                    hintText: 'Xác nhận mật khẩu',
+                    hintStyle: const TextStyle(
+                      fontSize: 14,
+                      color: Color.fromARGB(255, 108, 108, 108),
                     ),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -113,55 +133,64 @@ class _ResetPasswordState extends State<ResetPassword> {
                         });
                       },
                     ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
                   ),
                   validator: _validateConfirmPassword,
                 ),
                 SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _isLoading
-                      ? null
-                      : () async {
-                          if (_formKey.currentState!.validate()) {
-                            setState(() {
-                              _isLoading = true;
-                            });
-                            final newPassword =
-                                _newPasswordController.text.trim();
-                            final confirmPassword =
-                                _confirmPasswordController.text.trim();
-                            final authViewModel = Provider.of<AuthViewModel>(
-                                context,
-                                listen: false);
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: _isLoading
+                        ? null
+                        : () async {
+                            if (_formKey.currentState!.validate()) {
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              final newPassword =
+                                  _newPasswordController.text.trim();
+                              final confirmPassword =
+                                  _confirmPasswordController.text.trim();
+                              final authViewModel = Provider.of<AuthViewModel>(
+                                  context,
+                                  listen: false);
 
-                            await authViewModel.resetPassword(
-                                context,
-                                widget.email,
-                                widget.otp,
-                                newPassword,
-                                confirmPassword);
+                              await authViewModel.resetPassword(
+                                  context,
+                                  widget.email,
+                                  widget.otp,
+                                  newPassword,
+                                  confirmPassword);
 
-                            setState(() {
-                              _isLoading = false;
-                            });
-                          }
-                        },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.deepBlue,
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                    textStyle:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  child: _isLoading
-                      ? SizedBox(
-                          height: 24,
-                          width: 24,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
+                              setState(() {
+                                _isLoading = false;
+                              });
+                            }
+                          },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.deepBlue,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(25)),
+                      ),
+                    ),
+                    child: _isLoading
+                        ? SizedBox(
+                            child: CircularProgressIndicator(
+                              color: AppColors.neutralWhite,
+                            ),
+                          )
+                        : Text(
+                            "Đặt lại mật khẩu",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.neutralWhite),
                           ),
-                        )
-                      : Text("Đặt lại mật khẩu"),
+                  ),
                 ),
               ],
             ),

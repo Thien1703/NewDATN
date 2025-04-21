@@ -15,9 +15,12 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   final TextEditingController _controller = TextEditingController();
   final List<ChatMessage> _messages = [];
   bool _isLoading = false;
-  final String _apiKey =
-      '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';
-  final String _apiUrl = 'https://api.deepseek.com/v1/chat/completions';
+
+  // Thay API key này bằng key thật của bạn từ Google
+  // final String _apiKey = 'AIzaSyBjBLPylpQCrsTkLG4SZJmwAcBQSsi7GCs';
+  final String _apiKey = 'AIzaSyBjBLPylpQCrsTkLG4SZJmwAcBQSsi7GCs';
+  final String _apiUrl =
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key';
 
   void _sendMessage() async {
     if (_controller.text.isEmpty) return;
@@ -32,31 +35,31 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse(_apiUrl),
+        Uri.parse(_apiUrl), // đã gắn sẵn key trong _apiUrl
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $_apiKey',
         },
         body: jsonEncode({
-          'model': 'deepseek-chat',
-          'messages': [
+          "contents": [
             {
-              'role': 'user',
-              'content': '$userMessage. Hãy trả lời bằng tiếng Việt'
+              "role": "user", // Thêm role để đúng chuẩn Gemini
+              "parts": [
+                {"text": "$userMessage. Trả lời bằng tiếng Việt."}
+              ]
             }
-          ],
-          'temperature': 0.7,
-          'max_tokens': 500,
+          ]
         }),
       );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final aiResponse = data['choices'][0]['message']['content'];
+        final aiResponse = data['candidates'][0]['content']['parts'][0]['text'];
+
         setState(() {
           _messages.add(ChatMessage(text: aiResponse, isUser: false));
         });
       } else {
+        print('Lỗi chi tiết: ${response.body}');
         throw Exception('Lỗi API: ${response.statusCode}');
       }
     } catch (e) {
@@ -72,19 +75,14 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize:
-            Size.fromHeight(70), // Tăng chiều cao để có thêm khoảng trống
+        preferredSize: Size.fromHeight(70),
         child: Container(
           decoration: BoxDecoration(
             color: AppColors.deepBlue,
-            borderRadius: BorderRadius.vertical(
-                bottom: Radius.circular(20)), // Bo góc dưới
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black26,
-                blurRadius: 5,
-                offset: Offset(0, 3),
-              ),
+                  color: Colors.black26, blurRadius: 5, offset: Offset(0, 3)),
             ],
           ),
           padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),

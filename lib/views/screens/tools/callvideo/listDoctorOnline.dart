@@ -1,22 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
-
-class Doctor {
-  final String name;
-  final String specialty;
-  final double rating;
-
-  Doctor({required this.name, required this.specialty, required this.rating});
-}
+import 'package:health_care/views/screens/tools/callvideo/bookOnline.dart';
+import 'package:health_care/views/screens/tools/callvideo/doctorOnLineModel.dart';
 
 class DoctorOnlineList extends StatelessWidget {
   DoctorOnlineList({super.key});
 
   final List<Doctor> doctors = [
-    Doctor(name: "BS. Nguyễn Văn A", specialty: "Nội tổng quát", rating: 4.8),
-    Doctor(name: "BS. Trần Thị B", specialty: "Da liễu", rating: 4.6),
-    Doctor(name: "BS. Lê Văn C", specialty: "Nhi khoa", rating: 4.9),
-    Doctor(name: "BS. Phạm Thị D", specialty: "Tim mạch", rating: 4.7),
+    Doctor(
+      name: "BS. Nguyễn Văn Anh",
+      specialty: "Nội tổng quát",
+      rating: 4.8,
+      imagePath: 'assets/images/bacsi1.jpg',
+    ),
+    Doctor(
+      name: "BS. Trần Thị Lan",
+      specialty: "Da liễu",
+      rating: 4.6,
+      imagePath: 'assets/images/bacsi3.jpg',
+    ),
+    Doctor(
+      name: "BS. Lê Văn Hải",
+      specialty: "Nhi khoa",
+      rating: 4.9,
+      imagePath: 'assets/images/bacsi2.jpg',
+    ),
+    Doctor(
+      name: "BS. Phạm Hùng Chiến",
+      specialty: "Tim mạch",
+      rating: 4.7,
+      imagePath: 'assets/images/bacsi4.jpg',
+    ),
   ];
 
   @override
@@ -46,10 +60,9 @@ class DoctorOnlineList extends StatelessWidget {
             elevation: 4,
             margin: const EdgeInsets.only(bottom: 16),
             child: ListTile(
-              leading: const CircleAvatar(
+              leading: CircleAvatar(
                 radius: 28,
-                backgroundImage:
-                    AssetImage('assets/images/doctor.png'), // thay hình nếu cần
+                backgroundImage: AssetImage(doctor.imagePath),
               ),
               title: Text(
                 doctor.name,
@@ -60,7 +73,12 @@ class DoctorOnlineList extends StatelessWidget {
               isThreeLine: true,
               trailing: ElevatedButton(
                 onPressed: () {
-                  // TODO: Điều hướng tới phòng khám hoặc form đặt lịch
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => BookingOnlineScreen(doctor: doctor),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.deepBlue,

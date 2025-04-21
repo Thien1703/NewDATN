@@ -9,7 +9,8 @@ import 'package:provider/provider.dart';
 
 class WidgetProfileCard extends StatefulWidget {
   final Map<String, dynamic> profile;
-  final Function(int)? onTap;
+  final Function(int customerId, int customerProfileId)? onTap;
+  // final Function(int)? onTap;
   final VoidCallback? onProfileUpdated;
 
   const WidgetProfileCard({
@@ -38,19 +39,17 @@ class WidgetProfileCardState extends State<WidgetProfileCard> {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (widget.profile['id'] != null) {
-          int customerId = widget.profile['id'];
-          if (widget.onTap != null) {
-            widget.onTap!(customerId);
-          }
+        // Lấy customerId và customerProfileId từ profile
+        int customerProfileId = widget.profile['id'];
+        int customerId = widget.profile['customerId'] ??
+            customerProfileId; // Nếu không có customerId thì dùng id làm customerId
+
+        // Kiểm tra và gọi onTap nếu có
+        if (widget.onTap != null) {
+          widget.onTap!(customerId, customerProfileId);
         }
       },
       child: Card(
@@ -63,6 +62,11 @@ class WidgetProfileCardState extends State<WidgetProfileCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // _customRow(
+              //   image: AppIcons.user1,
+              //   titleOfImage:
+              //       widget.profile['customerId'].toString() ?? 'Chưa có id',
+              // ),
               _customRow(
                 image: AppIcons.user1,
                 titleOfImage: widget.profile['fullName'] ?? 'Chưa có tên',
@@ -74,8 +78,6 @@ class WidgetProfileCardState extends State<WidgetProfileCard> {
                         id: widget.profile['id'],
                         customerId: widget.profile['customerId'],
                         onProfileAdded: () {
-                          // Gọi lại setState để reload sau khi cập nhật xong
-                          setState(() {});
                           // 👇 Gọi callback sau khi chỉnh sửa xong
                           if (widget.onProfileUpdated != null) {
                             widget.onProfileUpdated!();

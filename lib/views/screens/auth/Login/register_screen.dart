@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:health_care/utils/validators.dart';
+import 'package:health_care/views/screens/profile/termsAndServices_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/viewmodels/auth_viewmodel.dart';
@@ -44,22 +45,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       setState(() => _isLoading = false);
     }
-  }
-
-  void _showTermsDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Điều khoản và điều kiện"),
-        content: const Text("Đây là nội dung điều khoản và điều kiện..."),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Đóng"),
-          ),
-        ],
-      ),
-    );
   }
 
   @override
@@ -209,15 +194,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     ),
                                     children: [
                                       TextSpan(
-                                        text: 'các điều khoản và điều kiện',
-                                        style: const TextStyle(
-                                          color: AppColors.deepBlue,
-                                          fontWeight: FontWeight.bold,
-                                          decoration: TextDecoration.underline,
-                                        ),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = _showTermsDialog,
-                                      ),
+                                          text: 'các điều khoản và dịch vụ',
+                                          style: const TextStyle(
+                                            color: AppColors.deepBlue,
+                                            fontWeight: FontWeight.bold,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        TermsandservicesScreen(),
+                                                  ));
+                                            }),
                                     ],
                                   ),
                                 ),
