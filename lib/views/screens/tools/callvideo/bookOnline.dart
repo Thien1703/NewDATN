@@ -1,8 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:health_care/views/screens/tools/callvideo/thanhtoan.dart';
+import 'package:health_care/views/screens/tools/callvideo/donebookOn.dart';
 import 'package:intl/intl.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/views/screens/tools/callvideo/doctorOnLineModel.dart';
+
+String generateRoomCode() {
+  final random = Random();
+  return random.nextInt(10000).toString().padLeft(4, '0');
+}
 
 class BookingOnlineScreen extends StatefulWidget {
   final Doctor doctor;
@@ -131,17 +138,21 @@ class _BookingOnlineScreenState extends State<BookingOnlineScreen> {
                         selectedTime != null &&
                         selectedPackage != null)
                     ? () {
+                        String roomCode = generateRoomCode(); // 🔥 Tạo mã phòng
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => PaymentScreen(
+                            builder: (_) => BookingConfirmationScreen(
                               doctorName: widget.doctor.name,
                               selectedPackage: selectedPackage!,
                               selectedDate: selectedDate!,
                               selectedTime: selectedTime!,
+                              roomCode: roomCode, // 🔥 Truyền mã phòng
                             ),
                           ),
                         );
+
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text(
                               'Đã đặt lịch thành công cho ${widget.doctor.name}'),
@@ -154,7 +165,7 @@ class _BookingOnlineScreenState extends State<BookingOnlineScreen> {
                 ),
                 child: const Text(
                   'Xác nhận đặt lịch',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),
             ),

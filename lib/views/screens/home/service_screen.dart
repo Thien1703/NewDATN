@@ -237,7 +237,7 @@ class _ServiceScreen extends State<ServiceScreen> {
                                                     Text(
                                                       service.name,
                                                       style: TextStyle(
-                                                        fontSize: 13,
+                                                        fontSize: 11,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),

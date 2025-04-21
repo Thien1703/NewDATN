@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:health_care/views/screens/tools/callvideo/payOS_service.dart';
 import 'package:intl/intl.dart';
 import 'package:health_care/common/app_colors.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 int calculateFee(String selectedPackage) {
@@ -37,7 +36,7 @@ class PaymentScreen extends StatelessWidget {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: const Text(
-          "Thanh toán",
+          "Thông tin khám Online",
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
@@ -89,61 +88,63 @@ class PaymentScreen extends StatelessWidget {
             const SizedBox(height: 30),
 
             /// Mã QR thanh toán
-            const Text(
-              "Quét mã QR để thanh toán",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 6,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
+            // const Text(
+            //   "Quét mã QR để thanh toán",
+            //   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            // ),
+            // const SizedBox(height: 16),
+            // Container(
+            //   padding: const EdgeInsets.all(12),
+            //   decoration: BoxDecoration(
+            //     color: Colors.white,
+            //     borderRadius: BorderRadius.circular(16),
+            //     boxShadow: const [
+            //       BoxShadow(
+            //         color: Colors.black12,
+            //         blurRadius: 6,
+            //         offset: Offset(0, 3),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // const SizedBox(height: 20),
 
-            ElevatedButton.icon(
-              onPressed: () async {
-                final orderCode =
-                    DateTime.now().millisecondsSinceEpoch.toString();
-                final paymentUrl = await createPaymentLink(
-                  amount: fee,
-                  description:
-                      'Thanh toán khám với bác sĩ $doctorName - $selectedPackage',
-                  orderCode: orderCode,
-                  returnUrl: 'https://yourapp.com/success',
-                  cancelUrl: 'https://yourapp.com/cancel',
-                );
+            // ElevatedButton.icon(
+            //   onPressed: () async {
+            //     final orderCode =
+            //         DateTime.now().millisecondsSinceEpoch.toString();
+            //     final paymentUrl = await createPaymentLink(
+            //       amount: fee,
+            //       description:
+            //           'Thanh toán khám với bác sĩ $doctorName - $selectedPackage',
+            //       orderCode: orderCode,
+            //       returnUrl:
+            //           'https://backend-healthcare-up0d.onrender.com/admin/success',
+            //       cancelUrl:
+            //           'https://backend-healthcare-up0d.onrender.com/admin/cancel',
+            //     );
 
-                if (paymentUrl != null) {
-                  await launchUrl(Uri.parse(paymentUrl),
-                      mode: LaunchMode.externalApplication);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text("Không tạo được link thanh toán")),
-                  );
-                }
-              },
-              icon: const Icon(Icons.payment),
-              label: const Text("Thanh toán qua PayOS"),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ),
+            //     if (paymentUrl != null) {
+            //       await launchUrl(Uri.parse(paymentUrl),
+            //           mode: LaunchMode.externalApplication);
+            //     } else {
+            //       ScaffoldMessenger.of(context).showSnackBar(
+            //         const SnackBar(
+            //             content: Text("Không tạo được link thanh toán")),
+            //       );
+            //     }
+            //   },
+            //   icon: const Icon(Icons.payment),
+            //   label: const Text("Thanh toán qua PayOS"),
+            //   style: ElevatedButton.styleFrom(
+            //     backgroundColor: Colors.green,
+            //     padding:
+            //         const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+            //     shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(12),
+            //     ),
+            //   ),
+            // ),
             const SizedBox(height: 20),
 
             /// Nút hoàn tất
@@ -151,7 +152,7 @@ class PaymentScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Cảm ơn bạn đã thanh toán!")),
+                  const SnackBar(content: Text("Cảm ơn bạn đã đặt lịch!")),
                 );
               },
               style: ElevatedButton.styleFrom(
