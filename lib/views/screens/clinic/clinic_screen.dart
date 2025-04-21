@@ -240,43 +240,43 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                           //                 AppColors.deepBlue)),
                                           //   ),
                                           // ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.white,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  side: BorderSide(
-                                                      color: Colors.black,
-                                                      width: 1),
-                                                ),
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 20,
-                                                    vertical: 10),
-                                              ),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ChatScreen(
-                                                              clinicId:
-                                                                  clinic.id,
-                                                              clinicName:
-                                                                  clinic.name)),
-                                                );
-                                              },
-                                              child: Text('Chat phòng khám',
-                                                  style: TextStyle(
-                                                      fontSize: 17,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color:
-                                                          AppColors.deepBlue)),
-                                            ),
-                                          ),
+                                          // Align(
+                                          //   alignment: Alignment.topRight,
+                                          //   child: ElevatedButton(
+                                          //     style: ElevatedButton.styleFrom(
+                                          //       backgroundColor: Colors.white,
+                                          //       shape: RoundedRectangleBorder(
+                                          //         borderRadius:
+                                          //             BorderRadius.circular(10),
+                                          //         side: BorderSide(
+                                          //             color: Colors.black,
+                                          //             width: 1),
+                                          //       ),
+                                          //       padding: EdgeInsets.symmetric(
+                                          //           horizontal: 20,
+                                          //           vertical: 10),
+                                          //     ),
+                                          //     onPressed: () {
+                                          //       Navigator.push(
+                                          //         context,
+                                          //         MaterialPageRoute(
+                                          //             builder: (context) =>
+                                          //                 ChatScreen(
+                                          //                     clinicId:
+                                          //                         clinic.id,
+                                          //                     clinicName:
+                                          //                         clinic.name)),
+                                          //       );
+                                          //     },
+                                          //     child: Text('Chat phòng khám',
+                                          //         style: TextStyle(
+                                          //             fontSize: 17,
+                                          //             fontWeight:
+                                          //                 FontWeight.w400,
+                                          //             color:
+                                          //                 AppColors.deepBlue)),
+                                          //   ),
+                                          // ),
                                           Align(
                                             alignment: Alignment.topRight,
                                             child: ElevatedButton(
