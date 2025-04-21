@@ -289,6 +289,7 @@ class _ServiceScreen extends State<ServiceScreen> {
                                 ),
                               ),
                             ),
+                          SizedBox(height: 20),
                         ],
                       ),
                     ),

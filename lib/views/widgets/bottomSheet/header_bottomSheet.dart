@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_icons.dart';
 
 class HeaderBottomSheet extends StatelessWidget {
@@ -15,6 +16,7 @@ class HeaderBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+      color: AppColors.ghostWhite,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

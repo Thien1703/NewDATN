@@ -25,6 +25,7 @@ class _AppointmentScreen extends State<AppointmentScreen> {
   String? selectedTime;
 
   int? customerId; // Thêm biến customerId
+  int? customerProfileId;
   late final List<Widget> _screens;
   late List<bool> _isSelected;
   @override
@@ -40,13 +41,14 @@ class _AppointmentScreen extends State<AppointmentScreen> {
         onNavigateToScreen: navigateToScreen,
         clinicId: widget.clinicId,
         selectedServiceId: [],
+
         date: 'Chưa chọn ngày', // Giá trị mặc định
         time: 'Chưa chọn giờ', // Giá trị mặc định
-
       ),
       ConfirmBooking(
         onNavigateToScreen: navigateToScreen,
         customerId: customerId ?? 0,
+        customerProfileId: customerProfileId ?? 0,
         clinicId: widget.clinicId,
         selectedServiceIds: [],
         date: 'Chưa chọn ngày', // Giá trị mặc định
@@ -63,6 +65,7 @@ class _AppointmentScreen extends State<AppointmentScreen> {
     String? time,
     List<int>? serviceIds,
     int? customerId,
+    int? customerProfileId,
   }) {
     setState(() {
       _currentIndex = index;
@@ -85,6 +88,7 @@ class _AppointmentScreen extends State<AppointmentScreen> {
         _screens[index] = ConfirmBooking(
           onNavigateToScreen: navigateToScreen,
           customerId: customerId ?? this.customerId ?? 0,
+          customerProfileId: customerProfileId ?? 0,
           clinicId: clinicId ?? widget.clinicId,
           selectedServiceIds: serviceIds ?? [],
           date: date ?? 'Chưa chọn ngày',

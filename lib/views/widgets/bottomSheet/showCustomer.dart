@@ -50,7 +50,7 @@ class _Showcustomer extends State<Showcustomer> {
                             color: Colors.white,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.1),
+                                color: Colors.grey.withOpacity(0.5  ),
                                 blurRadius: 1,
                                 spreadRadius: 1,
                               )

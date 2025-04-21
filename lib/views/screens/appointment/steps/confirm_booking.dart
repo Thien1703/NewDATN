@@ -9,6 +9,8 @@ import 'package:health_care/views/screens/appointment/steps/notiSucefully_screen
 import 'package:health_care/views/widgets/appointment/widget_hospital_info_card.dart';
 import 'package:health_care/views/widgets/appointment/widget_customPricePayment.dart';
 import 'package:health_care/views/widgets/appointment/widget_customButton.dart';
+import 'package:health_care/views/widgets/widgetCustomer.dart';
+import 'package:health_care/views/widgets/widgetCustomerProfile.dart';
 import 'package:health_care/views/widgets/widget_lineBold.dart';
 import 'package:health_care/views/widgets/widget_customerInfor_card.dart';
 import 'package:health_care/models/appointment/appointment_Create.dart';
@@ -21,6 +23,7 @@ class ConfirmBooking extends StatefulWidget {
     super.key,
     required this.onNavigateToScreen,
     required this.customerId,
+    required this.customerProfileId,
     required this.clinicId,
     required this.selectedServiceIds,
     required this.date,
@@ -29,6 +32,7 @@ class ConfirmBooking extends StatefulWidget {
 
   final Function(int, String) onNavigateToScreen;
   final int customerId;
+  final int customerProfileId;
   final int clinicId;
   final List<int> selectedServiceIds;
   final String date;
@@ -93,6 +97,10 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
       customerId: widget.customerId,
       date: widget.date,
       time: widget.time,
+      customerProfileId:
+          widget.customerProfileId == 0 || widget.customerProfileId == null
+              ? null
+              : widget.customerProfileId,
       status: "pending",
     );
     if (!mounted) return;
@@ -166,7 +174,11 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                         clinicId: widget.clinicId,
                       ),
                       const SectionTitle(title: 'Thông tin bệnh nhân'),
-                      WidgetCustomerinforCard(),
+
+                        widget.customerProfileId == 0
+                            ? WidgetCustomer(customerId: widget.customerId,)
+                            : WidgetCustomerProfile(
+                                customerProfileId: widget.customerProfileId),
                       const SectionTitle(title: 'Thông tin dịch vụ'),
                       Card(
                         child: Container(

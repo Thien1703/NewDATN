@@ -5,12 +5,14 @@ class AppointmentCreate {
   final String date;
   final String time;
   final String? status;
+  final int? customerProfileId;
   AppointmentCreate({
     this.id,
     required this.clinicId,
     required this.customerId,
     required this.date,
     required this.time,
+    required this.customerProfileId,
     this.status,
   });
 
@@ -21,6 +23,7 @@ class AppointmentCreate {
       customerId: json['customerId'],
       date: json['date'],
       time: json['time'],
+      customerProfileId: json['customerProfileId'],
       status: json['status'],
     );
   }
@@ -30,6 +33,7 @@ class AppointmentCreate {
       'customerId': customerId,
       'date': date,
       'time': time,
+      'customerProfileId': customerProfileId,
     };
     return data;
   }
