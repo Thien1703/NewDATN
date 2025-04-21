@@ -369,10 +369,17 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                                         Icon(Icons.star,
                                                             color:
                                                                 Colors.amber),
-                                                        Text(
-                                                          service.averageRating
-                                                              .toString(),
-                                                        ),
+                                                      Text(
+  service.averageRating != null
+      ? service.averageRating!.toStringAsFixed(1)
+      : '0.0',
+  style: const TextStyle(
+    color: Colors.black54,
+    fontWeight: FontWeight.bold,
+    fontSize: 10,
+  ),
+)
+,
                                                       ],
                                                     )
                                                   ],

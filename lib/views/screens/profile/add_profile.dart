@@ -83,7 +83,11 @@ class _AddProfileState extends State<AddProfile> {
     return WidgetHeaderBody(
       iconBack: true,
       title: 'Thêm hồ sơ đặt khám',
-      body: SingleChildScrollView(
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
@@ -170,6 +174,7 @@ class _AddProfileState extends State<AddProfile> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:health_care/models/clinic.dart';
 import 'package:health_care/models/customer.dart';
+import 'package:health_care/models/customerProfile.dart';
 
 class Appointment {
   final int id;
   final Clinic clinic;
   final Customer customer;
+  final CustomerProfile? customerProfile;
   final String date;
   final String time;
   final String status;
@@ -20,6 +22,7 @@ class Appointment {
     required this.date,
     required this.time,
     required this.status,
+    required this.customerProfile,
     this.cancelNote,
     this.payment,
   });
@@ -36,6 +39,9 @@ class Appointment {
       customer: json['customer'] != null
           ? Customer.fromJson(json['customer'])
           : Customer.defaultCustomer(),
+      customerProfile: json['customerProfile'] != null
+          ? CustomerProfile.fromJson(json['customerProfile'])
+          : null,
       date: json['date'] ?? "Chưa cập nhật",
       time: json['time'] ?? "Chưa cập nhật",
       status: json['status'] ?? "Chưa cập nhật",
@@ -52,6 +58,7 @@ class Appointment {
       'id': id,
       'clinic': clinic.toJson(),
       'customer': customer.toJson(),
+      'customerProfile': customerProfile?.toJson(),
       'date': date,
       'time': time,
       'status': status,
@@ -65,6 +72,7 @@ class Appointment {
       id: 0,
       clinic: Clinic.defaultClinic(),
       customer: Customer.defaultCustomer(),
+      customerProfile: CustomerProfile.defaultProfile(),
       date: "Chưa cập nhật",
       time: "Chưa cập nhật",
       status: "Chưa cập nhật",
