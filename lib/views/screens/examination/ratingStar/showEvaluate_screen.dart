@@ -74,7 +74,11 @@ class _ShowevaluateScreen extends State<ShowevaluateScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            Row(
+children: [
+  // Image.asset('assets/images/iconProfile.jpg',width: 30,),
+  Column(
+    children: [Text(
                               ratings.customerName,
                               style: TextStyle(
                                 fontSize: 13,
@@ -91,6 +95,9 @@ class _ShowevaluateScreen extends State<ShowevaluateScreen> {
                                   size: 20,
                                 );
                               }),
+                            ),],
+  )
+],
                             ),
                             Text(ratings.comment ?? 'Không xác định'),
                             Container(

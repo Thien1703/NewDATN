@@ -16,7 +16,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   final List<ChatMessage> _messages = [];
   bool _isLoading = false;
   final String _apiKey =
-      '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';
+      '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';
   final String _apiUrl = 'https://api.deepseek.com/v1/chat/completions';
 
   void _sendMessage() async {
@@ -35,7 +35,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
         Uri.parse(_apiUrl),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $_apiKey',
+          'Authorization': 'Bearer ${_apiKey}',
         },
         body: jsonEncode({
           'model': 'deepseek-chat',
