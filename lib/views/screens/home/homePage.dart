@@ -232,7 +232,7 @@ class _HomePage extends State<HomePage> {
                                             'Đặt khám online với Bác Sĩ',
                                             style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 18,
+                                              fontSize: 16,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -265,47 +265,50 @@ class _HomePage extends State<HomePage> {
                           SizedBox(height: 20),
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                _buildFeatureButton(
-                                    'Tìm phòng khám', AppIcons.mapPlus, () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              SearchScreen()));
-                                }),
-                                _buildFeatureButton(
-                                    'Chat với AI', AppIcons.robotAI, () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ChatBotScreen(),
-                                      ));
-                                }),
-                                _buildFeatureButton('Đo BMI', AppIcons.bmiIcon,
-                                    () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => BmiScreen()));
-                                }),
-                                _buildFeatureButton('Đo BMR', AppIcons.mapPlus,
-                                    () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => BmrScreen(),
-                                      ));
-                                }),
-                                _buildFeatureButton(
-                                  'CSKH',
-                                  AppIcons.healthCheck,
-                                  () =>
-                                      _launchURL('https://zalo.me/0917107881'),
-                                ),
-                                SizedBox(width: 10),
-                              ],
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 16.0),
+                              child: Row(
+                                children: [
+                                  _buildFeatureButton(
+                                      'Tìm phòng khám', AppIcons.mapPlus, () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SearchScreen()));
+                                  }),
+                                  _buildFeatureButton(
+                                      'Chat với AI', AppIcons.robotAI, () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ChatBotScreen(),
+                                        ));
+                                  }),
+                                  _buildFeatureButton(
+                                      'Đo BMI', AppIcons.bmiIcon, () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => BmiScreen()));
+                                  }),
+                                  _buildFeatureButton(
+                                      'Đo BMR', AppIcons.mapPlus, () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => BmrScreen(),
+                                        ));
+                                  }),
+                                  _buildFeatureButton(
+                                    'CSKH',
+                                    AppIcons.healthCheck,
+                                    () => _launchURL(
+                                        'https://zalo.me/0917107881'),
+                                  ),
+                                  SizedBox(width: 20),
+                                ],
+                              ),
                             ),
                           ),
 
