@@ -184,7 +184,7 @@ class _AddProfileState extends State<AddProfile> {
       alignment: Alignment.centerLeft,
       child: Text(
         title,
-        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.deepBlue),
       ),
     );
   }

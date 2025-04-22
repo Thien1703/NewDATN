@@ -90,7 +90,10 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
                   ),
                   const SizedBox(height: 10),
                   _buildInfoRow(
-                      'Họ và tên', userData?['fullName'] ?? 'Chưa cập nhật'),
+                    'Họ và tên',
+                    userData?['fullName'] ?? 'Chưa cập nhật',
+                    isSingleLine: true,
+                  ),
                   _buildInfoRow(
                       'Ngày sinh', formatBirthDate(userData?['birthDate'])),
                   _buildInfoRow(
@@ -167,7 +170,8 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildInfoRow(String label, String value,
+      {bool isSingleLine = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: Row(
@@ -190,8 +194,10 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.right,
-              softWrap: true,
-              overflow: TextOverflow.visible,
+              overflow:
+                  isSingleLine ? TextOverflow.ellipsis : TextOverflow.visible,
+              maxLines: isSingleLine ? 1 : null,
+              softWrap: !isSingleLine,
             ),
           ),
         ],

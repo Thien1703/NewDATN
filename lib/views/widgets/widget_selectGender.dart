@@ -26,6 +26,18 @@ class _WidgetSelectGenderState extends State<WidgetSelectGender> {
   }
 
   @override
+  void didUpdateWidget(covariant WidgetSelectGender oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialGender != widget.initialGender &&
+        widget.initialGender != null &&
+        widget.initialGender!.isNotEmpty) {
+      setState(() {
+        selectedGender = widget.initialGender!;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => _showGenderSelectionSheet(context),
@@ -43,7 +55,9 @@ class _WidgetSelectGenderState extends State<WidgetSelectGender> {
           children: [
             Text(
               selectedGender,
-              style: const TextStyle(fontSize: 16),
+              style: TextStyle(
+                fontSize: 16,
+              ),
             ),
             const Icon(Icons.keyboard_arrow_right_sharp),
           ],
@@ -55,6 +69,7 @@ class _WidgetSelectGenderState extends State<WidgetSelectGender> {
   void _showGenderSelectionSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true, // Cho phép nội dung scroll nếu quá dài
       builder: (BuildContext context) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),

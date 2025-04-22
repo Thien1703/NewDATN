@@ -3,7 +3,11 @@ class Validators {
     if (value == null || value.trim().isEmpty) {
       return 'Vui lòng nhập họ và tên';
     }
+    final trimmed = value.trim();
 
+    if (trimmed.length > 30) {
+      return 'Họ và tên không được vượt quá 30 ký tự';
+    }
     // Regex: chỉ cho phép chữ cái và khoảng trắng (bao gồm tên có dấu tiếng Việt)
     final regex = RegExp(r"^[a-zA-ZÀ-ỹ\s]+$");
 
@@ -64,6 +68,31 @@ class Validators {
   static String? validateGender(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Vui lòng chọn giới tính';
+    }
+    return null;
+  }
+
+  static String? validateBirthDate(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Vui lòng chọn ngày sinh';
+    }
+    return null;
+  }
+
+  static String? validateAddress(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Vui lòng nhập địa chỉ';
+    }
+
+    // Regex: cho phép chữ cái, số, khoảng trắng, dấu chấm, phẩy và dấu gạch ngang và dấu /
+    final regex = RegExp(r'^[a-zA-ZÀ-ỹ0-9\s,./-]+$');
+
+    if (!regex.hasMatch(value.trim())) {
+      return 'Địa chỉ không hợp lệ';
+    }
+
+    if (value.trim().length < 5) {
+      return 'Địa chỉ quá ngắn';
     }
     return null;
   }
