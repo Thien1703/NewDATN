@@ -45,8 +45,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       setState(() {
         _nameController.text = userProfile['fullName'] ?? '';
         _addressController.text = userProfile['address'] ?? '';
-        selectedGender = userProfile['gender'];
-
+        String? genderRaw = userProfile['gender'];
+        if (genderRaw != null) {
+          if (genderRaw.toLowerCase() == 'male') {
+            selectedGender = 'Nam';
+          } else if (genderRaw.toLowerCase() == 'female') {
+            selectedGender = 'Nữ';
+          } else {
+            selectedGender =
+                genderRaw; // Nếu backend đã trả về đúng 'Nam' hoặc 'Nữ'
+          }
+        }
+        print('Giới tính từ backend: ${userProfile['gender']}');
         // Cập nhật dữ liệu avatar
         _userData = userProfile;
         if (userProfile['avatar'] != null && userProfile['avatar'].isNotEmpty) {
@@ -207,10 +217,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       SizedBox(height: 5),
                       TextFormField(
                         controller: _dobController,
-                        validator: (value) =>
-                            value == null || value.trim().isEmpty
-                                ? 'Vui lòng nhập địa chỉ'
-                                : null,
+                        validator: Validators.validateBirthDate,
                         decoration: InputDecoration(
                           hintText: 'Chọn ngày sinh',
                           border: OutlineInputBorder(
@@ -266,9 +273,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   _customTextField(
                     controller: _addressController,
                     hint: 'Nhập địa chỉ',
-                    validator: (value) => value == null || value.trim().isEmpty
-                        ? 'Vui lòng nhập địa chỉ'
-                        : null,
+                    validator: Validators.validateAddress,
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 12, bottom: 20),

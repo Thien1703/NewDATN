@@ -169,8 +169,8 @@ class _HomePage extends State<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding:
-                                EdgeInsets.only(left: 25, bottom: 10, top: 25),
+                            padding: EdgeInsets.only(
+                                left: 25, right: 25, bottom: 10, top: 25),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -180,11 +180,16 @@ class _HomePage extends State<HomePage> {
                                       fontSize: 15,
                                       fontWeight: FontWeight.normal),
                                 ),
-                                Text(
-                                  customers!.fullName,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
+                                Expanded(
+                                  child: Text(
+                                    customers!.fullName,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    softWrap: false,
                                   ),
                                 ),
                               ],

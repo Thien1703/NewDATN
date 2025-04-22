@@ -41,7 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:AppColors.ghostWhite,
+      backgroundColor: AppColors.ghostWhite,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -74,25 +74,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     as ImageProvider,
           ),
           const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                userData?['fullName'] ?? 'Người dùng',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  userData?['fullName'] ?? 'Người dùng',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  softWrap: false,
                 ),
-              ),
-              Text(
-                userData?['phoneNumber'] ?? 'Số điện thoại',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
+                Text(
+                  userData?['phoneNumber'] ?? 'Số điện thoại',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           )
         ],
       ),
@@ -128,8 +133,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }),
           const SizedBox(height: 10),
           _buildMenuItem(Icons.list_alt_outlined, "Điều khoản dịch vụ", () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => const TermsandservicesScreen()));})
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const TermsandservicesScreen()));
+          })
         ],
       ),
     );

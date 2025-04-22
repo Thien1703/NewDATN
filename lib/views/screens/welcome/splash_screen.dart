@@ -24,47 +24,59 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _navigate() async {
-    await Future.delayed(Duration(seconds: 1));
-
+    await Future.delayed(const Duration(seconds: 1));
     if (!mounted) return;
 
-    bool isFirstTime =
-        await LocalStorageService.isFirstTime(); // Hàm kiểm tra lần đầu mở app
+    final bool isFirstTime = await LocalStorageService.isFirstTime();
     if (isFirstTime) {
-      if (!mounted) return;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => WelcomeScreen()),
-      );
+      _goTo(const WelcomeScreen());
       return;
     }
 
-    bool isLoggedIn = await LocalStorageService.isLoggedIn();
-    print("🟢 isLoggedIn: $isLoggedIn");
-    if (!mounted) return;
+    final bool isLoggedIn = await LocalStorageService.isLoggedIn();
+    debugPrint("🟢 isLoggedIn: $isLoggedIn");
+
     if (!isLoggedIn) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => chooseSigninRes()));
+      _goTo(chooseSigninRes());
       return;
     }
-    // 🔹 Lấy customerId từ API
-    int? customerId = await AppConfig.getMyUserId();
-    if (customerId != null) {
-      await LocalStorageService.saveUserId(customerId);
-      if (!mounted) return;
-      // 🔹 Lưu customerId vào Provider
-      Provider.of<UserProvider>(context, listen: false)
-          .setCustomerId(customerId);
-      print("Đã lưu customerId vào Provider: $customerId");
-    } else {
+
+    final int? customerId = await AppConfig.getMyUserId();
+    if (customerId == null) {
       showToastError("Không thể lấy ID người dùng!");
+      _goTo(chooseSigninRes());
       return;
     }
+
+    // Lưu customerId
+    await LocalStorageService.saveUserId(customerId);
     if (!mounted) return;
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => HomeScreens(),
+    Provider.of<UserProvider>(context, listen: false).setCustomerId(customerId);
+    debugPrint("✅ Đã lưu customerId vào Provider: $customerId");
+
+    _goTo(HomeScreens());
+  }
+
+  void _goTo(Widget screen) {
+    if (!mounted) return;
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => screen,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0.0, 0.05), // Slide từ dưới lên nhẹ
+                end: Offset.zero,
+              ).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeOut),
+              ),
+              child: child,
+            ),
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 500),
       ),
     );
   }
@@ -72,16 +84,15 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      decoration: BoxDecoration(
+      body: Container(
         color: AppColors.deepBlue,
-      ),
-      child: Center(
-        child: Image.asset(
-          'assets/images/logoDATN.png',
-          width: 250,
+        child: Center(
+          child: Image.asset(
+            'assets/images/logoDATN.png',
+            width: 250,
+          ),
         ),
       ),
-    ));
+    );
   }
 }
