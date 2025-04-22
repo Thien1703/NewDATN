@@ -141,8 +141,6 @@ class _ProfileBooking extends State<ProfileBooking> {
             onTap: (customerId) {
               _handleProfileTap(customerId, null);
             },
-            // onTap: _handleProfileTap,
-            // onProfileUpdated: _fetchUserProfile,
           ),
           const SizedBox(height: 10),
           _isLoading

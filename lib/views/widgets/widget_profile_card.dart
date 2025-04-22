@@ -90,7 +90,7 @@ class WidgetProfileCardState extends State<WidgetProfileCard> {
                 onDelete: () {
                   showDialog(
                     context: context,
-                    builder: (context) => ConfirmDeleteDialog(
+                    builder: (_) => ConfirmDialogDelete(
                       onConfirm: () async {
                         final profileVM = Provider.of<ProfileViewModel>(context,
                             listen: false);

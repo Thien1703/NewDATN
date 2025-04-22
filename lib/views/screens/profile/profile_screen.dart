@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/config/app_config.dart';
 import 'package:health_care/views/screens/profile/inforProfile_screen.dart';
+import 'package:health_care/views/screens/profile/notification_setting.dart';
+import 'package:health_care/views/screens/profile/patient_profiles.dart';
 import 'package:health_care/views/screens/profile/termsAndServices_screen.dart';
 import 'package:health_care/views/widgets/bottomSheet/logOut_bottomSheet.dart';
 
@@ -126,15 +128,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _buildMenuItem(Icons.person, "Thông tin cá nhân", () {
             Navigator.of(context)
                 .push(MaterialPageRoute(
-                    builder: (context) => const InforProfileScreen()))
+                    builder: (context) => InforProfileScreen()))
                 .then((_) {
               fetchUserProfile(); // Cập nhật lại dữ liệu khi trở về ProfileScreen
             });
           }),
-          const SizedBox(height: 10),
+          _buildMenuItem(Icons.folder, "Hồ sơ đặt khám", () {
+            Navigator.of(context)
+                .push(
+                    MaterialPageRoute(builder: (context) => PatientProfiles()))
+                .then((_) {
+              fetchUserProfile(); // Cập nhật lại dữ liệu khi trở về ProfileScreen
+            });
+          }),
+          // const SizedBox(height: 5),
           _buildMenuItem(Icons.list_alt_outlined, "Điều khoản dịch vụ", () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const TermsandservicesScreen()));
+                builder: (context) => TermsandservicesScreen()));
+          }),
+          _buildMenuItem(Icons.notifications, "Cài đặt thông báo", () {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => NotificationSetting()));
           })
         ],
       ),
