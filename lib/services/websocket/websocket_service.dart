@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 import 'websocket_config.dart';
-import 'websocket_topics.dart';
 
 typedef OnMessageReceived = void Function(Map<String, dynamic> message);
 typedef OnConnectionChange = void Function(bool isConnected);
@@ -15,6 +14,9 @@ class WebSocketService {
 
   bool _isConnected = false;
 
+  // 🔒 Hằng số topic giống Java
+  static const String USER_TOPIC_PREFIX = '/topic/user/';
+
   WebSocketService({
     required this.jwtToken,
     required this.userId,
@@ -23,9 +25,8 @@ class WebSocketService {
   });
 
   void connect() {
-    // Đảm bảo chỉ tạo client khi chưa có kết nối
     if (_isConnected) {
-      print("🔴 Đã có kết nối WebSocket.");
+      print("🔴 WebSocket đã được kết nối.");
       return;
     }
 
@@ -45,7 +46,7 @@ class WebSocketService {
   void _onConnect(StompFrame frame) {
     print('🟢 WebSocket đã kết nối!');
     _setConnectionStatus(true);
-    subscribeToPrivateChat(userId);
+    _subscribeToUserNotifications(userId);
   }
 
   void _onDisconnect(StompFrame frame) {
@@ -54,23 +55,26 @@ class WebSocketService {
   }
 
   void _onStompError(StompFrame frame) {
-    print('❌ Lỗi STOMP: ${frame.body}');
+    print('❌ STOMP Error: ${frame.body}');
     _setConnectionStatus(false);
   }
 
   void _onWebSocketError(dynamic error) {
-    print('❌ Lỗi WebSocket: $error');
+    print('❌ WebSocket Error: $error');
     _setConnectionStatus(false);
   }
 
   void disconnect() {
     if (!_isConnected) {
-      print("🔴 WebSocket không kết nối.");
+      print("🟡 WebSocket chưa được kết nối.");
       return;
     }
+
     stompClient.deactivate();
     _setConnectionStatus(false);
   }
+
+  bool get isConnected => _isConnected;
 
   void _setConnectionStatus(bool status) {
     if (_isConnected != status) {
@@ -79,12 +83,9 @@ class WebSocketService {
     }
   }
 
-  // Thêm getter cho trạng thái kết nối
-  bool get isConnected => _isConnected;
-
-  void subscribeToClinicChat(String clinicId) {
-    final topic = WebSocketTopics.clinicTopic(clinicId);
-    print('📥 Subscribing to clinic topic: $topic');
+  void _subscribeToUserNotifications(String userId) {
+    final topic = '$USER_TOPIC_PREFIX$userId';
+    print('📥 Đăng ký lắng nghe thông báo người dùng: $topic');
 
     stompClient.subscribe(
       destination: topic,
@@ -92,62 +93,13 @@ class WebSocketService {
         if (frame.body != null) {
           try {
             final message = jsonDecode(frame.body!);
-            print('📨 Nhận từ clinic [$clinicId]: $message');
+            print('📨 Đã nhận thông báo: $message');
             onMessageReceived(message);
           } catch (e) {
-            print('❌ Lỗi JSON clinic chat: $e');
+            print('❌ Lỗi khi parse JSON: $e');
           }
         }
       },
-    );
-  }
-
-  void subscribeToPrivateChat(String userId) {
-    final topic = WebSocketTopics.userTopic(userId);
-    print('📥 Subscribing to user topic: $topic');
-
-    stompClient.subscribe(
-      destination: topic,
-      callback: (frame) {
-        if (frame.body != null) {
-          try {
-            final message = jsonDecode(frame.body!);
-            print('📥 Nhận tin nhắn riêng: $message');
-
-            // Kiểm tra nếu widget vẫn còn trong cây widget trước khi gọi setState
-            onMessageReceived(message);
-          } catch (e) {
-            print('❌ Lỗi JSON private chat: $e');
-          }
-        }
-      },
-    );
-  }
-
-  void sendChatMessage({
-    required String senderId,
-    required String clinicId,
-    required String content,
-  }) {
-    final message = {
-      'senderId': senderId,
-      'recipientId': 'clinic_$clinicId',
-      'content': content,
-      'timestamp': DateTime.now().toIso8601String(),
-    };
-
-    stompClient.send(
-      destination: WebSocketTopics.sendChatMessage,
-      body: jsonEncode(message),
-    );
-
-    print('📤 Đã gửi tin nhắn đến clinic [$clinicId]: $message');
-  }
-
-  void sendTestMessage() {
-    stompClient.send(
-      destination: WebSocketTopics.testNotification,
-      body: jsonEncode({'message': 'Ping test từ Flutter'}),
     );
   }
 }

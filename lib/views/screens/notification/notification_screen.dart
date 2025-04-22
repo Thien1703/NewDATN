@@ -113,7 +113,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               itemCount: notifications.length,
               itemBuilder: (context, index) {
                 final item = notifications[index];
-                final isNew = item["type"] == "NEW_APPOINTMENT";
+                final isNew = item["type"] == "PENDING_APPOINTMENT";
 
                 return Card(
                   margin:
