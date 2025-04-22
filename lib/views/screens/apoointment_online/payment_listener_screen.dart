@@ -59,12 +59,6 @@ class _PaymentListenerScreenState extends State<PaymentListenerScreen> {
   }
 
   @override
-  void dispose() {
-    WebSocketManager.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Thanh toán")),
