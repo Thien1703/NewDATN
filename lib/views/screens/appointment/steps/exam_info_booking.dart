@@ -213,13 +213,13 @@ class _ServiceSelectorState extends State<ServiceSelector> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Colors.grey[200], // Màu nền nhẹ
+                          color: Colors.grey[300], // Màu nền nhẹ
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           '- ${service.name}',
                           style: const TextStyle(
-                              fontSize: 14, color: Colors.black),
+                              fontSize: 13, color: Colors.black),
                         ),
                       ))
                   .toList(),
