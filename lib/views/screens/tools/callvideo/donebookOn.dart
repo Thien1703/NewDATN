@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/views/screens/tools/callvideo/thanhtoan.dart';
 import 'package:intl/intl.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class BookingConfirmationScreen extends StatelessWidget {
   final String doctorName;

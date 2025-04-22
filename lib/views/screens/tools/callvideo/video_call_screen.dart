@@ -19,11 +19,9 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
   bool _isLocalUserMuted = false;
   bool _isLocalVideoDisabled = false;
 
-  static const String appId =
-      '4792f5bf117d4fd691389e63d525b6e0'; // <-- Thay bằng App ID thật
+  static const String appId = '4792f5bf117d4fd691389e63d525b6e0';
   static const String tokenServerUrl =
-      'https://backend-healthcare-up0d.onrender.com/api/agora/token'; // <-- Thay bằng BE của bạn
-
+      'https://backend-healthcare-up0d.onrender.com/api/agora/token';
   @override
   void initState() {
     super.initState();
@@ -120,9 +118,15 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
     _agoraEngine.muteLocalAudioStream(_isLocalUserMuted);
   }
 
-  void _toggleCamera() {
+  void _toggleCamera() async {
     setState(() => _isLocalVideoDisabled = !_isLocalVideoDisabled);
-    _agoraEngine.muteLocalVideoStream(_isLocalVideoDisabled);
+    await _agoraEngine.muteLocalVideoStream(_isLocalVideoDisabled);
+
+    if (_isLocalVideoDisabled) {
+      await _agoraEngine.stopPreview(); // 🛑 Dừng xem trước camera
+    } else {
+      await _agoraEngine.startPreview(); // ✅ Bật lại camera khi mở
+    }
   }
 
   Future<void> _leaveChannel() async {
@@ -131,6 +135,15 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
   }
 
   Widget _renderLocalPreview() {
+    if (_isLocalVideoDisabled) {
+      return Container(
+        color: Colors.black, // Màn hình đen
+        child: const Center(
+          child: Icon(Icons.videocam_off, color: Colors.white, size: 40),
+        ),
+      );
+    }
+
     return AgoraVideoView(
       controller: VideoViewController(
         rtcEngine: _agoraEngine,

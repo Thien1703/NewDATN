@@ -5,6 +5,7 @@ import 'package:health_care/viewmodels/api/clinic_api.dart';
 import 'package:health_care/views/screens/chat/chat_screen.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/views/screens/appointment/appointment_screen.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ClinicScreen extends StatefulWidget {
   const ClinicScreen({
@@ -100,16 +101,7 @@ class _ClinicScreenState extends State<ClinicScreen> {
                     ),
                   ),
                   clinics == null
-                      ? Container(
-                          width: double.infinity,
-                          height: 700,
-                          alignment: Alignment.center,
-                          child: SizedBox(
-                            width: 30,
-                            height: 30,
-                            child: CircularProgressIndicator(strokeWidth: 3),
-                          ),
-                        )
+                      ? buildShimmerBody()
                       : clinics != null
                           ? ListView.builder(
                               padding: EdgeInsets.only(top: 10),
@@ -130,25 +122,6 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                     padding: EdgeInsets.all(15),
                                     child: Column(
                                       children: [
-                                        // Align(
-                                        //   alignment: Alignment.topRight,
-                                        //   child: InkWell(
-                                        //     onTap: () {
-                                        //       Navigator.push(
-                                        //         context,
-                                        //         MaterialPageRoute(
-                                        //             builder: (context) =>
-                                        //                 ClinicDetailScreen(
-                                        //                     clinicId: clinic.id)),
-                                        //       );
-                                        //     },
-                                        //     child: Icon(
-                                        //       Icons.info,
-                                        //       color: AppColors.deepBlue,
-                                        //       size: 30,
-                                        //     ),
-                                        //   ),
-                                        // ),
                                         Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
@@ -306,6 +279,32 @@ class _ClinicScreenState extends State<ClinicScreen> {
                 ],
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildShimmerBody() {
+    return Container(
+      child: GridView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: 15,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 1,
+          crossAxisSpacing: 15,
+          mainAxisSpacing: 15,
+          childAspectRatio: 1.8,
+        ),
+        itemBuilder: (context, index) => Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[300]!,
+          child: Container(
+            height: 70,
+            width: double.infinity,
+            color: Colors.white,
           ),
         ),
       ),

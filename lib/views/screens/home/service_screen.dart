@@ -5,6 +5,8 @@ import 'package:health_care/views/screens/home/serviceDetail_screen.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/models/service.dart';
 import 'package:health_care/views/screens/clinic/clinic_screen.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ServiceScreen extends StatefulWidget {
   final int specialtyId;
@@ -59,16 +61,7 @@ class _ServiceScreen extends State<ServiceScreen> {
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 10),
         child: isLoading
-            ? Container(
-                width: double.infinity,
-                height: 700,
-                alignment: Alignment.center,
-                child: SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: CircularProgressIndicator(strokeWidth: 3),
-                ),
-              )
+            ? buildShimmerBody()
             : services.isEmpty
                 ? Container(
                     width: double.infinity,
@@ -294,6 +287,159 @@ class _ServiceScreen extends State<ServiceScreen> {
                       ),
                     ),
                   ),
+      ),
+    );
+  }
+
+  Widget buildShimmerGrid() {
+    return Container(
+      child: Column(
+        children: [
+          GridView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: 6,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 15,
+              mainAxisSpacing: 15,
+              childAspectRatio: 0.9,
+            ),
+            itemBuilder: (context, index) {
+              return Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(16)),
+                        child: Container(
+                          height: 120,
+                          width: double.infinity,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 12,
+                              width: double.infinity,
+                              color: Colors.white,
+                            ),
+                            SizedBox(height: 6),
+                            Container(
+                              height: 12,
+                              width: 80,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildShimmerBody() {
+    return SingleChildScrollView(
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 15),
+        color: AppColors.ghostWhite,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // shimmer tiêu đề chuyên khoa
+            Row(
+              children: [
+                Container(
+                  height: 30,
+                  width: 7,
+                  color: Colors.grey[300],
+                ),
+                SizedBox(width: 10),
+                Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    height: 35,
+                    width: 80,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+            // shimmer mô tả
+            Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                height: 90,
+                width: double.infinity,
+                margin: EdgeInsets.symmetric(horizontal: 15),
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: 35),
+            // shimmer hàng giới thiệu
+            Row(
+              children: [
+                Container(
+                  height: 30,
+                  width: 7,
+                  color: Colors.grey[300],
+                ),
+                SizedBox(width: 10),
+                Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    height: 30,
+                    width: 340,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            // shimmer danh sách dịch vụ
+            buildShimmerGrid(),
+            SizedBox(height: 24),
+            // shimmer button
+            Center(
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  height: 45,
+                  width: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }

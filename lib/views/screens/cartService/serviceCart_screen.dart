@@ -141,294 +141,380 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
           },
         ),
       ),
-      body: Container(
-        color: AppColors.ghostWhite,
-        child: Column(
-          children: [
-            // Thanh tìm kiếm
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(
-                      color: AppColors.softBlue,
-                      width: 1.5), // Đổi màu và độ dày border theo yêu cầu
-                ),
-                child: Row(
-                  children: [
-                    SizedBox(width: 10),
-                    const Icon(Icons.search,
-                        color: AppColors.softBlue), // Tạo icon tìm kiếm
-                    const SizedBox(width: 5),
-                    Expanded(
-                      child: TextField(
-                        controller: searchController,
-                        decoration: const InputDecoration(
-                          hintText: 'Tìm kiếm dịch vụ, theo tên hoặc loại...',
-                          hintStyle: TextStyle(
-                            fontSize: 14, // Đặt kích thước font cho placeholder
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Container(
+          color: AppColors.ghostWhite,
+          child: Column(
+            children: [
+              // Thanh tìm kiếm
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                        color: const Color.fromARGB(255, 193, 199, 206),
+                        width: 1.5), // Đổi màu và độ dày border theo yêu cầu
+                  ),
+                  child: Row(
+                    children: [
+                      SizedBox(width: 10),
+                      const Icon(Icons.search,
+                          color: AppColors.deepBlue), // Tạo icon tìm kiếm
+                      const SizedBox(width: 5),
+                      Expanded(
+                        child: TextField(
+                          controller: searchController,
+                          decoration: const InputDecoration(
+                            hintText: 'Tìm kiếm dịch vụ, theo tên hoặc loại...',
+                            hintStyle: TextStyle(
+                              fontSize:
+                                  14, // Đặt kích thước font cho placeholder
+                            ),
+                            border: InputBorder
+                                .none, // Loại bỏ border của TextField
+                            isDense:
+                                true, // Đảm bảo rằng trường input không quá cao
                           ),
-                          border:
-                              InputBorder.none, // Loại bỏ border của TextField
-                          isDense:
-                              true, // Đảm bảo rằng trường input không quá cao
                         ),
                       ),
-                    ),
-                    if (searchController.text.isNotEmpty)
-                      IconButton(
-                        icon: const Icon(Icons.clear,
-                            color: Colors.black54), // Clear icon
-                        onPressed: () {
-                          searchController.clear();
-                          _filterServices(); // Clear filter khi icon được nhấn
-                        },
-                      ),
-                  ],
+                      if (searchController.text.isNotEmpty)
+                        IconButton(
+                          icon: const Icon(Icons.clear,
+                              color: Colors.black54), // Clear icon
+                          onPressed: () {
+                            searchController.clear();
+                            _filterServices(); // Clear filter khi icon được nhấn
+                          },
+                        ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            // Danh sách dịch vụ
-            Expanded(
-              child: filteredServices.isEmpty
-                  ? const Center(child: CircularProgressIndicator())
-                  : Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: ListView(
-                        children: [
-                          // Row Chuyên khoa
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis
-                                  .horizontal, // Make the row scrollable horizontally
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  // Nút "Tất cả" luôn hiển thị
-                                  GestureDetector(
-                                    onTap: () => _selectSpecialty(
-                                        ''), // Lọc tất cả dịch vụ
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8),
-                                      child: Chip(
-                                        label: const Text('Tất cả'),
-                                        backgroundColor:
-                                            selectedSpecialty.isEmpty
-                                                ? AppColors.accent
-                                                : Colors.grey[300],
-                                      ),
-                                    ),
-                                  ),
-                                  // Các chuyên khoa khác
-                                  ...groupedServices.keys.map((specialty) {
-                                    return GestureDetector(
-                                      onTap: () => _selectSpecialty(specialty),
+              // Danh sách dịch vụ
+              Expanded(
+                child: filteredServices.isEmpty
+                    ? const Center(child: CircularProgressIndicator())
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: ListView(
+                          children: [
+                            // Row Chuyên khoa
+                            Padding(
+                              padding: EdgeInsets.zero,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis
+                                    .horizontal, // Make the row scrollable horizontally
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    // Nút "Tất cả" luôn hiển thị
+                                    GestureDetector(
+                                      onTap: () => _selectSpecialty(
+                                          ''), // Lọc tất cả dịch vụ
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 8),
+                                            horizontal: 5),
                                         child: Chip(
-                                          label: Text(specialty),
+                                          label: Text(
+                                            'Tất cả',
+                                            style: TextStyle(
+                                              color: selectedSpecialty.isEmpty
+                                                  ? Colors.white
+                                                  : Colors.black,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14,
+                                            ),
+                                          ),
                                           backgroundColor:
-                                              selectedSpecialty == specialty
-                                                  ? AppColors.accent
-                                                  : Colors.grey[300],
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                                ],
-                              ),
-                            ),
-                          ),
-                          ...filteredServices.entries.map(
-                            (entry) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 8),
-                                    child: Text(
-                                      entry.key,
-                                      style: const TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.deepBlue,
-                                      ),
-                                    ),
-                                  ),
-                                  GridView.builder(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    padding: EdgeInsets.zero,
-                                    gridDelegate:
-                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      crossAxisSpacing: 5,
-                                      mainAxisSpacing: 5,
-                                      childAspectRatio: 0.8,
-                                    ),
-                                    itemCount: entry.value.length,
-                                    itemBuilder: (context, index) {
-                                      final service = entry.value[index];
-                                      bool isSelected =
-                                          selectedServices.contains(service);
-                                      return GestureDetector(
-                                        onTap: () => _toggleService(service),
-                                        child: Card(
-                                          color: Colors.white,
-                                          elevation: isSelected ? 6 : 3,
+                                              selectedSpecialty.isEmpty
+                                                  ? AppColors.deepBlue
+                                                  : Color.fromARGB(
+                                                      255, 231, 230, 230),
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(16),
-                                            side: isSelected
-                                                ? BorderSide(
-                                                    color: AppColors.deepBlue,
-                                                    width: 2)
-                                                : BorderSide.none,
+                                                BorderRadius.circular(12),
                                           ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(12),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Colors.grey
-                                                            .withOpacity(0.5),
-                                                        width: 1),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12),
-                                                  ),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12),
-                                                    child: Image.network(
-                                                      service.image,
-                                                      width: double.infinity,
-                                                      height: 90,
-                                                      fit: BoxFit.cover,
-                                                      errorBuilder: (context,
-                                                          error, stackTrace) {
-                                                        return Container(
-                                                          height: 80,
-                                                          width:
-                                                              double.infinity,
-                                                          color:
-                                                              Colors.grey[300],
-                                                          child: const Icon(
-                                                              Icons
-                                                                  .broken_image,
-                                                              size: 50,
-                                                              color:
-                                                                  Colors.grey),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 6),
-                                                Text(
-                                                  service.name,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 12,
-                                                  ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 2,
-                                                ),
-
-                                                const SizedBox(height: 4),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      service.formattedPrice,
-                                                      style: const TextStyle(
-                                                        color: Colors.black54,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 10,
-                                                      ),
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Icon(Icons.star,
-                                                            color:
-                                                                Colors.amber),
-                                                      Text(
-  service.averageRating != null
-      ? service.averageRating!.toStringAsFixed(1)
-      : '0.0',
-  style: const TextStyle(
-    color: Colors.black54,
-    fontWeight: FontWeight.bold,
-    fontSize: 10,
-  ),
-)
-,
-                                                      ],
-                                                    )
-                                                  ],
-                                                ),
-                                                const Spacer(),
-                                                // Center(
-                                                //   child: ElevatedButton(
-                                                //     onPressed: () =>
-                                                //         _toggleService(service),
-                                                //     style: ElevatedButton.styleFrom(
-                                                //       backgroundColor: isSelected
-                                                //           ? AppColors.accent
-                                                //           : Colors.white,
-                                                //       foregroundColor: isSelected
-                                                //           ? Colors.white
-                                                //           : AppColors.accent,
-                                                //       shape: RoundedRectangleBorder(
-                                                //         borderRadius:
-                                                //             BorderRadius.circular(
-                                                //                 8),
-                                                //       ),
-                                                //     ),
-                                                //     child: Text(isSelected
-                                                //         ? 'Bỏ chọn'
-                                                //         : 'Chọn dịch vụ'),
-                                                //   ),
-                                                // )
-                                              ],
+                                        ),
+                                      ),
+                                    ),
+                                    // Các chuyên khoa khác
+                                    ...groupedServices.keys.map((specialty) {
+                                      return GestureDetector(
+                                        onTap: () =>
+                                            _selectSpecialty(specialty),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 5),
+                                          child: Chip(
+                                            label: Text(
+                                              specialty,
+                                              style: TextStyle(
+                                                color: selectedSpecialty ==
+                                                        specialty
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            backgroundColor:
+                                                selectedSpecialty == specialty
+                                                    ? AppColors.deepBlue
+                                                    : Color.fromARGB(
+                                                        255, 231, 230, 230),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                             ),
                                           ),
                                         ),
                                       );
-                                    },
+                                    }),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            ...filteredServices.entries.map(
+                              (entry) {
+                                return Container(
+                                  padding: EdgeInsets.only(bottom: 15),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.zero,
+                                        child: Container(
+                                          padding:
+                                              EdgeInsets.symmetric(vertical: 8),
+                                          color: AppColors.deepBlue,
+                                          width: double.infinity,
+                                          child: Center(
+                                            child: Text(
+                                              entry.key,
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      GridView.builder(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        padding: EdgeInsets.zero,
+                                        gridDelegate:
+                                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          crossAxisSpacing: 5,
+                                          mainAxisSpacing: 5,
+                                          childAspectRatio: 0.84,
+                                        ),
+                                        itemCount: entry.value.length,
+                                        itemBuilder: (context, index) {
+                                          final service = entry.value[index];
+                                          bool isSelected = selectedServices
+                                              .contains(service);
+                                          return GestureDetector(
+                                            onTap: () =>
+                                                _toggleService(service),
+                                            child: Card(
+                                              color: Colors.white,
+                                              elevation: isSelected ? 10 : 3,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                                side: isSelected
+                                                    ? BorderSide(
+                                                        color:
+                                                            AppColors.deepBlue,
+                                                        width: 2)
+                                                    : BorderSide.none,
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.zero,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Stack(
+                                                      children: [
+                                                        Container(
+                                                          height:
+                                                              110, // Đảm bảo luôn cố định chiều cao
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            border: Border.all(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .withOpacity(
+                                                                        0.5),
+                                                                width: 1),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12),
+                                                          ),
+                                                          child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12),
+                                                            child:
+                                                                Image.network(
+                                                              service.image,
+                                                              width: double
+                                                                  .infinity,
+                                                              height: 110,
+                                                              fit: BoxFit.cover,
+                                                              errorBuilder:
+                                                                  (context,
+                                                                      error,
+                                                                      stackTrace) {
+                                                                return Container(
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      300],
+                                                                  child: Image
+                                                                      .asset(
+                                                                    'assets/images/imageOnErrror.png',
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    width: double
+                                                                        .infinity,
+                                                                    height:
+                                                                        110, // giữ đúng kích thước
+                                                                  ),
+                                                                );
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Positioned(
+                                                          right: 10,
+                                                          top: 80,
+                                                          child: Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        6,
+                                                                    vertical:
+                                                                        3),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Colors
+                                                                  .white
+                                                                  .withOpacity(
+                                                                      0.8),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                            ),
+                                                            child: Row(
+                                                              children: [
+                                                                Icon(Icons.star,
+                                                                    color: Colors
+                                                                        .amber,
+                                                                    size: 18),
+                                                                SizedBox(
+                                                                    width: 4),
+                                                                Text(
+                                                                  service.averageRating !=
+                                                                          null
+                                                                      ? service
+                                                                          .averageRating!
+                                                                          .toStringAsFixed(
+                                                                              1)
+                                                                      : '0.0',
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontSize:
+                                                                        14,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(height: 6),
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 5),
+                                                      child: Text(
+                                                        service.name,
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 15,
+                                                        ),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        maxLines: 2,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                        horizontal: 5,
+                                                      ),
+                                                      child: Text(
+                                                        service.formattedPrice,
+                                                        style: const TextStyle(
+                                                          color: Colors.black54,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              );
-                            },
-                          ),
-                        ],
+                                );
+                              },
+                            ),
+                            SizedBox(height: 20),
+                          ],
+                        ),
                       ),
-                    ),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
 
       // thanh toán
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border(
@@ -440,7 +526,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
           children: [
             Text(
               'Đã chọn ${selectedServices.length} dịch vụ',
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
             ),
             Row(
               children: [
@@ -451,7 +537,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                     const Text(
                       "Tổng thanh toán",
                       style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                     ),
                     Text(
                       formatCurrency(getTotalPrice()),
@@ -474,11 +560,18 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                           });
                         },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: selectedServices.isEmpty
-                        ? Colors.white
-                        : AppColors.deepBlue,
-                    foregroundColor: Colors.white,
-                  ),
+                      backgroundColor: selectedServices.isEmpty
+                          ? Colors.white
+                          : AppColors.deepBlue,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 4,
+                      textStyle: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      )),
                   child: const Text('XONG'),
                 ),
               ],

@@ -15,7 +15,7 @@ class HeaderBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       color: AppColors.ghostWhite,
       child: Column(
         mainAxisSize: MainAxisSize.min,
