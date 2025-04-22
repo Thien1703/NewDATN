@@ -10,7 +10,7 @@ class WebSocketConfig {
     required void Function(dynamic error) onWebSocketError,
   }) {
     final wsUrl =
-        '${AppEnv.baseUrl.replaceFirst("http", "ws").replaceFirst("https", "wss")}/notifications/websocket';
+        '${AppEnv.baseUrl.replaceFirst("http", "ws").replaceFirst("https", "wss")}/ws/websocket';
 
     return StompConfig(
       url: wsUrl,
