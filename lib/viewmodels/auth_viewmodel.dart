@@ -228,11 +228,11 @@ class AuthViewModel with ChangeNotifier {
 
       showToastSuccess("Đăng xuất thành công!");
 
-      // Chuyển về màn hình Splash
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-        (route) => false,
-      );
+      // // Chuyển về màn hình Splash
+      // Navigator.of(context).pushAndRemoveUntil(
+      //   MaterialPageRoute(builder: (context) => LoginScreen()),
+      //   (route) => false,
+      // );
     } else {
       showToastError("Lỗi khi đăng xuất: $errorMessage");
     }

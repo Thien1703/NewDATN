@@ -179,7 +179,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           ? CachedNetworkImageProvider(
                                               _userData!['avtar'])
                                           : const AssetImage(
-                                              'assets/images/noavatar.png'))
+                                              'assets/images/iconProfile.jpg'))
                                       as ImageProvider,
                               child: isAvatarLoading
                                   ? const CircularProgressIndicator(

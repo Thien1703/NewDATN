@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/config/app_config.dart';
+import 'package:health_care/services/user_preferences_service.dart';
+import 'package:health_care/views/screens/auth/Login/login_screen.dart';
 import 'package:health_care/views/screens/profile/inforProfile_screen.dart';
+import 'package:health_care/views/screens/profile/notification_setting_screen.dart';
+import 'package:health_care/views/screens/profile/patient_profiles.dart';
 import 'package:health_care/views/screens/profile/termsAndServices_screen.dart';
 import 'package:health_care/views/widgets/bottomSheet/logOut_bottomSheet.dart';
 
@@ -19,23 +23,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    fetchUserProfile();
+    loadUserFromPrefs(); // Load dữ liệu cache trước
+    fetchUserProfile(); // Gọi API để cập nhật
   }
 
   Future<void> fetchUserProfile() async {
     try {
       final data = await AppConfig.getUserProfile();
-      if (mounted) {
-        // Kiểm tra xem widget có còn tồn tại không
-        setState(() {
-          userData = data;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {}); // Tránh gọi setState khi đã dispose
-      }
+      if (!mounted) return;
+
+      setState(() {
+        userData = data;
+      });
+
+      // Lưu thông tin vào local
+      await UserPreferencesService.saveUserProfile(
+        avatar: data?['avtar'] ?? '',
+        fullName: data?['fullName'] ?? '',
+        phoneNumber: data?['phoneNumber'] ?? '',
+      );
+    } catch (_) {
+      if (mounted) setState(() {});
     }
+  }
+
+  Future<void> loadUserFromPrefs() async {
+    final data = await UserPreferencesService.getUserProfile();
+    setState(() {
+      userData = data;
+    });
   }
 
   @override
@@ -70,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             radius: 40,
             backgroundImage: userData?['avtar'] != null
                 ? NetworkImage(userData!['avtar'])
-                : const AssetImage('assets/images/noavatar.png')
+                : const AssetImage('assets/images/iconProfile.jpg')
                     as ImageProvider,
           ),
           const SizedBox(width: 10),
@@ -115,26 +131,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
-          // _buildMenuItem(
-          //   Icons.qr_code,
-          //   "Mã QR của tôi",
-          //   () {
-          //     Navigator.push(context,
-          //         MaterialPageRoute(builder: (context) => QrCustomer()));
-          //   },
-          // ),
           _buildMenuItem(Icons.person, "Thông tin cá nhân", () {
             Navigator.of(context)
                 .push(MaterialPageRoute(
-                    builder: (context) => const InforProfileScreen()))
+                    builder: (context) => InforProfileScreen()))
                 .then((_) {
               fetchUserProfile(); // Cập nhật lại dữ liệu khi trở về ProfileScreen
             });
           }),
-          const SizedBox(height: 10),
+          _buildMenuItem(Icons.folder, "Hồ sơ đặt khám", () {
+            Navigator.of(context)
+                .push(
+                    MaterialPageRoute(builder: (context) => PatientProfiles()))
+                .then((_) {
+              fetchUserProfile(); // Cập nhật lại dữ liệu khi trở về ProfileScreen
+            });
+          }),
+          // const SizedBox(height: 5),
           _buildMenuItem(Icons.list_alt_outlined, "Điều khoản dịch vụ", () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const TermsandservicesScreen()));
+                builder: (context) => TermsandservicesScreen()));
+          }),
+          _buildMenuItem(Icons.notifications, "Cài đặt thông báo", () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => NotificationSettingScreen()));
           })
         ],
       ),
@@ -145,13 +165,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, bottom: 40.0),
       child: OutlinedButton(
-        onPressed: () {
-          showModalBottomSheet(
+        onPressed: () async {
+          final result = await showModalBottomSheet(
             context: context,
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent, // để bo góc đẹp hơn
             builder: (context) => const LogoutBottomsheet(),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+            ),
           );
+
+          if (result == true && mounted) {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+              (route) => false,
+            );
+          }
         },
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.deepBlue,

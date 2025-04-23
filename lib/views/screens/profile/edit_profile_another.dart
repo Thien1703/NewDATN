@@ -128,9 +128,7 @@ class _EditProfileAnotherState extends State<EditProfileAnother> {
                 _customTitle('Ngày sinh'),
                 TextFormField(
                   controller: _birthDateController,
-                  validator: (value) => value == null || value.trim().isEmpty
-                      ? 'Vui lòng chọn ngày sinh'
-                      : null,
+                  validator: Validators.validateBirthDate,
                   decoration: InputDecoration(
                     hintText: 'Chọn ngày sinh',
                     border: OutlineInputBorder(

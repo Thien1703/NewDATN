@@ -81,7 +81,7 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
                             radius: 40,
                             backgroundImage: userData?['avtar'] != null
                                 ? NetworkImage(userData!['avtar'])
-                                : const AssetImage('assets/images/noavatar.png')
+                                : const AssetImage('assets/images/iconProfile.jpg')
                                     as ImageProvider,
                           ),
                         ),
