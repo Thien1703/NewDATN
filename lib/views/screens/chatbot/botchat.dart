@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatBotScreen extends StatefulWidget {
   const ChatBotScreen({super.key});
@@ -15,12 +16,26 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   final TextEditingController _controller = TextEditingController();
   final List<ChatMessage> _messages = [];
   bool _isLoading = false;
+  final String _apiKey =
+      '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';
+  final String _apiUrl = 'https://openrouter.ai/api/v1/auth/keys';
 
-  // Thay API key này bằng key thật của bạn từ Google
-  // final String _apiKey = 'AIzaSyBjBLPylpQCrsTkLG4SZJmwAcBQSsi7GCs';
-  final String _apiKey = 'AIzaSyBjBLPylpQCrsTkLG4SZJmwAcBQSsi7GCs';
-  final String _apiUrl =
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key';
+  final List<String> _suggestedQuestions = [
+    'Tôi nên ăn gì để tăng sức đề kháng?',
+    'Làm sao để ngủ ngon hơn mỗi đêm?',
+    'Các dấu hiệu ban đầu của tiểu đường là gì?',
+    'Cách phòng tránh bệnh cảm cúm hiệu quả?',
+    'Tôi có nên tập thể dục khi đang bị cảm không?',
+    'Thực phẩm nào giúp giảm căng thẳng?',
+    'Tôi nên khám sức khỏe tổng quát bao lâu một lần?',
+    'Tôi cần làm gì khi bị cao huyết áp?',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMessages(); // 👈 Tải lịch sử khi khởi động
+  }
 
   void _sendMessage() async {
     if (_controller.text.isEmpty) return;
@@ -35,31 +50,33 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse(_apiUrl), // đã gắn sẵn key trong _apiUrl
+        Uri.parse('https://openrouter.ai/api/v1/chat/completions'),
         headers: {
+          'Authorization':
+              'Bearer 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', // <- Thay bằng API Key từ OpenRouter
           'Content-Type': 'application/json',
+          'HTTP-Referer':
+              'https://example.com', // <- Bắt buộc, có thể ghi tạm domain
+          'X-Title': 'HealthCareAI',
         },
         body: jsonEncode({
-          "contents": [
-            {
-              "role": "user", // Thêm role để đúng chuẩn Gemini
-              "parts": [
-                {"text": "$userMessage. Trả lời bằng tiếng Việt."}
-              ]
-            }
+          "model": "deepseek/deepseek-chat",
+          "messages": [
+            {"role": "user", "content": "$userMessage. Trả lời bằng tiếng Việt"}
           ]
         }),
       );
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final aiResponse = data['candidates'][0]['content']['parts'][0]['text'];
+        final data = json.decode(utf8.decode(response.bodyBytes));
+        final aiResponse = data['choices'][0]['message']['content'];
 
         setState(() {
           _messages.add(ChatMessage(text: aiResponse, isUser: false));
         });
+        _saveMessages();
       } else {
-        print('Lỗi chi tiết: ${response.body}');
+        print('❌ Lỗi chi tiết: ${response.body}');
         throw Exception('Lỗi API: ${response.statusCode}');
       }
     } catch (e) {
@@ -68,6 +85,32 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
       );
     } finally {
       setState(() => _isLoading = false);
+    }
+  }
+
+  void _saveMessages() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> chatData = _messages
+        .map((e) => jsonEncode({
+              'text': e.text,
+              'isUser': e.isUser,
+            }))
+        .toList();
+    await prefs.setStringList('chat_history', chatData);
+  }
+
+  void _loadMessages() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? chatData = prefs.getStringList('chat_history');
+
+    if (chatData != null) {
+      setState(() {
+        _messages.clear();
+        _messages.addAll(chatData.map((e) {
+          final decoded = jsonDecode(e);
+          return ChatMessage(text: decoded['text'], isUser: decoded['isUser']);
+        }).toList());
+      });
     }
   }
 
@@ -111,6 +154,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
       ),
       body: Column(
         children: [
+          _buildSuggestedQuestions(),
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.all(8.0),
@@ -125,6 +169,39 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
           ),
           _buildInputField(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSuggestedQuestions() {
+    return Container(
+      height: 100,
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: _suggestedQuestions.map((question) {
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 6),
+            child: ElevatedButton(
+              onPressed: () {
+                _controller.text = question;
+                _sendMessage();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.blue,
+                side: BorderSide(color: Colors.blue),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: Text(
+                question,
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
@@ -189,8 +266,11 @@ class ChatMessage extends StatelessWidget {
           borderRadius: BorderRadius.circular(15.0),
         ),
         child: Text(
-          text,
-          style: TextStyle(color: Colors.black87),
+          utf8.decode(utf8.encode(text)),
+          style: TextStyle(
+            color: Colors.black87,
+            fontSize: 16,
+          ),
         ),
       ),
     );
