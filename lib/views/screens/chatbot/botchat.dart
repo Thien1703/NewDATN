@@ -16,8 +16,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   final List<ChatMessage> _messages = [];
   bool _isLoading = false;
   final String _apiKey =
-      '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';
-  final String _apiUrl = 'https://api.deepseek.com/v1/chat/completions';
+      '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';
+  final String _apiUrl = 'https://openrouter.ai/api/v1/auth/keys';
 
   void _sendMessage() async {
     if (_controller.text.isEmpty) return;
@@ -32,32 +32,32 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse(_apiUrl), // đã gắn sẵn key trong _apiUrl
+        Uri.parse('https://openrouter.ai/api/v1/chat/completions'),
         headers: {
+          'Authorization':
+              'Bearer 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', // <- Thay bằng API Key từ OpenRouter
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${_apiKey}',
+          'HTTP-Referer':
+              'https://example.com', // <- Bắt buộc, có thể ghi tạm domain
+          'X-Title': 'HealthCareAI',
         },
         body: jsonEncode({
-          "contents": [
-            {
-              "role": "user", // Thêm role để đúng chuẩn Gemini
-              "parts": [
-                {"text": "$userMessage. Trả lời bằng tiếng Việt."}
-              ]
-            }
+          "model": "deepseek/deepseek-chat",
+          "messages": [
+            {"role": "user", "content": "$userMessage. Trả lời bằng tiếng Việt"}
           ]
         }),
       );
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final aiResponse = data['candidates'][0]['content']['parts'][0]['text'];
+        final data = json.decode(utf8.decode(response.bodyBytes));
+        final aiResponse = data['choices'][0]['message']['content'];
 
         setState(() {
           _messages.add(ChatMessage(text: aiResponse, isUser: false));
         });
       } else {
-        print('Lỗi chi tiết: ${response.body}');
+        print('❌ Lỗi chi tiết: ${response.body}');
         throw Exception('Lỗi API: ${response.statusCode}');
       }
     } catch (e) {
@@ -187,8 +187,11 @@ class ChatMessage extends StatelessWidget {
           borderRadius: BorderRadius.circular(15.0),
         ),
         child: Text(
-          text,
-          style: TextStyle(color: Colors.black87),
+          utf8.decode(utf8.encode(text)),
+          style: TextStyle(
+            color: Colors.black87,
+            fontSize: 16,
+          ),
         ),
       ),
     );
