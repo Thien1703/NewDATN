@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/clinic.dart';
 import 'package:health_care/viewmodels/api/clinic_api.dart';
-import 'package:health_care/views/screens/chat/chat_screen.dart';
+
+import 'package:health_care/views/screens/apoointment_online/doctor_online/doctor_list_screen.dart';
+
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/views/screens/appointment/appointment_screen.dart';
 import 'package:shimmer/shimmer.dart';
@@ -204,16 +206,10 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ChatScreen(
-                                                                clinicId:
-                                                                    clinic.id,
-                                                                clinicName:
-                                                                    clinic
-                                                                        .name)),
+                                                        builder:(context) => const DoctorListScreen()),
                                                   );
                                                 },
-                                                child: Text('Chat phòng khám',
+                                                child: Text('Đặt khám online',
                                                     style: TextStyle(
                                                         fontSize: 17,
                                                         fontWeight:
