@@ -14,6 +14,7 @@ import 'package:health_care/views/screens/home/service_screen.dart';
 import 'package:health_care/views/screens/notification/notification_screen.dart';
 import 'package:health_care/views/screens/tools/BMR/BMR_screen.dart';
 import 'package:health_care/views/screens/tools/callvideo/choseVideoCall.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
@@ -155,16 +156,7 @@ class _HomePage extends State<HomePage> {
                   ),
                 ),
                 child: customers == null && specialties == null
-                    ? Container(
-                        width: double.infinity,
-                        height: 700,
-                        alignment: Alignment.center,
-                        child: SizedBox(
-                          width: 30,
-                          height: 30,
-                          child: CircularProgressIndicator(strokeWidth: 3),
-                        ),
-                      )
+                    ? _buildShimerGrid()
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -469,6 +461,114 @@ Widget _buildFeatureButton(String text, String icon, VoidCallback onTap) {
           ),
         ],
       ),
+    ),
+  );
+}
+
+Widget _buildShimerGrid() {
+  return Container(
+    margin: EdgeInsets.symmetric(),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: 25, right: 25, bottom: 10, top: 25),
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              height: 15,
+              width: 80,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  height: 75,
+                  width: double.infinity,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(height: 30),
+              GridView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: 4,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  childAspectRatio: 0.85,
+                ),
+                itemBuilder: (context, index) {
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      color: Colors.white,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(height: 38),
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  height: 140,
+                  width: double.infinity,
+                  color: Colors.white,
+                ),
+              ),
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  margin: EdgeInsets.only(top: 30, bottom: 20),
+                  height: 25,
+                  width: 180,
+                  color: Colors.white,
+                ),
+              ),
+              GridView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: 16,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 2.7,
+                ),
+                itemBuilder: (context, index) {
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      height: 40,
+                      width: 150,
+                      color: Colors.white,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(height: 250),
+            ],
+          ),
+        )
+      ],
     ),
   );
 }

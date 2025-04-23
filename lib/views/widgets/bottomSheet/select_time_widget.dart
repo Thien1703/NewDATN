@@ -84,72 +84,82 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
         widget.selectedDate!.month == now.month &&
         widget.selectedDate!.day == now.day;
 
-    return HeaderBottomSheet(
-      title: 'Chọn giờ khám',
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.85,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _customLabel(label: 'Buổi sáng'),
-                  Wrap(
-                    spacing: 10.0,
-                    runSpacing: 13.0,
-                    children: allTimes
-                        .where((time) => int.parse(time.split(':')[0]) < 12)
-                        .map((time) => _customValueTime(
-                              time,
-                              isToday && _isPastTime(time),
-                            ))
-                        .toList(),
+    return Container(
+      color: AppColors.ghostWhite,
+      child: HeaderBottomSheet(
+        title: 'Chọn giờ khám',
+        body: Container(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.85,
                   ),
-                  _customLabel(label: 'Buổi chiều'),
-                  Wrap(
-                    spacing: 10.0,
-                    runSpacing: 13.0,
-                    children: allTimes
-                        .where((time) => int.parse(time.split(':')[0]) >= 12)
-                        .map((time) => _customValueTime(
-                              time,
-                              isToday && _isPastTime(time),
-                            ))
-                        .toList(),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Text(
-                      'Tất cả thời gian theo múi giờ Việt Nam GMT + 7',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xFFFEAD6D),
-                      ),
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _customLabel(label: 'Buổi sáng'),
+                        Wrap(
+                          spacing: 10.0,
+                          runSpacing: 13.0,
+                          children: allTimes
+                              .where(
+                                  (time) => int.parse(time.split(':')[0]) < 12)
+                              .map((time) => _customValueTime(
+                                    time,
+                                    isToday && _isPastTime(time),
+                                  ))
+                              .toList(),
+                        ),
+                        _customLabel(label: 'Buổi chiều'),
+                        Wrap(
+                          spacing: 10.0,
+                          runSpacing: 13.0,
+                          children: allTimes
+                              .where(
+                                  (time) => int.parse(time.split(':')[0]) >= 12)
+                              .map((time) => _customValueTime(
+                                    time,
+                                    isToday && _isPastTime(time),
+                                  ))
+                              .toList(),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Text(
+                            'Tất cả thời gian theo múi giờ Việt Nam GMT + 7',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFFFEAD6D),
+                            ),
+                          ),
+                        ),
+                        // Responsive image
+                        SizedBox(
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height * 0.08,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 1),
+                            child: Image.asset(
+                              'assets/images/pageTime.jpg',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  // Responsive image
-                  SizedBox(
-                    width: double.infinity,
-                    height: MediaQuery.of(context).size.height * 0.08,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 1),
-                      child: Image.asset(
-                        'assets/images/pageTime.jpg',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }

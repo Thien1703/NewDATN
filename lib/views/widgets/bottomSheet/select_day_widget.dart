@@ -15,13 +15,14 @@ class _SelectDayWidgetState extends State<SelectDayWidget> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
   final DateTime _firstDay = DateTime.now(); // Không cho chọn ngày trước đó
-  final DateTime _lastDay = DateTime.now().add(Duration(days: 365));
+  final DateTime _lastDay = DateTime.now().add(Duration(days: 60));
 
   @override
   Widget build(BuildContext context) {
     return HeaderBottomSheet(
       title: 'Chọn ngày khám',
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min, // Giúp co giãn
         children: [
           TableCalendar(
