@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
+import 'package:health_care/views/screens/chatbot/botchat.dart';
 import 'package:health_care/views/screens/clinic/clinic_screen.dart';
 import 'package:health_care/views/screens/examination/examination_screen.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
@@ -217,7 +218,7 @@ class _BuildDrawState extends State<BuildDraw> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SearchScreen(),
+                        builder: (context) => ChatBotScreen(),
                       ));
                 }),
                 ExpansionTile(

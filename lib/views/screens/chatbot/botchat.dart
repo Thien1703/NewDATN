@@ -15,12 +15,9 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   final TextEditingController _controller = TextEditingController();
   final List<ChatMessage> _messages = [];
   bool _isLoading = false;
-
-  // Thay API key này bằng key thật của bạn từ Google
-  // final String _apiKey = 'AIzaSyBjBLPylpQCrsTkLG4SZJmwAcBQSsi7GCs';
-  final String _apiKey = 'AIzaSyBjBLPylpQCrsTkLG4SZJmwAcBQSsi7GCs';
-  final String _apiUrl =
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key';
+  final String _apiKey =
+      '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';
+  final String _apiUrl = 'https://api.deepseek.com/v1/chat/completions';
 
   void _sendMessage() async {
     if (_controller.text.isEmpty) return;
@@ -38,6 +35,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
         Uri.parse(_apiUrl), // đã gắn sẵn key trong _apiUrl
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${_apiKey}',
         },
         body: jsonEncode({
           "contents": [
