@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:health_care/services/local_storage_service.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 
-class NotificationSetting extends StatefulWidget {
-  const NotificationSetting({super.key});
+class NotificationSettingScreen extends StatefulWidget {
+  const NotificationSettingScreen({super.key});
 
   @override
-  State<NotificationSetting> createState() => _NotificationSettingState();
+  State<NotificationSettingScreen> createState() =>
+      _NotificationSettingScreenState();
 }
 
-class _NotificationSettingState extends State<NotificationSetting> {
+class _NotificationSettingScreenState extends State<NotificationSettingScreen> {
   final Map<String, bool> _settings = {
     'notifications': true,
     'camera': true,
