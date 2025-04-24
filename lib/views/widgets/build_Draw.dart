@@ -1,10 +1,7 @@
-import 'dart:math';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/views/screens/chatbot/botchat.dart';
 import 'package:health_care/views/screens/clinic/clinic_screen.dart';
-import 'package:health_care/views/screens/examination/examination_screen.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
 import 'package:health_care/views/screens/map/searchMap.dart';
 import 'package:health_care/views/screens/notification/notification_screen.dart';
@@ -117,7 +114,7 @@ class _BuildDrawState extends State<BuildDraw> {
                 children: [
                   CircleAvatar(
                     radius: 25,
-                    backgroundImage: widget.image.startsWith('htpp')
+                    backgroundImage: widget.image.startsWith('https')
                         ? NetworkImage(widget.image)
                         : AssetImage(widget.image) as ImageProvider,
                   ),

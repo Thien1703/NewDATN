@@ -14,13 +14,14 @@ class PatientProfiles extends StatefulWidget {
 }
 
 class _PatientProfilesState extends State<PatientProfiles> {
-  final ProfileViewModel _profileViewModel = ProfileViewModel();
+  late ProfileViewModel _profileViewModel;
   List<Map<String, dynamic>> _profiles = [];
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    _profileViewModel = ProfileViewModel();
     _fetchProfiles();
   }
 
@@ -52,6 +53,8 @@ class _PatientProfilesState extends State<PatientProfiles> {
     return WidgetHeaderBody(
       iconBack: true,
       title: 'Hồ sơ đặt khám',
+      iconAdd: true,
+      onAddPressed: _fetchProfiles,
       body: Container(
         color: AppColors.neutralGrey,
         child: Padding(
@@ -61,8 +64,12 @@ class _PatientProfilesState extends State<PatientProfiles> {
               : _profiles.isEmpty
                   ? const Center(child: Text("Bạn chưa có hồ sơ nào."))
                   : ListView.separated(
+                      shrinkWrap: true,
+                      physics:
+                          NeverScrollableScrollPhysics(), // Dùng khi bọc trong ListView lớn hơn
                       itemCount: _profiles.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 10),
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 10),
                       itemBuilder: (context, index) {
                         final profile = _profiles[index];
                         return WidgetProfileCard(
