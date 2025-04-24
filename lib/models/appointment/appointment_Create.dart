@@ -6,14 +6,17 @@ class AppointmentCreate {
   final String time;
   final String? status;
   final int? customerProfileId;
+  final List<int> serviceIds; // Thêm serviceIds vào model
+
   AppointmentCreate({
     this.id,
     required this.clinicId,
     required this.customerId,
     required this.date,
     required this.time,
-    required this.customerProfileId,
+    this.customerProfileId,
     this.status,
+    required this.serviceIds, // Thêm serviceIds vào constructor
   });
 
   factory AppointmentCreate.fromJson(Map<String, dynamic> json) {
@@ -25,8 +28,11 @@ class AppointmentCreate {
       time: json['time'],
       customerProfileId: json['customerProfileId'],
       status: json['status'],
+      serviceIds: List<int>.from(
+          json['serviceIds'] ?? []), // Dùng List<int> cho serviceIds
     );
   }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {
       'clinicId': clinicId,
@@ -34,6 +40,7 @@ class AppointmentCreate {
       'date': date,
       'time': time,
       'customerProfileId': customerProfileId,
+      'serviceIds': serviceIds, // Thêm serviceIds vào toJson
     };
     return data;
   }

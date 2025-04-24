@@ -275,4 +275,44 @@ class AppointmentApi {
       return false; // Lỗi hệ thống
     }
   }
+
+  static Future<Appointment?> getBooking(
+      AppointmentCreate appointmentCreate) async {
+    final url =
+        Uri.parse('${AppConfig.baseUrl}/appointment/create-with-services');
+    String? token = await LocalStorageService.getToken();
+
+    if (token == null) {
+      print('Không tìm thấy token.');
+      return null;
+    }
+
+    final body = json.encode(appointmentCreate.toJson());
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: body,
+    );
+
+    print('Giá trị status code: ${response.statusCode}');
+    print('Giá trị response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      final jsonBody = json.decode(response.body);
+      if (jsonBody['status'] == 0) {
+        final data = jsonBody['data'];
+        return Appointment.fromJson(data);
+      } else {
+        print('Lỗi từ API: ${jsonBody['message']}');
+        return null;
+      }
+    } else {
+      print('API Lỗi: ${response.statusCode}');
+      return null;
+    }
+  }
 }

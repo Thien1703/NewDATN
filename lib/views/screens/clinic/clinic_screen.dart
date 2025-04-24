@@ -206,7 +206,8 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
-                                                        builder:(context) => const DoctorListScreen()),
+                                                        builder: (context) =>
+                                                            const DoctorListScreen()),
                                                   );
                                                 },
                                                 child: Text('Đặt khám online',
@@ -239,7 +240,7 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                                     MaterialPageRoute(
                                                       builder: (context) =>
                                                           AppointmentScreen(
-                                                        clinicId: clinic.id,
+                                                        clinic: clinic,
                                                       ),
                                                     ),
                                                   );

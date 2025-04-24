@@ -95,6 +95,10 @@ class _ProfileBooking extends State<ProfileBooking> {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       child: ListView(
         children: [
+          Text(widget.clinicId.toString()),
+          Text(widget.selectedServiceId.toString()),
+          Text(widget.date),
+          Text(widget.time),
           Padding(
             padding: const EdgeInsets.all(5), // Padding giống với Card
             child: Row(

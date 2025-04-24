@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
+import 'package:health_care/views/screens/apoointment_online/doctor_online/doctor_list_screen.dart';
 import 'package:health_care/views/screens/chatbot/botchat.dart';
 import 'package:health_care/views/screens/clinic/clinic_screen.dart';
 import 'package:health_care/views/screens/examination/examination_screen.dart';
@@ -123,7 +124,7 @@ class _BuildDrawState extends State<BuildDraw> {
                   ),
                   SizedBox(width: 10),
                   Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         widget.fullName,
@@ -166,7 +167,7 @@ class _BuildDrawState extends State<BuildDraw> {
                   title: Text(
                     'Đặt khám',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.w700,
                       color: isExpanded ? AppColors.deepBlue : Colors.black,
                     ),
@@ -176,7 +177,7 @@ class _BuildDrawState extends State<BuildDraw> {
                       title: Text(
                         'Đặt khám tại phòng khám',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 15,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -188,16 +189,16 @@ class _BuildDrawState extends State<BuildDraw> {
                     ),
                     ListTile(
                       title: Text(
-                        'Đặt khám online',
+                        'Tư vấn khám bệnh qua video',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 15,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                       onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => chooseCallVideo(),
+                            builder: (context) => DoctorListScreen(),
                           )),
                     )
                   ],
@@ -226,7 +227,7 @@ class _BuildDrawState extends State<BuildDraw> {
                   title: Text(
                     'Đo chỉ số',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.w700,
                       color: isExpanded ? AppColors.deepBlue : Colors.black,
                     ),
@@ -236,7 +237,7 @@ class _BuildDrawState extends State<BuildDraw> {
                       title: Text(
                         'Đo BMI',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 15,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -250,7 +251,7 @@ class _BuildDrawState extends State<BuildDraw> {
                       title: Text(
                         'Đo BMR',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 15,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -271,7 +272,9 @@ class _BuildDrawState extends State<BuildDraw> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>HomeScreens(inttialIndex: 1,),
+                        builder: (context) => HomeScreens(
+                          inttialIndex: 1,
+                        ),
                       ));
                 }),
                 _buildTitle(
@@ -293,7 +296,7 @@ class _BuildDrawState extends State<BuildDraw> {
         child: Text(
           label,
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 16,
             fontWeight: FontWeight.w700,
           ),
         ),

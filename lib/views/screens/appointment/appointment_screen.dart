@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_icons.dart';
 import 'package:health_care/common/app_colors.dart';
+import 'package:health_care/models/clinic.dart';
 import 'package:health_care/views/screens/appointment/steps/confirm_booking.dart';
 import 'package:health_care/views/screens/appointment/steps/exam_info_booking.dart';
 import 'package:health_care/views/screens/appointment/steps/profile_booking.dart';
@@ -9,9 +10,11 @@ import 'package:health_care/views/widgets/widget_header_body.dart';
 class AppointmentScreen extends StatefulWidget {
   const AppointmentScreen({
     super.key,
-    required this.clinicId,
+    required this.clinic,
+    this.clinicId = 1,
   });
   final int clinicId;
+  final Clinic clinic;
   @override
   State<AppointmentScreen> createState() => _AppointmentScreen();
 }
@@ -35,7 +38,7 @@ class _AppointmentScreen extends State<AppointmentScreen> {
     _screens = [
       ExamInfoBooking(
         onNavigateToScreen: navigateToScreen,
-        clinicId: widget.clinicId,
+        clinic: widget.clinic,
       ),
       ProfileBooking(
         onNavigateToScreen: navigateToScreen,
