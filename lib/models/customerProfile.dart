@@ -7,7 +7,7 @@ class CustomerProfile {
   final String phoneNumber;
   final String birthDate;
   final String gender;
-  final String? cccd;
+  // final String? cccd;
   final String address;
 
   CustomerProfile({
@@ -17,7 +17,7 @@ class CustomerProfile {
     required this.phoneNumber,
     required this.birthDate,
     required this.gender,
-    this.cccd,
+    // this.cccd,
     required this.address,
   });
 
@@ -32,7 +32,7 @@ class CustomerProfile {
       phoneNumber: json['phoneNumber'] ?? "Chưa cập nhật",
       birthDate: json['birthDate'] ?? "Chưa cập nhật",
       gender: json['gender'] ?? "Chưa cập nhật",
-      cccd: json['cccd'],
+      // cccd: json['cccd'],
       address:  json["address"]?.toString().isNotEmpty == true
           ? utf8.decode(json["address"].toString().runes.toList())
           : "Chưa cập nhật",
@@ -47,7 +47,7 @@ class CustomerProfile {
       'phoneNumber': phoneNumber,
       'birthDate': birthDate,
       'gender': gender,
-      'cccd': cccd,
+      // 'cccd': cccd,
       'address': address,
     };
   }
@@ -60,7 +60,7 @@ class CustomerProfile {
       phoneNumber: "Chưa cập nhật",
       birthDate: "Chưa cập nhật",
       gender: "Chưa cập nhật",
-      cccd: null,
+      // cccd: null,
       address: "Chưa cập nhật",
     );
   }

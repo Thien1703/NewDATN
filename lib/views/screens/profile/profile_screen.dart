@@ -38,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       // Lưu thông tin vào local
       await UserPreferencesService.saveUserProfile(
-        avatar: data?['avtar'] ?? '',
+        avatar: data?['avatar'] ?? '',
         fullName: data?['fullName'] ?? '',
         phoneNumber: data?['phoneNumber'] ?? '',
       );
@@ -84,8 +84,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           CircleAvatar(
             radius: 40,
-            backgroundImage: userData?['avtar'] != null
-                ? NetworkImage(userData!['avtar'])
+            backgroundImage: userData?['avatar'] != null
+                ? NetworkImage(userData!['avatar'])
                 : const AssetImage('assets/images/iconProfile.jpg')
                     as ImageProvider,
           ),

@@ -34,9 +34,12 @@ class HeaderBottomSheet extends StatelessWidget {
             children: [
               Align(
                 alignment: Alignment.centerLeft,
-                child: InkWell(
-                  onTap: () => Navigator.pop(context),
-                  child: Image.asset(AppIcons.cancel, width: 14),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: InkWell(
+                    onTap: () => Navigator.pop(context),
+                    child: Image.asset(AppIcons.cancel, width: 14),
+                  ),
                 ),
               ),
               Text(

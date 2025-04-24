@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
+import 'package:health_care/views/screens/profile/add_profile.dart';
 
-class WidgetHeaderBody extends StatelessWidget {
+class WidgetHeaderBody extends StatefulWidget {
   final String title;
   final Widget body;
   final VoidCallback? onBackPressed;
   final Widget? selectedIcon;
   final bool iconBack;
   final Color? color;
-  final bool iconShare;
+  final bool iconAdd;
+  final VoidCallback? onAddPressed;
 
   const WidgetHeaderBody({
     super.key,
@@ -18,9 +20,15 @@ class WidgetHeaderBody extends StatelessWidget {
     this.onBackPressed,
     this.selectedIcon,
     this.color,
-    this.iconShare = false,
+    this.iconAdd = false,
+    this.onAddPressed,
   });
 
+  @override
+  State<WidgetHeaderBody> createState() => _WidgetHeaderBodyState();
+}
+
+class _WidgetHeaderBodyState extends State<WidgetHeaderBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,8 +37,8 @@ class WidgetHeaderBody extends StatelessWidget {
           _buildHeader(context),
           Expanded(
             child: Container(
-              color: color ?? Colors.white,
-              child: body,
+              color: widget.color ?? Colors.white,
+              child: widget.body,
             ),
           ),
         ],
@@ -42,22 +50,23 @@ class WidgetHeaderBody extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 10, // Padding theo notch
+        top: MediaQuery.of(context).padding.top + 10,
         bottom: MediaQuery.of(context).padding.bottom + 10,
       ),
       color: AppColors.deepBlue,
       child: Column(
         children: [
           HeaderRow(
-            iconBack: iconBack,
-            title: title,
-            onBackPressed: onBackPressed,
-            iconShare: iconShare,
+            iconBack: widget.iconBack,
+            title: widget.title,
+            onBackPressed: widget.onBackPressed,
+            onAddPressed: widget.onAddPressed,
+            iconAdd: widget.iconAdd,
           ),
-          if (selectedIcon != null) const SizedBox(height: 5),
+          if (widget.selectedIcon != null) const SizedBox(height: 5),
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
-            child: selectedIcon,
+            child: widget.selectedIcon,
           ),
         ],
       ),
@@ -65,43 +74,49 @@ class WidgetHeaderBody extends StatelessWidget {
   }
 }
 
-class HeaderRow extends StatelessWidget {
+class HeaderRow extends StatefulWidget {
   final String title;
   final VoidCallback? onBackPressed;
+  final VoidCallback? onAddPressed;
   final bool iconBack;
-  final bool iconShare;
+  final bool iconAdd;
 
   const HeaderRow({
     super.key,
     required this.title,
     this.onBackPressed,
     required this.iconBack,
-    required this.iconShare,
+    required this.iconAdd,
+    this.onAddPressed,
   });
+  @override
+  State<HeaderRow> createState() => _HeaderRowState();
+}
 
+class _HeaderRowState extends State<HeaderRow> {
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         SizedBox(
-            child: iconBack
-                ? IconButton(
-                    icon: const Icon(Icons.arrow_back_ios,
-                        color: Colors.white, size: 24),
-                    onPressed:
-                        onBackPressed ?? () => Navigator.of(context).pop(),
-                  )
-                : IconButton(
-                    icon: const Icon(Icons.arrow_back,
-                        color: AppColors.deepBlue, size: 24),
-                    onPressed:
-                        onBackPressed ?? () => Navigator.of(context).pop(),
-                  ) // Khi không có icon, giữ khoảng trống
-            ),
+          child: widget.iconBack
+              ? IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_new,
+                      color: Colors.white, size: 24),
+                  onPressed:
+                      widget.onBackPressed ?? () => Navigator.of(context).pop(),
+                )
+              : IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_new,
+                      color: AppColors.deepBlue, size: 24),
+                  onPressed:
+                      widget.onBackPressed ?? () => Navigator.of(context).pop(),
+                ),
+        ),
         Expanded(
           child: Text(
-            title,
+            widget.title,
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Colors.white,
@@ -111,24 +126,35 @@ class HeaderRow extends StatelessWidget {
           ),
         ),
         SizedBox(
-          child: iconShare
+          child: widget.iconAdd
               ? IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.ios_share_outlined,
+                  onPressed: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddProfile(),
+                      ),
+                    );
+                    if (widget.onAddPressed != null) {
+                      widget
+                          .onAddPressed!(); // 👈 gọi lại hàm ở PatientProfiles
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.group_add_rounded,
                     color: Colors.white,
                     size: 24,
                   ),
                 )
               : IconButton(
                   onPressed: () {},
-                  icon: Icon(
-                    Icons.ios_share_outlined,
+                  icon: const Icon(
+                    Icons.group_add_rounded,
                     color: AppColors.deepBlue,
                     size: 24,
                   ),
                 ),
-        )
+        ),
       ],
     );
   }

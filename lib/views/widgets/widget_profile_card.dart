@@ -4,6 +4,8 @@ import 'package:health_care/common/app_icons.dart';
 import 'package:health_care/viewmodels/profile_viewmodel.dart';
 import 'package:health_care/views/screens/profile/confirm_dialog_delete.dart';
 import 'package:health_care/views/screens/profile/edit_profile_another.dart';
+import 'package:health_care/views/screens/profile/infor_profile_another_screen.dart';
+import 'package:health_care/views/widgets/bottomSheet/profile_options_bottom_sheet.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -70,39 +72,58 @@ class WidgetProfileCardState extends State<WidgetProfileCard> {
               _customRow(
                 image: AppIcons.user1,
                 titleOfImage: widget.profile['fullName'] ?? 'Chưa có tên',
-                onEdit: () {
-                  Navigator.push(
+                onMore: () {
+                  ProfileOptionsBottomSheet.show(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => EditProfileAnother(
-                        id: widget.profile['id'],
-                        customerId: widget.profile['customerId'],
-                        onProfileAdded: () {
-                          // 👇 Gọi callback sau khi chỉnh sửa xong
-                          if (widget.onProfileUpdated != null) {
-                            widget.onProfileUpdated!();
-                          }
-                        },
-                      ),
-                    ),
-                  );
-                },
-                onDelete: () {
-                  showDialog(
-                    context: context,
-                    builder: (_) => ConfirmDialogDelete(
-                      onConfirm: () async {
-                        final profileVM = Provider.of<ProfileViewModel>(context,
-                            listen: false);
-                        await profileVM.deleteProfileById(
-                            context, widget.profile['id']);
+                    onViewDetail: () {
+                      // Xử lý xem chi tiết
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => InforProfileAnotherScreen(
+                            profileId: widget.profile['id'],
+                          ),
+                        ),
+                      );
+                    },
+                    onEdit: () {
+                      // Xử lý sửa hồ sơ
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditProfileAnother(
+                            id: widget.profile['id'],
+                            customerId: widget.profile['customerId'],
+                            onProfileAdded: () {
+                              // 👇 Gọi callback sau khi chỉnh sửa xong
+                              if (widget.onProfileUpdated != null) {
+                                widget.onProfileUpdated!();
+                              }
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                    onDelete: () {
+                      // Xử lý xoá hồ sơ
+                      showDialog(
+                        context: context,
+                        builder: (_) => ConfirmDialogDelete(
+                          onConfirm: () async {
+                            final profileVM = Provider.of<ProfileViewModel>(
+                                context,
+                                listen: false);
+                            await profileVM.deleteProfileById(
+                                context, widget.profile['id']);
 
-                        if (widget.onProfileUpdated != null) {
-                          widget
-                              .onProfileUpdated!(); // Cập nhật lại danh sách hồ sơ
-                        }
-                      },
-                    ),
+                            if (widget.onProfileUpdated != null) {
+                              widget
+                                  .onProfileUpdated!(); // Cập nhật lại danh sách hồ sơ
+                            }
+                          },
+                        ),
+                      );
+                    },
                   );
                 },
               ),
@@ -128,8 +149,8 @@ class WidgetProfileCardState extends State<WidgetProfileCard> {
   Widget _customRow({
     required String image,
     required String titleOfImage,
-    VoidCallback? onEdit,
-    VoidCallback? onDelete,
+    VoidCallback? onMore,
+    // VoidCallback? onDelete,
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 5),
@@ -153,28 +174,28 @@ class WidgetProfileCardState extends State<WidgetProfileCard> {
               overflow: TextOverflow.visible,
             ),
           ),
-          if (onEdit != null)
+          if (onMore != null)
             TextButton(
-              onPressed: onEdit,
+              onPressed: onMore,
               style: TextButton.styleFrom(
                 minimumSize: Size(30, 30),
                 padding: EdgeInsets.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              child: Icon(Icons.edit, size: 20, color: AppColors.deepBlue),
+              child: Icon(Icons.more_vert, size: 20, color: AppColors.deepBlue),
             ),
-          SizedBox(width: 5),
-          if (onDelete != null)
-            TextButton(
-              onPressed: onDelete,
-              style: TextButton.styleFrom(
-                minimumSize: Size(30, 30),
-                padding: EdgeInsets.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child:
-                  Icon(Icons.delete, size: 20, color: AppColors.neutralGrey3),
-            ),
+          // SizedBox(width: 5),
+          // if (onDelete != null)
+          //   TextButton(
+          //     onPressed: onDelete,
+          //     style: TextButton.styleFrom(
+          //       minimumSize: Size(30, 30),
+          //       padding: EdgeInsets.zero,
+          //       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          //     ),
+          //     child:
+          //         Icon(Icons.delete, size: 20, color: AppColors.neutralGrey3),
+          //   ),
         ],
       ),
     );
