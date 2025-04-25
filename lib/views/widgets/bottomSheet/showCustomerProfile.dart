@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/customerProfile.dart';
 import 'package:health_care/viewmodels/api/customerProfile_api.dart';
 import 'package:health_care/views/widgets/bottomSheet/header_bottomSheet.dart';
@@ -83,7 +84,7 @@ class _ShowcustomerProfile extends State<ShowcustomerProfile> {
                     ),
                     padding: EdgeInsets.symmetric(vertical: 10),
                     decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppColors.deepBlue,
                         borderRadius: BorderRadius.circular(8),
                         boxShadow: [
                           BoxShadow(
@@ -97,6 +98,7 @@ class _ShowcustomerProfile extends State<ShowcustomerProfile> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 15,
+                        color: AppColors.neutralLightGreen2,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

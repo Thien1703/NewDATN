@@ -60,7 +60,7 @@ class _NotificationSettingScreenState extends State<NotificationSettingScreen> {
     return WidgetHeaderBody(
       iconBack: true,
       title: "Cài đặt thông báo",
-      iconShare: false,
+      iconAdd: false,
       color: Colors.white,
       body: ListView(
         children: [

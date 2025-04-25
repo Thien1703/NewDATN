@@ -172,12 +172,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               radius: 40,
                               backgroundImage: _avatarFile != null
                                   ? FileImage(_avatarFile!)
-                                  : (_userData?['avtar'] != null &&
-                                              Uri.tryParse(_userData!['avtar'])
+                                  : (_userData?['avatar'] != null &&
+                                              Uri.tryParse(_userData!['avatar'])
                                                       ?.hasAbsolutePath ==
                                                   true
                                           ? CachedNetworkImageProvider(
-                                              _userData!['avtar'])
+                                              _userData!['avatar'])
                                           : const AssetImage(
                                               'assets/images/iconProfile.jpg'))
                                       as ImageProvider,

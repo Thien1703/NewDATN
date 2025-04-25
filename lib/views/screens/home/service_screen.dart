@@ -57,7 +57,7 @@ class _ServiceScreen extends State<ServiceScreen> {
       iconBack: true,
       title: 'Dịch vụ',
       color: AppColors.ghostWhite,
-      iconShare: true,
+      iconAdd: false,
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 10),
         child: isLoading
