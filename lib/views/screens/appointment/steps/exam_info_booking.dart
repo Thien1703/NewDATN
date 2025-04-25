@@ -21,7 +21,7 @@ class ExamInfoBooking extends StatefulWidget {
   final void Function(
     int,
     String, {
-    int? clinicId,
+    Clinic clinic,
     List<int>? serviceIds,
     String? date,
     String? time,
@@ -126,7 +126,7 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
                     widget.onNavigateToScreen(
                       1,
                       'Chọn hồ sơ',
-                      clinicId: widget.clinic.id,
+                      clinic: widget.clinic,
                       serviceIds: selectedServiceId,
                       date: DateFormat('yyyy-MM-dd').format(selectedDate!),
                       time: selectedTime!,

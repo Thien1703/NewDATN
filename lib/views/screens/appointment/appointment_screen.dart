@@ -42,7 +42,7 @@ class _AppointmentScreen extends State<AppointmentScreen> {
       ),
       ProfileBooking(
         onNavigateToScreen: navigateToScreen,
-        clinicId: widget.clinicId,
+        clinic: widget.clinic,
         selectedServiceId: [],
 
         date: 'Chưa chọn ngày', // Giá trị mặc định
@@ -52,7 +52,7 @@ class _AppointmentScreen extends State<AppointmentScreen> {
         onNavigateToScreen: navigateToScreen,
         customerId: customerId ?? 0,
         customerProfileId: customerProfileId ?? 0,
-        clinicId: widget.clinicId,
+        clinic: widget.clinic,
         selectedServiceIds: [],
         date: 'Chưa chọn ngày', // Giá trị mặc định
         time: 'Chưa chọn giờ', // Giá trị mặc định
@@ -63,7 +63,7 @@ class _AppointmentScreen extends State<AppointmentScreen> {
   void navigateToScreen(
     int index,
     String title, {
-    int? clinicId,
+    Clinic? clinic,
     String? date,
     String? time,
     List<int>? serviceIds,
@@ -80,7 +80,7 @@ class _AppointmentScreen extends State<AppointmentScreen> {
       if (index == 1) {
         _screens[index] = ProfileBooking(
           onNavigateToScreen: navigateToScreen,
-          clinicId: clinicId ?? widget.clinicId,
+          clinic: widget.clinic,
           selectedServiceId: serviceIds ?? [],
           date: date ?? 'Chưa chọn ngày',
           time: time ?? 'Chưa chọn giờ',
@@ -92,7 +92,7 @@ class _AppointmentScreen extends State<AppointmentScreen> {
           onNavigateToScreen: navigateToScreen,
           customerId: customerId ?? this.customerId ?? 0,
           customerProfileId: customerProfileId ?? 0,
-          clinicId: clinicId ?? widget.clinicId,
+          clinic: widget.clinic,
           selectedServiceIds: serviceIds ?? [],
           date: date ?? 'Chưa chọn ngày',
           time: time ?? 'Chưa chọn giờ',

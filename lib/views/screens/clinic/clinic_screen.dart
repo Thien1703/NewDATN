@@ -104,8 +104,17 @@ class _ClinicScreenState extends State<ClinicScreen> {
                   ),
                   clinics == null
                       ? buildShimmerBody()
-                      : clinics != null
-                          ? ListView.builder(
+                      : filteredClinics == null || filteredClinics!.isEmpty
+                          ? Center(
+                              child: Text(
+                                'Không có phòng khám nào',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey[600]),
+                              ),
+                            )
+                          : ListView.builder(
                               padding: EdgeInsets.only(top: 10),
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
@@ -260,18 +269,6 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                   ),
                                 );
                               },
-                            )
-                          : Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(20),
-                                child: Text(
-                                  'Không có phòng khám nào',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey[600]),
-                                ),
-                              ),
                             )
                 ],
               ),
