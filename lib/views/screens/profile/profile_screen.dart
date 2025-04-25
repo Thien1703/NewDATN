@@ -86,8 +86,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             radius: 40,
             backgroundImage: userData?['avatar'] != null
                 ? NetworkImage(userData!['avatar'])
-                : const AssetImage('assets/images/iconProfile.jpg')
-                    as ImageProvider,
+                : const AssetImage(
+                    'assets/images/iconProfile.jpg',
+                  ) as ImageProvider,
+            backgroundColor: Colors.transparent,
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -133,8 +135,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 10),
           _buildMenuItem(Icons.person, "Thông tin cá nhân", () {
             Navigator.of(context)
-                .push(MaterialPageRoute(
-                    builder: (context) => InforProfileScreen()))
+                .push(
+              MaterialPageRoute(
+                builder: (context) => InforProfileScreen(),
+              ),
+            )
                 .then((_) {
               fetchUserProfile(); // Cập nhật lại dữ liệu khi trở về ProfileScreen
             });
