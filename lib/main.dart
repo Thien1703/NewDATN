@@ -21,7 +21,7 @@ final FlutterLocalNotificationsPlugin localNotificationsPlugin =
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-void main() async {
+void main() async { 
   WidgetsFlutterBinding.ensureInitialized();
 
   // ✅ cameracamera

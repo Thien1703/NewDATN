@@ -60,9 +60,13 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
           'X-Title': 'HealthCareAI',
         },
         body: jsonEncode({
-          "model": "deepseek/deepseek-chat",
+          "model": "mistralai/mistral-7b-instruct",
+          "max_tokens": 300, // 👈 Tối đa 300 token (khoảng 200-250 từ)
           "messages": [
-            {"role": "user", "content": "$userMessage. Trả lời bằng tiếng Việt"}
+            {
+              "role": "user",
+              "content": "Trả lời câu hỏi sau bằng tiếng Việt: $userMessage"
+            }
           ]
         }),
       );

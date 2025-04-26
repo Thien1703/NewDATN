@@ -45,7 +45,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
     final LatLng currentLatLng = LatLng(position.latitude, position.longitude);
 
-    // Thêm marker vị trí hiện tại
     setState(() {
       markers.add(
         Marker(
