@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/clinic.dart';
 import 'package:health_care/viewmodels/api/clinic_api.dart';
-import 'package:health_care/views/screens/chat/chat_screen.dart';
+
+import 'package:health_care/views/screens/apoointment_online/doctor_online/doctor_list_screen.dart';
+
 import 'package:health_care/views/widgets/widget_header_body.dart';
 import 'package:health_care/views/screens/appointment/appointment_screen.dart';
 import 'package:shimmer/shimmer.dart';
@@ -102,8 +104,17 @@ class _ClinicScreenState extends State<ClinicScreen> {
                   ),
                   clinics == null
                       ? buildShimmerBody()
-                      : clinics != null
-                          ? ListView.builder(
+                      : filteredClinics == null || filteredClinics!.isEmpty
+                          ? Center(
+                              child: Text(
+                                'Không có phòng khám nào',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey[600]),
+                              ),
+                            )
+                          : ListView.builder(
                               padding: EdgeInsets.only(top: 10),
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
@@ -205,15 +216,10 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            ChatScreen(
-                                                                clinicId:
-                                                                    clinic.id,
-                                                                clinicName:
-                                                                    clinic
-                                                                        .name)),
+                                                            const DoctorListScreen()),
                                                   );
                                                 },
-                                                child: Text('Chat phòng khám',
+                                                child: Text('Đặt khám online',
                                                     style: TextStyle(
                                                         fontSize: 17,
                                                         fontWeight:
@@ -243,7 +249,7 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                                     MaterialPageRoute(
                                                       builder: (context) =>
                                                           AppointmentScreen(
-                                                        clinicId: clinic.id,
+                                                        clinic: clinic,
                                                       ),
                                                     ),
                                                   );
@@ -263,18 +269,6 @@ class _ClinicScreenState extends State<ClinicScreen> {
                                   ),
                                 );
                               },
-                            )
-                          : Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(20),
-                                child: Text(
-                                  'Không có phòng khám nào',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey[600]),
-                                ),
-                              ),
                             )
                 ],
               ),

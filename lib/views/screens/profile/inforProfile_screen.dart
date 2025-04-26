@@ -46,20 +46,6 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
     }
   }
 
-  // Future<void> _pickImage() async {
-  //   final ImagePicker picker = ImagePicker();
-  //   final XFile? pickedFile =
-  //       await picker.pickImage(source: ImageSource.gallery);
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       _avatarFile = File(pickedFile.path);
-  //     });
-
-  //     final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
-  //     await authViewModel.uploadAvatar(context, _avatarFile!);
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return WidgetHeaderBody(
@@ -79,9 +65,10 @@ class _InforProfileScreenState extends State<InforProfileScreen> {
                           padding: const EdgeInsets.only(top: 5.0),
                           child: CircleAvatar(
                             radius: 40,
-                            backgroundImage: userData?['avtar'] != null
-                                ? NetworkImage(userData!['avtar'])
-                                : const AssetImage('assets/images/noavatar.png')
+                            backgroundImage: userData?['avatar'] != null
+                                ? NetworkImage(userData!['avatar'])
+                                : const AssetImage(
+                                        'assets/images/iconProfile.jpg')
                                     as ImageProvider,
                           ),
                         ),

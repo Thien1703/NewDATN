@@ -87,7 +87,6 @@ class LocalStorageService {
       final isLogged = token != null;
       print("🔍 Đã đăng nhập chưa? $isLogged");
       return isLogged;
-
     } catch (e) {
       print("❌ Lỗi khi kiểm tra đăng nhập: $e");
       return false;
@@ -138,6 +137,28 @@ class LocalStorageService {
     } catch (e) {
       print("❌ Lỗi khi đọc notifications từ local: $e");
       return [];
+    }
+  }
+
+  static Future<void> saveSwitchSetting(String key, bool value) async {
+    try {
+      await _storage.write(key: 'setting_$key', value: value.toString());
+      print("✅ Đã lưu trạng thái $key: $value");
+    } catch (e) {
+      print("❌ Lỗi khi lưu trạng thái $key: $e");
+    }
+  }
+
+  static Future<bool?> getSwitchSetting(String key) async {
+    try {
+      String? value = await _storage.read(key: 'setting_$key');
+      if (value != null) {
+        return value == 'true';
+      }
+      return null;
+    } catch (e) {
+      print("❌ Lỗi khi đọc trạng thái $key: $e");
+      return null;
     }
   }
 }

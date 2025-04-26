@@ -73,6 +73,8 @@ class LogoutBottomsheet extends StatelessWidget {
                       listen: false,
                     );
                     await authViewModel.signOut(context);
+                    // Trả về true để báo hiệu đăng xuất thành công
+                    Navigator.pop(context, true);
                   },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Colors.grey),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
+import 'package:health_care/models/clinic.dart';
 import 'package:health_care/viewmodels/profile_viewmodel.dart';
 import 'package:health_care/viewmodels/user_provider.dart';
 import 'package:health_care/views/screens/profile/add_profile.dart';
@@ -11,22 +12,22 @@ class ProfileBooking extends StatefulWidget {
   final Function(
     int,
     String, {
-    int? clinicId,
+    Clinic clinic,
     List<int>? serviceIds,
     int? customerId,
     int? customerProfileId,
-    String? date, // ✅ Thêm ngày khám
-    String? time, // ✅ Thêm giờ khám
+    String? date, 
+    String? time,
   }) onNavigateToScreen;
 
-  final int clinicId;
+  final Clinic clinic;
   final List<int> selectedServiceId;
-  final String date; // Thêm ngày khám
-  final String time; // Thêm giờ khám
+  final String date;
+  final String time; 
   const ProfileBooking({
     super.key,
     required this.onNavigateToScreen,
-    required this.clinicId,
+    required this.clinic,
     required this.selectedServiceId,
     required this.date,
     required this.time,
@@ -82,7 +83,7 @@ class _ProfileBooking extends State<ProfileBooking> {
       'Xác nhận thông tin',
       customerId: customerId,
       customerProfileId: customerProfileId,
-      clinicId: widget.clinicId,
+      clinic: widget.clinic,
       serviceIds: widget.selectedServiceId,
       date: widget.date,
       time: widget.time,
@@ -141,8 +142,6 @@ class _ProfileBooking extends State<ProfileBooking> {
             onTap: (customerId) {
               _handleProfileTap(customerId, null);
             },
-            // onTap: _handleProfileTap,
-            // onProfileUpdated: _fetchUserProfile,
           ),
           const SizedBox(height: 10),
           _isLoading

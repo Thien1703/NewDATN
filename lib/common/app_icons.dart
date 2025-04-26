@@ -53,5 +53,6 @@ class AppIcons {
   static const String robotAI = 'assets/icons/robotAI_icon.png';
   static const String bmiIcon = 'assets/icons/bmi_icon.png';
   static const String healthCheck = 'assets/icons/healthCheck_icon.png';
-  static const String maker = 'assets/icons/maker.png';
+  static const String maker = 'assets/icons/ongnghe.png';
+  static const String stethoscope = 'assets/icons/ongnghe.png';
 }

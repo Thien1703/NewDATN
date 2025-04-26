@@ -68,9 +68,9 @@ class ProfileViewModel with ChangeNotifier {
   }
 
   /// Lấy danh sách tất cả hồ sơ
-  Future<List<Map<String, dynamic>>?> getAllProfiles() async {
-    return await ProfileConfig.getAllProfiles();
-  }
+  // Future<List<Map<String, dynamic>>?> getAllProfiles() async {
+  //   return await ProfileConfig.getAllProfiles();
+  // }
 
   /// Lấy thông tin hồ sơ theo ID
   Future<Map<String, dynamic>?> getProfileById(int id) async {

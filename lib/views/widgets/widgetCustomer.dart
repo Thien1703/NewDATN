@@ -5,7 +5,7 @@ import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:intl/intl.dart';
 
 class WidgetCustomer extends StatefulWidget {
-  const WidgetCustomer({super.key,required this.customerId});
+  const WidgetCustomer({super.key, required this.customerId});
   final int customerId;
   @override
   WidgetCustomerProfileState createState() => WidgetCustomerProfileState();
@@ -22,8 +22,8 @@ class WidgetCustomerProfileState extends State<WidgetCustomer> {
   }
 
   Future<void> fetchUserProfile() async {
-    Customer? result =
-        await CustomerApi.getCustomer(widget.customerId);
+    Customer? result = await CustomerApi.getCustomer(widget.customerId);
+    if (!mounted) return;
     setState(() {
       customer = result;
       isLoading = false;

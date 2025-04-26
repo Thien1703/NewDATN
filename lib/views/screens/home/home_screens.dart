@@ -3,11 +3,13 @@ import 'package:flutter/services.dart'; // Import để sử dụng SystemNaviga
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/customer.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
+import 'package:health_care/views/screens/apoointment_online/doctor_online/doctor_list_screen.dart';
 import 'package:health_care/views/screens/clinic/clinic_screen.dart';
 import 'package:health_care/views/screens/profile/profile_screen.dart';
 import 'package:health_care/views/screens/examination/examination_screen.dart';
 import 'package:health_care/views/screens/home/homePage.dart';
 import 'package:health_care/views/screens/tools/tools_screen.dart';
+import 'package:health_care/views/widgets/bottomSheet/header_bottomSheet.dart';
 import 'package:health_care/views/widgets/build_Draw.dart';
 
 class HomeScreens extends StatefulWidget {
@@ -88,9 +90,35 @@ class _HomeScreensState extends State<HomeScreens> {
             backgroundColor: AppColors.deepBlue,
             shape: const CircleBorder(),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ClinicScreen()),
+              showModalBottomSheet(
+                context: context,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                ),
+                builder: (context) => HeaderBottomSheet(
+                    title: 'Chọn hình thức đặt khám',
+                    body: Column(
+                      children: [
+                        SizedBox(height: 10),
+                        _buildContainer(
+                          'Đặt khám tại phòng khám',
+                          () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ClinicScreen()),
+                            );
+                          },
+                        ),
+                        _buildContainer('Đặt khám tư vấn online', () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DoctorListScreen()),
+                          );
+                        })
+                      ],
+                    )),
               );
             },
             child: const Icon(Icons.add, size: 30, color: Colors.white),
@@ -124,6 +152,40 @@ class _HomeScreensState extends State<HomeScreens> {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContainer(String label, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        margin: EdgeInsets.only(bottom: 10, left: 20, right: 20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.grey, width: 1),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.calendar_month_sharp,
+              color: AppColors.deepBlue,
+              size: 35,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -101,33 +101,33 @@ class ProfileConfig {
   }
 
   // Hiển thị danh sách hồ sơ đặt khám
-  static Future<List<Map<String, dynamic>>?> getAllProfiles() async {
-    final url = Uri.parse('$baseUrl/profile/get-all');
-    final token = await LocalStorageService.getToken();
+  // static Future<List<Map<String, dynamic>>?> getAllProfiles() async {
+  //   final url = Uri.parse('$baseUrl/profile/get-all');
+  //   final token = await LocalStorageService.getToken();
 
-    try {
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+  //   try {
+  //     final response = await http.post(
+  //       url,
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': 'Bearer $token',
+  //       },
+  //     );
 
-      final data = jsonDecode(utf8.decode(response.bodyBytes));
+  //     final data = jsonDecode(utf8.decode(response.bodyBytes));
 
-      if (response.statusCode == 200 && data['status'] == 0) {
-        final List<dynamic> profiles = data['data'];
-        return profiles.cast<Map<String, dynamic>>();
-      } else {
-        print('⚠️ Lỗi khi lấy danh sách hồ sơ: ${data['message']}');
-        return null;
-      }
-    } catch (e) {
-      print('❌ Lỗi khi gọi API get-all: $e');
-      return null;
-    }
-  }
+  //     if (response.statusCode == 200 && data['status'] == 0) {
+  //       final List<dynamic> profiles = data['data'];
+  //       return profiles.cast<Map<String, dynamic>>();
+  //     } else {
+  //       print('⚠️ Lỗi khi lấy danh sách hồ sơ: ${data['message']}');
+  //       return null;
+  //     }
+  //   } catch (e) {
+  //     print('❌ Lỗi khi gọi API get-all: $e');
+  //     return null;
+  //   }
+  // }
 
 // Lấy hồ sơ theo ID
   static Future<Map<String, dynamic>?> getProfileById(int id) async {
@@ -161,7 +161,7 @@ class ProfileConfig {
   // Lấy danh sách hồ sơ theo customerId
   static Future<List<Map<String, dynamic>>?> getProfilesByCustomerId(
       int customerId) async {
-    final url = Uri.parse('$baseUrl/profile/get-by-customer-id');
+    final url = Uri.parse('$baseUrl/profile/get-all-by-customer');
     final token = await LocalStorageService.getToken();
 
     try {
@@ -191,7 +191,7 @@ class ProfileConfig {
 
   // Xóa hồ sơ đặt khám theo ID
   static Future<String?> deleteProfileById(int id) async {
-    final url = Uri.parse('$baseUrl/profile/delete-by-id');
+    final url = Uri.parse('$baseUrl/profile/delete');
     final token = await LocalStorageService.getToken();
 
     try {
