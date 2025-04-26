@@ -368,7 +368,8 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                         children: [
                           Icon(Icons.security_rounded),
                           Text(
-                            'Bằng việc đăng ký / thanh toán bạn đã đọc và đồng ý với các điều khoản và điều kiện sử dụng của chúng tôi.',
+                            'fsfsfsdf',
+                            // 'Bằng việc đăng ký / thanh toán bạn đã đọc và đồng ý với các điều khoản và điều kiện sử dụng của chúng tôi.',
                             softWrap: true,
                           ),
                         ],

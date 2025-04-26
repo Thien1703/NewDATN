@@ -1,10 +1,16 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:health_care/models/customer.dart';
 import 'package:health_care/models/employee.dart';
+import 'package:health_care/models/specialty.dart';
 import 'package:health_care/services/local_storage_service.dart';
+import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/views/screens/apoointment_online/appointment_online_api.dart';
 import 'package:health_care/views/screens/apoointment_online/confirmAppointment_online_screen.dart';
 import 'package:health_care/views/screens/apoointment_online/doctor_online/doctor_model.dart';
+import 'package:health_care/views/screens/apoointment_online/doctor_online/selectedOnline/seleCustomerOnline.dart';
+import 'package:health_care/views/screens/apoointment_online/doctor_online/selectedOnline/seleServiceOnline.dart';
+import 'package:health_care/views/screens/apoointment_online/doctor_online/selectedOnline/seleSpecialtyOnline.dart';
 import 'package:health_care/views/screens/apoointment_online/payment_listener_screen.dart';
 import 'package:health_care/views/widgets/widgetSelectedTimeOnline.dart';
 import 'package:intl/intl.dart';
@@ -12,7 +18,7 @@ import 'package:intl/intl.dart';
 import 'package:health_care/common/app_colors.dart';
 
 class AppointmentOnlineScreen extends StatefulWidget {
-  final Employee doctor;
+  final Doctor doctor;
 
   const AppointmentOnlineScreen({super.key, required this.doctor});
 
@@ -24,6 +30,12 @@ class AppointmentOnlineScreen extends StatefulWidget {
 class _AppointmentOnlineScreenState extends State<AppointmentOnlineScreen> {
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
+  Customer? customer;
+  Specialty? _selectedSpecialty;
+  String? _selectedSpecialtyId;
+  String? _selectedServiceName;
+  int? _selectedServiceId;
+  String? selectedTimes;
 
   String generateRoomCode() {
     final random = Random();
@@ -127,10 +139,18 @@ class _AppointmentOnlineScreenState extends State<AppointmentOnlineScreen> {
                           ]),
                       child: Row(
                         children: [
-                          CircleAvatar(
-                            radius: 40,
-                            backgroundImage: NetworkImage(widget.doctor.avatar),
-                            onBackgroundImageError: (_, __) {},
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: AppColors.deepBlue, width: 1),
+                              shape: BoxShape.circle, // ✅ bo tròn viền
+                            ),
+                            child: CircleAvatar(
+                              radius: 40,
+                              backgroundImage:
+                                  NetworkImage(widget.doctor.avatar),
+                              onBackgroundImageError: (_, __) {},
+                            ),
                           ),
                           SizedBox(width: 10),
                           Expanded(
@@ -151,7 +171,7 @@ class _AppointmentOnlineScreenState extends State<AppointmentOnlineScreen> {
                                       fontSize: 16),
                                 ),
                                 Text(
-                                  'Chuyên khoa: ${widget.doctor.specialty.isNotEmpty ? widget.doctor.specialty.map((e) => e.name).join(', ') : "Chưa có chuyên khoa"}',
+                                  'Chuyên khoa: ${widget.doctor.specialties.isNotEmpty ? widget.doctor.specialties.map((e) => e.name).join(', ') : "Chưa có chuyên khoa"}',
                                   style: TextStyle(fontSize: 15),
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
@@ -163,93 +183,116 @@ class _AppointmentOnlineScreenState extends State<AppointmentOnlineScreen> {
                       ),
                     ),
                     _buildTitle('Đặt lịch khám này cho: '),
-                    Container(
-                      margin:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 215, 227, 241),
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey[500]!,
-                              blurRadius: 1,
-                              spreadRadius: 1,
-                            )
-                          ]),
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey[300]!,
-                                    blurRadius: 1,
-                                    spreadRadius: 1,
-                                  )
-                                ]),
-                            child: Column(
-                              children: [
-                                _buildRow('Họ và tên', 'Lê Văn Dũng'),
-                                _buildRow('Giới tính', 'Nam'),
-                                _buildRow('Ngày sinh', '07/10/2004'),
-                                _buildRow('Điện thoại', '0979 591 276'),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 17),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Xem chi tiết',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Text(
-                                    'Sửa hồ sơ',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: AppColors.deepBlue,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                    Selecustomeronline(
+                      onCustomerSelected: (value) {
+                        setState(() {
+                          customer = value;
+                        });
+                      },
                     ),
-                    SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Chọn hoặc tạo hồ sơ khác',
-                          style: TextStyle(
-                              color: AppColors.deepBlue,
-                              fontSize: 15.5,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        Icon(
-                          Icons.arrow_forward,
-                          size: 17,
-                          color: AppColors.deepBlue,
-                        )
-                      ],
-                    ),
+                    Text(
+                        'customerId:${customer?.id.toString() ?? 'không lấy được'}'),
                     const SizedBox(height: 15),
                     _buildTitle('Chọn chuyên khoa'),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      child: InkWell(
+                        onTap: () async {
+                          final selected =
+                              await showModalBottomSheet<Specialty>(
+                            context: context,
+                            isScrollControlled: true,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(20)),
+                            ),
+                            builder: (context) => Selespecialtyonline(
+                              specialties: widget.doctor.specialties,
+                            ),
+                          );
+
+                          if (selected != null) {
+                            setState(() {
+                              _selectedSpecialty = selected;
+                              _selectedSpecialtyId =
+                                  selected.id.toString(); // Lưu id chuyên khoa
+                            });
+                          }
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 15),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey[400]!,
+                                  blurRadius: 1,
+                                  spreadRadius: 1,
+                                )
+                              ]),
+                          child: Text(
+                            _selectedSpecialty?.name ?? 'Chọn chuyên khoa',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      _selectedSpecialtyId != null
+                          ? 'SpecialtyId: $_selectedSpecialtyId'
+                          : 'SpecialtyId: Chưa chọn',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    ),
                     _buildTitle('Chọn dịch vụ'),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      child: InkWell(
+                        onTap: () async {
+                          final result =
+                              await showModalBottomSheet<Map<String, dynamic>>(
+                            context: context,
+                            builder: (context) => Seleserviceonline(
+                              serviceId: _selectedSpecialtyId.toString(),
+                            ),
+                          );
+
+                          if (result != null) {
+                            setState(() {
+                              _selectedServiceName = result['name'];
+                              _selectedServiceId = result['id'];
+                            });
+                          }
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 15),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey[400]!,
+                                  blurRadius: 1,
+                                  spreadRadius: 1,
+                                )
+                              ]),
+                          child: Text(
+                            _selectedServiceName ?? 'Chọn dịch vụ',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Text(_selectedServiceId != null
+                        ? 'ID dịch vụ: $_selectedServiceId'
+                        : 'ID địch vụ: Chưa có'),
                     _buildTitle('Chọn ngày khám'),
                     ListTile(
                       leading: const Icon(Icons.calendar_today),
@@ -273,7 +316,25 @@ class _AppointmentOnlineScreenState extends State<AppointmentOnlineScreen> {
                       },
                     ),
                     _buildTitle('Chọn giờ khám'),
-                    Widgetselectedtimeonline(),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildTitle('Chọn giờ khám'),
+                        Widgetselectedtimeonline(
+                          onTimeSelected: (time) {
+                            setState(() {
+                              selectedTimes = time;
+                            });
+                            print('Giờ đã chọn từ con: $time');
+                          },
+                        ),
+                        if (selectedTimes != null)
+                          Padding(
+                            padding: EdgeInsets.all(12),
+                            child: Text('Giờ đã chọn: $selectedTimes'),
+                          ),
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -286,8 +347,7 @@ class _AppointmentOnlineScreenState extends State<AppointmentOnlineScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.deepBlue,
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(12), // Điều chỉnh độ bo góc
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                   onPressed: () {
@@ -295,14 +355,20 @@ class _AppointmentOnlineScreenState extends State<AppointmentOnlineScreen> {
                       context,
                       PageRouteBuilder(
                         pageBuilder: (context, animation, secondaryAnimation) {
-                          return ConfirmappointmentOnlineScreen(); // Màn hình tiếp theo
+                          return ConfirmappointmentOnlineScreen(
+                            clinicId: widget.doctor.clinic.id,
+                            customerId: customer!.id,
+                            date: selectedDate!,
+                            employeeId: widget.doctor.id,
+                            time: selectedTimes.toString(),
+                            serviceIds: [_selectedServiceId ?? 0],
+                          );
                         },
                         transitionsBuilder:
                             (context, animation, secondaryAnimation, child) {
-                          const begin = Offset(1.0, 0.0); // Bắt đầu từ bên phải
-                          const end = Offset.zero; // Kết thúc ở vị trí ban đầu
-                          const curve =
-                              Curves.easeInOut; // Hiệu ứng chuyển động mượt mà
+                          const begin = Offset(1.0, 0.0);
+                          const end = Offset.zero;
+                          const curve = Curves.easeInOut;
 
                           var tween = Tween(begin: begin, end: end)
                               .chain(CurveTween(curve: curve));

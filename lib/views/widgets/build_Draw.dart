@@ -186,7 +186,7 @@ class _BuildDrawState extends State<BuildDraw> {
                     ),
                     ListTile(
                       title: Text(
-                        'Tư vấn khám bệnh qua video',
+                        'Đặt khám tư vấn online',
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,

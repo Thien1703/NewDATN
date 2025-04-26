@@ -1,8 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 
-class Widgetselectedtimeonline extends StatelessWidget {
-  const Widgetselectedtimeonline({super.key});
+class Widgetselectedtimeonline extends StatefulWidget {
+  final Function(String) onTimeSelected;
+
+  const Widgetselectedtimeonline({
+    super.key,
+    required this.onTimeSelected,
+  });
+
+  @override
+  State<Widgetselectedtimeonline> createState() =>
+      _WidgetselectedtimeonlineState();
+}
+
+class _WidgetselectedtimeonlineState extends State<Widgetselectedtimeonline> {
+  String? _selectedTime;
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -34,13 +48,44 @@ class Widgetselectedtimeonline extends StatelessWidget {
               height: 150,
               child: TabBarView(
                 children: [
-                  Center(child: Text('Nội dung buổi sáng')),
-                  Center(child: Text('Nội dung buổi chiều')),
+                  _buildTimeButtons(['07:00', '08:00', '09:00', '10:00']),
+                  _buildTimeButtons(['13:00', '14:00', '15:00']),
                 ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildTimeButtons(List<String> times) {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Wrap(
+        spacing: 12,
+        runSpacing: 12,
+        children: times.map((time) {
+          final isSelected = _selectedTime == time;
+          return ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _selectedTime = time;
+              });
+              widget.onTimeSelected(time); // Gửi giờ ra ngoài
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isSelected ? AppColors.deepBlue : Colors.white,
+              foregroundColor: isSelected ? Colors.white : AppColors.deepBlue,
+              side: BorderSide(color: AppColors.deepBlue),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            ),
+            child: Text(time),
+          );
+        }).toList(),
       ),
     );
   }

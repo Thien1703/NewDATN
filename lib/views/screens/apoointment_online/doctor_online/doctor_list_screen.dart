@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
-import 'package:health_care/models/employee.dart';
 import 'package:health_care/views/screens/apoointment_online/appointment_online_screen.dart';
 import 'package:health_care/views/screens/apoointment_online/doctor_online/doctor_api.dart';
 import 'package:health_care/views/screens/apoointment_online/doctor_online/doctor_detail_screen.dart';
 import 'package:health_care/views/screens/apoointment_online/doctor_online/doctor_model.dart';
 import 'package:health_care/views/widgets/bottomSheet/widget_filterSpecialty.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
+import 'package:shimmer/shimmer.dart';
 
 class DoctorListScreen extends StatefulWidget {
   const DoctorListScreen({super.key});
@@ -16,7 +16,7 @@ class DoctorListScreen extends StatefulWidget {
 }
 
 class _DoctorListScreenState extends State<DoctorListScreen> {
-  List<Employee>? employee;
+  List<Doctor>? doctor;
 
   @override
   void initState() {
@@ -25,9 +25,9 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
   }
 
   void fetchEmployee() async {
-    List<Employee>? data = await DoctorApi.getAllOnlineDoctors();
+    List<Doctor>? data = await DoctorApi.getAllOnlineDoctors();
     setState(() {
-      employee = data;
+      doctor = data;
     });
   }
 
@@ -86,23 +86,21 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
                 ),
               ],
             ),
-            employee == null
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : employee != null
+            doctor == null
+                ? _buildLoadingData()
+                : doctor != null
                     ? ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: employee!.length,
+                        itemCount: doctor!.length,
                         itemBuilder: (context, index) {
-                          final employees = employee![index];
+                          final doctors = doctor![index];
                           return InkWell(
                             onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      DoctorDetailScreen(employee: employees),
+                                      DoctorDetailScreen(doctor: doctors),
                                 )),
                             child: Container(
                               padding: EdgeInsets.symmetric(
@@ -123,7 +121,7 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Image.network(
-                                    employees.avatar,
+                                    doctors.avatar,
                                     width: 90,
                                     height: 100,
                                     fit: BoxFit.cover,
@@ -135,7 +133,7 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Bác sĩ ${employees.fullName}',
+                                          'Bác sĩ ${doctors.fullName}',
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20,
@@ -147,7 +145,7 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
                                           height: 5,
                                         ),
                                         Text(
-                                          'Chuyên khoa: ${employees.specialty.map((e) => e.name).join(', ')}',
+                                          'Chuyên khoa: ${doctors.specialties.map((e) => e.name).join(', ')}',
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
@@ -167,8 +165,7 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
                                                     MaterialPageRoute(
                                                       builder: (context) =>
                                                           AppointmentOnlineScreen(
-                                                              doctor:
-                                                                  employees),
+                                                              doctor: doctors),
                                                     ));
                                               },
                                               style: OutlinedButton.styleFrom(
@@ -210,26 +207,53 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
     );
   }
 
-  Widget _buildRow({required String label, required String value}) {
-    return Container(
-      child: Row(
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
+  Widget _buildLoadingData() {
+    return Expanded(
+      // ← Thêm Expanded vào đây
+      child: ListView.builder(
+        itemCount: 5,
+        itemBuilder: (context, index) {
+          return Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 14,
+                          width: double.infinity,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          height: 14,
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
-            softWrap: true,
-          ),
-        ],
+          );
+        },
       ),
     );
   }

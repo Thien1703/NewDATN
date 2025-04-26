@@ -6,9 +6,8 @@ import 'package:health_care/config/app_config.dart';
 import 'package:health_care/services/local_storage_service.dart';
 
 class DoctorApi {
-  static Future<List<Employee>> getAllOnlineDoctors() async {
-    final url =
-        Uri.parse('${AppConfig.baseUrl}/employee/get-all-doctor-online');
+  static Future<List<Doctor>> getAllOnlineDoctors() async {
+    final url = Uri.parse('${AppConfig.baseUrl}/employee/get-all-doctor');
     String? token = await LocalStorageService.getToken();
 
     if (token == null) {
@@ -32,8 +31,8 @@ class DoctorApi {
         final data = jsonDecode(response.body);
 
         if (data['status'] == 0 && data['data'] is List) {
-          List<Employee> doctors = (data['data'] as List)
-              .map((item) => Employee.fromJson(item))
+          List<Doctor> doctors = (data['data'] as List)
+              .map((item) => Doctor.fromJson(item))
               .toList();
           return doctors;
         } else {

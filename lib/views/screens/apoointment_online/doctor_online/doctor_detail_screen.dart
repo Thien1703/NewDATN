@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/employee.dart';
 import 'package:health_care/views/screens/apoointment_online/appointment_online_screen.dart';
+import 'package:health_care/views/screens/apoointment_online/doctor_online/doctor_model.dart';
 import 'package:intl/intl.dart';
 
 class DoctorDetailScreen extends StatefulWidget {
-  final Employee employee;
+  final Doctor doctor;
 
-  const DoctorDetailScreen({super.key, required this.employee});
+  const DoctorDetailScreen({super.key, required this.doctor});
 
   @override
   _DoctorDetailScreenState createState() => _DoctorDetailScreenState();
@@ -57,7 +58,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                       ),
                       child: CircleAvatar(
                         radius: size.width * 0.14,
-                        backgroundImage: NetworkImage(widget.employee.avatar),
+                        backgroundImage: NetworkImage(widget.doctor.avatar),
                         onBackgroundImageError: (_, __) {},
                         backgroundColor: Colors.transparent,
                       ),
@@ -65,7 +66,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Bác sĩ ${widget.employee.fullName}',
+                    'Bác sĩ ${widget.doctor.fullName}',
                     style: TextStyle(
                         fontSize: isSmall ? 18 : 25,
                         fontWeight: FontWeight.bold,
@@ -84,8 +85,8 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                       ),
                       Expanded(
                         child: Text(
-                          DateFormat('dd / MM / yyyy').format(
-                              DateTime.parse(widget.employee.birthDate)),
+                          DateFormat('dd / MM / yyyy')
+                              .format(DateTime.parse(widget.doctor.birthDate)),
                           softWrap: true,
                           style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
@@ -106,7 +107,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                       ),
                       Expanded(
                         child: Text(
-                          widget.employee.gender == 'Male' ? 'Nam' : 'Nữ',
+                          widget.doctor.gender == 'Male' ? 'Nam' : 'Nữ',
                           softWrap: true,
                           style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
@@ -145,7 +146,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  widget.employee.specialty.isEmpty
+                  widget.doctor.specialties.isEmpty
                       ? Text(
                           'Chưa có chuyên khoa',
                           style: TextStyle(fontSize: 16, color: Colors.black),
@@ -155,10 +156,10 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                           child: ListView.builder(
                             scrollDirection:
                                 Axis.horizontal, // Cuộn theo chiều ngang
-                            itemCount: widget.employee.specialty.length,
+                            itemCount: widget.doctor.specialties.length,
                             itemBuilder: (context, index) {
                               final specialty =
-                                  widget.employee.specialty[index];
+                                  widget.doctor.specialties[index];
                               return Container(
                                 width: size.width *
                                     0.25, // Cố định chiều dài cho Container
@@ -271,12 +272,12 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'BS. ${widget.employee.fullName}, hiện đang công tác tại Phòng khám ${widget.employee.clinic.name}, là người có nhiều kinh nghiệm trong lĩnh vực Nội khoa- Da liễu.',
+                          'BS. ${widget.doctor.fullName}, hiện đang công tác tại Phòng khám ${widget.doctor.clinic.name}, là người có nhiều kinh nghiệm trong lĩnh vực Nội khoa- Da liễu.',
                           textAlign: TextAlign.justify,
                           style: TextStyle(fontSize: 15),
                         ),
                         Text(
-                          'Bác sĩ ${widget.employee.fullName} đã hoàn thành lớp kiến thức và thực hành cơ bản chuyên khoa Da Liễu tại Đại Học Y Dược TP HCM loại giỏi, hoàn thành các khóa đào tạo liên tục hằng năm.',
+                          'Bác sĩ ${widget.doctor.fullName} đã hoàn thành lớp kiến thức và thực hành cơ bản chuyên khoa Da Liễu tại Đại Học Y Dược TP HCM loại giỏi, hoàn thành các khóa đào tạo liên tục hằng năm.',
                           textAlign: TextAlign.justify,
                           style: TextStyle(fontSize: 15),
                         ),
@@ -326,7 +327,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                           ),
                         ),
                         Text(
-                          '-Năm 2021 - 2025: Phòng khám Đa Khoa FPT địa chỉ ${widget.employee.clinic.name}',
+                          '-Năm 2021 - 2025: Phòng khám Đa Khoa FPT địa chỉ ${widget.doctor.clinic.name}',
                           textAlign: TextAlign.justify,
                           style: TextStyle(fontSize: 15),
                         ),
@@ -390,7 +391,7 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              AppointmentOnlineScreen(doctor: widget.employee),
+                              AppointmentOnlineScreen(doctor: widget.doctor),
                         ));
                   },
                   style: ElevatedButton.styleFrom(

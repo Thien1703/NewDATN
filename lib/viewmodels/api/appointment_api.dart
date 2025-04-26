@@ -1,3 +1,6 @@
+import 'package:health_care/models/appointment/appointmentOnline_Create.dart';
+import 'package:health_care/models/appointment/bookingOnlineInfo.dart';
+import 'package:health_care/models/appointment/statusAppointment.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:health_care/config/app_config.dart';
@@ -276,6 +279,7 @@ class AppointmentApi {
     }
   }
 
+  //đặt lịch offline
   static Future<Appointment?> getBooking(
       AppointmentCreate appointmentCreate) async {
     final url =
@@ -313,6 +317,65 @@ class AppointmentApi {
     } else {
       print('API Lỗi: ${response.statusCode}');
       return null;
+    }
+  }
+
+// đặt lịch online
+  static Future<ApiResponse<BookingOnlineInfo?>> getBookingOnline(
+      AppointmentCreateOnline appointmentCreateOnline) async {
+    final url =
+        Uri.parse('${AppConfig.baseUrl}/appointment/create-online-and-pay');
+    String? token = await LocalStorageService.getToken();
+
+    if (token == null) {
+      print('❌ Không tìm thấy token.');
+      return ApiResponse(statusCode: 401, message: 'Không tìm thấy token');
+    }
+
+    final body = json.encode(appointmentCreateOnline.toJson());
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: body,
+      );
+
+      print('📩 Status code: ${response.statusCode}');
+      print('📩 Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final jsonBody = json.decode(response.body);
+        if (jsonBody['status'] == 0) {
+          final data = jsonBody['data'];
+          return ApiResponse(
+            statusCode: 200,
+            data: BookingOnlineInfo.fromJson(data),
+          );
+        } else if (jsonBody['status'] == 409) {
+          // Xử lý đặt lịch trùng dịch vụ
+          return ApiResponse(
+            statusCode: 409,
+            message: jsonBody['message'] ?? 'Bạn đã đặt lịch dịch vụ này rồi.',
+          );
+        } else {
+          return ApiResponse(
+            statusCode: 400,
+            message: jsonBody['message'] ?? 'Đặt lịch thất bại',
+          );
+        }
+      } else {
+        return ApiResponse(
+          statusCode: response.statusCode,
+          message: 'Lỗi API: ${response.reasonPhrase}',
+        );
+      }
+    } catch (e) {
+      print('❌ Lỗi kết nối API: $e');
+      return ApiResponse(statusCode: 500, message: 'Lỗi kết nối tới máy chủ');
     }
   }
 }

@@ -1,10 +1,33 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
-import 'package:health_care/views/widgets/widget_customerPainted.dart';
+import 'package:health_care/models/appointment/appointmentOnline_Create.dart';
+import 'package:health_care/services/local_storage_service.dart';
+import 'package:health_care/viewmodels/api/appointment_api.dart';
+import 'package:health_care/views/screens/apoointment_online/payment_listener_screen.dart';
+import 'package:health_care/views/screens/apoointment_online/receiveAppont_online_screen.dart';
+import 'package:health_care/views/screens/home/home_screens.dart';
+import 'package:intl/intl.dart';
 
 class ConfirmappointmentOnlineScreen extends StatefulWidget {
-  const ConfirmappointmentOnlineScreen({super.key});
+  const ConfirmappointmentOnlineScreen({
+    super.key,
+    required this.clinicId,
+    required this.customerId,
+    this.customeProfileId = 0,
+    required this.date,
+    required this.time,
+    this.isOnline = 1,
+    required this.employeeId,
+    required this.serviceIds,
+  });
+  final int clinicId;
+  final int customerId;
+  final int customeProfileId;
+  final DateTime date;
+  final String time;
+  final int isOnline;
+  final int employeeId;
+  final List<int> serviceIds;
 
   @override
   State<ConfirmappointmentOnlineScreen> createState() =>
@@ -21,24 +44,24 @@ class _ConfirmappointmentOnlineScreenState
           onPressed: () {
             Navigator.pop(
               context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) {
-                  return ConfirmappointmentOnlineScreen(); // Trang bạn muốn quay lại
-                },
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  const begin = Offset(1.0, 0.0); // Di chuyển từ phải sang trái
-                  const end = Offset.zero; // Kết thúc tại vị trí ban đầu
-                  const curve = Curves.easeInOut; // Hiệu ứng mượt mà
+              // PageRouteBuilder(
+              //   pageBuilder: (context, animation, secondaryAnimation) {
+              //     return ConfirmappointmentOnlineScreen(); // Trang bạn muốn quay lại
+              //   },
+              //   transitionsBuilder:
+              //       (context, animation, secondaryAnimation, child) {
+              //     const begin = Offset(1.0, 0.0); // Di chuyển từ phải sang trái
+              //     const end = Offset.zero; // Kết thúc tại vị trí ban đầu
+              //     const curve = Curves.easeInOut; // Hiệu ứng mượt mà
 
-                  var tween = Tween(begin: begin, end: end)
-                      .chain(CurveTween(curve: curve));
-                  var offsetAnimation = animation.drive(tween);
+              //     var tween = Tween(begin: begin, end: end)
+              //         .chain(CurveTween(curve: curve));
+              //     var offsetAnimation = animation.drive(tween);
 
-                  return SlideTransition(
-                      position: offsetAnimation, child: child);
-                },
-              ),
+              //     return SlideTransition(
+              //         position: offsetAnimation, child: child);
+              //   },
+              // ),
             );
           },
           icon: Icon(Icons.arrow_back_ios),
@@ -105,7 +128,19 @@ class _ConfirmappointmentOnlineScreenState
                             color: Colors.blue,
                             borderRadius: BorderRadius.circular(15)),
                         child: Column(
-                          children: [Row()],
+                          children: [
+                            Text('Clinic ID: ${widget.clinicId}'),
+                            Text('Customer ID: ${widget.customerId}'),
+                            Text(
+                                'CustomerProfile ID: ${widget.customeProfileId}'),
+                            Text('isOnline: ${widget.isOnline}'),
+                            Text(
+                                'Date: ${DateFormat('yyyy-MM-dd').format(widget.date)}'),
+                            Text('Time: ${widget.time}'),
+                            Text('Employee ID: ${widget.employeeId}'),
+                            Text(
+                                'Selected Services: ${widget.serviceIds.join(', ')}'),
+                          ],
                         ),
                       ),
                     ]),
@@ -122,7 +157,76 @@ class _ConfirmappointmentOnlineScreenState
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () async {
+                    final appointment = AppointmentCreateOnline(
+                      clinicId: widget.clinicId,
+                      customerId: widget.customerId,
+                      customerProfileId: widget.customeProfileId == 0
+                          ? null
+                          : widget.customeProfileId,
+                      date: DateFormat('yyyy-MM-dd').format(widget.date),
+                      time: widget.time,
+                      isOnline: widget.isOnline,
+                      employeeId: widget.employeeId,
+                      serviceIds: widget.serviceIds,
+                    );
+
+                    final response =
+                        await AppointmentApi.getBookingOnline(appointment);
+
+                    if (response != null) {
+                      if (response.statusCode == 200) {
+                        final bookingInfo =
+                            response.data; // lấy ra thông tin booking
+                        if (bookingInfo != null) {
+                          // 👉 LẤY TOKEN TRƯỚC
+                          final token =
+                              await LocalStorageService.getToken() ?? '';
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Đặt lịch thành công!'),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+
+                          // 👉 rồi mới Navigator.push
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PaymentListenerScreen(
+                                qrCode: bookingInfo.qrCode,
+                                checkoutUrl: bookingInfo.checkoutUrl,
+                                userId: widget.customerId,
+                                jwtToken: token,
+                              ),
+                            ),
+                          );
+                        }
+                      } else if (response.statusCode == 409) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Dịch vụ này đã được đặt rồi!'),
+                            backgroundColor: Colors.orange,
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Đặt lịch thất bại!'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Không kết nối được tới máy chủ!'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  },
                   child: const Text(
                     "Xác nhận đặt lịch",
                     style: TextStyle(fontSize: 18, color: Colors.white),
