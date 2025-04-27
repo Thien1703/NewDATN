@@ -6,16 +6,16 @@ import 'package:health_care/viewmodels/api/appointmentService_api.dart';
 import 'package:health_care/viewmodels/api/rating_api.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 
-class ShowservicestarScreen extends StatefulWidget {
+class ShowdoctorstarScreen extends StatefulWidget {
   final int appointmentId;
 
-  const ShowservicestarScreen({super.key, required this.appointmentId});
+  const ShowdoctorstarScreen({super.key, required this.appointmentId});
 
   @override
-  State<ShowservicestarScreen> createState() => _ShowservicestarScreenState();
+  State<ShowdoctorstarScreen> createState() => _ShowdoctorstarScreenState();
 }
 
-class _ShowservicestarScreenState extends State<ShowservicestarScreen> {
+class _ShowdoctorstarScreenState extends State<ShowdoctorstarScreen> {
   List<AppointmentService>? appointmentServices;
   bool _isSubmitting = false;
 
@@ -36,7 +36,7 @@ class _ShowservicestarScreenState extends State<ShowservicestarScreen> {
   }
 
   Future<void> submitRatings() async {
-    if (appointmentServices == null) return;
+    if (appointmentServices == null || _ratings.isEmpty) return;
 
     setState(() {
       _isSubmitting = true;
@@ -55,22 +55,25 @@ class _ShowservicestarScreenState extends State<ShowservicestarScreen> {
       if (rating > 0) {
         try {
           // Determine targetType dynamically (SERVICE or EMPLOYEE)
-          final targetType = item.service != null ? 'SERVICE' : 'EMPLOYEE';
+          final targetType =
+              'DOCTOR'; // Bạn có thể điều chỉnh lại logic nếu cần
 
-          final response = await RatingApi.writeApiRating(
+          final response = await RatingApi.writeApiRatingDoctor(
             widget.appointmentId,
-            serviceId,
             customerId,
             rating.toInt(),
             comment,
             targetType, // truyền targetType vào API
+            item.employee?.id, // Đưa serviceId vào nếu cần thiết
           );
+          print(response);
 
           if (response == null) {
             hasError = true;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('❌ Đánh giá thất bại cho dịch vụ $serviceId.'),
+                content: Text(
+                    '❌ Đánh giá thất bại cho dịch vụ ${item.service?.name ?? "không rõ"}'),
                 backgroundColor: Colors.red,
               ),
             );
@@ -82,7 +85,8 @@ class _ShowservicestarScreenState extends State<ShowservicestarScreen> {
           debugPrint('❌ Lỗi khi gửi đánh giá cho serviceId $serviceId: $e');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('❌ Lỗi gửi đánh giá cho dịch vụ $serviceId.'),
+              content: Text(
+                  '❌ Lỗi gửi đánh giá cho dịch vụ ${item.service?.name ?? "không rõ"}'),
               backgroundColor: Colors.red,
             ),
           );
@@ -133,31 +137,59 @@ class _ShowservicestarScreenState extends State<ShowservicestarScreen> {
                                 Row(
                                   children: [
                                     Image.network(
-                                      (item.service!.image.isNotEmpty)
-                                          ? item.service!.image
-                                          : 'https://via.placeholder.com/100x100.png?text=No+Image',
+                                      item.employee?.avatar ??
+                                          'https://via.placeholder.com/100x100.png?text=No+Image', // Nếu employee là null, sử dụng hình ảnh mặc định
                                       width: 100,
                                       height: 100,
                                       fit: BoxFit.cover,
                                       errorBuilder:
                                           (context, error, stackTrace) {
+                                        // Nếu có lỗi khi tải hình ảnh, hiển thị biểu tượng lỗi hoặc hình ảnh mặc định khác
                                         return Container(
                                           width: 100,
                                           height: 100,
                                           color: Colors.grey.shade300,
-                                          child: const Icon(Icons.broken_image,
-                                              size: 40, color: Colors.grey),
+                                          child: const Icon(
+                                            Icons.broken_image,
+                                            size: 40,
+                                            color: Colors.grey,
+                                          ),
                                         );
                                       },
                                     ),
-                                    const SizedBox(width: 12),
                                     Expanded(
                                       child: Text(
-                                        item.service!.name,
+                                        item.employee!.fullName,
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold),
                                       ),
                                     ),
+                                    // Image.network(
+                                    //   (item.service!.image.isNotEmpty)
+                                    //       ? item.service!.image
+                                    //       : 'https://via.placeholder.com/100x100.png?text=No+Image',
+                                    //   width: 100,
+                                    //   height: 100,
+                                    //   fit: BoxFit.cover,
+                                    //   errorBuilder:
+                                    //       (context, error, stackTrace) {
+                                    //     return Container(
+                                    //       width: 100,
+                                    //       height: 100,
+                                    //       color: Colors.grey.shade300,
+                                    //       child: const Icon(Icons.broken_image,
+                                    //           size: 40, color: Colors.grey),
+                                    //     );
+                                    //   },
+                                    // ),
+                                    // const SizedBox(width: 12),
+                                    // Expanded(
+                                    //   child: Text(
+                                    //     item.service!.name,
+                                    //     style: TextStyle(
+                                    //         fontWeight: FontWeight.bold),
+                                    //   ),
+                                    // ),
                                   ],
                                 ),
                                 const SizedBox(height: 12),

@@ -29,9 +29,15 @@ class _ShowevaluateScreen extends State<ShowevaluateScreen> {
     if (data != null) {
       Map<int, Service> fetchedServices = {};
       for (var rating in data) {
-        Service? service = await ServiceApi.getServiceById(rating.serviceId);
-        if (service != null) {
-          fetchedServices[rating.serviceId] = service;
+        // Kiểm tra null và xử lý mặc định nếu null
+        int serviceId = rating.serviceId ?? 0;
+
+        if (serviceId != 0) {
+          // Kiểm tra serviceId có hợp lệ không
+          Service? service = await ServiceApi.getServiceById(serviceId);
+          if (service != null) {
+            fetchedServices[serviceId] = service;
+          }
         }
       }
 
@@ -75,29 +81,31 @@ class _ShowevaluateScreen extends State<ShowevaluateScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-children: [
-  // Image.asset('assets/images/iconProfile.jpg',width: 30,),
-  Column(
-    children: [Text(
-                              ratings.customerName,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            Row(
-                              children: List.generate(5, (index) {
-                                return Icon(
-                                  index < ratings.stars
-                                      ? Icons.star
-                                      : Icons.star_border,
-                                  color: Colors.amber,
-                                  size: 20,
-                                );
-                              }),
-                            ),],
-  )
-],
+                              children: [
+                                // Image.asset('assets/images/iconProfile.jpg',width: 30,),
+                                Column(
+                                  children: [
+                                    Text(
+                                      ratings.customerName,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: List.generate(5, (index) {
+                                        return Icon(
+                                          index < ratings.stars
+                                              ? Icons.star
+                                              : Icons.star_border,
+                                          color: Colors.amber,
+                                          size: 20,
+                                        );
+                                      }),
+                                    ),
+                                  ],
+                                )
+                              ],
                             ),
                             Text(ratings.comment ?? 'Không xác định'),
                             Container(

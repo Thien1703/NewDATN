@@ -1,6 +1,7 @@
 import 'package:health_care/models/rating/rating.dart';
 import 'package:health_care/viewmodels/api/rating_api.dart';
 import 'package:health_care/views/screens/examination/paidDetail_screen.dart';
+import 'package:health_care/views/screens/examination/ratingStar/showDoctorStar_screen.dart';
 import 'package:health_care/views/screens/examination/ratingStar/showEvaluate_screen.dart';
 import 'package:health_care/views/screens/examination/ratingStar/showServiceStar_screen.dart';
 import 'package:health_care/views/screens/examination/unPaidDetail_screen.dart';
@@ -173,7 +174,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
     );
   }
 
-  Widget  _buildAppointmentCard(Appointment appointment) {
+  Widget _buildAppointmentCard(Appointment appointment) {
     return InkWell(
       onTap: () {
         appointment.status == "CANCELLED"
@@ -254,7 +255,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
               SizedBox(height: 10),
               Align(
                 alignment: Alignment.topRight,
-                child: appointment.status == "COMPLETED"
+                child: appointment.status == "PENDING"
                     ? _hasUnratedService(appointment.id)
                         ? InkWell(
                             onTap: () async {
@@ -262,6 +263,66 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ShowservicestarScreen(
+                                      appointmentId: appointment.id),
+                                ),
+                              );
+                              if (result == true) {
+                                fetchAppointments(); // Gọi lại API để load dữ liệu mới
+                              }
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.red, width: 1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                'Đánh giá',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                          )
+                        : InkWell(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ShowevaluateScreen(
+                                    appointmentId: appointment.id,
+                                  ),
+                                )),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.grey, width: 1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                'Xem đánh giá',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                            ),
+                          )
+                    : SizedBox.shrink(),
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: appointment.status == "ONLINE"
+                    ? _hasUnratedService(appointment.id)
+                        ? InkWell(
+                            onTap: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ShowdoctorstarScreen(
                                       appointmentId: appointment.id),
                                 ),
                               );

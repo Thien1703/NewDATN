@@ -2,26 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_icons.dart';
 
-class HeaderBottomSheet extends StatelessWidget {
-  const HeaderBottomSheet({
+class HeaderBottomSheet1 extends StatelessWidget {
+  const HeaderBottomSheet1({
     super.key,
     required this.title,
     required this.body,
-    this.isFulHeight = false,
   });
 
   final String title;
   final Widget body;
-  final bool isFulHeight;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: AppColors.ghostWhite,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: Column(
-          mainAxisSize: isFulHeight ? MainAxisSize.max : MainAxisSize.min,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               margin: const EdgeInsets.only(bottom: 10),

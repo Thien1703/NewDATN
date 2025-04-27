@@ -59,7 +59,7 @@ class Employee {
               : "Chưa cập nhật",
       avatar: json['avatar'] != null && json['avatar'].toString().isNotEmpty
           ? json['avatar']
-          : "assets/images/imageError.png",
+          : "https://suckhoe123.vn/uploads/users/doctor-avatar-male_n2gdre0x_1.png",
     );
   }
 
@@ -90,7 +90,8 @@ class Employee {
       specialty: [],
       gender: "Chưa cập nhật",
       birthDate: "Chưa cập nhật",
-      avatar: "assets/images/imageError.png",
+      avatar:
+          "https://suckhoe123.vn/uploads/users/doctor-avatar-male_n2gdre0x_1.png",
     );
   }
 }
