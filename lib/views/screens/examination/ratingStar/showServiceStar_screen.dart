@@ -19,7 +19,7 @@ class _ShowservicestarScreenState extends State<ShowservicestarScreen> {
   List<AppointmentService>? appointmentServices;
   bool _isSubmitting = false;
 
-  // Map để lưu rating và comment theo serviceId
+  // Map to store rating and comment by serviceId
   final Map<int, double> _ratings = {};
   final Map<int, String> _comments = {};
 
@@ -36,7 +36,7 @@ class _ShowservicestarScreenState extends State<ShowservicestarScreen> {
   }
 
   Future<void> submitRatings() async {
-    if (appointmentServices == null) return;
+    if (appointmentServices == null || _ratings.isEmpty) return;
 
     setState(() {
       _isSubmitting = true;
@@ -63,7 +63,7 @@ class _ShowservicestarScreenState extends State<ShowservicestarScreen> {
             customerId,
             rating.toInt(),
             comment,
-            targetType, // truyền targetType vào API
+            targetType, // pass targetType to API
           );
 
           if (response == null) {
@@ -122,9 +122,12 @@ class _ShowservicestarScreenState extends State<ShowservicestarScreen> {
                         final serviceId = item.service?.id;
                         if (serviceId == null)
                           return SizedBox.shrink(); // Skip if no serviceId
-                        return Card(
-                          margin: const EdgeInsets.all(12),
-                          elevation: 5,
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          margin: const EdgeInsets.all(20),
                           child: Padding(
                             padding: const EdgeInsets.all(16),
                             child: Column(
@@ -204,28 +207,49 @@ class _ShowservicestarScreenState extends State<ShowservicestarScreen> {
                 Container(
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    child: _isSubmitting
-                        ? SizedBox(
-                            width: 20,
-                            child: const CircularProgressIndicator(),
-                          )
-                        : ElevatedButton(
-                            onPressed: submitRatings,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.deepBlue,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                  child: Center(
+                      child: _isSubmitting
+                          ? SizedBox(
+                              width: 40, // Adjust the size of the loader
+                              height: 40,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 3, // Thicker loader
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  AppColors.deepBlue,
+                                ),
                               ),
-                            ),
-                            child: const Text(
-                              'Gửi đánh giá',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                            ),
-                          ),
-                  ),
+                            )
+                          : Container(
+                              margin: EdgeInsets.symmetric(horizontal: 20),
+                              width: double
+                                  .infinity, // Makes the button take up the full width of the screen
+
+                              child: ElevatedButton(
+                                onPressed: _ratings.values.any((rating) =>
+                                        rating >
+                                        0) // Check if any rating exists
+                                    ? submitRatings
+                                    : null, // Disable button if no rating
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: _ratings.values
+                                          .any((rating) => rating > 0)
+                                      ? AppColors.deepBlue
+                                      : Colors.grey, // Button color changes
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 16, // Adjust vertical padding
+                                    horizontal: 32, // Adjust horizontal padding
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Gửi đánh giá',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
+                              ),
+                            )),
                 )
               ],
             ),

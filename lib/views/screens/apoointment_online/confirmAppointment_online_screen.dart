@@ -403,12 +403,12 @@ class _ConfirmappointmentOnlineScreenState
                                       await LocalStorageService.getToken() ??
                                           '';
 
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('Đặt lịch thành công!'),
-                                      backgroundColor: Colors.green,
-                                    ),
-                                  );
+                                  // ScaffoldMessenger.of(context).showSnackBar(
+                                  //   SnackBar(
+                                  //     content: Text('Đặt lịch thành công!'),
+                                  //     backgroundColor: Colors.green,
+                                  //   ),
+                                  // );
 
                                   Navigator.push(
                                     context,
@@ -552,6 +552,7 @@ class _ConfirmappointmentOnlineScreenState
                 color: const Color(0xFF656565),
               )
             : SizedBox.shrink(),
+        SizedBox(width: 10),
       ],
     );
   }

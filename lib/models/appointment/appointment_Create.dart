@@ -6,7 +6,7 @@ class AppointmentCreate {
   final String time;
   final String? status;
   final int? customerProfileId;
-  final List<int> serviceIds; // Thêm serviceIds vào model
+  final List<int> serviceIds;
 
   AppointmentCreate({
     this.id,
@@ -16,9 +16,10 @@ class AppointmentCreate {
     required this.time,
     this.customerProfileId,
     this.status,
-    required this.serviceIds, // Thêm serviceIds vào constructor
+    required this.serviceIds,
   });
 
+  // Factory constructor để chuyển JSON thành đối tượng AppointmentCreate
   factory AppointmentCreate.fromJson(Map<String, dynamic> json) {
     return AppointmentCreate(
       id: json['id'],
@@ -28,20 +29,21 @@ class AppointmentCreate {
       time: json['time'],
       customerProfileId: json['customerProfileId'],
       status: json['status'],
-      serviceIds: List<int>.from(
-          json['serviceIds'] ?? []), // Dùng List<int> cho serviceIds
+      serviceIds: List<int>.from(json['serviceIds'] ?? []),
     );
   }
 
+  // Hàm chuyển đối tượng AppointmentCreate thành JSON
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {
+    return {
+      'id': id,
       'clinicId': clinicId,
       'customerId': customerId,
       'date': date,
       'time': time,
       'customerProfileId': customerProfileId,
-      'serviceIds': serviceIds, // Thêm serviceIds vào toJson
+      'status': status,
+      'serviceIds': serviceIds,
     };
-    return data;
   }
 }

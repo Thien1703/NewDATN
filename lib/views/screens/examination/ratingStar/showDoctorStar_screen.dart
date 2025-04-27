@@ -138,13 +138,12 @@ class _ShowdoctorstarScreenState extends State<ShowdoctorstarScreen> {
                                   children: [
                                     Image.network(
                                       item.employee?.avatar ??
-                                          'https://via.placeholder.com/100x100.png?text=No+Image', // Nếu employee là null, sử dụng hình ảnh mặc định
+                                          'https://via.placeholder.com/100x100.png?text=No+Image',
                                       width: 100,
                                       height: 100,
                                       fit: BoxFit.cover,
                                       errorBuilder:
                                           (context, error, stackTrace) {
-                                        // Nếu có lỗi khi tải hình ảnh, hiển thị biểu tượng lỗi hoặc hình ảnh mặc định khác
                                         return Container(
                                           width: 100,
                                           height: 100,
@@ -164,32 +163,6 @@ class _ShowdoctorstarScreenState extends State<ShowdoctorstarScreen> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                     ),
-                                    // Image.network(
-                                    //   (item.service!.image.isNotEmpty)
-                                    //       ? item.service!.image
-                                    //       : 'https://via.placeholder.com/100x100.png?text=No+Image',
-                                    //   width: 100,
-                                    //   height: 100,
-                                    //   fit: BoxFit.cover,
-                                    //   errorBuilder:
-                                    //       (context, error, stackTrace) {
-                                    //     return Container(
-                                    //       width: 100,
-                                    //       height: 100,
-                                    //       color: Colors.grey.shade300,
-                                    //       child: const Icon(Icons.broken_image,
-                                    //           size: 40, color: Colors.grey),
-                                    //     );
-                                    //   },
-                                    // ),
-                                    // const SizedBox(width: 12),
-                                    // Expanded(
-                                    //   child: Text(
-                                    //     item.service!.name,
-                                    //     style: TextStyle(
-                                    //         fontWeight: FontWeight.bold),
-                                    //   ),
-                                    // ),
                                   ],
                                 ),
                                 const SizedBox(height: 12),
@@ -238,25 +211,40 @@ class _ShowdoctorstarScreenState extends State<ShowdoctorstarScreen> {
                   padding: EdgeInsets.symmetric(vertical: 10),
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 20),
-                    child: _isSubmitting
-                        ? SizedBox(
-                            width: 20,
-                            child: const CircularProgressIndicator(),
-                          )
-                        : ElevatedButton(
-                            onPressed: submitRatings,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.deepBlue,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                    child: ElevatedButton(
+                      onPressed: _isSubmitting
+                          ? null // Disable button when submitting
+                          : (_ratings.values.any((rating) => rating > 0)
+                              ? submitRatings
+                              : null), // Nếu không có đánh giá, nút sẽ bị disable
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _isSubmitting
+                            ? Colors.grey // Nút màu xám khi đang loading
+                            : _ratings.values.any((rating) => rating > 0)
+                                ? AppColors.deepBlue
+                                : Colors.grey,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                      ),
+                      child: _isSubmitting
+                          ? SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                                strokeWidth: 3,
                               ),
-                            ),
-                            child: const Text(
+                            )
+                          : const Text(
                               'Gửi đánh giá',
                               style:
                                   TextStyle(color: Colors.white, fontSize: 16),
                             ),
-                          ),
+                    ),
                   ),
                 )
               ],

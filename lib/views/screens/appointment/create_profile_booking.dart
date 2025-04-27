@@ -41,6 +41,7 @@ class _CreateProfileBooking extends State<CreateProfileBooking> {
       body: WidgetHeaderBody(
         iconBack: true,
         title: 'Tạo hồ sơ mới',
+        iconAdd: false,
         body: Container(
           margin: EdgeInsets.symmetric(horizontal: 25),
           child: Column(
