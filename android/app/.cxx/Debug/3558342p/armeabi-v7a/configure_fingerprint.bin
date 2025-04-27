@@ -2,54 +2,27 @@ C/C++ Structured LogO
 M
 KC:\src\flutter\packages\flutter_tools\gradle\src\main\groovy\CMakeLists.txtC
 A
-<<<<<<< HEAD
-?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	­“™ˆç2§ ˆÌŸÐß2m
+?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	Á¤ë¸ç2§ ˆÌŸÐß2m
 k
-iD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\additional_project_files.txt	­“™ˆç2 Ü„ãå2j
+iD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\additional_project_files.txt	Â¤ë¸ç2 ¥¤ë¸ç2j
 h
-fD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\android_gradle_build.json	­“™ˆç2¯ ’Ü„ãå2o
+fD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\android_gradle_build.json	Â¤ë¸ç2¯ ¦¤ë¸ç2o
 m
-kD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\android_gradle_build_mini.json	­“™ˆç2Œ ¡Ü„ãå2\
+kD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\android_gradle_build_mini.json	Â¤ë¸ç2Œ º¤ë¸ç2\
 Z
-XD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\build.ninja	­“™ˆç2ÔÒ ŠÛ„ãå2`
+XD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\build.ninja	Â¤ë¸ç2ÔÒ ¾£ë¸ç2`
 ^
-\D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\build.ninja.txt	­“™ˆç2e
+\D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\build.ninja.txt	Â¤ë¸ç2e
 c
-aD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\build_file_index.txt	­“™ˆç2K £Ü„ãå2f
+aD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\build_file_index.txt	Â¤ë¸ç2K ½¤ë¸ç2f
 d
-bD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\compile_commands.json	­“™ˆç2	j
+bD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\compile_commands.json	Â¤ë¸ç2	j
 h
-fD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\compile_commands.json.bin	­“™ˆç2
+fD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\compile_commands.json.bin	Â¤ë¸ç2
 p
 n
-lD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\metadata_generation_command.txt	­“™ˆç2É ¡Ü„ãå2c
+lD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\metadata_generation_command.txt	Â¤ë¸ç2É ¼¤ë¸ç2c
 a
-_D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\prefab_config.json	­“™ˆç2( £Ü„ãå2h
+_D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\prefab_config.json	Â¤ë¸ç2( ¼¤ë¸ç2h
 f
-dD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\symbol_folder_index.txt	­“™ˆç2[ £Ü„ãå2
-=======
-?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	Üšˆµç2§ ˆÌŸÐß2m
-k
-iD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\additional_project_files.txt	Üšˆµç2 Ü„ãå2j
-h
-fD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\android_gradle_build.json	Üšˆµç2¯ ’Ü„ãå2o
-m
-kD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\android_gradle_build_mini.json	Üšˆµç2Œ ¡Ü„ãå2\
-Z
-XD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\build.ninja	Üšˆµç2ÔÒ ŠÛ„ãå2`
-^
-\D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\build.ninja.txt	Üšˆµç2e
-c
-aD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\build_file_index.txt	Üšˆµç2K £Ü„ãå2f
-d
-bD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\compile_commands.json	Üšˆµç2	j
-h
-fD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\compile_commands.json.bin	Üšˆµç2
-p
-n
-lD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\metadata_generation_command.txt	Üšˆµç2É ¡Ü„ãå2c
-a
-_D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\prefab_config.json	Üšˆµç2( £Ü„ãå2h
-f
-dD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\symbol_folder_index.txt	Üšˆµç2[ £Ü„ãå2
->>>>>>> main
+dD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\symbol_folder_index.txt	Â¤ë¸ç2[ ½¤ë¸ç2
