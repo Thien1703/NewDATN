@@ -72,57 +72,122 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  // Widget _buildProfileHeader() {
+  //   return Container(
+  //     padding: const EdgeInsets.all(20),
+  //     width: double.infinity,
+  //     decoration: BoxDecoration(
+  //       color: AppColors.deepBlue,
+  //     ),
+  //     child: Row(
+  //       crossAxisAlignment: CrossAxisAlignment.end,
+  //       children: [
+  //         CircleAvatar(
+  //           radius: 40,
+  //           backgroundImage: userData?['avatar'] != null
+  //               ? NetworkImage(userData!['avatar'])
+  //               : const AssetImage(
+  //                   'assets/images/iconProfile.jpg',
+  //                 ) as ImageProvider,
+  //           backgroundColor: Colors.transparent,
+  //         ),
+  //         const SizedBox(width: 10),
+  //         Expanded(
+  //           child: Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               Text(
+  //                 userData?['fullName'] ?? 'Người dùng',
+  //                 style: const TextStyle(
+  //                   color: Colors.white,
+  //                   fontSize: 18,
+  //                   fontWeight: FontWeight.bold,
+  //                 ),
+  //                 overflow: TextOverflow.ellipsis,
+  //                 maxLines: 1,
+  //                 softWrap: false,
+  //               ),
+  //               Text(
+  //                 userData?['phoneNumber'] ?? 'Số điện thoại',
+  //                 style: const TextStyle(
+  //                   color: Colors.white,
+  //                   fontSize: 16,
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
+
   Widget _buildProfileHeader() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColors.deepBlue,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          CircleAvatar(
-            radius: 40,
-            backgroundImage: userData?['avatar'] != null
-                ? NetworkImage(userData!['avatar'])
-                : const AssetImage('assets/images/iconProfile.jpg')
-                    as ImageProvider,
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          width: double.infinity,
+          height: 100,
+          decoration: const BoxDecoration(
+            color: AppColors.deepBlue,
           ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  userData?['fullName'] ?? 'Người dùng',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+        ),
+        Positioned(
+          top: 45,
+          // Đẩy avatar xuống 1 nửa, đè ra ngoài
+          left: 0,
+          right: 0,
+          child: Column(
+            children: [
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  CircleAvatar(
+                    radius: 45,
+                    backgroundImage: userData?['avatar'] != null
+                        ? NetworkImage(userData!['avatar'])
+                        : const AssetImage('assets/images/iconProfile.jpg')
+                            as ImageProvider,
+                    backgroundColor: Colors.white,
                   ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  softWrap: false,
+                  // Positioned(
+                  //   bottom: 0,
+                  //   right: -2,
+                  //   child: Container(
+                  //     decoration: const BoxDecoration(
+                  //       color: Colors.white,
+                  //       shape: BoxShape.circle,
+                  //     ),
+                  //     padding: const EdgeInsets.all(4),
+                  //     child: const Icon(
+                  //       Icons.camera_alt,
+                  //       size: 16,
+                  //       color: Colors.black,
+                  //     ),
+                  //   ),
+                  // ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(
+                userData?['fullName'] ?? 'Người dùng',
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
-                Text(
-                  userData?['phoneNumber'] ?? 'Số điện thoại',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildAccountSection() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 100.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -133,8 +198,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 10),
           _buildMenuItem(Icons.person, "Thông tin cá nhân", () {
             Navigator.of(context)
-                .push(MaterialPageRoute(
-                    builder: (context) => InforProfileScreen()))
+                .push(
+              MaterialPageRoute(
+                builder: (context) => InforProfileScreen(),
+              ),
+            )
                 .then((_) {
               fetchUserProfile(); // Cập nhật lại dữ liệu khi trở về ProfileScreen
             });

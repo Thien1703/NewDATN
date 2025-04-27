@@ -147,14 +147,7 @@ class _HeaderRowState extends State<HeaderRow> {
                     size: 24,
                   ),
                 )
-              : IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.group_add_rounded,
-                    color: AppColors.deepBlue,
-                    size: 24,
-                  ),
-                ),
+              : const SizedBox.shrink(),
         ),
       ],
     );
