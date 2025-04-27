@@ -187,7 +187,8 @@ class AppointmentserviceApi {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData = jsonDecode(response.body);
-        if (responseData.containsKey('data') && responseData['data'] is List) {
+
+        if (responseData['data'] != null && responseData['data'] is List) {
           return (responseData['data'] as List)
               .map((e) => AppointmentService.fromJson(e))
               .toList();

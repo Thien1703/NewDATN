@@ -255,7 +255,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
               SizedBox(height: 10),
               Align(
                 alignment: Alignment.topRight,
-                child: appointment.status == "PENDING"
+                child: appointment.status == "COMPLETED"
                     ? _hasUnratedService(appointment.id)
                         ? InkWell(
                             onTap: () async {

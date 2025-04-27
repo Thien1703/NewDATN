@@ -7,6 +7,7 @@ import 'package:health_care/models/service.dart';
 import 'package:health_care/viewmodels/api/customerProfile_api.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/viewmodels/api/service_api.dart';
+import 'package:health_care/views/screens/appointment/steps/notiSucefully_screen.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
 import 'package:health_care/views/widgets/appointment/widget_customButton.dart';
 import 'package:health_care/viewmodels/api/appointment_api.dart';
@@ -70,6 +71,19 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     }
   }
 
+  String _calculateTotalAmount() {
+    double total = 0.0;
+    if (services != null) {
+      for (var service in services!) {
+        total += service.price ?? 0.0; // Giả sử mỗi dịch vụ có thuộc tính price
+      }
+    }
+
+    // Dùng NumberFormat để định dạng tổng tiền với dấu phân cách hàng nghìn
+    final formatCurrency = NumberFormat.currency(locale: 'vi_VN', symbol: 'đ');
+    return formatCurrency.format(total);
+  }
+
   void _bookAppointment() async {
     if (services == null || services!.isEmpty) {
       print('Chưa có dịch vụ');
@@ -91,37 +105,44 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     );
 
     final result = await AppointmentApi.getBooking(appointmentCreate);
-
+    print('result: $result');
     setState(() {
       isLoading = false;
     });
 
-    if (result == 0) {
-      // Đặt lịch thành công
+    if (result != null && result.status == 'PENDING') {
+      // Đặt lịch thành công, lấy appointmentId từ đối tượng Appointment
+      int appointmentId = result.id; // Lấy ID cuộc hẹn từ đối tượng Appointment
+      print('Appointment ID: $appointmentId');
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Đặt lịch thành công'),
           backgroundColor: Colors.green,
         ),
       );
+
+      // Pass the appointmentId to the NotiSucefully screen
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreens()),
-      );
-    } else if (result == 409) {
-      // Dịch vụ đã được đặt rồi
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Dịch vụ này đã được đặt rồi.'),
-          backgroundColor: Colors.orange,
+        MaterialPageRoute(
+          builder: (context) => NotiSucefully(appointmentId: appointmentId),
         ),
       );
-    } else {
-      // Các lỗi khác
+    } else if (result == null || result.status != 'PENDING') {
+      // Các lỗi khác hoặc cuộc hẹn không thành công
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Đặt lịch thất bại. Vui lòng thử lại.'),
           backgroundColor: Colors.red,
+        ),
+      );
+    } else {
+      // Trường hợp dịch vụ đã được đặt rồi (status 409)
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Dịch vụ này đã được đặt rồi.'),
+          backgroundColor: Colors.orange,
         ),
       );
     }
@@ -318,16 +339,6 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            Row(
-                              children: [
-                                Text('Giải thích'),
-                                SizedBox(width: 3),
-                                Icon(
-                                  Icons.help_outline,
-                                  size: 18,
-                                )
-                              ],
-                            )
                           ],
                         ),
                       ),
@@ -351,36 +362,10 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                             Divider(),
                             _buildRowValue('Phí tiện ích', 'Miễn phí'),
                             Divider(),
-                            _buildRowValue('Tổng thanh toán', '0đ'),
+                            _buildRowValue('Tổng thanh toán',
+                                _calculateTotalAmount().toString()),
                           ],
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 30, bottom: 10, top: 10),
-                        child: Text(
-                          'Hỗ trợ đặt khám',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Icon(Icons.chat),
-                          Text('Quy trình hủy lịch/ hoàn tiền'),
-                          Icon(Icons.chevron_right_rounded),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Icon(Icons.security_rounded),
-                          Text(
-                            'fsfsfsdf',
-                            // 'Bằng việc đăng ký / thanh toán bạn đã đọc và đồng ý với các điều khoản và điều kiện sử dụng của chúng tôi.',
-                            softWrap: true,
-                          ),
-                        ],
                       ),
                       SizedBox(height: 30),
                     ],
