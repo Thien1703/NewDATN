@@ -16,12 +16,16 @@ class VideoCallScreen extends StatefulWidget {
 class _VideoCallScreenState extends State<VideoCallScreen> {
   late final RtcEngine _agoraEngine;
   final List<int> _remoteUids = [];
+  final Set<int> _mutedVideoUids = {}; // ✅ lưu uid bị tắt cam
+
   bool _isLocalUserMuted = false;
   bool _isLocalVideoDisabled = false;
+  bool _isLocalFullscreen = false;
 
   static const String appId = '4792f5bf117d4fd691389e63d525b6e0';
   static const String tokenServerUrl =
       'https://backend-healthcare-up0d.onrender.com/api/agora/token';
+
   @override
   void initState() {
     super.initState();
@@ -43,25 +47,37 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
   Future<void> _initializeAgora() async {
     _agoraEngine = createAgoraRtcEngine();
 
-    await _agoraEngine.initialize(
-      RtcEngineContext(appId: appId),
-    );
+    await _agoraEngine.initialize(RtcEngineContext(appId: appId));
 
     _agoraEngine.registerEventHandler(
       RtcEngineEventHandler(
         onJoinChannelSuccess: (connection, elapsed) {
-          debugPrint('✅ Tham gia kênh thành công, UID: ${connection.localUid}');
+          _showSnackBar('✅ Tham gia kênh thành công');
         },
         onUserJoined: (connection, remoteUid, elapsed) {
-          debugPrint('👤 Người dùng tham gia: $remoteUid');
+          _showSnackBar('👤 Người dùng tham gia: $remoteUid');
           setState(() => _remoteUids.add(remoteUid));
         },
         onUserOffline: (connection, remoteUid, reason) {
-          debugPrint('👋 Người dùng rời: $remoteUid');
-          setState(() => _remoteUids.remove(remoteUid));
+          _showSnackBar('👋 Người dùng rời: $remoteUid');
+          setState(() {
+            _remoteUids.remove(remoteUid);
+            _mutedVideoUids.remove(remoteUid);
+          });
+        },
+        onUserMuteVideo: (connection, remoteUid, muted) {
+          setState(() {
+            if (muted) {
+              _mutedVideoUids.add(remoteUid);
+              _showSnackBar('📷 Người dùng $remoteUid đã tắt camera');
+            } else {
+              _mutedVideoUids.remove(remoteUid);
+              _showSnackBar('📷 Người dùng $remoteUid đã bật lại camera');
+            }
+          });
         },
         onError: (error, msg) {
-          debugPrint('❌ Lỗi Agora: $error - $msg');
+          _showSnackBar('❌ Lỗi Agora: $msg');
         },
       ),
     );
@@ -69,13 +85,12 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
     await _agoraEngine.enableVideo();
     await _agoraEngine.startPreview();
 
-    final token = await _fetchToken(widget.channelName); // 🔥 gọi token backend
-    final int myUid = DateTime.now().millisecondsSinceEpoch.remainder(1000000);
+    final token = await _fetchToken(widget.channelName);
 
     await _agoraEngine.joinChannel(
       token: token,
       channelId: widget.channelName,
-      uid: myUid,
+      uid: 0,
       options: const ChannelMediaOptions(
         channelProfile: ChannelProfileType.channelProfileCommunication,
         clientRoleType: ClientRoleType.clientRoleBroadcaster,
@@ -83,49 +98,22 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
     );
   }
 
-  Widget _buildControlPanel() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          IconButton(
-            icon: Icon(
-              _isLocalUserMuted ? Icons.mic_off : Icons.mic,
-              color: Colors.white,
-            ),
-            onPressed: _toggleMic,
-          ),
-          IconButton(
-            icon: Icon(
-              _isLocalVideoDisabled ? Icons.videocam_off : Icons.videocam,
-              color: Colors.white,
-            ),
-            onPressed: _toggleCamera,
-          ),
-          IconButton(
-            icon: const Icon(Icons.call_end),
-            color: Colors.red,
-            onPressed: _leaveChannel,
-          ),
-        ],
-      ),
-    );
-  }
-
   void _toggleMic() {
     setState(() => _isLocalUserMuted = !_isLocalUserMuted);
     _agoraEngine.muteLocalAudioStream(_isLocalUserMuted);
+    _showSnackBar(_isLocalUserMuted ? '🎙️ Mic đã tắt' : '🎙️ Mic đã bật');
   }
 
   void _toggleCamera() async {
     setState(() => _isLocalVideoDisabled = !_isLocalVideoDisabled);
     await _agoraEngine.muteLocalVideoStream(_isLocalVideoDisabled);
+    _showSnackBar(
+        _isLocalVideoDisabled ? '📷 Camera đã tắt' : '📷 Camera đã bật');
 
     if (_isLocalVideoDisabled) {
-      await _agoraEngine.stopPreview(); // 🛑 Dừng xem trước camera
+      await _agoraEngine.stopPreview();
     } else {
-      await _agoraEngine.startPreview(); // ✅ Bật lại camera khi mở
+      await _agoraEngine.startPreview();
     }
   }
 
@@ -134,22 +122,69 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
     Navigator.of(context).pop();
   }
 
+  void _showSnackBar(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: const TextStyle(fontSize: 16)),
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.blueAccent,
+      ),
+    );
+  }
+
   Widget _renderLocalPreview() {
     if (_isLocalVideoDisabled) {
       return Container(
-        color: Colors.black, // Màn hình đen
+        color: Colors.black,
         child: const Center(
           child: Icon(Icons.videocam_off, color: Colors.white, size: 40),
         ),
       );
     }
 
-    return AgoraVideoView(
-      controller: VideoViewController(
-        rtcEngine: _agoraEngine,
-        canvas: const VideoCanvas(uid: 0),
+    return GestureDetector(
+      onTap: () {
+        setState(() => _isLocalFullscreen = !_isLocalFullscreen);
+      },
+      child: AgoraVideoView(
+        controller: VideoViewController(
+          rtcEngine: _agoraEngine,
+          canvas: const VideoCanvas(uid: 0),
+        ),
       ),
     );
+  }
+
+  Widget _buildRemoteUserView(int uid) {
+    if (_mutedVideoUids.contains(uid)) {
+      // Người này đã tắt camera
+      return Container(
+        color: Colors.black,
+        child: Center(
+          child: CircleAvatar(
+            radius: 40,
+            backgroundColor: Colors.blue,
+            child: Text(
+              'U', // Chữ đại diện user (có thể lấy từ tên userInfo nếu có)
+              style: const TextStyle(fontSize: 30, color: Colors.white),
+            ),
+          ),
+        ),
+      );
+    } else {
+      return AgoraVideoView(
+        controller: VideoViewController.remote(
+          rtcEngine: _agoraEngine,
+          canvas: VideoCanvas(
+            uid: uid,
+            renderMode: RenderModeType.renderModeFit, // ✅ nằm trong VideoCanvas
+          ),
+          connection: RtcConnection(channelId: widget.channelName),
+        ),
+      );
+    }
   }
 
   Widget _renderRemoteViews() {
@@ -164,13 +199,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
 
     if (_remoteUids.length == 1) {
       return SizedBox.expand(
-        child: AgoraVideoView(
-          controller: VideoViewController.remote(
-            rtcEngine: _agoraEngine,
-            canvas: VideoCanvas(uid: _remoteUids[0]),
-            connection: RtcConnection(channelId: widget.channelName),
-          ),
-        ),
+        child: _buildRemoteUserView(_remoteUids[0]),
       );
     }
 
@@ -181,14 +210,34 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
       ),
       itemCount: _remoteUids.length,
       itemBuilder: (context, index) {
-        return AgoraVideoView(
-          controller: VideoViewController.remote(
-            rtcEngine: _agoraEngine,
-            canvas: VideoCanvas(uid: _remoteUids[index]),
-            connection: RtcConnection(channelId: widget.channelName),
-          ),
-        );
+        return _buildRemoteUserView(_remoteUids[index]);
       },
+    );
+  }
+
+  Widget _buildControlPanel() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          IconButton(
+            icon: Icon(_isLocalUserMuted ? Icons.mic_off : Icons.mic,
+                color: Colors.white),
+            onPressed: _toggleMic,
+          ),
+          IconButton(
+            icon: Icon(
+                _isLocalVideoDisabled ? Icons.videocam_off : Icons.videocam,
+                color: Colors.white),
+            onPressed: _toggleCamera,
+          ),
+          IconButton(
+            icon: const Icon(Icons.call_end, color: Colors.red),
+            onPressed: _leaveChannel,
+          ),
+        ],
+      ),
     );
   }
 
@@ -197,10 +246,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text(
-          'Mã phòng khám: ${widget.channelName}',
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
+        title: Text('Mã phòng khám: ${widget.channelName}'),
         centerTitle: true,
         backgroundColor: AppColors.deepBlue,
         shape: const RoundedRectangleBorder(
@@ -217,10 +263,15 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
                   Positioned(
                     bottom: 16,
                     right: 16,
-                    width: 120,
-                    height: 160,
+                    width: _isLocalFullscreen
+                        ? MediaQuery.of(context).size.width
+                        : 120,
+                    height: _isLocalFullscreen
+                        ? MediaQuery.of(context).size.height
+                        : 160,
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius:
+                          BorderRadius.circular(_isLocalFullscreen ? 0 : 12),
                       child: _renderLocalPreview(),
                     ),
                   ),
