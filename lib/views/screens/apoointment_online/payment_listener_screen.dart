@@ -25,15 +25,16 @@ class PaymentListenerScreen extends StatefulWidget {
 class _PaymentListenerScreenState extends State<PaymentListenerScreen> {
   bool _navigated = false;
 
-    @override
+  @override
   void initState() {
     super.initState();
-  
+
     final webSocketInstance = WebSocketManager.instance;
     if (webSocketInstance != null) {
       // Đăng ký lại callback
       webSocketInstance.onMessageReceived = _handleMessage;
-      webSocketInstance.onConnectionChange = (connected) => print("🟢 WebSocket: $connected");
+      webSocketInstance.onConnectionChange =
+          (connected) => print("🟢 WebSocket: $connected");
     } else {
       // Nếu chưa khởi tạo, khởi tạo mới
       WebSocketManager.getInstance(
@@ -46,13 +47,15 @@ class _PaymentListenerScreenState extends State<PaymentListenerScreen> {
   }
 
   void _handleMessage(Map<String, dynamic> message) {
-      print('📥 Received WebSocket message: $message'); // <- thêm dòng này để log ra mỗi lần nhận
+    print(
+        '📥 Received WebSocket message: $message'); // <- thêm dòng này để log ra mỗi lần nhận
     if (_navigated) return;
     if (message['type'] == 'PAID_APPOINTMENT') {
       final appointment = message['appointment'];
       final roomCode = appointment['roomCode'];
       final appointmentId = appointment['id'];
-    print('✅ Đã nhận PAID_APPOINTMENT, roomCode: $roomCode, appointmentId: $appointmentId');
+      print(
+          '✅ Đã nhận PAID_APPOINTMENT, roomCode: $roomCode, appointmentId: $appointmentId');
 
       _navigated = true;
 

@@ -5,117 +5,67 @@ import 'package:health_care/viewmodels/api/service_api.dart';
 import 'package:intl/intl.dart';
 
 class ServiceCartScreen extends StatefulWidget {
-  const ServiceCartScreen({super.key});
+  const ServiceCartScreen({
+    super.key,
+    required this.specialtyId,
+    this.previouslySelected,
+  });
+
+  final int specialtyId;
+  final List<Service>? previouslySelected;
 
   @override
   State<ServiceCartScreen> createState() => _ServiceCartScreenState();
 }
 
 class _ServiceCartScreenState extends State<ServiceCartScreen> {
-  List<Service>? services;
-  Map<String, List<Service>> groupedServices = {};
-  Map<String, List<Service>> filteredServices = {};
+  List<Service>? service;
+  List<Service>? filteredServices;
+  List<Service> selectedServices = [];
   TextEditingController searchController = TextEditingController();
-  Set<Service> selectedServices = {}; // Danh sách dịch vụ đã chọn
-  String selectedSpecialty = ''; // Lưu chuyên khoa đang được chọn
 
   @override
   void initState() {
     super.initState();
-    fetchServices();
+    selectedServices = widget.previouslySelected ?? [];
     searchController.addListener(_filterServices);
+    _loadServices();
   }
 
-  void fetchServices() async {
-    List<Service>? data = await ServiceApi.getAllServe();
-    if (data != null) {
-      setState(() {
-        services = data;
-        groupedServices = _groupBySpecialty(data);
-        filteredServices = groupedServices;
-      });
-    }
-  }
-
-  Map<String, List<Service>> _groupBySpecialty(List<Service> services) {
-    Map<String, List<Service>> grouped = {};
-    for (var service in services) {
-      String specialtyName = service.specialty.name ?? 'Không xác định';
-      if (!grouped.containsKey(specialtyName)) {
-        grouped[specialtyName] = [];
-      }
-      grouped[specialtyName]?.add(service);
-    }
-    return grouped;
+  void _loadServices() async {
+    final result = await ServiceApi.getOfflineServeById(widget.specialtyId);
+    setState(() {
+      service = result;
+      filteredServices = result;
+    });
   }
 
   void _filterServices() {
-    String query = searchController.text.toLowerCase();
-    if (query.isEmpty) {
+    if (searchController.text.isEmpty) {
       setState(() {
-        filteredServices = groupedServices;
+        filteredServices = service;
       });
-      return;
-    }
-
-    setState(() {
-      filteredServices = groupedServices.map((category, services) {
-        var filteredList = services
-            .where((service) => service.name.toLowerCase().contains(query))
+    } else {
+      setState(() {
+        filteredServices = service
+            ?.where((s) => s.name
+                .toLowerCase()
+                .contains(searchController.text.toLowerCase()))
             .toList();
-        return MapEntry(category, filteredList);
-      })
-        ..removeWhere((key, value) => value.isEmpty);
-    });
-
-    Map<String, List<Service>> temp = {};
-    groupedServices.forEach((specialty, serviceList) {
-      List<Service> filteredList = serviceList.where((service) {
-        return service.name.toLowerCase().contains(query) ||
-            specialty.toLowerCase().contains(query);
-      }).toList();
-
-      if (filteredList.isNotEmpty) {
-        temp[specialty] = filteredList;
-      }
-    });
-
-    setState(() {
-      filteredServices = temp;
-    });
+      });
+    }
   }
 
-  void _selectSpecialty(String specialty) {
-    setState(() {
-      selectedSpecialty = specialty;
-      if (specialty.isEmpty) {
-        filteredServices =
-            groupedServices; // Hiển thị tất cả dịch vụ khi không có chuyên khoa được chọn
-      } else {
-        filteredServices = {specialty: groupedServices[specialty]!};
-      }
-    });
+  String formatCurrency(num amount) {
+    final formatCurrency = NumberFormat.currency(locale: 'vi_VN', symbol: 'đ');
+    return formatCurrency.format(amount);
   }
 
-  void _toggleService(Service service) {
-    setState(() {
-      if (selectedServices.contains(service)) {
-        selectedServices.remove(service);
-      } else {
-        selectedServices.add(service);
-      }
-    });
-  }
-
-  int getTotalPrice() {
-    return selectedServices
-        .fold(0.0, (sum, service) => sum + service.price)
-        .round();
-  }
-
-  String formatCurrency(int amount) {
-    final formatter = NumberFormat("#,###", "vi_VN");
-    return "${formatter.format(amount)}VNĐ";
+  @override
+  void dispose() {
+    searchController.removeListener(_filterServices);
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -136,23 +86,19 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
+        onTap: () => FocusScope.of(context).unfocus(),
         child: Container(
           color: AppColors.ghostWhite,
+          padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             children: [
-              // Thanh tìm kiếm
+              // Search bar
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 15),
                 child: Container(
                   height: 50,
                   decoration: BoxDecoration(
@@ -160,366 +106,177 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(
                         color: const Color.fromARGB(255, 193, 199, 206),
-                        width: 1.5), // Đổi màu và độ dày border theo yêu cầu
+                        width: 1.5),
                   ),
                   child: Row(
                     children: [
-                      SizedBox(width: 10),
-                      const Icon(Icons.search,
-                          color: AppColors.deepBlue), // Tạo icon tìm kiếm
+                      const SizedBox(width: 10),
+                      const Icon(Icons.search, color: AppColors.deepBlue),
                       const SizedBox(width: 5),
                       Expanded(
                         child: TextField(
                           controller: searchController,
                           decoration: const InputDecoration(
                             hintText: 'Tìm kiếm dịch vụ, theo tên hoặc loại...',
-                            hintStyle: TextStyle(
-                              fontSize:
-                                  14, // Đặt kích thước font cho placeholder
-                            ),
-                            border: InputBorder
-                                .none, // Loại bỏ border của TextField
-                            isDense:
-                                true, // Đảm bảo rằng trường input không quá cao
+                            hintStyle: TextStyle(fontSize: 14),
+                            border: InputBorder.none,
+                            isDense: true,
                           ),
                         ),
                       ),
-                      if (searchController.text.isNotEmpty)
-                        IconButton(
-                          icon: const Icon(Icons.clear,
-                              color: Colors.black54), // Clear icon
-                          onPressed: () {
-                            searchController.clear();
-                            _filterServices(); // Clear filter khi icon được nhấn
-                          },
-                        ),
                     ],
                   ),
                 ),
               ),
-              // Danh sách dịch vụ
-              Expanded(
-                child: filteredServices.isEmpty
-                    ? const Center(child: CircularProgressIndicator())
-                    : Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: ListView(
-                          children: [
-                            // Row Chuyên khoa
-                            Padding(
-                              padding: EdgeInsets.zero,
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis
-                                    .horizontal, // Make the row scrollable horizontally
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    // Nút "Tất cả" luôn hiển thị
-                                    GestureDetector(
-                                      onTap: () => _selectSpecialty(
-                                          ''), // Lọc tất cả dịch vụ
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5),
-                                        child: Chip(
-                                          label: Text(
-                                            'Tất cả',
-                                            style: TextStyle(
-                                              color: selectedSpecialty.isEmpty
-                                                  ? Colors.white
-                                                  : Colors.black,
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                          backgroundColor:
-                                              selectedSpecialty.isEmpty
-                                                  ? AppColors.deepBlue
-                                                  : Color.fromARGB(
-                                                      255, 231, 230, 230),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    // Các chuyên khoa khác
-                                    ...groupedServices.keys.map((specialty) {
-                                      return GestureDetector(
-                                        onTap: () =>
-                                            _selectSpecialty(specialty),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 5),
-                                          child: Chip(
-                                            label: Text(
-                                              specialty,
-                                              style: TextStyle(
-                                                color: selectedSpecialty ==
-                                                        specialty
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            backgroundColor:
-                                                selectedSpecialty == specialty
-                                                    ? AppColors.deepBlue
-                                                    : Color.fromARGB(
-                                                        255, 231, 230, 230),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    }),
-                                  ],
-                                ),
-                              ),
+              // Service list
+              service == null
+                  ? const Expanded(
+                      child: Center(child: CircularProgressIndicator()))
+                  : filteredServices == null || filteredServices!.isEmpty
+                      ? const Expanded(
+                          child: Center(child: Text('Không có dịch vụ nào')))
+                      : Expanded(
+                          child: GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                              childAspectRatio: 0.95,
                             ),
-                            SizedBox(height: 20),
-                            ...filteredServices.entries.map(
-                              (entry) {
-                                return Container(
-                                  padding: EdgeInsets.only(bottom: 15),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                            itemCount: filteredServices!.length,
+                            itemBuilder: (context, index) {
+                              final services = filteredServices![index];
+                              final isSelected = selectedServices
+                                  .any((s) => s.id == services.id);
+
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    if (isSelected) {
+                                      selectedServices.removeWhere(
+                                          (s) => s.id == services.id);
+                                    } else {
+                                      selectedServices.add(services);
+                                    }
+                                  });
+                                },
+                                child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                      color: isSelected
+                                          ? AppColors.deepBlue
+                                          : Colors.transparent,
+                                      width: 1.5,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  elevation: 4,
+                                  color: Colors.white,
+                                  child: Stack(
                                     children: [
-                                      Padding(
-                                        padding: EdgeInsets.zero,
-                                        child: Container(
-                                          padding:
-                                              EdgeInsets.symmetric(vertical: 8),
-                                          color: AppColors.deepBlue,
-                                          width: double.infinity,
-                                          child: Center(
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Image.network(
+                                            services.image.isNotEmpty
+                                                ? services.image
+                                                : "assets/images/imageOnErrror.png",
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Image.asset(
+                                                "assets/images/imageOnErrror.png",
+                                                width: double.infinity,
+                                                height: 100,
+                                                fit: BoxFit.cover,
+                                              );
+                                            },
+                                            width: double.infinity,
+                                            height: 100,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 4),
                                             child: Text(
-                                              entry.key,
+                                              services.name,
                                               style: const TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                      SizedBox(height: 5),
-                                      GridView.builder(
-                                        shrinkWrap: true,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        padding: EdgeInsets.zero,
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2,
-                                          crossAxisSpacing: 5,
-                                          mainAxisSpacing: 5,
-                                          childAspectRatio: 0.84,
-                                        ),
-                                        itemCount: entry.value.length,
-                                        itemBuilder: (context, index) {
-                                          final service = entry.value[index];
-                                          bool isSelected = selectedServices
-                                              .contains(service);
-                                          return GestureDetector(
-                                            onTap: () =>
-                                                _toggleService(service),
-                                            child: Card(
-                                              color: Colors.white,
-                                              elevation: isSelected ? 10 : 3,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(16),
-                                                side: isSelected
-                                                    ? BorderSide(
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 4),
+                                            child: Row(
+                                              children: [
+                                                const Text('Giá: ',
+                                                    style: TextStyle(
                                                         color:
-                                                            AppColors.deepBlue,
-                                                        width: 2)
-                                                    : BorderSide.none,
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.zero,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Stack(
-                                                      children: [
-                                                        Container(
-                                                          height:
-                                                              110, // Đảm bảo luôn cố định chiều cao
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .withOpacity(
-                                                                        0.5),
-                                                                width: 1),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        12),
-                                                          ),
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        12),
-                                                            child:
-                                                                Image.network(
-                                                              service.image,
-                                                              width: double
-                                                                  .infinity,
-                                                              height: 110,
-                                                              fit: BoxFit.cover,
-                                                              errorBuilder:
-                                                                  (context,
-                                                                      error,
-                                                                      stackTrace) {
-                                                                return Container(
-                                                                  color: Colors
-                                                                          .grey[
-                                                                      300],
-                                                                  child: Image
-                                                                      .asset(
-                                                                    'assets/images/imageOnErrror.png',
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                    width: double
-                                                                        .infinity,
-                                                                    height:
-                                                                        110, // giữ đúng kích thước
-                                                                  ),
-                                                                );
-                                                              },
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Positioned(
-                                                          right: 10,
-                                                          top: 80,
-                                                          child: Container(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        6,
-                                                                    vertical:
-                                                                        3),
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Colors
-                                                                  .white
-                                                                  .withOpacity(
-                                                                      0.8),
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10),
-                                                            ),
-                                                            child: Row(
-                                                              children: [
-                                                                Icon(Icons.star,
-                                                                    color: Colors
-                                                                        .amber,
-                                                                    size: 18),
-                                                                SizedBox(
-                                                                    width: 4),
-                                                                Text(
-                                                                  service.averageRating !=
-                                                                          null
-                                                                      ? service
-                                                                          .averageRating!
-                                                                          .toStringAsFixed(
-                                                                              1)
-                                                                      : '0.0',
-                                                                  style:
-                                                                      const TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    fontSize:
-                                                                        14,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(height: 6),
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 5),
-                                                      child: Text(
-                                                        service.name,
-                                                        style: const TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 15,
-                                                        ),
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        maxLines: 2,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 4),
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                        horizontal: 5,
-                                                      ),
-                                                      child: Text(
-                                                        service.formattedPrice,
-                                                        style: const TextStyle(
-                                                          color: Colors.black54,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
+                                                            Color(0xFFDAA520))),
+                                                Text(
+                                                  formatCurrency(
+                                                      services.price),
+                                                  style: const TextStyle(
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 228, 164, 1),
+                                                  ),
                                                 ),
-                                              ),
+                                              ],
                                             ),
-                                          );
-                                        },
+                                          ),
+                                        ],
                                       ),
+                                      Positioned(
+                                        right: 0,
+                                        top: 70,
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 5, vertical: 3),
+                                          decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                255, 245, 244, 244),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                (services.averageRating ?? 0)
+                                                    .toStringAsFixed(1),
+                                                style: const TextStyle(
+                                                    fontSize: 11),
+                                              ),
+                                              Icon(Icons.star,
+                                                  color: AppColors.star,
+                                                  size: 20),
+                                            ],
+                                          ),
+                                        ),
+                                      )
                                     ],
                                   ),
-                                );
-                              },
-                            ),
-                            SizedBox(height: 20),
-                          ],
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-              ),
             ],
           ),
         ),
       ),
-
-      // thanh toán
+      // Bottom bar
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border(
-            top: BorderSide(color: Colors.grey.shade300, width: 1),
-          ),
+          border:
+              Border(top: BorderSide(color: Colors.grey.shade300, width: 1)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -540,38 +297,39 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                           TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                     ),
                     Text(
-                      formatCurrency(getTotalPrice()),
+                      formatCurrency(
+                        selectedServices.fold(
+                            0, (sum, item) => sum + item.price),
+                      ),
                       style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.deepBlue),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.deepBlue,
+                      ),
                     ),
                   ],
                 ),
-                SizedBox(width: 5),
+                const SizedBox(width: 5),
                 ElevatedButton(
                   onPressed: selectedServices.isEmpty
                       ? null
                       : () {
-                          Navigator.pop(context, {
-                            'selectedServiceList': selectedServices.toList(),
-                            'selectedServiceId':
-                                selectedServices.map((s) => s.id).toList(),
-                          });
+                          Navigator.pop(context, selectedServices);
                         },
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: selectedServices.isEmpty
-                          ? Colors.white
-                          : AppColors.deepBlue,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 4,
-                      textStyle: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      )),
+                    backgroundColor: selectedServices.isEmpty
+                        ? Colors.grey
+                        : AppColors.deepBlue,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 4,
+                    textStyle: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   child: const Text('XONG'),
                 ),
               ],
@@ -580,11 +338,5 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
   }
 }

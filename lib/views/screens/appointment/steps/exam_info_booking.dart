@@ -1,30 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/common/app_icons.dart';
-import 'package:health_care/viewmodels/api/clinic_api.dart';
+import 'package:health_care/views/screens/appointment/steps/selectedSteps/selected_Service.dart';
+import 'package:health_care/views/screens/appointment/steps/selectedSteps/selected_Specialty.dart';
 import 'package:health_care/views/widgets/appointment/widget_hospital_info_card.dart';
 import 'package:health_care/views/widgets/widget_select_item.dart';
 import 'package:health_care/views/widgets/appointment/widget_customButton.dart';
 import 'package:health_care/views/widgets/bottomSheet/select_day_widget.dart';
 import 'package:health_care/views/widgets/bottomSheet/select_time_widget.dart';
 import 'package:health_care/models/clinic.dart';
-import 'package:health_care/views/screens/cartService/serviceCart_screen.dart';
-import 'package:health_care/models/service.dart';
 import 'package:intl/intl.dart';
 
 class ExamInfoBooking extends StatefulWidget {
   const ExamInfoBooking({
     super.key,
     required this.onNavigateToScreen,
-    required this.clinicId,
+    required this.clinic,
   });
 
-  final void Function(int, String,
-      {int? clinicId,
-      List<int>? serviceIds,
-      String? date,
-      String? time}) onNavigateToScreen;
-  final int clinicId;
+  final void Function(
+    int,
+    String, {
+    Clinic clinic,
+    List<int>? serviceIds,
+    String? date,
+    String? time,
+  }) onNavigateToScreen;
+  final Clinic clinic;
 
   @override
   State<ExamInfoBooking> createState() => _ExamInfoBooking();
@@ -32,28 +34,14 @@ class ExamInfoBooking extends StatefulWidget {
 
 class _ExamInfoBooking extends State<ExamInfoBooking> {
   Clinic? clinices;
+  int? selectedSpecialtyId = 0;
   List<int> selectedServiceId = [];
   DateTime? selectedDate; // Lưu ngày
   String? selectedTime; // Lưu giờ
 
-  @override
-  void initState() {
-    super.initState();
-    fetchClinics();
-  }
-
-  void fetchClinics() async {
-    Clinic? data = await ClinicApi.getClinicById(widget.clinicId);
-    if (data != null) {
-      setState(() {
-        clinices = data;
-      });
-    }
-  }
-
-  void updateSelectedServices(List<int> serviceIds) {
+  void updateSelectedSpecialty(int id) {
     setState(() {
-      selectedServiceId = serviceIds;
+      selectedSpecialtyId = id;
     });
   }
 
@@ -85,9 +73,28 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
           Expanded(
             child: ListView(
               children: [
-                HospitalInfoWidget(clinicId: widget.clinicId),
+                HospitalInfoWidget(
+                  clinic: widget.clinic,
+                ),
+                SectionTitle(title: 'Chuyên khoa'),
+                SelectedSpecialty(
+                  onSelected: updateSelectedSpecialty,
+                ),
                 SectionTitle(title: 'Dịch vụ'),
-                ServiceSelector(onServicesSelected: updateSelectedServices),
+                IgnorePointer(
+                  ignoring: selectedSpecialtyId == 0,
+                  child: Opacity(
+                    opacity: selectedSpecialtyId != 0 ? 1 : 0.5,
+                    child: SelectedService(
+                      specialtyId: selectedSpecialtyId!,
+                      onServiceSelected: (ids) {
+                        setState(() {
+                          selectedServiceId = ids;
+                        });
+                      },
+                    ),
+                  ),
+                ),
                 SectionTitle(title: 'Ngày khám'),
                 IgnorePointer(
                   ignoring: !isServiceSelected,
@@ -95,7 +102,7 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
                     opacity: isServiceSelected ? 1 : 0.5,
                     child: DateSelector(
                       onDateSelected: updateSelectedDate,
-                      clinicId: widget.clinicId,
+                      clinicId: widget.clinic.id,
                     ),
                   ),
                 ),
@@ -119,7 +126,7 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
                     widget.onNavigateToScreen(
                       1,
                       'Chọn hồ sơ',
-                      clinicId: widget.clinicId,
+                      clinic: widget.clinic,
                       serviceIds: selectedServiceId,
                       date: DateFormat('yyyy-MM-dd').format(selectedDate!),
                       time: selectedTime!,
@@ -154,82 +161,6 @@ class SectionTitle extends StatelessWidget {
   }
 }
 
-class ServiceSelector extends StatefulWidget {
-  final Function(List<int>)
-      onServicesSelected; // Nhận callback để truyền lên ExamInfoBooking
-  const ServiceSelector({super.key, required this.onServicesSelected});
-
-  @override
-  State<ServiceSelector> createState() => _ServiceSelectorState();
-}
-
-class _ServiceSelectorState extends State<ServiceSelector> {
-  List<Service> selectedServices = [];
-  List<int> selectedServiceId = [];
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SelectItemWidget(
-          image: AppIcons.service2,
-          text: selectedServices.isEmpty
-              ? 'Chọn dịch vụ'
-              : 'Đã chọn ${selectedServices.length} dịch vụ',
-          onTap: () async {
-            final result = await Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const ServiceCartScreen()),
-            );
-
-            if (result != null && result is Map<String, dynamic>) {
-              setState(() {
-                selectedServices =
-                    List<Service>.from(result['selectedServiceList']);
-                selectedServiceId = List<int>.from(result['selectedServiceId']);
-              });
-
-              // Gọi callback để truyền dữ liệu lên ExamInfoBooking
-              widget.onServicesSelected(selectedServiceId);
-            }
-          },
-          color: selectedServices.isNotEmpty
-              ? AppColors.deepBlue
-              : Color(0xFF484848),
-          colorIcon: selectedServices.isNotEmpty
-              ? AppColors.deepBlue
-              : Color(0xFF484848),
-        ),
-        if (selectedServices.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Wrap(
-              spacing: 10, // Khoảng cách giữa các phần tử ngang
-              runSpacing: 5, // Khoảng cách giữa các dòng
-              children: selectedServices
-                  .map((service) => Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300], // Màu nền nhẹ
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          '- ${service.name}',
-                          style: const TextStyle(
-                              fontSize: 13, color: Colors.black),
-                        ),
-                      ))
-                  .toList(),
-            ),
-          ),
-      ],
-    );
-  }
-}
-
 class DateSelector extends StatefulWidget {
   final Function(DateTime) onDateSelected;
   final int clinicId;
@@ -256,9 +187,8 @@ class _DateSelectorState extends State<DateSelector> {
       setState(() {
         _selectedDate = pickedDate;
       });
-      // print("Ngày được chọn: ${DateFormat('yyyy-MM-dd').format(pickedDate)}");
 
-      widget.onDateSelected(pickedDate); // Truyền ngày lên ExamInfoBooking
+      widget.onDateSelected(pickedDate);
     }
   }
 

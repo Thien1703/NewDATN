@@ -1,35 +1,36 @@
-class AppointmentCreate {
-  final int? id;
+class AppointmentCreateOnline {
   final int clinicId;
   final int customerId;
+  final int? customerProfileId;
   final String date;
   final String time;
-  final String? status;
-  final int? customerProfileId;
+  final int isOnline;
+  final int employeeId;
   final List<int> serviceIds; // Thêm serviceIds vào model
 
-  AppointmentCreate({
-    this.id,
+  AppointmentCreateOnline({
     required this.clinicId,
     required this.customerId,
+    this.customerProfileId,
     required this.date,
     required this.time,
-    this.customerProfileId,
-    this.status,
+    this.isOnline = 1, // Mặc định là 1 cho lịch online
+    required this.employeeId,
     required this.serviceIds, // Thêm serviceIds vào constructor
   });
 
-  factory AppointmentCreate.fromJson(Map<String, dynamic> json) {
-    return AppointmentCreate(
-      id: json['id'],
+  factory AppointmentCreateOnline.fromJson(Map<String, dynamic> json) {
+    return AppointmentCreateOnline(
       clinicId: json['clinicId'],
       customerId: json['customerId'],
       date: json['date'],
       time: json['time'],
       customerProfileId: json['customerProfileId'],
-      status: json['status'],
+      employeeId: json['employee'], // Gán giá trị employee từ JSON
       serviceIds: List<int>.from(
           json['serviceIds'] ?? []), // Dùng List<int> cho serviceIds
+      isOnline: json['isOnline'] ??
+          1, // Nếu không có isOnline, mặc định là 1 (online)
     );
   }
 
@@ -40,6 +41,8 @@ class AppointmentCreate {
       'date': date,
       'time': time,
       'customerProfileId': customerProfileId,
+      'isOnline': isOnline, // Thêm isOnline vào toJson
+      'employeeId': employeeId, // Thêm employee vào toJson
       'serviceIds': serviceIds, // Thêm serviceIds vào toJson
     };
     return data;

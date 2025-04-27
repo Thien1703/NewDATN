@@ -13,7 +13,8 @@ class Appointment {
   final String time;
   final String status;
   final String? cancelNote;
-  final int? payment;
+  final String roomCode;
+  final int isOnline;
 
   Appointment({
     required this.id,
@@ -24,7 +25,8 @@ class Appointment {
     required this.status,
     required this.customerProfile,
     this.cancelNote,
-    this.payment,
+    required this.roomCode,
+    required this.isOnline,
   });
 
   factory Appointment.fromJson(Map<String, dynamic>? json) {
@@ -49,7 +51,8 @@ class Appointment {
           json['cancelNote'] != null && json['cancelNote'].toString().isNotEmpty
               ? utf8.decode(json['cancelNote'].toString().runes.toList())
               : "Chưa cập nhật",
-      payment: json['payment'] ?? 0,
+      roomCode: json['roomCode'] ?? "Chưa cập nhật",
+      isOnline: json['isOnline'] ?? 0,
     );
   }
 
@@ -63,7 +66,8 @@ class Appointment {
       'time': time,
       'status': status,
       'cancelNote': cancelNote,
-      'payment': payment,
+      'roomCode': roomCode,
+      'isOnline': isOnline
     };
   }
 
@@ -77,7 +81,8 @@ class Appointment {
       time: "Chưa cập nhật",
       status: "Chưa cập nhật",
       cancelNote: "Chưa cập nhật",
-      payment: 0,
+      roomCode: "Chưa cập nhật",
+      isOnline: 0,
     );
   }
 }
