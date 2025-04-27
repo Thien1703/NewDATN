@@ -6,6 +6,7 @@ class MapModel {
   final String image;
   final double latitude;
   final double longitude;
+  double? distance;
 
   MapModel({
     required this.id,
@@ -15,6 +16,7 @@ class MapModel {
     required this.image,
     required this.latitude,
     required this.longitude,
+    this.distance,
   });
 
   factory MapModel.fromJson(Map<String, dynamic> json) {
