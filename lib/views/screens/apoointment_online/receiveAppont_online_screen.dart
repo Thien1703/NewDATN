@@ -20,29 +20,11 @@ class _ReceiveappontOnlineScreenState extends State<ReceiveappontOnlineScreen> {
           onPressed: () {
             Navigator.pop(
               context,
-              // PageRouteBuilder(
-              //   pageBuilder: (context, animation, secondaryAnimation) {
-              //     return ReceiveappontOnlineScreen(); // Trang bạn muốn quay lại
-              //   },
-              //   transitionsBuilder:
-              //       (context, animation, secondaryAnimation, child) {
-              //     const begin = Offset(1.0, 0.0); // Di chuyển từ phải sang trái
-              //     const end = Offset.zero; // Kết thúc tại vị trí ban đầu
-              //     const curve = Curves.easeInOut; // Hiệu ứng mượt mà
-
-              //     var tween = Tween(begin: begin, end: end)
-              //         .chain(CurveTween(curve: curve));
-              //     var offsetAnimation = animation.drive(tween);
-
-              //     return SlideTransition(
-              //         position: offsetAnimation, child: child);
-              //   },
-              // ),
             );
           },
           icon: Icon(Icons.arrow_back_ios),
         ),
-        title: Text('Đặt lịch khám'),
+        title: Text('Thanh toán'),
         centerTitle: true,
         backgroundColor: AppColors.deepBlue,
         foregroundColor: Colors.white,
@@ -53,8 +35,10 @@ class _ReceiveappontOnlineScreenState extends State<ReceiveappontOnlineScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              color: Colors.white,
+              color: Colors.grey[400]!,
               child: Container(
+                margin: EdgeInsets.only(bottom: 1),
+                color: Colors.white,
                 padding: EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

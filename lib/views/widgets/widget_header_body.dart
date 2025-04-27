@@ -89,6 +89,7 @@ class HeaderRow extends StatefulWidget {
     required this.iconAdd,
     this.onAddPressed,
   });
+
   @override
   State<HeaderRow> createState() => _HeaderRowState();
 }
@@ -99,7 +100,7 @@ class _HeaderRowState extends State<HeaderRow> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SizedBox(
+        Flexible(
           child: widget.iconBack
               ? IconButton(
                   icon: const Icon(Icons.arrow_back_ios_new,
@@ -125,7 +126,7 @@ class _HeaderRowState extends State<HeaderRow> {
             ),
           ),
         ),
-        SizedBox(
+        Flexible(
           child: widget.iconAdd
               ? IconButton(
                   onPressed: () async {

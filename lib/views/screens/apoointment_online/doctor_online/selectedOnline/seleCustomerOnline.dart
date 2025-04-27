@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/customer.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
+import 'package:health_care/views/widgets/bottomSheet/showCustomer.dart';
+import 'package:intl/intl.dart';
 
 class Selecustomeronline extends StatefulWidget {
   final Function(Customer) onCustomerSelected;
@@ -30,12 +32,23 @@ class _Selecustomeronline extends State<Selecustomeronline> {
     }
   }
 
+  // Hàm để định dạng ngày tháng
+  String formatDate(String date) {
+    try {
+      DateTime parsedDate = DateTime.parse(date);
+      return DateFormat('dd/MM/yyyy')
+          .format(parsedDate); // Định dạng theo dạng ngày/tháng/năm
+    } catch (e) {
+      return date; // Trả về nguyên bản nếu không thể định dạng
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Container(
-          margin: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+          margin: EdgeInsets.only(left: 25, right: 12, top: 10, bottom: 10),
           decoration: BoxDecoration(
               color: const Color.fromARGB(255, 215, 227, 241),
               borderRadius: BorderRadius.circular(20),
@@ -63,22 +76,31 @@ class _Selecustomeronline extends State<Selecustomeronline> {
                 child: Column(
                   children: [
                     _buildRow('Họ và tên', customer?.fullName ?? '...'),
-                    _buildRow('Giới tính', customer?.email ?? '...'),
-                    _buildRow('Ngày sinh', customer?.birthDate ?? '...'),
+                    _buildRow('Giới tính', customer?.gender ?? '...'),
+                    _buildRow(
+                        'Ngày sinh', formatDate(customer?.birthDate ?? '...')),
                     _buildRow('Điện thoại', customer?.phoneNumber ?? '...'),
                   ],
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 17),
+                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 17),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) => Showcustomer(),
+                        );
+                      },
                       child: Text(
                         'Xem chi tiết',
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 15,
+                        ),
                       ),
                     ),
                     Container(
@@ -130,7 +152,7 @@ class _Selecustomeronline extends State<Selecustomeronline> {
         children: [
           Text(
             value,
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 15),
           ),
           Text(
             label,

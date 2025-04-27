@@ -15,18 +15,24 @@ class Selespecialtyonline extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(height: 10),
+            SizedBox(height: 5),
             ...specialties.map(
-              (s) => Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                color: Colors.white,
-                elevation: 5,
+              (s) => Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey[400]!,
+                        blurRadius: 1,
+                        spreadRadius: 1,
+                      )
+                    ]),
                 margin: EdgeInsets.symmetric(vertical: 6),
-                child: ListTile(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                  title: Text(
+                child: InkWell(
+                  child: Text(
                     s.name,
                     style: TextStyle(
                       fontSize: 16,
