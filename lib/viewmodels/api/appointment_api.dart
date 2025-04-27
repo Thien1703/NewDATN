@@ -280,8 +280,7 @@ class AppointmentApi {
   }
 
   //đặt lịch offline
-  static Future<Appointment?> getBooking(
-      AppointmentCreate appointmentCreate) async {
+  static Future<int?> getBooking(AppointmentCreate appointmentCreate) async {
     final url =
         Uri.parse('${AppConfig.baseUrl}/appointment/create-with-services');
     String? token = await LocalStorageService.getToken();
@@ -308,15 +307,16 @@ class AppointmentApi {
     if (response.statusCode == 200) {
       final jsonBody = json.decode(response.body);
       if (jsonBody['status'] == 0) {
-        final data = jsonBody['data'];
-        return Appointment.fromJson(data);
+        return 0; // thành công
       } else {
         print('Lỗi từ API: ${jsonBody['message']}');
-        return null;
+        return jsonBody['status']; // trả lỗi từ API
       }
+    } else if (response.statusCode == 409) {
+      return 409; // lỗi dịch vụ đã đặt rồi
     } else {
       print('API Lỗi: ${response.statusCode}');
-      return null;
+      return null; // lỗi không xác định
     }
   }
 

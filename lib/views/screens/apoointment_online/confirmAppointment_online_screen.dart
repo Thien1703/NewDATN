@@ -4,8 +4,7 @@ import 'package:health_care/models/appointment/appointmentOnline_Create.dart';
 import 'package:health_care/services/local_storage_service.dart';
 import 'package:health_care/viewmodels/api/appointment_api.dart';
 import 'package:health_care/views/screens/apoointment_online/payment_listener_screen.dart';
-import 'package:health_care/views/screens/apoointment_online/receiveAppont_online_screen.dart';
-import 'package:health_care/views/screens/home/home_screens.dart';
+
 import 'package:intl/intl.dart';
 
 class ConfirmappointmentOnlineScreen extends StatefulWidget {
@@ -170,6 +169,16 @@ class _ConfirmappointmentOnlineScreenState
                       employeeId: widget.employeeId,
                       serviceIds: widget.serviceIds,
                     );
+                    print('Sending booking info:');
+                    print('Clinic ID: ${appointment.clinicId}');
+                    print('Customer ID: ${appointment.customerId}');
+                    print(
+                        'CustomerProfile ID: ${appointment.customerProfileId}');
+                    print('Date: ${appointment.date}');
+                    print('Time: ${appointment.time}');
+                    print('IsOnline: ${appointment.isOnline}');
+                    print('Employee ID: ${appointment.employeeId}');
+                    print('Service IDs: ${appointment.serviceIds.join(', ')}');
 
                     final response =
                         await AppointmentApi.getBookingOnline(appointment);

@@ -42,7 +42,7 @@ class AppointmentCreateOnline {
       'time': time,
       'customerProfileId': customerProfileId,
       'isOnline': isOnline, // Thêm isOnline vào toJson
-      'employee': employeeId, // Thêm employee vào toJson
+      'employeeId': employeeId, // Thêm employee vào toJson
       'serviceIds': serviceIds, // Thêm serviceIds vào toJson
     };
     return data;

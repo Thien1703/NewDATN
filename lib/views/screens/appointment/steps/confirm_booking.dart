@@ -89,8 +89,6 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
       time: widget.time,
       serviceIds: widget.selectedServiceIds,
     );
-    print(widget.customerProfileId);
-    print(widget.customerId);
 
     final result = await AppointmentApi.getBooking(appointmentCreate);
 
@@ -98,7 +96,8 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
       isLoading = false;
     });
 
-    if (result != null) {
+    if (result == 0) {
+      // Đặt lịch thành công
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Đặt lịch thành công'),
@@ -109,7 +108,16 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
         context,
         MaterialPageRoute(builder: (context) => HomeScreens()),
       );
+    } else if (result == 409) {
+      // Dịch vụ đã được đặt rồi
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Dịch vụ này đã được đặt rồi.'),
+          backgroundColor: Colors.orange,
+        ),
+      );
     } else {
+      // Các lỗi khác
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Đặt lịch thất bại. Vui lòng thử lại.'),
