@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:health_care/models/employee.dart';
 import 'package:health_care/views/screens/apoointment_online/doctor_online/doctor_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:health_care/config/app_config.dart';
@@ -6,7 +7,7 @@ import 'package:health_care/services/local_storage_service.dart';
 
 class DoctorApi {
   static Future<List<Doctor>> getAllOnlineDoctors() async {
-    final url = Uri.parse('${AppConfig.baseUrl}/employee/get-all-doctor-online');
+    final url = Uri.parse('${AppConfig.baseUrl}/employee/get-all-doctor');
     String? token = await LocalStorageService.getToken();
 
     if (token == null) {

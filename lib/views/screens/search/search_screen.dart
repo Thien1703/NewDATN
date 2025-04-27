@@ -231,12 +231,15 @@ class _SearchHome extends State<SearchHome> {
                             } else if (item is Clinic) {
                               // Phòng khám
                               return InkWell(
-                                onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          AppointmentScreen(clinicId: item.id),
-                                    )),
+                                onTap: () {
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) =>
+                                  //         AppointmentScreen(clinicId: item.id),
+                                  //   ),
+                                  // );
+                                },
                                 child: Container(
                                   margin: EdgeInsets.symmetric(
                                     vertical: 5,
