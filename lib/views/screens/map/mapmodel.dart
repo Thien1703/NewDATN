@@ -4,8 +4,8 @@ class MapModel {
   final String description;
   final String address;
   final String image;
-  final double lat;
-  final double lng;
+  final double latitude;
+  final double longitude;
 
   MapModel({
     required this.id,
@@ -13,8 +13,8 @@ class MapModel {
     required this.description,
     required this.address,
     required this.image,
-    required this.lat,
-    required this.lng,
+    required this.latitude,
+    required this.longitude,
   });
 
   factory MapModel.fromJson(Map<String, dynamic> json) {
@@ -24,8 +24,8 @@ class MapModel {
       description: json['description'],
       address: json['address'],
       image: json['image'],
-      lat: json['latitude'],
-      lng: json['longitude'],
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
     );
   }
 }
