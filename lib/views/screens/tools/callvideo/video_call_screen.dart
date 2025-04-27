@@ -52,14 +52,14 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
     _agoraEngine.registerEventHandler(
       RtcEngineEventHandler(
         onJoinChannelSuccess: (connection, elapsed) {
-          _showSnackBar('✅ Tham gia kênh thành công');
+          _showSnackBar('Tham gia kênh thành công');
         },
         onUserJoined: (connection, remoteUid, elapsed) {
-          _showSnackBar('👤 Người dùng tham gia: $remoteUid');
+          _showSnackBar('Bác sĩ tham gia');
           setState(() => _remoteUids.add(remoteUid));
         },
         onUserOffline: (connection, remoteUid, reason) {
-          _showSnackBar('👋 Người dùng rời: $remoteUid');
+          _showSnackBar('Bác sĩ rời');
           setState(() {
             _remoteUids.remove(remoteUid);
             _mutedVideoUids.remove(remoteUid);
@@ -69,10 +69,10 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
           setState(() {
             if (muted) {
               _mutedVideoUids.add(remoteUid);
-              _showSnackBar('📷 Người dùng $remoteUid đã tắt camera');
+              _showSnackBar('Bác sĩ đã tắt camera');
             } else {
               _mutedVideoUids.remove(remoteUid);
-              _showSnackBar('📷 Người dùng $remoteUid đã bật lại camera');
+              _showSnackBar('Bác sĩ đã bật lại camera');
             }
           });
         },
@@ -167,7 +167,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
             radius: 40,
             backgroundColor: Colors.blue,
             child: Text(
-              'U', // Chữ đại diện user (có thể lấy từ tên userInfo nếu có)
+              'Bác sĩ', // Chữ đại diện user (có thể lấy từ tên userInfo nếu có)
               style: const TextStyle(fontSize: 30, color: Colors.white),
             ),
           ),
