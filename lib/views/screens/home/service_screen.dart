@@ -189,61 +189,111 @@ class _ServiceScreen extends State<ServiceScreen> {
                                                       serviceId: service.id),
                                             )),
                                         child: Card(
-                                          elevation: 3,
-                                          color: Colors.white,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.vertical(
-                                                        top: Radius.circular(
-                                                            16)),
-                                                child: Image.network(
-                                                  service.image,
-                                                  height: 120,
-                                                  width: double.infinity,
-                                                  fit: BoxFit.cover,
-                                                  errorBuilder: (_, __, ___) =>
-                                                      Container(
-                                                    height: 120,
-                                                    width: double.infinity,
-                                                    color: Colors.grey[300],
-                                                    child: Center(
-                                                      child: Icon(
-                                                        Icons.image,
-                                                        color: Colors.grey,
-                                                        size: 80,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(5.0),
-                                                child: Column(
+                                            elevation: 3,
+                                            color: Colors.white,
+                                            child: Stack(
+                                              children: [
+                                                Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    Text(
-                                                      service.name,
-                                                      style: TextStyle(
-                                                        fontSize: 11,
-                                                        fontWeight:
-                                                            FontWeight.bold,
+                                                    ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.vertical(
+                                                              top: Radius
+                                                                  .circular(
+                                                                      16)),
+                                                      child: Image.network(
+                                                        service.image,
+                                                        height: 120,
+                                                        width: double.infinity,
+                                                        fit: BoxFit.cover,
+                                                        errorBuilder:
+                                                            (_, __, ___) =>
+                                                                Container(
+                                                          height: 120,
+                                                          width:
+                                                              double.infinity,
+                                                          color:
+                                                              Colors.grey[300],
+                                                          child: Center(
+                                                            child: Icon(
+                                                              Icons.image,
+                                                              color:
+                                                                  Colors.grey,
+                                                              size: 80,
+                                                            ),
+                                                          ),
+                                                        ),
                                                       ),
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 2,
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              5.0),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            service.name,
+                                                            style: TextStyle(
+                                                              fontSize: 11,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            maxLines: 2,
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                                                Positioned(
+                                                  top: 90,
+                                                  right: 0,
+                                                  child: Container(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 5,
+                                                        vertical: 3),
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              255,
+                                                              245,
+                                                              244,
+                                                              244),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Text(
+                                                          service.averageRating
+                                                              .toString(),
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 11),
+                                                        ),
+                                                        Icon(Icons.star,
+                                                            color:
+                                                                AppColors.star,
+                                                            size: 20),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            )),
                                       );
                                     },
                                   ),

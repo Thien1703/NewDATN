@@ -10,8 +10,10 @@ import 'package:health_care/views/screens/appointment/appointment_screen.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ClinicScreen extends StatefulWidget {
+  final String? clinicName;
   const ClinicScreen({
     super.key,
+    this.clinicName,
     this.iconBack,
   });
   final bool? iconBack;
@@ -28,6 +30,7 @@ class _ClinicScreenState extends State<ClinicScreen> {
   void initState() {
     super.initState();
     fetchClinics();
+    searchController.text = widget.clinicName ?? '';
   }
 
   void fetchClinics() async {
@@ -35,6 +38,10 @@ class _ClinicScreenState extends State<ClinicScreen> {
     setState(() {
       clinics = data;
       filteredClinics = data;
+
+      if (widget.clinicName != null && widget.clinicName!.isNotEmpty) {
+        filterClinics(widget.clinicName!);
+      }
     });
   }
 
@@ -43,6 +50,7 @@ class _ClinicScreenState extends State<ClinicScreen> {
     setState(() {
       filteredClinics = clinics!
           .where((clinic) =>
+              clinic.name.toLowerCase().contains(query.toLowerCase()) ||
               clinic.address.toLowerCase().contains(query.toLowerCase()))
           .toList();
     });

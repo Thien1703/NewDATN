@@ -36,7 +36,7 @@ class _NotiSucefullyState extends State<NotiSucefully> {
 
   String formatCurrency(int amount) {
     final formatter = NumberFormat("#,###", "vi_VN");
-    return "${formatter.format(amount)}VNĐ";
+    return "${formatter.format(amount)} đ"; // Thêm "đ" vào cuối
   }
 
   @override
@@ -420,42 +420,42 @@ class _NotiSucefullyState extends State<NotiSucefully> {
                                 },
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 15, bottom: 10),
-                              child: Text(
-                                'Thông tin hộ trợ đặt khám',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            _buildtitleRow(
-                                icon: Icons.chat_rounded,
-                                title: 'Chat với CSKH',
-                                onTap: () {}),
-                            Container(
-                              height: 1,
-                              decoration: BoxDecoration(
-                                  color:
-                                      const Color.fromARGB(255, 207, 207, 207),
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                            _buildtitleRow(
-                                icon: Icons.event_note_outlined,
-                                title: 'Hướng dẫn đặt khám',
-                                onTap: () {}),
-                            Container(
-                              height: 1,
-                              decoration: BoxDecoration(
-                                  color:
-                                      const Color.fromARGB(255, 207, 207, 207),
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                            _buildtitleRow(
-                                icon: Icons.event_note_outlined,
-                                title: 'Quy trình hủy lịch',
-                                onTap: () {}),
+                            // Padding(
+                            //   padding: EdgeInsets.only(top: 15, bottom: 10),
+                            //   child: Text(
+                            //     'Thông tin hộ trợ đặt khám',
+                            //     style: TextStyle(
+                            //       fontSize: 14,
+                            //       fontWeight: FontWeight.w500,
+                            //     ),
+                            //   ),
+                            // ),
+                            // _buildtitleRow(
+                            //     icon: Icons.chat_rounded,
+                            //     title: 'Chat với CSKH',
+                            //     onTap: () {}),
+                            // Container(
+                            //   height: 1,
+                            //   decoration: BoxDecoration(
+                            //       color:
+                            //           const Color.fromARGB(255, 207, 207, 207),
+                            //       borderRadius: BorderRadius.circular(10)),
+                            // ),
+                            // _buildtitleRow(
+                            //     icon: Icons.event_note_outlined,
+                            //     title: 'Hướng dẫn đặt khám',
+                            //     onTap: () {}),
+                            // Container(
+                            //   height: 1,
+                            //   decoration: BoxDecoration(
+                            //       color:
+                            //           const Color.fromARGB(255, 207, 207, 207),
+                            //       borderRadius: BorderRadius.circular(10)),
+                            // ),
+                            // _buildtitleRow(
+                            //     icon: Icons.event_note_outlined,
+                            //     title: 'Quy trình hủy lịch',
+                            //     onTap: () {}),
                             SizedBox(height: 20),
                           ],
                         ),

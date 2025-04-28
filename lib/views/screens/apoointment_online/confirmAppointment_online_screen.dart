@@ -1,11 +1,15 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/appointment/appointmentOnline_Create.dart';
+import 'package:health_care/models/customer.dart';
 import 'package:health_care/services/local_storage_service.dart';
 import 'package:health_care/viewmodels/api/appointment_api.dart';
+import 'package:health_care/viewmodels/api/service_api.dart';
+import 'package:health_care/views/screens/apoointment_online/doctor_online/doctor_model.dart';
 import 'package:health_care/views/screens/apoointment_online/payment_listener_screen.dart';
-
 import 'package:intl/intl.dart';
+import 'package:health_care/models/service.dart';
 
 class ConfirmappointmentOnlineScreen extends StatefulWidget {
   const ConfirmappointmentOnlineScreen({
@@ -18,6 +22,10 @@ class ConfirmappointmentOnlineScreen extends StatefulWidget {
     this.isOnline = 1,
     required this.employeeId,
     required this.serviceIds,
+    required this.doctor,
+    required this.specialtyName,
+    required this.customer,
+    required this.specialtyId,
   });
   final int clinicId;
   final int customerId;
@@ -27,6 +35,10 @@ class ConfirmappointmentOnlineScreen extends StatefulWidget {
   final int isOnline;
   final int employeeId;
   final List<int> serviceIds;
+  final Doctor doctor;
+  final String specialtyName;
+  final Customer? customer;
+  final int specialtyId;
 
   @override
   State<ConfirmappointmentOnlineScreen> createState() =>
@@ -35,37 +47,80 @@ class ConfirmappointmentOnlineScreen extends StatefulWidget {
 
 class _ConfirmappointmentOnlineScreenState
     extends State<ConfirmappointmentOnlineScreen> {
+  bool isLoading = false;
+
+  String _formatAppointmentDate(DateTime date) {
+    final dayOfWeek = DateFormat('EEE', 'vi_VN').format(date); // T2, T3, CN
+    final dateFormatted = DateFormat('dd/MM/yyyy').format(date); // 08/09/2000
+    return '$dayOfWeek - $dateFormatted'; // T2 - 08/09/2000
+  }
+
+  String _formatBirthDate(DateTime? date) {
+    if (date == null) {
+      return "..."; // Trả về giá trị mặc định nếu date là null
+    }
+    return DateFormat('dd/MM/yyyy').format(date);
+  }
+
+  DateTime? _parseBirthDate(String? birthDateString) {
+    if (birthDateString == null || birthDateString.isEmpty) {
+      return null; // Nếu không có giá trị, trả về null
+    }
+    return DateTime.tryParse(
+        birthDateString); // Chuyển đổi String sang DateTime
+  }
+
+  List<Service>? services;
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  double totalPrice = 0;
+  String formatCurrency(double amount) {
+    final formatCurrency = NumberFormat.currency(
+      locale: 'vi_VN',
+      symbol: '', // bỏ ký hiệu ₫ nếu bạn muốn tự thêm 'đ' sau
+      decimalDigits: 0,
+    );
+    return formatCurrency.format(amount) + 'đ';
+  }
+
+  void fetchData() async {
+    int serviceId = widget.serviceIds.isNotEmpty ? widget.serviceIds[0] : 0;
+    print(serviceId);
+    List<Service>? fetchedServices =
+        await ServiceApi.getOnlineServeById(widget.specialtyId); // Sửa ở đây
+
+    double total = 0;
+    if (fetchedServices != null) {
+      for (var service in fetchedServices) {
+        total += service.price ?? 0; // nhớ kiểm tra null nếu price có thể null
+      }
+    }
+
+    setState(() {
+      services = fetchedServices;
+      totalPrice = total;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    String? birthDateString = widget.customer?.birthDate;
+    DateTime? birthDate = _parseBirthDate(birthDateString);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
             Navigator.pop(
               context,
-              // PageRouteBuilder(
-              //   pageBuilder: (context, animation, secondaryAnimation) {
-              //     return ConfirmappointmentOnlineScreen(); // Trang bạn muốn quay lại
-              //   },
-              //   transitionsBuilder:
-              //       (context, animation, secondaryAnimation, child) {
-              //     const begin = Offset(1.0, 0.0); // Di chuyển từ phải sang trái
-              //     const end = Offset.zero; // Kết thúc tại vị trí ban đầu
-              //     const curve = Curves.easeInOut; // Hiệu ứng mượt mà
-
-              //     var tween = Tween(begin: begin, end: end)
-              //         .chain(CurveTween(curve: curve));
-              //     var offsetAnimation = animation.drive(tween);
-
-              //     return SlideTransition(
-              //         position: offsetAnimation, child: child);
-              //   },
-              // ),
             );
           },
           icon: Icon(Icons.arrow_back_ios),
         ),
-        title: Text('Đặt lịch khám'),
+        title: Text('Xác nhận thông tin'),
         centerTitle: true,
         backgroundColor: AppColors.deepBlue,
         foregroundColor: Colors.white,
@@ -76,204 +131,406 @@ class _ConfirmappointmentOnlineScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              color: Colors.white,
+              color: Colors.grey[400]!,
               child: Container(
+                width: double.infinity,
+                margin: EdgeInsets.only(bottom: 1),
+                color: Colors.white,
                 padding: EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildTItleRow('1', 'Chọn lịch khám', Colors.green, true),
-                    _buildTItleRow('2', 'Xác nhận', AppColors.deepBlue, true),
-                    _buildTItleRow('3', 'Nhận lịch hẹn', Colors.grey, false),
-                  ],
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal, // Cuộn theo chiều ngang
+                  child: Row(
+                    children: [
+                      _buildTItleRow('1', 'Chọn lịch khám', Colors.green, true),
+                      _buildTItleRow('2', 'Xác nhận', AppColors.deepBlue, true),
+                      _buildTItleRow(
+                          '3', 'Nhận lịch hẹn', Color(0xFF656565), false),
+                    ],
+                  ),
                 ),
               ),
             ),
             Expanded(
               child: SingleChildScrollView(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                        decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 255, 237, 172),
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(12),
-                                bottomRight: Radius.circular(12))),
-                        child: Row(
-                          children: [
-                            Container(
-                              height: 70,
-                              width: 4,
-                              color: Colors.red,
-                            ),
-                            SizedBox(width: 15),
-                            Expanded(
-                              child: Text(
-                                'Hãy kiểm tra các thông tin trước khi xác nhận. Nếu bạn cần hộ trợ, vui lòng chat với CSKH hoặc liên hệ tổng đài',
-                                softWrap: true,
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildTitleHeader(),
+                        _buildTitle('THÔNG TIN ĐĂNG KÝ'),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 15),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey[400]!,
+                                  blurRadius: 1,
+                                  spreadRadius: 1,
+                                )
+                              ]),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 20),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 70,
+                                      height: 70,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape
+                                            .circle, // 👈 hình tròn hoàn toàn
+                                        border: Border.all(
+                                          color: Colors.blue, // viền xanh
+                                          width: 2, // độ dày viền
+                                        ),
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                              widget.doctor.avatar),
+                                          fit: BoxFit.cover, // ảnh vừa khít
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(
+                                        widget.doctor.fullName,
+                                        softWrap: true,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                              Divider(color: Colors.grey[300]),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 10),
+                                child: Row(
+                                  children: [
+                                    _buildColumn('Giờ khám', '${widget.time} '),
+                                    SizedBox(width: 80),
+                                    _buildColumn('Ngày khám',
+                                        '${_formatAppointmentDate(widget.date)}')
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 10),
+                                child: _buildRowValue(
+                                    'Chuyên khoa', widget.specialtyName),
+                              ),
+                              ListView.builder(
+                                padding: EdgeInsets.zero,
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: services?.length ?? 0,
+                                itemBuilder: (context, index) {
+                                  final service = services![index];
+                                  return Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 15, vertical: 3),
+                                      child: Column(
+                                        children: [
+                                          _buildRowValue(
+                                              'Dịch vụ', service.name),
+                                        ],
+                                      ));
+                                },
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 5),
+                                child: Row(
+                                  children: [
+                                    Text('Thông tin bệnh nhân'),
+                                    SizedBox(width: 10),
+                                    Expanded(
+                                      child: Divider(color: Colors.black),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 10),
+                                child: _buildColumn('Họ và tên',
+                                    widget.customer?.fullName ?? '...'
+                                    // widget.customerProfileId == 0
+                                    //     ? customer?.fullName ?? '..'
+                                    //     : customerProfile?.fullName ?? '..'
+                                    ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 10),
+                                child: Row(
+                                  children: [
+                                    _buildColumn('Giới tính',
+                                        widget.customer?.gender ?? "..."
+                                        // widget.customerProfileId == 0
+                                        //     ? customer?.gender ?? '...'
+                                        //     : customerProfile?.gender ?? '..'
+                                        ),
+                                    SizedBox(width: 70),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 15, vertical: 10),
+                                      child: _buildColumn('Ngày sinh',
+                                          _formatBirthDate(birthDate)
+                                          // widget.customerProfileId == 0
+                                          //     ? _formatDate(customer?.birthDate)
+                                          //     : _formatDate(
+                                          //         customerProfile?.birthDate
+                                          //         ),
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 10),
+                                child: _buildColumn('Số điện thoại',
+                                    widget.customer?.phoneNumber ?? "..."
+                                    // widget.customerProfileId == 0
+                                    //     ? customer?.phoneNumber ?? '...'
+                                    //     : customerProfile?.phoneNumber ?? '..'
+                                    ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 10),
+                                child: _buildColumn(
+                                    'Địa chỉ', widget.customer?.address ?? "..."
+                                    // widget.customerProfileId == 0
+                                    //     ? customer?.address ?? '...'
+                                    //     : customerProfile?.address ?? '..'
+                                    ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      _buildTitle('THÔNG TIN ĐĂNG KÝ'),
-                      Container(
-                        width: double.infinity,
-                        margin: EdgeInsets.symmetric(horizontal: 15),
-                        decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Column(
-                          children: [
-                            Text('Clinic ID: ${widget.clinicId}'),
-                            Text('Customer ID: ${widget.customerId}'),
-                            Text(
-                                'CustomerProfile ID: ${widget.customeProfileId}'),
-                            Text('isOnline: ${widget.isOnline}'),
-                            Text(
-                                'Date: ${DateFormat('yyyy-MM-dd').format(widget.date)}'),
-                            Text('Time: ${widget.time}'),
-                            Text('Employee ID: ${widget.employeeId}'),
-                            Text(
-                                'Selected Services: ${widget.serviceIds.join(', ')}'),
-                          ],
+                        Padding(
+                          padding: EdgeInsets.only(left: 5, top: 10, right: 15),
+                          child: _buildTitle('CHI TIẾT THANH TOÁN'),
                         ),
-                      ),
-                    ]),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 15),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 15),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey[400]!,
+                                  blurRadius: 1,
+                                  spreadRadius: 1,
+                                )
+                              ]),
+                          child: Column(
+                            children: [
+                              _buildRowValue('Phí khám', '0đ'),
+                              Divider(),
+                              _buildRowValue('Phí tiện ích', 'Miễn phí'),
+                              Divider(),
+                              _buildRowValue('Tổng thanh toán',
+                                  formatCurrency(totalPrice)),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 30),
+                      ]),
+                ),
               ),
             ),
-            SizedBox(
+            Container(
               width: double.infinity,
+              color: Colors.grey[400]!,
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.deepBlue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                margin: EdgeInsets.only(top: 1),
+                color: Colors.white,
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.deepBlue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                  ),
-                  onPressed: () async {
-                    final appointment = AppointmentCreateOnline(
-                      clinicId: widget.clinicId,
-                      customerId: widget.customerId,
-                      customerProfileId: widget.customeProfileId == 0
-                          ? null
-                          : widget.customeProfileId,
-                      date: DateFormat('yyyy-MM-dd').format(widget.date),
-                      time: widget.time,
-                      isOnline: widget.isOnline,
-                      employeeId: widget.employeeId,
-                      serviceIds: widget.serviceIds,
-                    );
-                    print('Sending booking info:');
-                    print('Clinic ID: ${appointment.clinicId}');
-                    print('Customer ID: ${appointment.customerId}');
-                    print(
-                        'CustomerProfile ID: ${appointment.customerProfileId}');
-                    print('Date: ${appointment.date}');
-                    print('Time: ${appointment.time}');
-                    print('IsOnline: ${appointment.isOnline}');
-                    print('Employee ID: ${appointment.employeeId}');
-                    print('Service IDs: ${appointment.serviceIds.join(', ')}');
+                    onPressed: isLoading
+                        ? null
+                        : () async {
+                            // disable nút khi đang loading
+                            setState(() {
+                              isLoading = true;
+                            });
 
-                    final response =
-                        await AppointmentApi.getBookingOnline(appointment);
+                            final appointment = AppointmentCreateOnline(
+                              clinicId: widget.clinicId,
+                              customerId: widget.customerId,
+                              customerProfileId: widget.customeProfileId == 0
+                                  ? null
+                                  : widget.customeProfileId,
+                              date:
+                                  DateFormat('yyyy-MM-dd').format(widget.date),
+                              time: widget.time,
+                              isOnline: widget.isOnline,
+                              employeeId: widget.employeeId,
+                              serviceIds: widget.serviceIds,
+                            );
 
-                    if (response != null) {
-                      if (response.statusCode == 200) {
-                        final bookingInfo =
-                            response.data; // lấy ra thông tin booking
-                        if (bookingInfo != null) {
-                          // 👉 LẤY TOKEN TRƯỚC
-                          final token =
-                              await LocalStorageService.getToken() ?? '';
+                            final response =
+                                await AppointmentApi.getBookingOnline(
+                                    appointment);
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Đặt lịch thành công!'),
-                              backgroundColor: Colors.green,
+                            if (response != null) {
+                              if (response.statusCode == 200) {
+                                final bookingInfo = response.data;
+                                if (bookingInfo != null) {
+                                  final token =
+                                      await LocalStorageService.getToken() ??
+                                          '';
+
+                                  // ScaffoldMessenger.of(context).showSnackBar(
+                                  //   SnackBar(
+                                  //     content: Text('Đặt lịch thành công!'),
+                                  //     backgroundColor: Colors.green,
+                                  //   ),
+                                  // );
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          PaymentListenerScreen(
+                                        qrCode: bookingInfo.qrCode,
+                                        checkoutUrl: bookingInfo.checkoutUrl,
+                                        userId: widget.customerId,
+                                        jwtToken: token,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              } else if (response.statusCode == 409) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content:
+                                        Text('Dịch vụ này đã được đặt rồi!'),
+                                    backgroundColor: Colors.orange,
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Đặt lịch thất bại!'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text('Không kết nối được tới máy chủ!'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+
+                            setState(() {
+                              isLoading = false;
+                            });
+                          },
+                    child: isLoading
+                        ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
                             ),
-                          );
-
-                          // 👉 rồi mới Navigator.push
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PaymentListenerScreen(
-                                qrCode: bookingInfo.qrCode,
-                                checkoutUrl: bookingInfo.checkoutUrl,
-                                userId: widget.customerId,
-                                jwtToken: token,
-                              ),
-                            ),
-                          );
-                        }
-                      } else if (response.statusCode == 409) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Dịch vụ này đã được đặt rồi!'),
-                            backgroundColor: Colors.orange,
+                          )
+                        : const Text(
+                            "Xác nhận đặt lịch",
+                            style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Đặt lịch thất bại!'),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      }
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Không kết nối được tới máy chủ!'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                  },
-                  child: const Text(
-                    "Xác nhận đặt lịch",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
     );
   }
 
+  Widget _buildTitleHeader() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 255, 237, 172),
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(12), bottomRight: Radius.circular(12))),
+      child: Row(
+        children: [
+          Container(
+            height: 70,
+            width: 4,
+            color: Colors.red,
+          ),
+          SizedBox(width: 15),
+          Expanded(
+            child: Text(
+              'Hãy kiểm tra các thông tin trước khi xác nhận. Nếu bạn cần hộ trợ, vui lòng chat với CSKH hoặc liên hệ tổng đài',
+              softWrap: true,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildTitle(String value) {
     return Padding(
-        padding: EdgeInsets.only(left: 35, top: 5, bottom: 5),
-        child: Text(
-          value,
-          style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w500),
-        ));
+      padding: EdgeInsets.only(left: 30, bottom: 10, top: 5),
+      child: Text(
+        value,
+        style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
   }
 
   Widget _buildTItleRow(String value, String label, Color colors, bool icon) {
     return Row(
       children: [
         Container(
-          width: 25,
-          height: 25,
+          width: 23,
+          height: 23,
           decoration: BoxDecoration(
-            color: colors,
-            shape: BoxShape.circle,
+            color: colors, // màu nền hình tròn
+            shape: BoxShape.circle, // tạo hình tròn
           ),
           alignment: Alignment.center,
           child: Text(
             value,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: 17,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -292,9 +549,35 @@ class _ConfirmappointmentOnlineScreenState
             ? Icon(
                 Icons.arrow_forward_ios_rounded,
                 size: 17,
-                color: const Color.fromARGB(255, 136, 136, 136),
+                color: const Color(0xFF656565),
               )
             : SizedBox.shrink(),
+        SizedBox(width: 10),
+      ],
+    );
+  }
+
+  Widget _buildRowValue(String label, String value) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: TextStyle(fontSize: 14)),
+        Text(value,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+      ],
+    );
+  }
+
+  Widget _buildColumn(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: TextStyle(fontSize: 14)),
+        Text(
+          value,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
       ],
     );
   }

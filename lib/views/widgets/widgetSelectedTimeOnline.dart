@@ -22,7 +22,7 @@ class _WidgetselectedtimeonlineState extends State<Widgetselectedtimeonline> {
     return DefaultTabController(
       length: 2,
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        margin: EdgeInsets.only(left: 25, right: 12, top: 10, bottom: 10),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -48,8 +48,26 @@ class _WidgetselectedtimeonlineState extends State<Widgetselectedtimeonline> {
               height: 150,
               child: TabBarView(
                 children: [
-                  _buildTimeButtons(['07:00', '08:00', '09:00', '10:00']),
-                  _buildTimeButtons(['13:00', '14:00', '15:00']),
+                  _buildTimeButtons([
+                    '08:00',
+                    '08:30',
+                    '09:00',
+                    '09:30',
+                    '10:00',
+                    '10:30',
+                    '11:00',
+                    '11:30'
+                  ]),
+                  _buildTimeButtons([
+                    '13:00',
+                    '13:30',
+                    '14:00',
+                    '14:30',
+                    '15:00',
+                    '15:30',
+                    '16:00',
+                    '16:30'
+                  ]),
                 ],
               ),
             ),
@@ -81,7 +99,7 @@ class _WidgetselectedtimeonlineState extends State<Widgetselectedtimeonline> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
             ),
             child: Text(time),
           );
