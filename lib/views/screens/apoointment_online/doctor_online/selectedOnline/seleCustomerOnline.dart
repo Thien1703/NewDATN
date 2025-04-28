@@ -103,19 +103,19 @@ class _Selecustomeronline extends State<Selecustomeronline> {
                         ),
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Text(
-                        'Sửa hồ sơ',
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: AppColors.deepBlue,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                    // Container(
+                    //   padding: EdgeInsets.all(5),
+                    //   decoration: BoxDecoration(
+                    //       color: Colors.white,
+                    //       borderRadius: BorderRadius.circular(10)),
+                    //   child: Text(
+                    //     'Sửa hồ sơ',
+                    //     style: TextStyle(
+                    //         fontSize: 14,
+                    //         color: AppColors.deepBlue,
+                    //         fontWeight: FontWeight.bold),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -126,18 +126,18 @@ class _Selecustomeronline extends State<Selecustomeronline> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Chọn hoặc tạo hồ sơ khác',
-              style: TextStyle(
-                  color: AppColors.deepBlue,
-                  fontSize: 15.5,
-                  fontWeight: FontWeight.w500),
-            ),
-            Icon(
-              Icons.arrow_forward,
-              size: 17,
-              color: AppColors.deepBlue,
-            )
+            // Text(
+            //   'Chọn hoặc tạo hồ sơ khác',
+            //   style: TextStyle(
+            //       color: AppColors.deepBlue,
+            //       fontSize: 15.5,
+            //       fontWeight: FontWeight.w500),
+            // ),
+            // Icon(
+            //   Icons.arrow_forward,
+            //   size: 17,
+            //   color: AppColors.deepBlue,
+            // )
           ],
         ),
       ],

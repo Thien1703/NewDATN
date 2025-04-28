@@ -72,6 +72,7 @@ class LogoutBottomsheet extends StatelessWidget {
                       context,
                       listen: false,
                     );
+
                     await authViewModel.signOut(context);
                     // Trả về true để báo hiệu đăng xuất thành công
                     Navigator.pop(context, true);

@@ -253,8 +253,27 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                 return Padding(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 15, vertical: 3),
-                                  child:
-                                      _buildRowValue('Dịch vụ', service.name),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Text('dich vụ',
+                                          style: TextStyle(fontSize: 14)),
+                                      SizedBox(width: 50),
+                                      Expanded(
+                                        child: Text(
+                                          service.name,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 );
                               },
                             ),
