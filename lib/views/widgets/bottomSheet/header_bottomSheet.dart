@@ -19,7 +19,7 @@ class HeaderBottomSheet extends StatelessWidget {
     return Container(
       color: AppColors.ghostWhite,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
         child: Column(
           mainAxisSize: isFulHeight ? MainAxisSize.max : MainAxisSize.min,
           children: [

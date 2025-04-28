@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
+import 'package:health_care/views/screens/apoointment_online/doctor_online/doctor_list_screen.dart';
 import 'package:health_care/views/screens/auth/Login/login_screen.dart';
 import 'package:health_care/views/screens/auth/Login/register_screen.dart';
 import 'package:health_care/views/screens/tools/callvideo/listDoctorOnline.dart';
@@ -42,7 +43,7 @@ class chooseCallVideo extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => DoctorOnlineList()));
+                  MaterialPageRoute(builder: (context) => DoctorListScreen()));
             },
             child: Container(
               height: 53,

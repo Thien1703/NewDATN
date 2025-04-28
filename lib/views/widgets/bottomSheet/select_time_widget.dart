@@ -93,7 +93,7 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
             builder: (context, constraints) {
               return SingleChildScrollView(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height * 0.85,
@@ -105,7 +105,7 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
                       children: [
                         _customLabel(label: 'Buổi sáng'),
                         Wrap(
-                          spacing: 10.0,
+                          spacing: 5.0,
                           runSpacing: 13.0,
                           children: allTimes
                               .where(
@@ -118,7 +118,7 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
                         ),
                         _customLabel(label: 'Buổi chiều'),
                         Wrap(
-                          spacing: 10.0,
+                          spacing: 5.0,
                           runSpacing: 13.0,
                           children: allTimes
                               .where(

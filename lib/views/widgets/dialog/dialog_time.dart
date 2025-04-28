@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-const MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -17,7 +16,6 @@ const MyApp({super.key});
     );
   }
 }
-
 
 class AppointmentDialog extends StatelessWidget {
   const AppointmentDialog({super.key});
@@ -44,71 +42,74 @@ class AppointmentDialog extends StatelessWidget {
   }
 
   Widget _buildAlertDialog(BuildContext context) {
-  return AlertDialog(
-    backgroundColor: Colors.white,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10.0),
-    ),
-    title: Row(
-
-      children: [
-        IconButton(
-          icon: Image.asset('assets/icons/cancle_icon.png'),
-          iconSize: 48,
-          onPressed: () {
-            Navigator.pop(context); // Đóng dialog
-          },
-        ),
-        SizedBox(width: 40,),
-        Text(
-          'Chọn giờ khám',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-
-      ],
-    ),
-    content: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, // Căn lề trái các phần tiêu đề
-        mainAxisSize: MainAxisSize.min,
+    return AlertDialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      title: Row(
         children: [
-          // Buổi sáng
+          IconButton(
+            icon: Image.asset('assets/icons/cancle_icon.png'),
+            iconSize: 48,
+            onPressed: () {
+              Navigator.pop(context); // Đóng dialog
+            },
+          ),
+          SizedBox(
+            width: 40,
+          ),
           Text(
-            'Buổi sáng',
+            'Chọn giờ khám',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 8),
-          Center(
-            child: _buildTimeSlots(timeSlotsMorning), // Đưa khung giờ vào giữa
-          ),
-          SizedBox(height: 16),
-          // Buổi chiều
-          Text(
-            'Buổi chiều',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 8),
-          Center(
-            child: _buildTimeSlots(timeSlotsAfternoon), // Đưa khung giờ vào giữa
-          ),
-          SizedBox(height: 16),
-          Text(
-            'Tất cả thời gian theo múi giờ Việt Nam GMT+7',
-            style: TextStyle(
-              fontSize: 12,
-              color: const Color.fromARGB(255, 215, 101, 44),
             ),
           ),
         ],
       ),
-    ),
-  );
+      content: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment:
+              CrossAxisAlignment.start, // Căn lề trái các phần tiêu đề
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Buổi sáng
+            Text(
+              'Buổi sáng',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8),
+            Center(
+              child:
+                  _buildTimeSlots(timeSlotsMorning), // Đưa khung giờ vào giữa
+            ),
+            SizedBox(height: 100),
+            // Buổi chiều
+            Text(
+              'Buổi chiều',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8),
+            Center(
+              child:
+                  _buildTimeSlots(timeSlotsAfternoon), // Đưa khung giờ vào giữa
+            ),
+            SizedBox(height: 13),
+            Text(
+              'Tất cả thời gian theo múi giờ Việt Nam GMT+7',
+              style: TextStyle(
+                fontSize: 12,
+                color: const Color.fromARGB(255, 215, 101, 44),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -127,14 +128,13 @@ Widget _buildTimeSlots(List<String> timeSlots) {
         ),
         child: Text(
           time,
-          style: TextStyle(fontSize: 10,color: const Color.fromARGB(255, 42, 140, 46)),
+          style: TextStyle(
+              fontSize: 10, color: const Color.fromARGB(255, 42, 140, 46)),
         ),
       );
     }).toList(),
   );
 }
-
-
 
 final List<String> timeSlotsMorning = [
   '06:00 - 07:00',

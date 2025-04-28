@@ -407,8 +407,27 @@ class _NotiSucefullyState extends State<NotiSucefully> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      _buildRow(
-                                          'Dịch vụ', appServices.service!.name),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Text('Dịch vụ',
+                                              style: TextStyle(fontSize: 14)),
+                                          SizedBox(width: 50),
+                                          Expanded(
+                                            child: Text(
+                                              appServices.service!.name,
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                       _buildRow(
                                           'Giá',
                                           formatCurrency(appServices

@@ -202,7 +202,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                             child: Text(
                                               services.name,
                                               style: const TextStyle(
-                                                fontSize: 14,
+                                                fontSize: 12,
                                                 fontWeight: FontWeight.w500,
                                               ),
                                             ),
@@ -220,7 +220,7 @@ class _ServiceCartScreenState extends State<ServiceCartScreen> {
                                                   formatCurrency(
                                                       services.price),
                                                   style: const TextStyle(
-                                                    fontSize: 13,
+                                                    fontSize: 12,
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
                                                         255, 228, 164, 1),

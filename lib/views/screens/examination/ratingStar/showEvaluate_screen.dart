@@ -115,8 +115,10 @@ class _ShowevaluateScreen extends State<ShowevaluateScreen> {
                                     service?.image ?? 'không thấy ảnh',
                                     width: 70,
                                   ),
-                                  SizedBox(width: 10),
-                                  Text(service?.name ?? 'Không rõ dịch vụ'),
+                                  SizedBox(width: 20),
+                                  Expanded(
+                                      child: Text(
+                                          service?.name ?? 'Không rõ dịch vụ')),
                                 ],
                               ),
                             ),
