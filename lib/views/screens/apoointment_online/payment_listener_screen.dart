@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/views/screens/apoointment_online/payment_success_screen.dart';
+import 'package:health_care/views/screens/home/home_screens.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:health_care/services/websocket/websocket_manager.dart';
@@ -71,29 +73,117 @@ class _PaymentListenerScreenState extends State<PaymentListenerScreen> {
     }
   }
 
+  Future<bool> _onWillPop() async {
+    // Quay lại trang chủ khi nhấn back
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => HomeScreens()),
+      (Route<dynamic> route) => false,
+    );
+    return Future.value(
+        false); // Để ngừng hành động mặc định (quay lại màn hình trước)
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Thanh toán")),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            const Text("Quét mã QR để thanh toán"),
-            const SizedBox(height: 16),
-            QrImageView(data: widget.qrCode, size: 240),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.open_in_browser),
-              label: const Text("Mở link thanh toán"),
-              onPressed: () async {
-                final uri = Uri.parse(widget.checkoutUrl);
-                if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri, mode: LaunchMode.externalApplication);
-                }
-              },
-            ),
-          ],
+    return WillPopScope(
+      onWillPop: _onWillPop, // Xử lý sự kiện nhấn back
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Thanh toán"),
+          titleTextStyle: TextStyle(
+            fontSize: 22,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          backgroundColor: AppColors.deepBlue,
+        ),
+        body: Container(
+          width: double.infinity,
+          color: AppColors.deepBlue,
+          child: Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                child: Column(
+                  children: [
+                    SizedBox(height: 40),
+                    const Text(
+                      "Vui lòng quét mã QR này để được đặt lịch",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Column(
+                          children: [
+                            QrImageView(data: widget.qrCode, size: 270),
+                            const SizedBox(height: 10),
+                            Text(
+                              'HUYNH MINH KHAI',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              '0974198371',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )
+                          ],
+                        )),
+                    const SizedBox(height: 24),
+                  ],
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: double.infinity,
+                  child: Image.asset(
+                    'assets/images/anhdep.png',
+                  ),
+                ),
+              ),
+              Positioned(
+                  bottom: 100, // Khoảng cách từ dưới lên
+                  left: 20, // Khoảng cách từ trái sang
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Phòng khám đa khoa FPT",
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.5),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        "Ứng dụng đặt khám qua phòng khám \nFPT dành cho gia đình bạn",
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.5),
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  )),
+            ],
+          ),
         ),
       ),
     );

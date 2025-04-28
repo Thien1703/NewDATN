@@ -119,7 +119,7 @@ class _ShowevaluateScreen extends State<ShowevaluateScreen> {
                                   Text(service?.name ?? 'Không rõ dịch vụ'),
                                 ],
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),

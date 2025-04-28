@@ -110,8 +110,7 @@ class _HeaderRowState extends State<HeaderRow> {
               : IconButton(
                   icon: const Icon(Icons.arrow_back_ios_new,
                       color: AppColors.deepBlue, size: 24),
-                  onPressed:
-                      widget.onBackPressed ?? () => Navigator.of(context).pop(),
+                  onPressed: () {},
                 ),
         ),
         Expanded(
@@ -146,7 +145,14 @@ class _HeaderRowState extends State<HeaderRow> {
                     size: 24,
                   ),
                 )
-              : const SizedBox.shrink(),
+              : IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.group_add_rounded,
+                    color: AppColors.deepBlue,
+                    size: 24,
+                  ),
+                ),
         ),
       ],
     );

@@ -279,19 +279,22 @@ class AppointmentApi {
     }
   }
 
-  //đặt lịch offline
-  static Future<int?> getBooking(AppointmentCreate appointmentCreate) async {
+  static Future<Appointment?> getBooking(
+      AppointmentCreate appointmentCreate) async {
     final url =
         Uri.parse('${AppConfig.baseUrl}/appointment/create-with-services');
     String? token = await LocalStorageService.getToken();
 
+    // Kiểm tra nếu không có token
     if (token == null) {
       print('Không tìm thấy token.');
-      return null;
+      return null; // Không thực hiện gọi API nếu không có token
     }
 
+    // Chuẩn bị body cho request
     final body = json.encode(appointmentCreate.toJson());
 
+    // Gửi POST request
     final response = await http.post(
       url,
       headers: {
@@ -301,22 +304,34 @@ class AppointmentApi {
       body: body,
     );
 
+    // In giá trị status code và body của response
     print('Giá trị status code: ${response.statusCode}');
     print('Giá trị response body: ${response.body}');
 
+    // Xử lý nếu response trả về status code 200 (thành công)
     if (response.statusCode == 200) {
       final jsonBody = json.decode(response.body);
+
       if (jsonBody['status'] == 0) {
-        return 0; // thành công
+        // Thành công, chuyển đổi JSON thành đối tượng Appointment
+        return Appointment.fromJson(
+            jsonBody['data']); // Chuyển thành đối tượng Appointment từ 'data'
       } else {
+        // In lỗi từ API
         print('Lỗi từ API: ${jsonBody['message']}');
-        return jsonBody['status']; // trả lỗi từ API
+        return null; // Trả về null nếu có lỗi từ API
       }
-    } else if (response.statusCode == 409) {
-      return 409; // lỗi dịch vụ đã đặt rồi
-    } else {
+    }
+    // Xử lý trường hợp 409 (dịch vụ đã được đặt)
+    else if (response.statusCode == 409) {
+      print('Dịch vụ đã đặt rồi.');
+      return null; // Trả về null nếu dịch vụ đã được đặt
+    }
+    // Xử lý các lỗi khác
+    else {
       print('API Lỗi: ${response.statusCode}');
-      return null; // lỗi không xác định
+      print('Thông báo lỗi: ${response.body}');
+      return null; // Trả về null nếu có lỗi không xác định
     }
   }
 
