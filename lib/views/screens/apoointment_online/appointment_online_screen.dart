@@ -6,10 +6,10 @@ import 'package:health_care/views/screens/apoointment_online/doctor_online/docto
 import 'package:health_care/views/screens/apoointment_online/doctor_online/selectedOnline/seleCustomerOnline.dart';
 import 'package:health_care/views/screens/apoointment_online/doctor_online/selectedOnline/seleServiceOnline.dart';
 import 'package:health_care/views/screens/apoointment_online/doctor_online/selectedOnline/seleSpecialtyOnline.dart';
+import 'package:health_care/views/widgets/bottomSheet/header_bottomSheet.dart';
 import 'package:health_care/views/widgets/bottomSheet/select_day_widget.dart';
 import 'package:health_care/views/widgets/widgetSelectedTimeOnline.dart';
 import 'package:intl/intl.dart';
-
 import 'package:health_care/common/app_colors.dart';
 
 class AppointmentOnlineScreen extends StatefulWidget {
@@ -24,410 +24,323 @@ class AppointmentOnlineScreen extends StatefulWidget {
 
 class _AppointmentOnlineScreenState extends State<AppointmentOnlineScreen> {
   DateTime? selectedDate;
-  Customer? customer;
-  Specialty? _selectedSpecialty;
-  String? _selectedSpecialtyId;
-  String? _selectedServiceName;
-  int? _selectedServiceId;
   String? selectedTimes;
-  bool _isAppointmentValid() {
-    return _selectedSpecialty != null &&
-        _selectedServiceId != null &&
-        selectedDate != null &&
-        selectedTimes != null &&
-        customer != null; // Ensure customer is selected
+  Customer? customer;
+
+  Specialty? _selectedSpecialty;
+  int? _selectedServiceId;
+  String? _selectedServiceName;
+
+  bool get isFormValid =>
+      customer != null &&
+      _selectedSpecialty != null &&
+      _selectedServiceId != null &&
+      selectedDate != null &&
+      selectedTimes != null;
+
+  void _goToConfirmScreen() {
+    if (!isFormValid) return;
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (_, animation, __) {
+          return ConfirmappointmentOnlineScreen(
+            specialtyId: _selectedSpecialty!.id,
+            clinicId: widget.doctor.clinic.id,
+            customer: customer,
+            customerId: customer!.id,
+            date: selectedDate!,
+            employeeId: widget.doctor.id,
+            time: selectedTimes!,
+            serviceIds: [_selectedServiceId!],
+            doctor: widget.doctor,
+            specialtyName: _selectedSpecialty!.name,
+          );
+        },
+        transitionsBuilder: (_, animation, __, child) {
+          final tween = Tween(begin: const Offset(1, 0), end: Offset.zero)
+              .chain(CurveTween(curve: Curves.easeInOut));
+          return SlideTransition(
+              position: animation.drive(tween), child: child);
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back_ios),
-        ),
-        title: Text('Đặt lịch khám'),
-        centerTitle: true, // Căn giữa title
-        backgroundColor: AppColors.deepBlue,
-        foregroundColor: Colors.white,
-      ),
+      appBar: _buildAppBar(),
       body: Container(
         color: AppColors.ghostWhite,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              color: Colors.grey[400]!,
-              child: Container(
-                width: double.infinity,
-                margin: EdgeInsets.only(bottom: 1),
-                color: Colors.white,
-                padding: EdgeInsets.all(10),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal, // Cuộn theo chiều ngang
-                  child: Row(
-                    children: [
-                      _buildTItleRow(
-                          '1', 'Chọn lịch khám', AppColors.deepBlue, true),
-                      _buildTItleRow('2', 'Xác nhận', Color(0xFF656565), true),
-                      _buildTItleRow(
-                          '3', 'Nhận lịch hẹn', Color(0xFF656565), false),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      margin:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 13, vertical: 15),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey[400]!,
-                              blurRadius: 1,
-                              spreadRadius: 1,
-                            )
-                          ]),
-                      child: Row(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: AppColors.deepBlue, width: 1),
-                              shape: BoxShape.circle, // ✅ bo tròn viền
-                            ),
-                            child: CircleAvatar(
-                              radius: 34,
-                              backgroundImage:
-                                  NetworkImage(widget.doctor.avatar),
-                              onBackgroundImageError: (_, __) {},
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            // Thêm cái này để Column có thể co giãn và không bị tràn
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Bác sĩ',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                  ),
-                                ),
-                                Text(
-                                  widget.doctor.fullName,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 17),
-                                ),
-                                Text(
-                                  'Chuyên khoa: ${widget.doctor.specialties.isNotEmpty ? widget.doctor.specialties.map((e) => e.name).join(', ') : "Chưa có chuyên khoa"}',
-                                  style: TextStyle(fontSize: 15),
-                                  softWrap: true,
-                                  overflow: TextOverflow.visible,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    _buildTitle('Đặt lịch khám này cho: '),
-                    Selecustomeronline(
-                      onCustomerSelected: (value) {
-                        setState(() {
-                          customer = value;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 15),
-                    _buildTitle('Chọn chuyên khoa'),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          left: 25, right: 12, top: 10, bottom: 10),
-                      child: InkWell(
-                        onTap: () async {
-                          final selected =
-                              await showModalBottomSheet<Specialty>(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (context) => Selespecialtyonline(
-                              specialties: widget.doctor.specialties,
-                            ),
-                          );
-
-                          if (selected != null) {
-                            setState(() {
-                              _selectedSpecialty = selected;
-                              _selectedSpecialtyId =
-                                  selected.id.toString(); // Lưu id chuyên khoa
-                            });
-                          }
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 15),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey[400]!,
-                                  blurRadius: 1,
-                                  spreadRadius: 1,
-                                )
-                              ]),
-                          child: Text(
-                            _selectedSpecialty?.name ?? 'Chọn chuyên khoa',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Text(
-                    //   _selectedSpecialtyId != null
-                    //       ? 'SpecialtyId: $_selectedSpecialtyId'
-                    //       : 'SpecialtyId: Chưa chọn',
-                    //   style:
-                    //       TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                    // ),
-                    _buildTitle('Chọn dịch vụ'),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          left: 25, right: 12, top: 10, bottom: 10),
-                      child: InkWell(
-                        onTap: () async {
-                          final result =
-                              await showModalBottomSheet<Map<String, dynamic>>(
-                            context: context,
-                            builder: (context) => Seleserviceonline(
-                              serviceId: _selectedSpecialtyId.toString(),
-                            ),
-                          );
-
-                          if (result != null) {
-                            setState(() {
-                              _selectedServiceName = result['name'];
-                              _selectedServiceId = result['id'];
-                            });
-                          }
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 15),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey[400]!,
-                                  blurRadius: 1,
-                                  spreadRadius: 1,
-                                )
-                              ]),
-                          child: Text(
-                            _selectedServiceName ?? 'Chọn dịch vụ',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    _buildTitle('Chọn ngày khám'),
-                    InkWell(
-                      onTap: () async {
-                        final selected = await showModalBottomSheet<DateTime>(
-                          context: context,
-                          builder: (context) => SelectDayWidget(
-                            clinicId: widget.doctor.clinic.id,
-                          ),
-                        );
-
-                        if (selected != null) {
-                          setState(() {
-                            selectedDate = selected; // Update selectedDate here
-                          });
-                        }
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            left: 25, right: 12, top: 10, bottom: 10),
-                        child: Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey[400]!,
-                                blurRadius: 1,
-                                spreadRadius: 1,
-                              ),
-                            ],
-                          ),
-                          child: Text(
-                            selectedDate != null
-                                ? DateFormat('dd/MM/yyyy').format(selectedDate!)
-                                : 'Chọn ngày khám', // Display selected date
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ),
-                    _buildTitle('Chọn giờ khám'),
-                    Widgetselectedtimeonline(
-                      onTimeSelected: (time) {
-                        setState(() {
-                          selectedTimes = time;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              color: Colors.grey[400]!,
-              child: Container(
-                margin: EdgeInsets.only(top: 1),
-                color: Colors.white,
-                child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                    color: Colors.white,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.deepBlue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      onPressed: _isAppointmentValid()
-                          ? () {
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder:
-                                      (context, animation, secondaryAnimation) {
-                                    return ConfirmappointmentOnlineScreen(
-                                      specialtyId: int.tryParse(
-                                              _selectedSpecialtyId ?? '') ??
-                                          0,
-                                      clinicId: widget.doctor.clinic.id,
-                                      customer: customer,
-                                      customerId: customer!.id,
-                                      date: selectedDate!,
-                                      employeeId: widget.doctor.id,
-                                      time: selectedTimes.toString(),
-                                      serviceIds: [_selectedServiceId ?? 0],
-                                      doctor: widget.doctor,
-                                      specialtyName: _selectedSpecialty?.name ??
-                                          'Chưa chọn chuyên khoa',
-                                    );
-                                  },
-                                  transitionsBuilder: (context, animation,
-                                      secondaryAnimation, child) {
-                                    const begin = Offset(1.0, 0.0);
-                                    const end = Offset.zero;
-                                    const curve = Curves.easeInOut;
-
-                                    var tween = Tween(begin: begin, end: end)
-                                        .chain(CurveTween(curve: curve));
-                                    var offsetAnimation =
-                                        animation.drive(tween);
-
-                                    return SlideTransition(
-                                        position: offsetAnimation,
-                                        child: child);
-                                  },
-                                ),
-                              );
-                            }
-                          : null, // Disable the button if validation fails
-                      child: const Text(
-                        "Tiếp tục",
-                        style: TextStyle(fontSize: 18, color: Colors.white),
-                      ),
-                    )),
-              ),
-            )
+            _buildStepHeader(),
+            Expanded(child: _buildFormContent()),
+            _buildBottomButton(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTitle(String value) {
-    return Padding(
-      padding: EdgeInsets.only(left: 15, top: 10),
-      child: Row(
-        children: [
-          Icon(
-            Icons.check,
-            color: AppColors.deepBlue,
-            size: 20,
+  AppBar _buildAppBar() {
+    return AppBar(
+      leading: BackButton(color: Colors.white),
+      title: const Text('Đặt lịch khám'),
+      centerTitle: true,
+      backgroundColor: AppColors.deepBlue,
+      foregroundColor: Colors.white,
+    );
+  }
+
+  Widget _buildStepHeader() {
+    return Container(
+      width: double.infinity,
+      color: Colors.grey[400],
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 1),
+        padding: const EdgeInsets.all(10),
+        color: Colors.white,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              _buildStepItem('1', 'Chọn lịch khám', AppColors.deepBlue, true),
+              _buildStepItem('2', 'Xác nhận', const Color(0xFF656565), true),
+              _buildStepItem(
+                  '3', 'Nhận lịch hẹn', const Color(0xFF656565), false),
+            ],
           ),
-          SizedBox(width: 5),
-          Text(
-            value,
-            style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w500),
-          )
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFormContent() {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildDoctorInfo(),
+          _buildSectionTitle('Đặt lịch khám này cho:'),
+          Selecustomeronline(
+              onCustomerSelected: (val) => setState(() => customer = val)),
+          _buildSectionTitle('Chọn chuyên khoa'),
+          _buildPickerTile(
+            title: _selectedSpecialty?.name ?? 'Chọn chuyên khoa',
+            onTap: () async {
+              final selected = await showModalBottomSheet<Specialty>(
+                context: context,
+                isScrollControlled: true,
+                builder: (_) =>
+                    Selespecialtyonline(specialties: widget.doctor.specialties),
+              );
+              if (selected != null) {
+                setState(() {
+                  _selectedSpecialty = selected;
+                  _selectedServiceId = null;
+                  _selectedServiceName = null;
+                });
+              }
+            },
+          ),
+          _buildSectionTitle('Chọn dịch vụ'),
+          _buildPickerTile(
+            title: _selectedServiceName ?? 'Chọn dịch vụ',
+            onTap: () async {
+              if (_selectedSpecialty == null) return;
+              final result = await showModalBottomSheet<Map<String, dynamic>>(
+                context: context,
+                builder: (_) => Seleserviceonline(
+                    serviceId: _selectedSpecialty!.id.toString()),
+              );
+              if (result != null) {
+                setState(() {
+                  _selectedServiceName = result['name'];
+                  _selectedServiceId = result['id'];
+                });
+              }
+            },
+          ),
+          _buildSectionTitle('Chọn ngày khám'),
+          _buildPickerTile(
+            title: selectedDate != null
+                ? DateFormat('dd/MM/yyyy').format(selectedDate!)
+                : 'Chọn ngày khám',
+            onTap: () async {
+              final selected = await showModalBottomSheet<DateTime>(
+                context: context,
+                builder: (_) =>
+                    SelectDayWidget(clinicId: widget.doctor.clinic.id),
+              );
+              if (selected != null) {
+                setState(() {
+                  selectedDate = selected;
+                  selectedTimes = null; // reset giờ khi chọn ngày mới
+                });
+              }
+            },
+          ),
+          _buildSectionTitle('Chọn giờ khám'),
+          _buildPickerTile(
+            title: selectedTimes?.isNotEmpty == true
+                ? selectedTimes!
+                : 'Chọn giờ khám',
+            onTap: () {
+              if (selectedDate == null) return;
+              showModalBottomSheet(
+                context: context,
+                builder: (_) => HeaderBottomSheet(
+                  title: 'Chọn giờ khám',
+                  body: WidgetSelectedTimeOnline(
+                    doctorId: widget.doctor.id,
+                    date: DateFormat('yyyy-MM-dd').format(selectedDate!),
+                    onTimeSelected: (time) {
+                      setState(() => selectedTimes = time);
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildTItleRow(String value, String label, Color colors, bool icon) {
-    return Row(
-      children: [
-        Container(
-          width: 23,
-          height: 23,
-          decoration: BoxDecoration(
-            color: colors, // màu nền hình tròn
-            shape: BoxShape.circle, // tạo hình tròn
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            value,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
+  Widget _buildDoctorInfo() {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(color: Colors.grey[400]!, blurRadius: 1, spreadRadius: 1)
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.deepBlue, width: 1),
+              shape: BoxShape.circle,
+            ),
+            child: CircleAvatar(
+              radius: 34,
+              backgroundImage: NetworkImage(widget.doctor.avatar),
+              onBackgroundImageError: (_, __) {},
             ),
           ),
-        ),
-        SizedBox(width: 5),
-        Text(
-          label,
-          style: TextStyle(
-            color: colors,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(widget.doctor.qualification,
+                    style: TextStyle(fontSize: 15)),
+                Text(widget.doctor.fullName,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w700, fontSize: 17)),
+                Text(
+                  'Chuyên khoa: ${widget.doctor.specialties.isNotEmpty ? widget.doctor.specialties.map((e) => e.name).join(', ') : "Chưa có chuyên khoa"}',
+                  style: const TextStyle(fontSize: 15),
+                  softWrap: true,
+                ),
+              ],
+            ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 15, top: 12, bottom: 6),
+      child: Row(
+        children: [
+          const Icon(Icons.check, size: 20, color: AppColors.deepBlue),
+          const SizedBox(width: 5),
+          Text(title,
+              style:
+                  const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w500)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPickerTile(
+      {required String title, required VoidCallback onTap}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.grey[400]!, blurRadius: 1, spreadRadius: 1)
+            ],
+          ),
+          child: Text(title, style: const TextStyle(fontSize: 16)),
         ),
-        SizedBox(width: 5),
-        icon == true
-            ? Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 17,
-                color: const Color(0xFF656565),
-              )
-            : SizedBox.shrink(),
+      ),
+    );
+  }
+
+  Widget _buildStepItem(
+      String number, String label, Color color, bool hasArrow) {
+    return Row(
+      children: [
+        CircleAvatar(
+          radius: 11.5,
+          backgroundColor: color,
+          child: Text(number,
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold)),
+        ),
+        const SizedBox(width: 5),
+        Text(label,
+            style: TextStyle(
+                color: color, fontSize: 12, fontWeight: FontWeight.w500)),
+        if (hasArrow)
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5),
+            child: Icon(Icons.arrow_forward_ios_rounded,
+                size: 14, color: Color(0xFF656565)),
+          ),
       ],
+    );
+  }
+
+  Widget _buildBottomButton() {
+    return Container(
+      color: Colors.grey[400],
+      child: Container(
+        width: double.infinity,
+        color: Colors.white,
+        margin: EdgeInsets.only(top: 1),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        child: ElevatedButton(
+          onPressed: isFormValid ? _goToConfirmScreen : null,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.deepBlue,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+          child: const Text('Tiếp tục',
+              style: TextStyle(fontSize: 18, color: Colors.white)),
+        ),
+      ),
     );
   }
 }
