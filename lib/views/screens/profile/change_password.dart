@@ -89,82 +89,88 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WidgetHeaderBody(
-      iconBack: true,
-      title: 'Đổi Mật Khẩu',
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _customTitle(title: 'Mật khẩu cũ'),
-                _buildPasswordField(
-                  controller: _oldPasswordController,
-                  hintText: 'Nhập mật khẩu cũ',
-                  isVisible: _isOldPasswordVisible,
-                  onToggle: () {
-                    setState(() {
-                      _isOldPasswordVisible = !_isOldPasswordVisible;
-                    });
-                  },
-                  validator: _validateOldPassword,
-                ),
-                const SizedBox(height: 15),
-                _customTitle(title: 'Mật khẩu mới'),
-                _buildPasswordField(
-                  controller: _newPasswordController,
-                  hintText: 'Nhập mật khẩu mới',
-                  isVisible: _isNewPasswordVisible,
-                  onToggle: () {
-                    setState(() {
-                      _isNewPasswordVisible = !_isNewPasswordVisible;
-                    });
-                  },
-                  validator: _validateNewPassword,
-                ),
-                const SizedBox(height: 15),
-                _customTitle(title: 'Xác nhận mật khẩu'),
-                _buildPasswordField(
-                  controller: _confirmPasswordController,
-                  hintText: 'Nhập lại mật khẩu',
-                  isVisible: _isConfirmPasswordVisible,
-                  onToggle: () {
-                    setState(() {
-                      _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
-                    });
-                  },
-                  validator: _validateConfirmPassword,
-                ),
-                const SizedBox(height: 15),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: isLoading ? null : _handleChangePassword,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.deepBlue,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(25)),
+    return Scaffold(
+      body: WidgetHeaderBody(
+        iconBack: true,
+        title: 'Đổi Mật Khẩu',
+        body: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _customTitle(title: 'Mật khẩu cũ'),
+                    _buildPasswordField(
+                      controller: _oldPasswordController,
+                      hintText: 'Nhập mật khẩu cũ',
+                      isVisible: _isOldPasswordVisible,
+                      onToggle: () {
+                        setState(() {
+                          _isOldPasswordVisible = !_isOldPasswordVisible;
+                        });
+                      },
+                      validator: _validateOldPassword,
+                    ),
+                    const SizedBox(height: 15),
+                    _customTitle(title: 'Mật khẩu mới'),
+                    _buildPasswordField(
+                      controller: _newPasswordController,
+                      hintText: 'Nhập mật khẩu mới',
+                      isVisible: _isNewPasswordVisible,
+                      onToggle: () {
+                        setState(() {
+                          _isNewPasswordVisible = !_isNewPasswordVisible;
+                        });
+                      },
+                      validator: _validateNewPassword,
+                    ),
+                    const SizedBox(height: 15),
+                    _customTitle(title: 'Xác nhận mật khẩu'),
+                    _buildPasswordField(
+                      controller: _confirmPasswordController,
+                      hintText: 'Nhập lại mật khẩu',
+                      isVisible: _isConfirmPasswordVisible,
+                      onToggle: () {
+                        setState(() {
+                          _isConfirmPasswordVisible =
+                              !_isConfirmPasswordVisible;
+                        });
+                      },
+                      validator: _validateConfirmPassword,
+                    ),
+                    const SizedBox(height: 15),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: isLoading ? null : _handleChangePassword,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.deepBlue,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(25)),
+                          ),
+                        ),
+                        child: isLoading
+                            ? CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    AppColors.neutralWhite),
+                              )
+                            : Text(
+                                'Xác nhận',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.neutralWhite),
+                              ),
                       ),
                     ),
-                    child: isLoading
-                        ? CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                AppColors.neutralWhite),
-                          )
-                        : Text(
-                            'Xác nhận',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.neutralWhite),
-                          ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
