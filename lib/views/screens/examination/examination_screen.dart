@@ -386,7 +386,9 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
       'CONFIRM': 'Đã xác nhận',
       'ARRIVED': 'Đã tới khám',
       'COMPLETED': 'Đã khám',
-      'CANCELLED': 'Đã hủy'
+      'CANCELLED': 'Đã hủy',
+      'ONLINE': 'Đã thanh toán',
+      'UPADID': 'Chưa thanh toán',
     };
     final textColor = {
           'PENDING': Colors.blueAccent,

@@ -6,6 +6,11 @@ import 'package:health_care/models/specialty.dart';
 import 'package:health_care/models/customer.dart';
 import 'package:health_care/viewmodels/api/customer_api.dart';
 import 'package:health_care/viewmodels/api/specialty_api.dart';
+import 'package:health_care/views/screens/apoointment_online/appointment_online_screen.dart';
+import 'package:health_care/views/screens/apoointment_online/doctor_online/doctor_api.dart';
+import 'package:health_care/views/screens/apoointment_online/doctor_online/doctor_detail_screen.dart';
+import 'package:health_care/views/screens/apoointment_online/doctor_online/doctor_list_screen.dart';
+import 'package:health_care/views/screens/apoointment_online/doctor_online/doctor_model.dart';
 import 'package:health_care/views/screens/chatbot/botchat.dart';
 import 'package:health_care/views/screens/map/searchMap.dart';
 import 'package:health_care/views/screens/search/search_screen.dart';
@@ -25,6 +30,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePage extends State<HomePage> {
   List<Specialty>? specialties;
+  List<Doctor>? doctor;
   Customer? customers;
   final List<String> imgList = [
     'assets/images/anhbia1.jpg',
@@ -44,12 +50,14 @@ class _HomePage extends State<HomePage> {
   void fetchSpecialties() async {
     List<Specialty>? data = await SpecialtyApi.getAllSpecialty();
     Customer? result = await CustomerApi.getCustomerProfile();
+    List<Doctor>? dataDoctor = await DoctorApi.getAllOnlineDoctors();
 
     if (mounted) {
       // Kiểm tra xem widget có còn tồn tại không
       setState(() {
         specialties = data;
         customers = result;
+        doctor = dataDoctor;
       });
     }
   }
@@ -308,7 +316,6 @@ class _HomePage extends State<HomePage> {
                               ),
                             ),
                           ),
-
                           CarouselSlider(
                             items: imgList
                                 .map(
@@ -329,9 +336,252 @@ class _HomePage extends State<HomePage> {
                               viewportFraction: 0.8,
                             ),
                           ),
-                          // Container(
-
-                          // ),
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'BÁC SĨ TƯ VẤN',
+                                          style: TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          'Khám bệnh qua video',
+                                          style: TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                      ],
+                                    ),
+                                    InkWell(
+                                      onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                DoctorListScreen(),
+                                          )),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Xem tất cả',
+                                            style: TextStyle(
+                                                color: AppColors.deepBlue,
+                                                fontSize: 15),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Icon(
+                                            Icons.arrow_forward_ios,
+                                            color: AppColors.deepBlue,
+                                            size: 14,
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(height: 15),
+                                doctor!.isEmpty
+                                    ? Center(
+                                        child: CircularProgressIndicator(),
+                                      )
+                                    : SizedBox(
+                                        height: 215, // đặt chiều cao cụ thể
+                                        child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: doctor!.length,
+                                          itemBuilder: (context, index) {
+                                            final doctors = doctor![index];
+                                            return InkWell(
+                                              onTap: () => Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        DoctorDetailScreen(
+                                                            doctor: doctors),
+                                                  )),
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 5),
+                                                width: 130,
+                                                margin: EdgeInsets.symmetric(
+                                                    horizontal: 8, vertical: 1),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey
+                                                          .withOpacity(0.6),
+                                                      spreadRadius: 1,
+                                                      blurRadius: 1,
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Center(
+                                                      child: Container(
+                                                        width: 80,
+                                                        height: 80,
+                                                        margin:
+                                                            EdgeInsets.all(8),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          border: Border.all(
+                                                            color: AppColors
+                                                                .deepBlue, // Màu viền
+                                                            width:
+                                                                1, // Độ dày viền
+                                                          ),
+                                                        ),
+                                                        child: ClipOval(
+                                                          child: Image.network(
+                                                            doctors.avatar,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 5),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Text(
+                                                              doctors
+                                                                  .averageRating
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .amber,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                            Icon(
+                                                              Icons.star,
+                                                              color:
+                                                                  Colors.amber,
+                                                              size: 19,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Text(
+                                                              doctors
+                                                                  .reviewCount
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .amber,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                            Icon(
+                                                              Icons.person,
+                                                              color:
+                                                                  Colors.amber,
+                                                              size: 19,
+                                                            ),
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
+                                                    Text(
+                                                      doctors.qualification,
+                                                      style: TextStyle(
+                                                          fontSize: 14),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                    Text(
+                                                      doctors.fullName,
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 5),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  AppointmentOnlineScreen(
+                                                                      doctor:
+                                                                          doctors),
+                                                            ));
+                                                      },
+                                                      child: Container(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 7),
+                                                        margin: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal: 5),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: AppColors
+                                                              .deepBlue,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                        ),
+                                                        child: Center(
+                                                          child: Text(
+                                                            'Tư vấn ngay',
+                                                            style: TextStyle(
+                                                              fontSize: 13.5,
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 10),
                           Container(
                             margin: EdgeInsets.symmetric(horizontal: 15),
                             child: Column(

@@ -130,10 +130,14 @@ class _WidgetSelectedTimeOnlineState extends State<WidgetSelectedTimeOnline> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isSelected
                       ? AppColors.deepBlue
-                      : (isPastTime ? Colors.grey : AppColors.deepBlue),
+                      : (isPastTime
+                          ? Colors.grey
+                          : AppColors.deepBlue.withOpacity(0.6)),
                   foregroundColor: isSelected
                       ? Colors.white
-                      : (isPastTime ? Colors.black : AppColors.deepBlue),
+                      : (isPastTime
+                          ? Colors.black
+                          : AppColors.deepBlue.withOpacity(0.6)),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
