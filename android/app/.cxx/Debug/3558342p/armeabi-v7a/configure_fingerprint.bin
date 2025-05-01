@@ -2,6 +2,7 @@ C/C++ Structured LogO
 M
 KC:\src\flutter\packages\flutter_tools\gradle\src\main\groovy\CMakeLists.txtC
 A
+<<<<<<< HEAD
 ?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	ð¹îØè2§ ˆÌŸÐß2m
 k
 iD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\additional_project_files.txt	ð¹îØè2 Ô¹îØè2j
@@ -26,3 +27,29 @@ a
 _D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\prefab_config.json	ð¹îØè2( ë¹îØè2h
 f
 dD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\symbol_folder_index.txt	ð¹îØè2[ ë¹îØè2
+=======
+?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	æ›þÙè2§ ˆÌŸÐß2m
+k
+iD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\additional_project_files.txt	æ›þÙè2 Û›þÙè2j
+h
+fD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\android_gradle_build.json	æ›þÙè2¯ Ý›þÙè2o
+m
+kD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\android_gradle_build_mini.json	æ›þÙè2Œ à›þÙè2\
+Z
+XD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\build.ninja	æ›þÙè2ÔÒ äšþÙè2`
+^
+\D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\build.ninja.txt	æ›þÙè2e
+c
+aD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\build_file_index.txt	æ›þÙè2K ã›þÙè2f
+d
+bD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\compile_commands.json	æ›þÙè2	j
+h
+fD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\compile_commands.json.bin	æ›þÙè2
+p
+n
+lD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\metadata_generation_command.txt	æ›þÙè2É á›þÙè2c
+a
+_D:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\prefab_config.json	æ›þÙè2( á›þÙè2h
+f
+dD:\FPT-Polytechnic\Term7\NewDATN\android\app\.cxx\Debug\3558342p\armeabi-v7a\symbol_folder_index.txt	æ›þÙè2[ ã›þÙè2
+>>>>>>> main

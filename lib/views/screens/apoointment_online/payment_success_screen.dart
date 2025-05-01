@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:health_care/views/screens/tools/callvideo/app_data.dart';
 
 class PaymentSuccessScreen extends StatelessWidget {
   final int appointmentId;
   final String roomCode;
+  //
 
   const PaymentSuccessScreen({
     super.key,
@@ -12,6 +14,7 @@ class PaymentSuccessScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppData.roomCode = roomCode;
     return Scaffold(
       appBar: AppBar(title: const Text("Hoá đơn thành công")),
       body: Center(
@@ -22,8 +25,11 @@ class PaymentSuccessScreen extends StatelessWidget {
             const SizedBox(height: 16),
             Text("🎉 Lịch hẹn #$appointmentId đã thanh toán thành công!"),
             const SizedBox(height: 8),
-            Text("Mã phòng tư vấn của bạn là:", style: const TextStyle(fontSize: 16)),
-            Text(roomCode, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            Text("Mã phòng tư vấn của bạn là:",
+                style: const TextStyle(fontSize: 16)),
+            Text(roomCode,
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           ],
         ),
       ),

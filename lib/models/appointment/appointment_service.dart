@@ -7,12 +7,16 @@ class AppointmentService {
   final Appointment appointment;
   final Service? service;
   final Employee? employee;
+  final String? status;
+  final String? note;
 
   AppointmentService({
     required this.id,
     required this.appointment,
     this.service,
     this.employee,
+    this.status,
+    this.note,
   });
 
   factory AppointmentService.fromJson(Map<String, dynamic> json) {
@@ -29,6 +33,8 @@ class AppointmentService {
         employee: json['employee'] != null
             ? Employee.fromJson(json['employee'])
             : null,
+        status: json['status'],
+        note: json['note'],
       );
     } catch (e, stackTrace) {
       print("Error parsing AppointmentService: $e");
@@ -42,6 +48,8 @@ class AppointmentService {
       'appointment': appointment.toJson(),
       'service': service?.toJson(),
       'employee': employee?.toJson(),
+      'status': status,
+      'note': note,
     };
   }
 }

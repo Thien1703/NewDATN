@@ -223,7 +223,7 @@ class _NotiSucefullyState extends State<NotiSucefully> {
                                               ),
                                             ),
                                             const SizedBox(width: 20),
-                                            Expanded(
+                                            Flexible(
                                               child: Text(
                                                 appointment.clinic.name,
                                                 softWrap: true,
@@ -231,6 +231,7 @@ class _NotiSucefullyState extends State<NotiSucefully> {
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w500,
                                                 ),
+                                                textAlign: TextAlign.right,
                                               ),
                                             ),
                                           ],
@@ -253,7 +254,7 @@ class _NotiSucefullyState extends State<NotiSucefully> {
                                         ),
                                         appointment.customerProfile?.id == null
                                             ? Padding(
-                                                padding: EdgeInsets.all(10),
+                                                padding: EdgeInsets.zero,
                                                 child: Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
@@ -415,8 +416,8 @@ class _NotiSucefullyState extends State<NotiSucefully> {
                                         children: [
                                           Text('Dịch vụ',
                                               style: TextStyle(fontSize: 14)),
-                                          SizedBox(width: 50),
-                                          Expanded(
+                                          SizedBox(width: 80),
+                                          Flexible(
                                             child: Text(
                                               appServices.service!.name,
                                               style: TextStyle(
@@ -424,6 +425,7 @@ class _NotiSucefullyState extends State<NotiSucefully> {
                                                   fontWeight: FontWeight.w600),
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.right,
                                             ),
                                           ),
                                         ],
