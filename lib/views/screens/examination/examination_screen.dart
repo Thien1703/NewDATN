@@ -134,7 +134,9 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
       'Đã xác nhận': 'CONFIRM',
       'Đã tới khám': 'ARRIVED',
       'Đã khám': 'COMPLETED',
-      'Đã hủy': 'CANCELLED'
+      'Đã hủy': 'CANCELLED',
+      'Đã thanh toán': 'ONINLE',
+      'Chưa thanh toán': 'UNPAID'
     };
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -388,7 +390,7 @@ class _ExaminationScreenState extends State<ExaminationScreen> {
       'COMPLETED': 'Đã khám',
       'CANCELLED': 'Đã hủy',
       'ONLINE': 'Đã thanh toán',
-      'UPADID': 'Chưa thanh toán',
+      'UNPAID': 'Chưa thanh toán',
     };
     final textColor = {
           'PENDING': Colors.blueAccent,

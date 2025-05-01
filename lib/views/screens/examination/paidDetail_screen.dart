@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/appointment/appointment_service.dart';
-import 'package:health_care/models/customerProfile.dart';
 import 'package:health_care/viewmodels/api/appointmentService_api.dart';
 import 'package:health_care/viewmodels/api/appointment_api.dart';
 import 'package:health_care/views/screens/clinic/clinic_screen.dart';
+import 'package:health_care/views/screens/examination/showAppointServiceDetail.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
 import 'package:health_care/views/widgets/bottomSheet/header_bottomSheet.dart';
 import 'package:health_care/views/widgets/bottomSheet/showCustomer.dart';
@@ -41,7 +41,7 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
 
   String formatCurrency(int amount) {
     final formatter = NumberFormat("#,###", "vi_VN");
-    return "${formatter.format(amount)}VNĐ";
+    return "${formatter.format(amount)} đ ";
   }
 
   String formatDate(String date) {
@@ -106,33 +106,36 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
                                               "Đang cập nhật",
                                           Colors.black,
                                         ),
-                                        // appointmentServices!
-                                        //             .first.appointment.status ==
-                                        //         'COMPLETED'
-                                        //     ? OutlinedButton(
-                                        //         onPressed: () {
-                                        //           Navigator.push(
-                                        //               context,
-                                        //               MaterialPageRoute(
-                                        //                 builder: (context) =>
-                                        //                     StarScreen(
-                                        //                   customerId:
-                                        //                       appointmentServices!
-                                        //                               .first
-                                        //                               .appointment
-                                        //                               .customer
-                                        //                               ?.id ??
-                                        //                           0,
-                                        //                   serviceId: item
-                                        //                           .service
-                                        //                           ?.id ??
-                                        //                       0,
-                                        //                 ),
-                                        //               ));
-                                        //         },
-                                        //         child: Text('Đánh giá'),
-                                        //       )
-                                        //     : Container(),
+                                        appointmentServices?.first.status ==
+                                                'COMPLETED'
+                                            ? Center(
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              Showappointservicedetail(
+                                                            appointmentServiceId:
+                                                                item.id,
+                                                          ),
+                                                        ));
+                                                  },
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        top: 10),
+                                                    child: Text(
+                                                      'Chi tiết',
+                                                      style: TextStyle(
+                                                          color: AppColors
+                                                              .deepBlue,
+                                                          fontWeight:
+                                                              FontWeight.w700),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            : SizedBox.shrink()
                                       ],
                                     ),
                                   );

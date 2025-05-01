@@ -9,6 +9,7 @@ import 'package:health_care/models/service.dart';
 class ShowevaluateScreen extends StatefulWidget {
   final int appointmentId;
   const ShowevaluateScreen({super.key, required this.appointmentId});
+
   @override
   State<ShowevaluateScreen> createState() => _ShowevaluateScreen();
 }
@@ -20,20 +21,17 @@ class _ShowevaluateScreen extends State<ShowevaluateScreen> {
   @override
   void initState() {
     super.initState();
-    fetchClinics();
+    fetchRatingsAndServices();
   }
 
-  void fetchClinics() async {
+  void fetchRatingsAndServices() async {
     List<Rating>? data =
         await RatingApi.getRatingByAppointment(widget.appointmentId);
     if (data != null) {
       Map<int, Service> fetchedServices = {};
-      for (var rating in data) {
-        // Kiểm tra null và xử lý mặc định nếu null
-        int serviceId = rating.serviceId ?? 0;
-
+      for (var r in data) {
+        int serviceId = r.serviceId ?? 0;
         if (serviceId != 0) {
-          // Kiểm tra serviceId có hợp lệ không
           Service? service = await ServiceApi.getServiceById(serviceId);
           if (service != null) {
             fetchedServices[serviceId] = service;
@@ -54,101 +52,115 @@ class _ShowevaluateScreen extends State<ShowevaluateScreen> {
       iconBack: true,
       title: 'Chi tiết đánh giá',
       body: rating == null
-          ? Container(
-              width: double.infinity,
-              height: 700,
-              alignment: Alignment.center,
-              child: SizedBox(
-                width: 30,
-                height: 30,
-                child: CircularProgressIndicator(strokeWidth: 3),
-              ),
+          ? Center(
+              child: CircularProgressIndicator(strokeWidth: 3),
             )
           : Container(
               color: AppColors.ghostWhite,
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 15),
-                child: ListView.builder(
-                  padding: EdgeInsets.only(top: 10),
-                  shrinkWrap: true,
-                  itemCount: rating!.length,
-                  itemBuilder: (context, index) {
-                    final ratings = rating![index];
-                    final service = serviceMap[ratings.serviceId];
-                    return Container(
-                      child: _buildContainer(
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: ListView.separated(
+                itemCount: rating!.length,
+                separatorBuilder: (_, __) => SizedBox(height: 12),
+                itemBuilder: (context, index) {
+                  final r = rating![index];
+                  final service = serviceMap[r.serviceId];
+
+                  return Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(0.7),
+                            blurRadius: 6,
+                            offset: Offset(0, 3),
+                            spreadRadius: 1)
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Header: Customer name + stars
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                // Image.asset('assets/images/iconProfile.jpg',width: 30,),
-                                Column(
-                                  children: [
-                                    Text(
-                                      ratings.customerName,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Row(
-                                      children: List.generate(5, (index) {
-                                        return Icon(
-                                          index < ratings.stars
-                                              ? Icons.star
-                                              : Icons.star_border,
-                                          color: Colors.amber,
-                                          size: 20,
-                                        );
-                                      }),
-                                    ),
-                                  ],
-                                )
-                              ],
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundImage:
+                                  AssetImage('assets/images/iconProfile.jpg'),
                             ),
-                            Text(ratings.comment ?? 'Không xác định'),
-                            Container(
-                              child: Row(
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Image.network(
-                                    service?.image ?? 'không thấy ảnh',
-                                    width: 70,
+                                  Text(
+                                    r.customerName,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
                                   ),
-                                  SizedBox(width: 20),
-                                  Expanded(
-                                      child: Text(
-                                          service?.name ?? 'Không rõ dịch vụ')),
+                                  SizedBox(height: 4),
+                                  Row(
+                                    children: List.generate(5, (i) {
+                                      return Icon(
+                                        i < r.stars
+                                            ? Icons.star
+                                            : Icons.star_border,
+                                        color: Colors.amber,
+                                        size: 18,
+                                      );
+                                    }),
+                                  ),
                                 ],
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    );
-                  },
-                ),
+                        SizedBox(height: 10),
+
+                        // Comment
+                        Text(
+                          r.comment ?? 'Không có bình luận.',
+                          style: TextStyle(fontSize: 14, color: Colors.black87),
+                        ),
+                        SizedBox(height: 12),
+                        Divider(),
+
+                        // Service info
+                        Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                service?.image ?? '',
+                                width: 70,
+                                height: 70,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) => Container(
+                                  width: 70,
+                                  height: 70,
+                                  color: Colors.grey[300],
+                                  child: Icon(Icons.broken_image, size: 30),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                service?.name ?? 'Dịch vụ không xác định',
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.w500),
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
-    );
-  }
-
-  Widget _buildContainer(Widget child) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      margin: const EdgeInsets.only(bottom: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              blurRadius: 5,
-              spreadRadius: 1),
-        ],
-      ),
-      child: child,
     );
   }
 }

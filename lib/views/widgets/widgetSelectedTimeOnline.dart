@@ -58,19 +58,28 @@ class _WidgetSelectedTimeOnlineState extends State<WidgetSelectedTimeOnline> {
   }
 
   bool _isTimePast(String time) {
-    final currentTime = DateTime.now();
-    final currentHour = currentTime.hour;
-    final currentMinute = currentTime.minute;
+    final now = DateTime.now();
+    final selectedDate =
+        DateTime.parse(widget.date); // widget.date định dạng "yyyy-MM-dd"
+
+    // Nếu là ngày tương lai thì không cần kiểm tra giờ
+    if (selectedDate.isAfter(DateTime(now.year, now.month, now.day))) {
+      return false;
+    }
+
+    // Nếu là hôm nay, mới cần so sánh giờ
     final timeParts = time.split(':');
     final hour = int.parse(timeParts[0]);
     final minute = int.parse(timeParts[1]);
+    final selectedDateTime = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      hour,
+      minute,
+    );
 
-    // So sánh giờ
-    if (hour < currentHour ||
-        (hour == currentHour && minute <= currentMinute)) {
-      return true;
-    }
-    return false;
+    return selectedDateTime.isBefore(now);
   }
 
   @override
@@ -118,26 +127,25 @@ class _WidgetSelectedTimeOnlineState extends State<WidgetSelectedTimeOnline> {
           return Column(
             children: [
               ElevatedButton(
-                onPressed: isPastTime
-                    ? null // Disable button if the time is in the past
+                onPressed: (isPastTime || slots == 0)
+                    ? null
                     : () {
                         setState(() {
-                          _selectedTime = time; // Lưu giờ đã chọn
+                          _selectedTime = time;
                         });
-                        widget.onTimeSelected(
-                            time); // Gửi giá trị về màn hình chính
+                        widget.onTimeSelected(time);
                       },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isSelected
                       ? AppColors.deepBlue
                       : (isPastTime
                           ? Colors.grey
-                          : AppColors.deepBlue.withOpacity(0.6)),
+                          : AppColors.deepBlue.withOpacity(0.5)),
                   foregroundColor: isSelected
                       ? Colors.white
                       : (isPastTime
                           ? Colors.black
-                          : AppColors.deepBlue.withOpacity(0.6)),
+                          : AppColors.deepBlue.withOpacity(0.5)),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
