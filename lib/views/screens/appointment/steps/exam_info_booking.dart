@@ -114,6 +114,8 @@ class _ExamInfoBooking extends State<ExamInfoBooking> {
                     child: TimeSelector(
                       onTimeSelected: updateSelectedTime,
                       selectedDate: selectedDate,
+                      clinicId: widget.clinic.id,
+                      specialtyId: selectedSpecialtyId!,
                     ),
                   ),
                 ),
@@ -211,8 +213,15 @@ class _DateSelectorState extends State<DateSelector> {
 class TimeSelector extends StatefulWidget {
   final Function(String) onTimeSelected;
   final DateTime? selectedDate;
-  const TimeSelector(
-      {super.key, required this.onTimeSelected, this.selectedDate});
+  final int clinicId;
+  final int? specialtyId;
+  const TimeSelector({
+    super.key,
+    required this.onTimeSelected,
+    this.selectedDate,
+    required this.clinicId,
+    required this.specialtyId,
+  });
 
   @override
   State<TimeSelector> createState() => _TimeSelectorState();
@@ -230,6 +239,14 @@ class _TimeSelectorState extends State<TimeSelector> {
 
   @override
   Widget build(BuildContext context) {
+    // Kiểm tra và khởi tạo các giá trị mặc định nếu là null
+    DateTime date = widget.selectedDate ??
+        DateTime.now(); // Sử dụng DateTime hiện tại nếu selectedDate là null
+    String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+
+    int specialtyId =
+        widget.specialtyId ?? 0; // Sử dụng 0 nếu specialtyId là null
+
     return Padding(
       padding: EdgeInsets.only(bottom: 20),
       child: SelectItemWidget(
@@ -237,7 +254,10 @@ class _TimeSelectorState extends State<TimeSelector> {
         text: selectedTime,
         bottomSheet: SelectTimeWidget(
           onTimeSelected: updateSelectedTime,
-          selectedDate: widget.selectedDate,
+          selectedDate: formattedDate,
+          clinicId: widget.clinicId,
+          specialtyId:
+              specialtyId, // Truyền specialtyId đã được khởi tạo giá trị
         ),
         color: selectedTime != 'Chọn giờ khám'
             ? AppColors.deepBlue

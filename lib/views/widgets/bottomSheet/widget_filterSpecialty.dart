@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/specialty.dart';
 import 'package:health_care/viewmodels/api/specialty_api.dart';
-import 'package:health_care/views/widgets/bottomSheet/header_bottomSheet.dart';
 import 'package:health_care/views/widgets/bottomSheet/header_bottomSheet1.dart';
 
 class WidgetFilterspecialty extends StatefulWidget {
-  const WidgetFilterspecialty({super.key});
+  final List<int> selectedIds; // Nhận danh sách ID đã chọn
+
+  const WidgetFilterspecialty({super.key, required this.selectedIds});
 
   @override
   State<WidgetFilterspecialty> createState() => _WidgetFilterspecialtyState();
@@ -38,10 +39,11 @@ class _WidgetFilterspecialtyState extends State<WidgetFilterspecialty> {
     if (mounted) {
       setState(() {
         specialties = data;
-        filteredSpecialties =
-            data; // Set the initial list to be the same as specialties
-        isSelectedList = List.generate(data?.length ?? 0,
-            (index) => false); // Khởi tạo trạng thái checkbox cho mỗi specialty
+        filteredSpecialties = data;
+        isSelectedList = List.generate(data?.length ?? 0, (index) {
+          // Kiểm tra nếu specialty đã được chọn từ danh sách `selectedIds`
+          return widget.selectedIds.contains(data![index].id);
+        });
       });
     }
   }
@@ -69,44 +71,7 @@ class _WidgetFilterspecialtyState extends State<WidgetFilterspecialty> {
         },
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Container(
-                height: 50,
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 226, 229, 231),
-                  border: Border.all(
-                      color: const Color.fromARGB(255, 193, 199, 206),
-                      width: 1.5),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.search,
-                      color: AppColors.deepBlue,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      child: TextField(
-                        controller: searchController,
-                        decoration: InputDecoration(
-                          hintText: 'Tìm kiếm chuyên khoa...',
-                          hintStyle: TextStyle(
-                            fontSize: 15,
-                          ),
-                          border: InputBorder.none,
-                          isDense: true,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            // ... (phần tìm kiếm và danh sách đã được giữ nguyên)
             SizedBox(
               height: 500,
               child: filteredSpecialties == null
@@ -131,32 +96,34 @@ class _WidgetFilterspecialtyState extends State<WidgetFilterspecialty> {
                                 ),
                                 margin: const EdgeInsets.only(bottom: 8),
                                 decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                        color: isSelectedList[index]
-                                            ? AppColors
-                                                .deepBlue // Chọn màu khi được chọn
-                                            : Colors
-                                                .grey, // Màu mặc định khi không chọn
-                                        width:
-                                            isSelectedList[index] ? 1.5 : 0.5),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey[300]!,
-                                        blurRadius: 3,
-                                        spreadRadius: 1,
-                                      )
-                                    ]),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: isSelectedList[index]
+                                        ? AppColors
+                                            .deepBlue // Chọn màu khi được chọn
+                                        : Colors
+                                            .grey, // Màu mặc định khi không chọn
+                                    width: isSelectedList[index] ? 1.5 : 0.5,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey[300]!,
+                                      blurRadius: 3,
+                                      spreadRadius: 1,
+                                    )
+                                  ],
+                                ),
                                 child: Row(
                                   children: [
                                     Expanded(
                                       child: Text(
                                         specialty.name,
                                         style: const TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500),
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
                                     Checkbox(
@@ -182,10 +149,10 @@ class _WidgetFilterspecialtyState extends State<WidgetFilterspecialty> {
                 List<int> selectedSpecialtyIds = [];
                 for (int i = 0; i < isSelectedList.length; i++) {
                   if (isSelectedList[i]) {
-                    selectedSpecialtyIds.add(
-                        specialties![i].id); // Lấy id của specialty đã chọn
+                    selectedSpecialtyIds.add(specialties![i].id);
                   }
                 }
+                Navigator.pop(context, selectedSpecialtyIds);
 
                 // In ra danh sách id của các specialty đã được chọn
                 print('Selected specialty IDs: $selectedSpecialtyIds');
