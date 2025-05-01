@@ -1,5 +1,8 @@
 import 'package:health_care/models/appointment/appointmentOnline_Create.dart';
+import 'package:health_care/models/appointment/appointmentResult.dart';
 import 'package:health_care/models/appointment/bookingOnlineInfo.dart';
+import 'package:health_care/models/appointment/modelCheckTimeOnline.dart';
+import 'package:health_care/models/appointment/modelTimeCheck.dart';
 import 'package:health_care/models/appointment/statusAppointment.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -279,22 +282,19 @@ class AppointmentApi {
     }
   }
 
-  static Future<Appointment?> getBooking(
+  static Future<AppointmentBookingResult> getBooking(
       AppointmentCreate appointmentCreate) async {
     final url =
         Uri.parse('${AppConfig.baseUrl}/appointment/create-with-services');
     String? token = await LocalStorageService.getToken();
 
-    // Kiểm tra nếu không có token
     if (token == null) {
       print('Không tìm thấy token.');
-      return null; // Không thực hiện gọi API nếu không có token
+      return AppointmentBookingResult(appointment: null, statusCode: 401);
     }
 
-    // Chuẩn bị body cho request
     final body = json.encode(appointmentCreate.toJson());
 
-    // Gửi POST request
     final response = await http.post(
       url,
       headers: {
@@ -304,34 +304,23 @@ class AppointmentApi {
       body: body,
     );
 
-    // In giá trị status code và body của response
     print('Giá trị status code: ${response.statusCode}');
     print('Giá trị response body: ${response.body}');
 
-    // Xử lý nếu response trả về status code 200 (thành công)
     if (response.statusCode == 200) {
       final jsonBody = json.decode(response.body);
-
       if (jsonBody['status'] == 0) {
-        // Thành công, chuyển đổi JSON thành đối tượng Appointment
-        return Appointment.fromJson(
-            jsonBody['data']); // Chuyển thành đối tượng Appointment từ 'data'
+        return AppointmentBookingResult(
+          appointment: Appointment.fromJson(jsonBody['data']),
+          statusCode: 200,
+        );
       } else {
-        // In lỗi từ API
         print('Lỗi từ API: ${jsonBody['message']}');
-        return null; // Trả về null nếu có lỗi từ API
+        return AppointmentBookingResult(appointment: null, statusCode: 500);
       }
-    }
-    // Xử lý trường hợp 409 (dịch vụ đã được đặt)
-    else if (response.statusCode == 409) {
-      print('Dịch vụ đã đặt rồi.');
-      return null; // Trả về null nếu dịch vụ đã được đặt
-    }
-    // Xử lý các lỗi khác
-    else {
-      print('API Lỗi: ${response.statusCode}');
-      print('Thông báo lỗi: ${response.body}');
-      return null; // Trả về null nếu có lỗi không xác định
+    } else {
+      return AppointmentBookingResult(
+          appointment: null, statusCode: response.statusCode);
     }
   }
 
@@ -391,6 +380,124 @@ class AppointmentApi {
     } catch (e) {
       print('❌ Lỗi kết nối API: $e');
       return ApiResponse(statusCode: 500, message: 'Lỗi kết nối tới máy chủ');
+    }
+  }
+
+  static Future<Modeltimecheck?> checkAppointmentTimeOff({
+    required int clinicId,
+    required String date,
+    required int specialtyId,
+  }) async {
+    final url = Uri.parse('${AppConfig.baseUrl}/appointment/check-slot');
+    String? token = await LocalStorageService.getToken();
+
+    // Kiểm tra token
+    if (token == null) {
+      print('❌ Không tìm thấy token.');
+      return null;
+    }
+
+    try {
+      // Tạo body request
+      final body = jsonEncode({
+        'clinicId': clinicId,
+        'date': date,
+        'specialtyId': specialtyId,
+      });
+
+      // Gửi request POST đến API
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: body,
+      );
+
+      print('📩 Status code: ${response.statusCode}');
+      print('📩 Response body: ${response.body}');
+
+      // Kiểm tra status code
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+
+        // Kiểm tra status trong response
+        if (json['status'] == 0) {
+          final data = json['data'];
+
+          // Kiểm tra data có null không
+          if (data != null) {
+            final modelTimeCheck = Modeltimecheck.fromJson({'data': data});
+            return modelTimeCheck;
+          } else {
+            print('❌ Không có dữ liệu slot');
+            return null;
+          }
+        } else {
+          // Xử lý lỗi API trả về
+          print('❌ API trả về lỗi: ${json['message']}');
+          return null;
+        }
+      } else {
+        print('❌ Server trả về lỗi: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      // Xử lý lỗi kết nối API
+      print('❌ Lỗi kết nối API: $e');
+      return null;
+    }
+  }
+
+// check slots đặt lịch
+  static Future<ModeltimecheckOnline?> checkAppointmentTime({
+    required int doctorId,
+    required String date,
+  }) async {
+    final url = Uri.parse('${AppConfig.baseUrl}/appointment/check-slot-doctor');
+    String? token = await LocalStorageService.getToken();
+
+    if (token == null) {
+      print('❌ Không tìm thấy token.');
+      return null;
+    }
+
+    try {
+      final body = jsonEncode({
+        'doctorId': doctorId,
+        'date': date,
+      });
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: body,
+      );
+
+      print('📩 Status code: ${response.statusCode}');
+      print('📩 Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        if (json['status'] == 0) {
+          // Parse ra BookingOnlineInfo từ data
+          final modelTimeCheck = ModeltimecheckOnline.fromJson(json['data']);
+          return modelTimeCheck;
+        } else {
+          print('❌ API trả về lỗi: ${json['message']}');
+          return null;
+        }
+      } else {
+        print('❌ Server trả về lỗi: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('❌ Lỗi kết nối API: $e');
+      return null;
     }
   }
 }

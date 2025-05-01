@@ -17,17 +17,39 @@ class DoctorListScreen extends StatefulWidget {
 
 class _DoctorListScreenState extends State<DoctorListScreen> {
   List<Doctor>? doctor;
+  List<Doctor>? filteredDoctors;
+  final TextEditingController _searchController = TextEditingController();
+  List<int> _selectedSpecialtyIds = [];
 
   @override
   void initState() {
     super.initState();
     fetchEmployee();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    final searchText = _searchController.text.toLowerCase();
+    if (doctor != null) {
+      setState(() {
+        filteredDoctors = doctor!.where((doc) {
+          return doc.fullName.toLowerCase().contains(searchText);
+        }).toList();
+      });
+    }
   }
 
   void fetchEmployee() async {
     List<Doctor>? data = await DoctorApi.getAllOnlineDoctors();
     setState(() {
       doctor = data;
+      filteredDoctors = data;
     });
   }
 
@@ -38,169 +60,247 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
       title: 'Tư vấn khám bệnh qua video',
       color: AppColors.ghostWhite,
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 17, vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'Lọc theo:',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true, // ← Thêm dòng này
-                      builder: (context) {
-                        return WidgetFilterspecialty();
-                      },
-                    );
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 227, 227, 227),
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Row(
-                      children: [
-                        Text(
-                          'Chuyên khoa',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
+            _buildFilterRow(),
+            _buildSearchField(),
+            doctor == null
+                ? _buildLoadingData()
+                : filteredDoctors!.isNotEmpty
+                    ? Expanded(
+                        child: SingleChildScrollView(
+                          child: ListView.builder(
+                            padding: EdgeInsets.zero,
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: filteredDoctors!.length,
+                            itemBuilder: (context, index) {
+                              final doc = filteredDoctors![index];
+                              return _buildDoctorCard(doc);
+                            },
                           ),
                         ),
-                        Icon(
-                          Icons.keyboard_arrow_down,
-                          size: 20,
-                        ),
-                      ],
+                      )
+                    : const Expanded(
+                        child: Center(child: Text('Không tìm thấy bác sĩ.')),
+                      ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilterRow() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 15),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Lọc theo:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              InkWell(
+                onTap: () async {
+                  final selectedIds = await showModalBottomSheet<List<int>>(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) => WidgetFilterspecialty(
+                      selectedIds:
+                          _selectedSpecialtyIds, // Truyền các ID đã chọn vào đây
                     ),
+                  );
+
+                  if (selectedIds != null) {
+                    setState(() {
+                      _selectedSpecialtyIds = selectedIds;
+                    });
+                  }
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 227, 227, 227),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: const Row(
+                    children: [
+                      Text(
+                        'Chuyên khoa',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                      Icon(Icons.keyboard_arrow_down, size: 20),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: _selectedSpecialtyIds.map((id) => Text('$id')).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSearchField() {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Container(
+        height: 50,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(
+              color: const Color.fromARGB(255, 193, 199, 206), width: 1.5),
+        ),
+        child: Row(
+          children: [
+            const SizedBox(width: 10),
+            const Icon(Icons.search, color: AppColors.deepBlue),
+            const SizedBox(width: 5),
+            Expanded(
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Tìm kiếm tên bác sĩ...',
+                  hintStyle: TextStyle(fontSize: 14),
+                  border: InputBorder.none,
+                  isDense: true,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDoctorCard(Doctor doctor) {
+    return InkWell(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DoctorDetailScreen(doctor: doctor),
+        ),
+      ),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+        margin: const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey[400]!,
+              blurRadius: 5,
+              spreadRadius: 1,
+            )
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                ClipOval(
+                  child: Image.network(
+                    doctor.avatar,
+                    width: 90,
+                    height: 90,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(doctor.qualification,
+                          style: TextStyle(fontSize: 14)),
+                      Text(
+                        doctor.fullName,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 19,
+                          color: AppColors.deepBlue,
+                        ),
+                      ),
+                      Text('${doctor.experienceYears} năm kinh nghiệm',
+                          style: TextStyle(fontSize: 14)),
+                      const SizedBox(height: 10),
+                      Wrap(
+                        spacing: 5,
+                        runSpacing: 8,
+                        children: doctor.specialties.map((e) {
+                          return Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 3),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: const Color.fromARGB(255, 223, 223, 223),
+                            ),
+                            child: Text(
+                              e.name,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-            doctor == null
-                ? _buildLoadingData()
-                : doctor != null
-                    ? ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: doctor!.length,
-                        itemBuilder: (context, index) {
-                          final doctors = doctor![index];
-                          return InkWell(
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      DoctorDetailScreen(doctor: doctors),
-                                )),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 5),
-                              margin: EdgeInsets.symmetric(vertical: 10),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(15),
-                                  // border: Border.all(color: Colors.black, width: 1),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey[400]!,
-                                      blurRadius: 5,
-                                      spreadRadius: 1,
-                                    )
-                                  ]),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Image.network(
-                                    doctors.avatar,
-                                    width: 90,
-                                    height: 100,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Bác sĩ ${doctors.fullName}',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                            color: AppColors.deepBlue,
-                                          ),
-                                          softWrap: true,
-                                        ),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Text(
-                                          'Chuyên khoa: ${doctors.specialties.map((e) => e.name).join(', ')}',
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Container(
-                                          margin:
-                                              EdgeInsets.only(right: 5, top: 5),
-                                          child: Align(
-                                            alignment: Alignment.topRight,
-                                            child: OutlinedButton(
-                                              onPressed: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          AppointmentOnlineScreen(
-                                                              doctor: doctors),
-                                                    ));
-                                              },
-                                              style: OutlinedButton.styleFrom(
-                                                  shape: RoundedRectangleBorder(
-                                                    side: BorderSide.none,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12), // bo góc
-                                                  ),
-                                                  foregroundColor: Colors
-                                                      .white, // màu chữ và icon
-                                                  backgroundColor:
-                                                      AppColors.deepBlue),
-                                              child: Text(
-                                                'Đặt lịch hẹn',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    : Center(
-                        child: Text('Không có bác sĩ '),
-                      )
+            const SizedBox(height: 10),
+            Padding(
+              padding: EdgeInsets.only(top: 5, bottom: 10),
+              child: Row(
+                children: [
+                  const Icon(Icons.location_on_rounded, size: 20),
+                  const SizedBox(width: 5),
+                  Text(
+                    doctor.clinic.name,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: OutlinedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          AppointmentOnlineScreen(doctor: doctor),
+                    ),
+                  );
+                },
+                style: OutlinedButton.styleFrom(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                  backgroundColor: AppColors.deepBlue,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+                child: const Text(
+                  'Đặt lịch ngay',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -209,7 +309,6 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
 
   Widget _buildLoadingData() {
     return Expanded(
-      // ← Thêm Expanded vào đây
       child: ListView.builder(
         itemCount: 5,
         itemBuilder: (context, index) {
@@ -217,10 +316,8 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
             baseColor: Colors.grey.shade300,
             highlightColor: Colors.grey.shade100,
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     width: 60,
@@ -233,7 +330,6 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           height: 14,

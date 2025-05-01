@@ -180,8 +180,8 @@ class _ConfirmappointmentOnlineScreenState
                                 child: Row(
                                   children: [
                                     Container(
-                                      width: 70,
-                                      height: 70,
+                                      width: 90,
+                                      height: 90,
                                       decoration: BoxDecoration(
                                         shape: BoxShape
                                             .circle, // 👈 hình tròn hoàn toàn
@@ -196,17 +196,25 @@ class _ConfirmappointmentOnlineScreenState
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      child: Text(
-                                        widget.doctor.fullName,
-                                        softWrap: true,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
+                                    SizedBox(width: 15),
+                                    Flexible(
+                                        child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(widget.doctor.qualification,
+                                            style: TextStyle(fontSize: 15)),
+                                        Text(widget.doctor.fullName,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 17)),
+                                        Text(
+                                          'Chuyên khoa: ${widget.doctor.specialties.isNotEmpty ? widget.doctor.specialties.map((e) => e.name).join(', ') : "Chưa có chuyên khoa"}',
+                                          style: const TextStyle(fontSize: 15),
+                                          softWrap: true,
                                         ),
-                                      ),
-                                    ),
+                                      ],
+                                    )),
                                   ],
                                 ),
                               ),

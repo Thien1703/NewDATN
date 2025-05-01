@@ -15,8 +15,8 @@ class Doctor {
   final List<Specialty> specialties;
   final double averageRating;
   final int reviewCount;
-  final String? qualification;
-  final int? experienceYears;
+  final String qualification;
+  final int experienceYears;
   final String? bio;
 
   Doctor({
@@ -31,8 +31,8 @@ class Doctor {
     required this.specialties,
     required this.averageRating,
     required this.reviewCount,
-    this.qualification,
-    this.experienceYears,
+    required this.qualification,
+    required this.experienceYears,
     this.bio,
   });
   factory Doctor.fromJson(Map<String, dynamic> json) {
@@ -50,7 +50,7 @@ class Doctor {
           .toList(),
       averageRating: (json['averageRating'] as num).toDouble(),
       reviewCount: json['reviewCount'],
-      qualification: json['qualification'],
+      qualification: utf8.decode(json['qualification'].runes.toList()),
       experienceYears: json['experienceYears'],
       bio: json['bio'],
     );

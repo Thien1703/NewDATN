@@ -18,7 +18,7 @@ class ConfirmDialogDelete extends StatelessWidget {
             const Text(
               'Thông báo',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 19,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -26,7 +26,7 @@ class ConfirmDialogDelete extends StatelessWidget {
             const Text(
               'Bạn có chắc chắn xóa hồ sơ này?',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 17),
             ),
             const SizedBox(height: 24),
             Row(
@@ -35,11 +35,11 @@ class ConfirmDialogDelete extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () => Navigator.pop(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF007AFF), // Xanh đậm
+                      backgroundColor: AppColors.deepBlue, // Xanh đậm
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
                     child: const Text(
                       'Không',
@@ -56,13 +56,13 @@ class ConfirmDialogDelete extends StatelessWidget {
                       onConfirm();
                     },
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: const Color(0xFF007AFF),
+                      foregroundColor: AppColors.deepBlue,
                       // backgroundColor:  AppColors.neutralGrey,
                       side: const BorderSide(color: AppColors.deepBlue),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
                     child: const Text(
                       'Xác nhận',

@@ -16,14 +16,14 @@ class ProfileBooking extends StatefulWidget {
     List<int>? serviceIds,
     int? customerId,
     int? customerProfileId,
-    String? date, 
+    String? date,
     String? time,
   }) onNavigateToScreen;
 
   final Clinic clinic;
   final List<int> selectedServiceId;
   final String date;
-  final String time; 
+  final String time;
   const ProfileBooking({
     super.key,
     required this.onNavigateToScreen,
