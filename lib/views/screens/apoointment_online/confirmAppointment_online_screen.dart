@@ -398,13 +398,22 @@ class _ConfirmappointmentOnlineScreenState
                               employeeId: widget.employeeId,
                               serviceIds: widget.serviceIds,
                             );
+                            print(widget.clinicId);
+                            print(widget.customerId);
+                            print(widget.customeProfileId);
+                            print(widget.date);
+                            print(widget.time);
+                            print(widget.isOnline);
+                            print(widget.employeeId);
+                            print(widget.serviceIds);
 
                             final response =
                                 await AppointmentApi.getBookingOnline(
                                     appointment);
 
                             if (response != null) {
-                              if (response.statusCode == 200) {
+                              if (response.statusCode == 200 ||
+                                  response.statusCode == 0) {
                                 final bookingInfo = response.data;
                                 if (bookingInfo != null) {
                                   final token =
@@ -431,12 +440,73 @@ class _ConfirmappointmentOnlineScreenState
                                     ),
                                   );
                                 }
-                              } else if (response.statusCode == 409) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content:
-                                        Text('Dịch vụ này đã được đặt rồi!'),
-                                    backgroundColor: Colors.orange,
+                              } else if (response.statusCode == 409 ||
+                                  response.statusCode == 3005) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => Dialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      side: const BorderSide(
+                                          color: Colors.grey, width: 1),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Center(
+                                            child: Text(
+                                              'Đặt lịch thất bại',
+                                              style: TextStyle(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 12),
+                                          const Text(
+                                            'Bệnh nhân này đã đặt lịch trước đó, nếu bạn muốn đặt lịch khám mới, '
+                                            'vui lòng hủy khám hiện tại và thử lại',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                          const SizedBox(height: 15),
+                                          Center(
+                                            child: Container(
+                                              width: double.infinity,
+                                              margin: EdgeInsets.symmetric(
+                                                  horizontal: 10),
+                                              child: OutlinedButton(
+                                                style: OutlinedButton.styleFrom(
+                                                  backgroundColor:
+                                                      AppColors.deepBlue,
+                                                  side: const BorderSide(
+                                                      color: Colors.blue),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                  ),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 24,
+                                                      vertical: 12),
+                                                ),
+                                                onPressed: () =>
+                                                    Navigator.of(context).pop(),
+                                                child: const Text(
+                                                  'Đồng ý',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 );
                               } else {

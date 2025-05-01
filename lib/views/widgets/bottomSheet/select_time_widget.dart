@@ -122,74 +122,7 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       isLoading
-                          ? Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Shimmer.fromColors(
-                                    baseColor: Colors.grey[300]!,
-                                    highlightColor: Colors.grey[100]!,
-                                    child: Container(
-                                      width: 100,
-                                      height: 20,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Shimmer.fromColors(
-                                    baseColor: Colors.grey[300]!,
-                                    highlightColor: Colors.grey[100]!,
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 60,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Shimmer.fromColors(
-                                    baseColor: Colors.grey[300]!,
-                                    highlightColor: Colors.grey[100]!,
-                                    child: Container(
-                                      width: 120,
-                                      height: 60,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Shimmer.fromColors(
-                                    baseColor: Colors.grey[300]!,
-                                    highlightColor: Colors.grey[100]!,
-                                    child: Container(
-                                      width: 100,
-                                      height: 20,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Shimmer.fromColors(
-                                    baseColor: Colors.grey[300]!,
-                                    highlightColor: Colors.grey[100]!,
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 60,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Shimmer.fromColors(
-                                    baseColor: Colors.grey[300]!,
-                                    highlightColor: Colors.grey[100]!,
-                                    child: Container(
-                                      width: double.infinity,
-                                      height: 70,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
+                          ? _shirmarBody()
                           : availableSlots.isEmpty
                               ? const Center(child: Text('Không có giờ trống.'))
                               : Container(
@@ -219,8 +152,6 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
                                                     time == selectedTime;
                                                 final slotCount =
                                                     availableSlots[time]!;
-                                                final isAvailable = isTimeInFuture(
-                                                    time); // Kiểm tra giờ có hợp lệ không
 
                                                 return Column(
                                                   crossAxisAlignment:
@@ -231,7 +162,8 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
                                                       selected: isSelected,
                                                       onSelected: (_) {
                                                         if (slotCount > 0 &&
-                                                            isAvailable) {
+                                                            isTimeInFuture(
+                                                                time)) {
                                                           setState(() {
                                                             selectedTime = time;
                                                           });
@@ -243,53 +175,26 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
                                                       },
                                                       selectedColor:
                                                           AppColors.primary,
-                                                      backgroundColor: isAvailable
-                                                          ? AppColors.deepBlue
-                                                              .withOpacity(0.5)
-                                                          : Colors.grey[
-                                                              300], // Màu xám cho giờ không thể chọn
+                                                      backgroundColor:
+                                                          isTimeInFuture(time)
+                                                              ? AppColors
+                                                                  .deepBlue
+                                                                  .withOpacity(
+                                                                      0.5)
+                                                              : Colors
+                                                                  .grey[300],
                                                       labelStyle: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w400,
-                                                        color: isAvailable
+                                                        color: isTimeInFuture(
+                                                                time)
                                                             ? (isSelected
                                                                 ? Colors.white
                                                                 : Colors.black)
-                                                            : Colors.grey[
-                                                                500], // Màu chữ khi giờ không thể chọn
+                                                            : Colors.grey[500],
                                                       ),
                                                     ),
-                                                    if (slotCount ==
-                                                        0) // Hiển thị thông báo "Lịch khám đã đầy" nếu slot == 0
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(left: 20),
-                                                        child: Text(
-                                                          'Lịch khám đã đầy',
-                                                          style: TextStyle(
-                                                            fontSize: 14,
-                                                            color: Colors.red,
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .lineThrough, // Gạch ngang chữ
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    if (slotCount > 0)
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                left: 15),
-                                                        child: Text(
-                                                          '$slotCount slot',
-                                                          style: TextStyle(
-                                                            fontSize: 14,
-                                                            color: Colors
-                                                                .grey[700],
-                                                          ),
-                                                        ),
-                                                      ),
+                                                    const SizedBox(height: 5),
                                                     if (slotCount == 0)
                                                       Padding(
                                                         padding:
@@ -300,6 +205,20 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
                                                           style: TextStyle(
                                                             fontSize: 14,
                                                             color: Colors.red,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    if (slotCount > 0)
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(left: 15),
+                                                        child: Text(
+                                                          '$slotCount slot',
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            color: Colors
+                                                                .grey[700],
                                                           ),
                                                         ),
                                                       ),
@@ -327,15 +246,13 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
                                               spacing:
                                                   10, // Khoảng cách giữa các giờ
                                               runSpacing:
-                                                  10, // Khoảng cách giữa các dòng
+                                                  5, // Khoảng cách giữa các dòng
                                               children: getAfternoonSlots()
                                                   .map((time) {
                                                 final isSelected =
                                                     time == selectedTime;
                                                 final slotCount =
                                                     availableSlots[time]!;
-                                                final isAvailable = isTimeInFuture(
-                                                    time); // Kiểm tra giờ có hợp lệ không
 
                                                 return Column(
                                                   crossAxisAlignment:
@@ -346,7 +263,8 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
                                                       selected: isSelected,
                                                       onSelected: (_) {
                                                         if (slotCount > 0 &&
-                                                            isAvailable) {
+                                                            isTimeInFuture(
+                                                                time)) {
                                                           setState(() {
                                                             selectedTime = time;
                                                           });
@@ -356,40 +274,28 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
                                                               context);
                                                         }
                                                       },
-
                                                       selectedColor:
                                                           AppColors.primary,
-                                                      backgroundColor: isAvailable
-                                                          ? AppColors.deepBlue
-                                                              .withOpacity(0.5)
-                                                          : Colors.grey[
-                                                              300], // Màu xám cho giờ không thể chọn
+                                                      backgroundColor:
+                                                          isTimeInFuture(time)
+                                                              ? AppColors
+                                                                  .deepBlue
+                                                                  .withOpacity(
+                                                                      0.5)
+                                                              : Colors
+                                                                  .grey[300],
                                                       labelStyle: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w400,
-                                                        color: isAvailable
+                                                        color: isTimeInFuture(
+                                                                time)
                                                             ? (isSelected
                                                                 ? Colors.white
                                                                 : Colors.black)
-                                                            : Colors.grey[
-                                                                500], // Màu chữ khi giờ không thể chọn
+                                                            : Colors.grey[500],
                                                       ),
                                                     ),
                                                     const SizedBox(height: 5),
-                                                    if (slotCount > 0)
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                left: 15),
-                                                        child: Text(
-                                                          '$slotCount slot',
-                                                          style: TextStyle(
-                                                            fontSize: 14,
-                                                            color: Colors
-                                                                .grey[700],
-                                                          ),
-                                                        ),
-                                                      ),
                                                     if (slotCount == 0)
                                                       Padding(
                                                         padding:
@@ -403,32 +309,29 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
                                                           ),
                                                         ),
                                                       ),
+                                                    if (slotCount > 0)
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(left: 15),
+                                                        child: Text(
+                                                          '$slotCount slot',
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            color: Colors
+                                                                .grey[700],
+                                                          ),
+                                                        ),
+                                                      ),
                                                   ],
                                                 );
                                               }).toList(),
                                             ),
                                           ],
                                         ),
-
-                                      const SizedBox(height: 10),
-                                      Card(
-                                        elevation: 3,
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.08,
-                                          child: Image.asset(
-                                            'assets/images/pageTime.jpg',
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 20),
                                     ],
                                   ),
-                                )
+                                ),
                     ],
                   ),
                 ),
@@ -439,4 +342,74 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
       ),
     );
   }
+}
+  
+Widget _shirmarBody() {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            width: 100,
+            height: 20,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            width: double.infinity,
+            height: 60,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            width: 120,
+            height: 60,
+            color: Colors.white,
+          ),
+        ),
+        SizedBox(height: 5),
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            width: 100,
+            height: 20,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            width: double.infinity,
+            height: 60,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            width: double.infinity,
+            height: 70,
+            color: Colors.white,
+          ),
+        ),
+      ],
+    ),
+  );
 }
