@@ -53,7 +53,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
         Uri.parse('https://openrouter.ai/api/v1/chat/completions'),
         headers: {
           'Authorization':
-              'Bearer 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', // <- Thay bằng API Key từ OpenRouter
+              'Bearer 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', // <- Thay bằng API Key từ OpenRouter
           'Content-Type': 'application/json',
           'HTTP-Referer':
               'https://example.com', // <- Bắt buộc, có thể ghi tạm domain
