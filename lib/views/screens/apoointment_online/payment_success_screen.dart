@@ -111,7 +111,7 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
     return Column(
       children: [
         Stack(
-          children: 
+          children:
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(top: 35),
@@ -149,7 +149,7 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
                   )
                 ],
               ),
-            ),
+            );
             const Positioned(
               left: 0,
               right: 0,
@@ -179,7 +179,7 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
             Text(roomCode,
                 style:
                     const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          ],
+    ),],
         ),
       ],
     );
