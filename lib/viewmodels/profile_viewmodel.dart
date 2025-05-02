@@ -12,7 +12,7 @@ class ProfileViewModel with ChangeNotifier {
     required String birthDate,
     required String gender,
     required String address,
-    String? avatar,
+    // String? avatar,
   }) async {
     String? errorMessage = await ProfileConfig.createProfile(
       customerId: customerId,
@@ -21,7 +21,7 @@ class ProfileViewModel with ChangeNotifier {
       birthDate: birthDate,
       gender: gender,
       address: address,
-      avatar: avatar,
+      // avatar: avatar,
     );
 
     if (!context.mounted) return;
@@ -44,7 +44,7 @@ class ProfileViewModel with ChangeNotifier {
     required String birthDate,
     required String gender,
     required String address,
-    String? avatar,
+    // String? avatar,
   }) async {
     String? errorMessage = await ProfileConfig.updateProfileById(
       id: id,
@@ -54,7 +54,7 @@ class ProfileViewModel with ChangeNotifier {
       birthDate: birthDate,
       gender: gender,
       address: address,
-      avatar: avatar,
+      // avatar: avatar,
     );
 
     if (!context.mounted) return;
@@ -66,11 +66,6 @@ class ProfileViewModel with ChangeNotifier {
       showToastError(errorMessage);
     }
   }
-
-  /// Lấy danh sách tất cả hồ sơ
-  // Future<List<Map<String, dynamic>>?> getAllProfiles() async {
-  //   return await ProfileConfig.getAllProfiles();
-  // }
 
   /// Lấy thông tin hồ sơ theo ID
   Future<Map<String, dynamic>?> getProfileById(int id) async {

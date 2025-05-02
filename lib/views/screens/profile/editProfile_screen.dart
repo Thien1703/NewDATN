@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:health_care/config/app_config.dart';
 import 'package:health_care/utils/validators.dart';
+import 'package:health_care/views/widgets/bottomSheet/select_image_option.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/viewmodels/auth_viewmodel.dart';
@@ -88,28 +89,69 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  Future<void> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile =
-        await picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        isAvatarLoading = true;
-        _avatarFile = File(pickedFile.path);
-      });
-      if (!mounted) return;
-      final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
-      await authViewModel.uploadAvatar(context, _avatarFile!);
+  void _showSelectImageOption() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => SelectImageOption(onPickFromGallery: () async {
+        final picker = ImagePicker();
+        final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+        if (pickedFile != null) {
+          setState(() {
+            isAvatarLoading = true;
+            _avatarFile = File(pickedFile.path);
+          });
+          if (!mounted) return;
 
-      setState(() {
-        isAvatarLoading = false; // Kết thúc loading
-      });
+          final authViewModel =
+              Provider.of<AuthViewModel>(context, listen: false);
+          await authViewModel.uploadAvatar(context, _avatarFile!);
+          setState(() {
+            isAvatarLoading = false;
+          });
+          widget.onProfileUpdated();
+        }
+      }, onTakePhoto: () async {
+        final picker = ImagePicker();
+        final pickedFile = await picker.pickImage(source: ImageSource.camera);
+        if (pickedFile != null) {
+          setState(() {
+            isAvatarLoading = true;
+            _avatarFile = File(pickedFile.path);
+          });
+          if (!mounted) return;
 
-      widget.onProfileUpdated(); // Gọi callback để reload ProfileScreen
-      if (mounted) {
-        setState(() {}); // Cập nhật UI ngay lập tức
+          final authViewModel =
+              Provider.of<AuthViewModel>(context, listen: false);
+          await authViewModel.uploadAvatar(context, _avatarFile!);
+
+          // Xoá cache
+          CachedNetworkImage.evictFromCache(_userData?['avatar'] ?? '');
+
+          // Sau khi upload xong, cập nhật lại thông tin
+          await _loadUserProfile();
+          setState(() {
+            isAvatarLoading = false;
+            _avatarFile = null;
+          });
+          widget.onProfileUpdated();
+        }
       }
-    }
+
+          // onRemovePhoto: () async {
+          //   final authViewModel =
+          //       Provider.of<AuthViewModel>(context, listen: false);
+          //   await authViewModel.removeAvatar(context); // Giả sử bạn có API remove
+          //   setState(() {
+          //     _avatarFile = null;
+          //     _userData?['avatar'] = null;
+          //   });
+          //   widget.onProfileUpdated();
+          // },
+          ),
+    );
   }
 
   Future<void> _handleUpdateProfile() async {
@@ -149,163 +191,167 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: WidgetHeaderBody(
-        iconBack: true,
-        title: 'Chỉnh sửa hồ sơ',
-        body: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 15),
-          child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Stack(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        body: WidgetHeaderBody(
+          iconBack: true,
+          title: 'Chỉnh sửa hồ sơ',
+          body: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 15),
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 12.0),
+                            child: InkWell(
+                              onTap: _showSelectImageOption,
+                              child: CircleAvatar(
+                                radius: 40,
+                                backgroundImage: _avatarFile != null
+                                    ? FileImage(_avatarFile!)
+                                    : (_userData?['avatar'] != null &&
+                                                Uri.tryParse(_userData![
+                                                            'avatar'])
+                                                        ?.hasAbsolutePath ==
+                                                    true
+                                            ? CachedNetworkImageProvider(
+                                                _userData!['avatar'])
+                                            : const AssetImage(
+                                                'assets/images/iconProfile.jpg'))
+                                        as ImageProvider,
+                                child: isAvatarLoading
+                                    ? const CircularProgressIndicator(
+                                        color: AppColors.softBlue)
+                                    : null, // Hiển thị spinner nếu đang tải
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: InkWell(
+                              onTap: _showSelectImageOption,
+                              child: CircleAvatar(
+                                radius: 12,
+                                backgroundColor: Colors.white,
+                                child: Icon(Icons.camera_alt,
+                                    color: AppColors.grey4),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    _customTitle(title: 'Họ và tên'),
+                    _customTextField(
+                      controller: _nameController,
+                      hint: 'Nhập họ và tên',
+                      validator: Validators.validateFullName,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 12.0),
-                          child: InkWell(
-                            onTap: _pickImage,
-                            child: CircleAvatar(
-                              radius: 40,
-                              backgroundImage: _avatarFile != null
-                                  ? FileImage(_avatarFile!)
-                                  : (_userData?['avatar'] != null &&
-                                              Uri.tryParse(_userData!['avatar'])
-                                                      ?.hasAbsolutePath ==
-                                                  true
-                                          ? CachedNetworkImageProvider(
-                                              _userData!['avatar'])
-                                          : const AssetImage(
-                                              'assets/images/iconProfile.jpg'))
-                                      as ImageProvider,
-                              child: isAvatarLoading
-                                  ? const CircularProgressIndicator(
-                                      color: AppColors.softBlue)
-                                  : null, // Hiển thị spinner nếu đang tải
+                        _customTitle(title: 'Ngày sinh'),
+                        SizedBox(height: 5),
+                        TextFormField(
+                          controller: _dobController,
+                          validator: Validators.validateBirthDate,
+                          decoration: InputDecoration(
+                            hintText: 'Chọn ngày sinh',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
+                            suffixIcon: const Icon(Icons.calendar_today),
                           ),
+                          readOnly: true,
+                          onTap: () async {
+                            final DateTime? picked = await showDatePicker(
+                              context: context,
+                              initialDate: _selectedDate,
+                              firstDate: DateTime(1900),
+                              lastDate: DateTime.now(),
+                            );
+                            if (picked != null && picked != _selectedDate) {
+                              setState(() {
+                                _selectedDate = picked;
+                                _dobController.text =
+                                    DateFormat('dd-MM-yyyy').format(picked);
+                              });
+                            }
+                          },
                         ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: InkWell(
-                            onTap: _pickImage,
-                            child: CircleAvatar(
-                              radius: 12,
-                              backgroundColor: Colors.white,
-                              child: Icon(Icons.camera_alt,
-                                  color: AppColors.grey4),
-                            ),
-                          ),
+                        // SelectBirthdayWidget(
+                        //   initialDate: DateTime.now(),
+                        //   onDateSelected: (DateTime pickedDate) {
+                        //     setState(() {
+                        //       _dobController.text =
+                        //           DateFormat('yyyy-MM-dd').format(pickedDate);
+                        //     });
+                        //   },
+                        // ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _customTitle(title: 'Giới tính'),
+                        SizedBox(height: 5),
+                        WidgetSelectGender(
+                          initialGender: selectedGender,
+                          onChanged: (String gender) {
+                            setState(() {
+                              selectedGender = gender;
+                            });
+                            // _updateButtonState();
+                          },
                         ),
                       ],
                     ),
-                  ),
-                  _customTitle(title: 'Họ và tên'),
-                  _customTextField(
-                    controller: _nameController,
-                    hint: 'Nhập họ và tên',
-                    validator: Validators.validateFullName,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _customTitle(title: 'Ngày sinh'),
-                      SizedBox(height: 5),
-                      TextFormField(
-                        controller: _dobController,
-                        validator: Validators.validateBirthDate,
-                        decoration: InputDecoration(
-                          hintText: 'Chọn ngày sinh',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
+                    _customTitle(title: 'Địa chỉ'),
+                    _customTextField(
+                      controller: _addressController,
+                      hint: 'Nhập địa chỉ',
+                      validator: Validators.validateAddress,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 12, bottom: 20),
+                      height: 55,
+                      width: double.infinity,
+                      child: GestureDetector(
+                        onTap: isLoading ? null : _handleUpdateProfile,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: AppColors.deepBlue,
                           ),
-                          suffixIcon: const Icon(Icons.calendar_today),
-                        ),
-                        readOnly: true,
-                        onTap: () async {
-                          final DateTime? picked = await showDatePicker(
-                            context: context,
-                            initialDate: _selectedDate,
-                            firstDate: DateTime(1900),
-                            lastDate: DateTime.now(),
-                          );
-                          if (picked != null && picked != _selectedDate) {
-                            setState(() {
-                              _selectedDate = picked;
-                              _dobController.text =
-                                  DateFormat('dd-MM-yyyy').format(picked);
-                            });
-                          }
-                        },
-                      ),
-                      // SelectBirthdayWidget(
-                      //   initialDate: DateTime.now(),
-                      //   onDateSelected: (DateTime pickedDate) {
-                      //     setState(() {
-                      //       _dobController.text =
-                      //           DateFormat('yyyy-MM-dd').format(pickedDate);
-                      //     });
-                      //   },
-                      // ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _customTitle(title: 'Giới tính'),
-                      SizedBox(height: 5),
-                      WidgetSelectGender(
-                        initialGender: selectedGender,
-                        onChanged: (String gender) {
-                          setState(() {
-                            selectedGender = gender;
-                          });
-                          // _updateButtonState();
-                        },
-                      ),
-                    ],
-                  ),
-                  _customTitle(title: 'Địa chỉ'),
-                  _customTextField(
-                    controller: _addressController,
-                    hint: 'Nhập địa chỉ',
-                    validator: Validators.validateAddress,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 12, bottom: 20),
-                    height: 55,
-                    width: double.infinity,
-                    child: GestureDetector(
-                      onTap: isLoading ? null : _handleUpdateProfile,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: AppColors.deepBlue,
-                        ),
-                        child: Center(
-                          child: isLoading
-                              ? SizedBox(
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
+                          child: Center(
+                            child: isLoading
+                                ? SizedBox(
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : Text(
+                                    'Cập nhật',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
                                   ),
-                                )
-                              : Text(
-                                  'Cập nhật',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
