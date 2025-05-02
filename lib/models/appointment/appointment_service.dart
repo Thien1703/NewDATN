@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:health_care/models/appointment/appointment.dart';
 import 'package:health_care/models/employee.dart';
 import 'package:health_care/models/service.dart';
@@ -34,7 +36,9 @@ class AppointmentService {
             ? Employee.fromJson(json['employee'])
             : null,
         status: json['status'],
-        note: json['note'],
+        note: json['note']?.toString().isNotEmpty == true
+            ? utf8.decode(json['note'].toString().runes.toList())
+            : 'Chưa cập nhật',
       );
     } catch (e, stackTrace) {
       print("Error parsing AppointmentService: $e");

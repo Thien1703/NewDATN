@@ -159,10 +159,12 @@ class _WidgetSelectedTimeOnlineState extends State<WidgetSelectedTimeOnline> {
                 ),
               ),
               SizedBox(height: 5),
-              Text(
-                '$slots slot${slots > 1 ? 's' : ''} ',
-                style: TextStyle(color: AppColors.deepBlue),
-              ),
+              // Chỉ hiển thị slot nếu nút giờ có thể nhấn được (không phải giờ đã qua và có slot trống)
+              if (!(isPastTime || slots == 0))
+                Text(
+                  '$slots slot${slots > 1 ? 's' : ''} ',
+                  style: TextStyle(color: AppColors.deepBlue),
+                ),
             ],
           );
         }).toList(),

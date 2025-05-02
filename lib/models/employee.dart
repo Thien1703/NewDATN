@@ -6,23 +6,33 @@ class Employee {
   final int id;
   final String fullName;
   final String phoneNumber;
-  final String role;
-  final Clinic clinic;
-  final List<Specialty> specialty;
   final String gender;
   final String birthDate;
   final String avatar;
+  final String role;
+  final Clinic clinic;
+  final List<Specialty> specialty;
+  final double averageRating;
+  final int reviewCount;
+  final String qualification;
+  final int experienceYears;
+  final String? bio;
 
   Employee({
     required this.id,
     required this.fullName,
     required this.phoneNumber,
-    required this.role,
-    required this.clinic,
-    required this.specialty,
     required this.gender,
     required this.birthDate,
     required this.avatar,
+    required this.role,
+    required this.clinic,
+    required this.specialty,
+    required this.averageRating,
+    required this.reviewCount,
+    required this.qualification,
+    required this.experienceYears,
+    this.bio,
   });
 
   // Chuyển từ JSON sang Object
@@ -60,6 +70,11 @@ class Employee {
       avatar: json['avatar'] != null && json['avatar'].toString().isNotEmpty
           ? json['avatar']
           : "https://suckhoe123.vn/uploads/users/doctor-avatar-male_n2gdre0x_1.png",
+      averageRating: (json['averageRating'] as num).toDouble(),
+      reviewCount: json['reviewCount'],
+      qualification: utf8.decode(json['qualification'].runes.toList()),
+      experienceYears: json['experienceYears'],
+      bio: json['bio'],
     );
   }
 
@@ -76,6 +91,11 @@ class Employee {
       'gender': gender,
       'birthDate': birthDate,
       'avatar': avatar,
+      'averageRating': averageRating,
+      'reviewCount': reviewCount,
+      'qualification': qualification,
+      'experienceYears': experienceYears,
+      'ưbio': bio,
     };
   }
 
@@ -92,6 +112,11 @@ class Employee {
       birthDate: "Chưa cập nhật",
       avatar:
           "https://suckhoe123.vn/uploads/users/doctor-avatar-male_n2gdre0x_1.png",
+      averageRating: 0.0,
+      experienceYears: 0,
+      qualification: "Chưa cập nhật",
+      reviewCount: 0,
+      bio: 'Chưa cập nhật',
     );
   }
 }
