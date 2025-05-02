@@ -52,7 +52,7 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
     final appointment = appointmentServices?.first.appointment;
     final qrData = widget.appointmentId.toString();
 
-    AppData.roomCode = roomCode;
+    AppData.roomCode = widget.roomCode;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -107,11 +107,13 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
     );
   }
 
-  Widget _buildSuccessBanner(appointment) {
+  Widget _buildSuccessBanner(
+    appointment,
+  ) {
     return Column(
       children: [
         Stack(
-          children: 
+          children: [
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(top: 35),
@@ -140,13 +142,13 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
                         appointment.time.substring(0, 5),
                         style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       Text(
                         '${appointment.date.split("-")[2]}-${appointment.date.split("-")[1]}-${appointment.date.split("-")[0]}',
                         style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -169,17 +171,22 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
                 ),
               ),
             ),
-
-            const Icon(Icons.check_circle, color: Colors.green, size: 80),
-            const SizedBox(height: 16),
-            Text("🎉 Lịch hẹn #$appointmentId đã thanh toán thành công!"),
-            const SizedBox(height: 8),
-            Text("Mã phòng tư vấn của bạn là:",
-                style: const TextStyle(fontSize: 16)),
-            Text(roomCode,
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           ],
+        ),
+        const SizedBox(height: 16),
+        Text(
+          "🎉 Lịch hẹn #${widget.appointmentId} đã thanh toán thành công!",
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          "Mã phòng tư vấn của bạn là:",
+          style: TextStyle(fontSize: 16),
+        ),
+        Text(
+          widget.roomCode,
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
       ],
     );
