@@ -5,6 +5,7 @@ import 'package:health_care/viewmodels/api/appointmentService_api.dart';
 import 'package:health_care/views/screens/home/home_screens.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:health_care/views/screens/tools/callvideo/app_data.dart';
 
 class PaymentSuccessScreen extends StatefulWidget {
   final int appointmentId;
@@ -51,6 +52,7 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
     final appointment = appointmentServices?.first.appointment;
     final qrData = widget.appointmentId.toString();
 
+    AppData.roomCode = roomCode;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -109,7 +111,7 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
     return Column(
       children: [
         Stack(
-          children: [
+          children: 
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(top: 35),
@@ -167,6 +169,16 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
                 ),
               ),
             ),
+
+            const Icon(Icons.check_circle, color: Colors.green, size: 80),
+            const SizedBox(height: 16),
+            Text("🎉 Lịch hẹn #$appointmentId đã thanh toán thành công!"),
+            const SizedBox(height: 8),
+            Text("Mã phòng tư vấn của bạn là:",
+                style: const TextStyle(fontSize: 16)),
+            Text(roomCode,
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           ],
         ),
       ],
