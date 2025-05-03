@@ -1,6 +1,5 @@
 import 'package:health_care/config/app_config.dart';
 import 'package:health_care/models/rating/rating.dart';
-import 'package:health_care/models/rating/rating_sreate.dart';
 import 'package:health_care/services/local_storage_service.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -227,6 +226,49 @@ class RatingApi {
           return ratings;
         } else {
           print('⚠️ Dữ liệu không đúng định dạng hoặc status khác 0');
+          return null;
+        }
+      } else {
+        print('❌ HTTP Error: ${response.statusCode}');
+        print('❌ Response: ${response.body}');
+        return null;
+      }
+    } catch (e) {
+      print('❌ Lỗi exception: $e');
+      return null;
+    }
+  }
+
+  static Future<List<Rating>?> getRatingByEmployee(int employeeId) async {
+    final url = Uri.parse('${AppConfig.baseUrl}/rating/get-by-employee');
+
+    String? token = await LocalStorageService.getToken();
+    if (token == null) {
+      print('❌ Token không hợp lệ.');
+      return null;
+    }
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          "employeeId": employeeId, // ✅ Sửa đúng key
+        }),
+      );
+
+      print('📥 API response: ${response.statusCode} - ${response.body}');
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['status'] == 0 && data['data'] != null) {
+          List<dynamic> rawList = data['data'];
+          return rawList.map((e) => Rating.fromJson(e)).toList();
+        } else {
+          print('⚠️ API không trả về danh sách hợp lệ.');
           return null;
         }
       } else {

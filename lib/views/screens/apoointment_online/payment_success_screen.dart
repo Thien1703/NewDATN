@@ -175,7 +175,7 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
         ),
         const SizedBox(height: 16),
         Text(
-          "🎉 Lịch hẹn #${widget.appointmentId} đã thanh toán thành công!",
+          "Lịch hẹn đã thanh toán thành công!",
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           textAlign: TextAlign.center,
         ),

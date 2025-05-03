@@ -13,7 +13,7 @@ class Appointment {
   final String time;
   final String status;
   final String? cancelNote;
-  final String roomCode;
+  final String? roomCode;
   final int isOnline;
 
   Appointment({
@@ -51,7 +51,7 @@ class Appointment {
           json['cancelNote'] != null && json['cancelNote'].toString().isNotEmpty
               ? utf8.decode(json['cancelNote'].toString().runes.toList())
               : "Chưa cập nhật",
-      roomCode: json['roomCode'] ?? "Chưa cập nhật",
+      roomCode: json['roomCode'],
       isOnline: json['isOnline'] ?? 0,
     );
   }
@@ -81,7 +81,7 @@ class Appointment {
       time: "Chưa cập nhật",
       status: "Chưa cập nhật",
       cancelNote: "Chưa cập nhật",
-      roomCode: "Chưa cập nhật",
+      roomCode: null,
       isOnline: 0,
     );
   }

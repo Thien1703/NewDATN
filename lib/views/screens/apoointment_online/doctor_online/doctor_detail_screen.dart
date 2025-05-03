@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/employee.dart';
+import 'package:health_care/models/rating/rating.dart';
+import 'package:health_care/viewmodels/api/rating_api.dart';
 import 'package:health_care/views/screens/apoointment_online/appointment_online_screen.dart';
 import 'package:health_care/views/screens/apoointment_online/doctor_online/doctor_model.dart';
 import 'package:intl/intl.dart';
@@ -18,6 +20,21 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
   bool _showGeneralInfo =
       true; // Mặc định là true để hiển thị "Thông tin chung"
   bool _showRating = false;
+  List<Rating>? ratings;
+  @override
+  void initState() {
+    super.initState();
+    _fetchRatings();
+  }
+
+  void _fetchRatings() async {
+    List<Rating>? data = await RatingApi.getRatingByEmployee(widget.doctor.id);
+    if (mounted) {
+      setState(() {
+        ratings = data;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,25 +133,25 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                   ),
                   const SizedBox(height: 5),
 
-                  Row(
-                    children: [
-                      Text(
-                        'Lịch khám: ',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          'Thứ 2, 3, 4, 5, 6, 7, Chủ nhật',
-                          softWrap: true,
-                          style: TextStyle(fontSize: 16, color: Colors.black),
-                        ),
-                      )
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     Text(
+                  //       'Lịch khám: ',
+                  //       style: TextStyle(
+                  //         color: Colors.black,
+                  //         fontSize: 17,
+                  //         fontWeight: FontWeight.w700,
+                  //       ),
+                  //     ),
+                  //     Expanded(
+                  //       child: Text(
+                  //         'Thứ 2, 3, 4, 5, 6, 7, Chủ nhật',
+                  //         softWrap: true,
+                  //         style: TextStyle(fontSize: 16, color: Colors.black),
+                  //       ),
+                  //     )
+                  //   ],
+                  // ),
                   const SizedBox(height: 5),
 
                   Text(
@@ -340,15 +357,73 @@ class _DoctorDetailScreenState extends State<DoctorDetailScreen> {
                   // Hiển thị đánh giá nếu nút được nhấn
                   Visibility(
                     visible: _showRating,
-                    child: Container(
-                      child: Center(
-                        child: Text(
-                          'Chưa có đánh giá.',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ),
-                    ),
-                  ),
+                    child: ratings == null
+                        ? Center(child: CircularProgressIndicator())
+                        : ratings!.isEmpty
+                            ? Center(
+                                child: Text("Chưa có đánh giá nào.",
+                                    style: TextStyle(fontSize: 16)),
+                              )
+                            : Container(
+                                margin: EdgeInsets.only(bottom: 30),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: ratings!.map((rating) {
+                                    return Container(
+                                      margin: const EdgeInsets.only(bottom: 12),
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.3),
+                                            blurRadius: 4,
+                                            offset: Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            rating.customerName ??
+                                                'Người dùng ẩn danh',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          SizedBox(height: 4),
+                                          Row(
+                                            children: List.generate(
+                                              rating.stars ?? 0,
+                                              (index) => Icon(Icons.star,
+                                                  color: Colors.orange,
+                                                  size: 18),
+                                            ),
+                                          ),
+                                          SizedBox(height: 4),
+                                          Text(
+                                            rating.comment ?? '',
+                                            style: TextStyle(fontSize: 14),
+                                          ),
+                                          // Text(
+                                          //   rating.createdAt != null
+                                          //       ? DateFormat('dd/MM/yyyy – HH:mm')
+                                          //           .format(DateTime.parse(
+                                          //               rating.createdAt!))
+                                          //       : '',
+                                          //   style: TextStyle(
+                                          //       fontSize: 12, color: Colors.grey),
+                                          // ),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                  )
                 ],
               ),
             ),

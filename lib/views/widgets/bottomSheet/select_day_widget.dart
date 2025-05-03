@@ -45,70 +45,70 @@ class _SelectDayWidgetState extends State<SelectDayWidget> {
             },
             calendarStyle: CalendarStyle(
               outsideDaysVisible: false, // Ẩn ngày ngoài tháng
-              cellMargin: EdgeInsets.all(2),
-              defaultTextStyle: TextStyle(fontSize: 15),
-              weekendTextStyle: TextStyle(fontSize: 15),
-              todayTextStyle:
-                  TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              cellMargin: EdgeInsets.all(1), // Giảm khoảng cách
+              defaultTextStyle: TextStyle(fontSize: 12), // Giảm font size
+              weekendTextStyle: TextStyle(fontSize: 12),
+              todayTextStyle: TextStyle(
+                  fontSize: 10, fontWeight: FontWeight.bold), // Giảm font size
               // Nếu chọn ngày (selected)
               selectedDecoration: BoxDecoration(
                 color: Colors.grey,
                 shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(6), // Thu nhỏ borderRadius
               ),
               // Cài đặt cho ngày hôm nay, tránh xung đột với borderRadius khi dùng circle
               todayDecoration: BoxDecoration(
                 color: AppColors.deepBlue,
                 shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(6), // Thu nhỏ borderRadius
               ),
               weekendDecoration: BoxDecoration(
                 color: AppColors.softBlue,
                 shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(6), // Thu nhỏ borderRadius
               ),
               defaultDecoration: BoxDecoration(
                 color: AppColors.softBlue,
                 shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(6), // Thu nhỏ borderRadius
               ),
               disabledTextStyle:
                   TextStyle(color: const Color.fromARGB(255, 179, 179, 179)),
               disabledDecoration: BoxDecoration(
                 color: const Color.fromARGB(255, 228, 227, 227),
                 shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(6), // Thu nhỏ borderRadius
               ),
             ),
             headerStyle: HeaderStyle(
-              headerPadding: EdgeInsets.symmetric(vertical: 5),
+              headerPadding: EdgeInsets.symmetric(vertical: 3), // Giảm padding
               formatButtonVisible: false,
               titleCentered: true,
               titleTextStyle: TextStyle(
-                fontSize: 18,
+                fontSize: 16, // Giảm font size
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
-              leftChevronIcon:
-                  Icon(Icons.chevron_left, size: 20, color: Colors.white),
-              rightChevronIcon:
-                  Icon(Icons.chevron_right, size: 20, color: Colors.white),
+              leftChevronIcon: Icon(Icons.chevron_left,
+                  size: 18, color: Colors.white), // Giảm kích thước icon
+              rightChevronIcon: Icon(Icons.chevron_right,
+                  size: 18, color: Colors.white), // Giảm kích thước icon
               decoration: BoxDecoration(
                 color: AppColors.deepBlue,
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
+                  topLeft: Radius.circular(16), // Giảm borderRadius
+                  topRight: Radius.circular(16), // Giảm borderRadius
                 ),
               ),
             ),
             daysOfWeekStyle: DaysOfWeekStyle(
-              weekdayStyle:
-                  TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-              weekendStyle:
-                  TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+              weekdayStyle: TextStyle(
+                  fontSize: 12, fontWeight: FontWeight.w600), // Giảm font size
+              weekendStyle: TextStyle(
+                  fontSize: 12, fontWeight: FontWeight.w600), // Giảm font size
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 8), // Giảm khoảng cách
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -116,7 +116,7 @@ class _SelectDayWidgetState extends State<SelectDayWidget> {
               _buildLegendIndicator(AppColors.softBlue, 'Còn trống'),
             ],
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 8), // Giảm khoảng cách
         ],
       ),
     );
@@ -126,16 +126,16 @@ class _SelectDayWidgetState extends State<SelectDayWidget> {
     return Row(
       children: [
         Container(
-          width: 12,
-          height: 12,
+          width: 10, // Giảm kích thước
+          height: 10, // Giảm kích thước
           decoration: BoxDecoration(
             color: color,
             shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(6), // Thu nhỏ borderRadius
           ),
         ),
         SizedBox(width: 5),
-        Text(text, style: TextStyle(fontSize: 14)),
+        Text(text, style: TextStyle(fontSize: 12)), // Giảm font size
       ],
     );
   }
