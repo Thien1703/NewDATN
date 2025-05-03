@@ -16,9 +16,9 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   final TextEditingController _controller = TextEditingController();
   final List<ChatMessage> _messages = [];
   bool _isLoading = false;
-  final String _apiKey =
-      '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';
-  final String _apiUrl = 'https://openrouter.ai/api/v1/auth/keys';
+  // final String _apiKey =
+  //     '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';
+  // final String _apiUrl = 'https://openrouter.ai/api/v1/auth/keys';
 
   final List<String> _suggestedQuestions = [
     'Tôi nên ăn gì để tăng sức đề kháng?',
