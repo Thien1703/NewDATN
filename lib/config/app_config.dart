@@ -79,10 +79,12 @@ class AppConfig {
         return data['message'] ?? "Đăng nhập thất bại.";
       }
     } else if (response.statusCode == 401) {
-      return "Mật khẩu không đúng!";
-    } else if (response.statusCode == 404) {
-      return "Tài khoản không tồn tại!";
-    } else {
+      return "Tài khoản hoặc mật khẩu không đúng!";
+    }
+    //  else if (response.statusCode == 1002) {
+    //   return "Tài khoản không tồn tại!";
+    // }
+    else {
       return "Lỗi máy chủ: ${response.statusCode}";
     }
   }
@@ -118,9 +120,9 @@ class AppConfig {
       } else {
         return data['message'] ?? "Lỗi không xác định từ server.";
       }
-    } else if (response.statusCode == 409) {
-      if (data['status'] == 3001) {
-        return "Tài khoản email đã được đăng ký";
+    } else if (response.statusCode == 400) {
+      if (data['status'] == 5000) {
+        return "Tài khoản email/số điện thoại đã được đăng ký";
       }
       if (data['status'] == 3003) {
         return "Số điện thoại đã được đăng ký";
