@@ -25,7 +25,7 @@ class AppInitializer {
     await _setupLocalNotification();
 
     // 🔌 Kết nối WebSocket nếu đã đăng nhập
-    await _connectWebSocketIfNeeded();
+    await connectWebSocketIfNeeded();
   }
 
   static Future<void> _requestPermissions() async {
@@ -69,7 +69,7 @@ class AppInitializer {
     );
   }
 
-  static Future<void> _connectWebSocketIfNeeded() async {
+  static Future<void> connectWebSocketIfNeeded() async {
     final jwtToken = await LocalStorageService.getToken();
     final userId = (await LocalStorageService.getUserId())?.toString();
 
