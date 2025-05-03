@@ -189,7 +189,7 @@ class _ShowappointservicedetailState extends State<Showappointservicedetail> {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'Trạng thái: ${appointmentService!.appointment.status}',
+                                'Trạng thái: Đã khám',
                                 style: const TextStyle(
                                     fontSize: 14, color: Colors.grey),
                               ),

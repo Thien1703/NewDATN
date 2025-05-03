@@ -220,7 +220,10 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
                 )
               : SizedBox.shrink(),
           const WidgetLineBold(),
-          appointment.roomCode == 0 ? Text('data') : Text('fsdfs'),
+          appointment.roomCode != null
+              ? _buildInfoRow(
+                  'Mã phòng', appointment.roomCode.toString(), Colors.black)
+              : SizedBox.shrink(),
           _buildInfoRow(
               'Mã phiếu khám', appointment.id.toString(), Colors.black),
           _buildInfoRow(

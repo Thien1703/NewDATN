@@ -509,10 +509,10 @@ class _ConfirmappointmentOnlineScreenState
                                     ),
                                   ),
                                 );
-                              } else {
+                              } else if (response.statusCode == 500) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text('Đặt lịch thất bại!'),
+                                    content: Text('Lỗi hệ thống'),
                                     backgroundColor: Colors.red,
                                   ),
                                 );
