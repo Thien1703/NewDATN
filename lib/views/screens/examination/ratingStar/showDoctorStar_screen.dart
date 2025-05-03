@@ -4,6 +4,7 @@ import 'package:health_care/common/app_colors.dart';
 import 'package:health_care/models/appointment/appointment_service.dart';
 import 'package:health_care/viewmodels/api/appointmentService_api.dart';
 import 'package:health_care/viewmodels/api/rating_api.dart';
+import 'package:health_care/views/screens/examination/ratingStar/ratingSuccessScreen.dart';
 import 'package:health_care/views/widgets/widget_header_body.dart';
 
 class ShowdoctorstarScreen extends StatefulWidget {
@@ -99,13 +100,11 @@ class _ShowdoctorstarScreenState extends State<ShowdoctorstarScreen> {
     });
 
     if (!hasError) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('🎉 Đã gửi đánh giá thành công!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-      Navigator.pop(context, true);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RatingSuccessScreen(),
+          ));
     }
   }
 

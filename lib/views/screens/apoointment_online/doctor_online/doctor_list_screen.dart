@@ -268,9 +268,13 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
                 children: [
                   const Icon(Icons.location_on_rounded, size: 20),
                   const SizedBox(width: 5),
-                  Text(
-                    doctor.clinic.name,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  Expanded(
+                    child: Text(
+                      doctor.clinic.name,
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      softWrap: true,
+                    ),
                   ),
                 ],
               ),

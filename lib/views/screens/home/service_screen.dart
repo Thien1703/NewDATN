@@ -462,7 +462,7 @@ class _ServiceScreen extends State<ServiceScreen> {
                   highlightColor: Colors.grey[100]!,
                   child: Container(
                     height: 30,
-                    width: 340,
+                    width: 290,
                     color: Colors.white,
                   ),
                 ),
