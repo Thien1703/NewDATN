@@ -13,8 +13,10 @@ class WebSocketService {
   late OnConnectionChange onConnectionChange;
 
   bool _isConnected = false;
+  bool _isReconnecting = false;
+  int _retryCount = 0;
+  final int _maxRetries = 5;
 
-  // 🔒 Hằng số topic giống Java
   static const String USER_TOPIC_PREFIX = '/topic/user/';
 
   WebSocketService({
@@ -30,6 +32,7 @@ class WebSocketService {
       return;
     }
 
+    print("⚡ Đang kết nối WebSocket...");
     stompClient = StompClient(
       config: WebSocketConfig.createConfig(
         jwtToken: jwtToken,
@@ -45,6 +48,8 @@ class WebSocketService {
 
   void _onConnect(StompFrame frame) {
     print('🟢 WebSocket đã kết nối!');
+    _retryCount = 0;
+    _isReconnecting = false;
     _setConnectionStatus(true);
     _subscribeToUserNotifications(userId);
   }
@@ -52,16 +57,19 @@ class WebSocketService {
   void _onDisconnect(StompFrame frame) {
     print('🔴 WebSocket đã ngắt kết nối.');
     _setConnectionStatus(false);
+    _retryConnection();
   }
 
   void _onStompError(StompFrame frame) {
     print('❌ STOMP Error: ${frame.body}');
     _setConnectionStatus(false);
+    _retryConnection();
   }
 
   void _onWebSocketError(dynamic error) {
     print('❌ WebSocket Error: $error');
     _setConnectionStatus(false);
+    _retryConnection();
   }
 
   void disconnect() {
@@ -81,6 +89,21 @@ class WebSocketService {
       _isConnected = status;
       onConnectionChange(status);
     }
+  }
+
+  void _retryConnection() async {
+    if (_isReconnecting || _retryCount >= _maxRetries) {
+      print("⛔ Vượt quá số lần thử lại kết nối WebSocket ($_maxRetries lần). Dừng thử lại.");
+      return;
+    }
+
+    _isReconnecting = true;
+    _retryCount++;
+
+    print("🔁 Đang thử kết nối lại WebSocket lần $_retryCount sau 5 giây...");
+    await Future.delayed(Duration(seconds: 5));
+
+    connect(); // gọi lại connect
   }
 
   void _subscribeToUserNotifications(String userId) {
