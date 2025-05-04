@@ -6,16 +6,16 @@ class WebSocketManager {
   static WebSocketService getInstance({
     required String jwtToken,
     required String userId,
-    required OnMessageReceived onMessageReceived,
-    required OnConnectionChange onConnectionChange,
   }) {
-    _instance ??= WebSocketService(
-      jwtToken: jwtToken,
-      userId: userId,
-      onMessageReceived: onMessageReceived,
-      onConnectionChange: onConnectionChange,
-    );
-
+    if (_instance == null) {
+      _instance = WebSocketService(
+        jwtToken: jwtToken,
+        userId: userId,
+        onMessageReceived: (_) {}, // mặc định rỗng
+        onConnectionChange: (_) {}, // mặc định rỗng
+      );
+      _instance!.connect();
+    }
     return _instance!;
   }
 

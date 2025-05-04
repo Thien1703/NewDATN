@@ -74,46 +74,49 @@ class AppInitializer {
     final userId = (await LocalStorageService.getUserId())?.toString();
 
     if (jwtToken != null && userId != null) {
-      WebSocketManager.getInstance(
+      final socket = WebSocketManager.getInstance(
         jwtToken: jwtToken,
         userId: userId,
-        onMessageReceived: (message) async {
-          final messageText = message['message'];
-          final type = message['type'];
-          final appointment = message['appointment'];
-          final appointmentId = appointment?['id'];
-          final roomCode =
-              message['roomCode']; // 🔥 lấy roomCode từ WebSocket nếu có
+      );
 
-          print("📥 [WS] Thông báo mới: $messageText");
+      // Đăng ký listener chính tại đây
+      socket.addMessageListener(_handleSocketMessage);
+      socket.addConnectionListener((connected) {
+        print(connected
+            ? "🟢 WebSocket đã kết nối từ AppInitializer"
+            : "🔴 WebSocket đã mất kết nối.");
+      });
 
-          final saved = await LocalStorageService.getSavedNotifications();
-          saved.insert(0, {
-            "type": type,
-            "message": messageText,
-            "roomCode": message['roomCode'], // ⚡ phải lưu thêm dòng này
-            "appointment": appointment,
-            "time": DateFormat('HH:mm:ss dd/MM/yyyy').format(DateTime.now()),
-          });
-
-          await LocalStorageService.saveNotifications(saved);
-
-          // 🔥 Nếu là cuộc gọi video thì ưu tiên truyền roomCode
-          if (type == "CALL_VIDEO") {
-            await _showLocalNotification(type, messageText, roomCode);
-          } else {
-            await _showLocalNotification(
-                type, messageText, appointmentId?.toString());
-          }
-        },
-        onConnectionChange: (isConnected) {
-          print(isConnected
-              ? "🟢 WebSocket đã kết nối từ AppInitializer"
-              : "🔴 WebSocket đã mất kết nối.");
-        },
-      ).connect();
+      socket.connect();
     } else {
       print("⚠️ Không thể khởi tạo WebSocket (thiếu token/userId)");
+    }
+  }
+
+  static Future<void> _handleSocketMessage(Map<String, dynamic> message) async {
+    final messageText = message['message'];
+    final type = message['type'];
+    final appointment = message['appointment'];
+    final appointmentId = appointment?['id'];
+    final roomCode = message['roomCode'];
+
+    print("📥 [WS] Thông báo mới: $messageText");
+
+    final saved = await LocalStorageService.getSavedNotifications();
+    saved.insert(0, {
+      "type": type,
+      "message": messageText,
+      "roomCode": roomCode,
+      "appointment": appointment,
+      "time": DateFormat('HH:mm:ss dd/MM/yyyy').format(DateTime.now()),
+    });
+    await LocalStorageService.saveNotifications(saved);
+
+    // 🔔 Hiển thị local notification
+    if (type == "CALL_VIDEO") {
+      await _showLocalNotification(type, messageText, roomCode);
+    } else {
+      await _showLocalNotification(type, messageText, appointmentId?.toString());
     }
   }
 
@@ -121,6 +124,7 @@ class AppInitializer {
       String type, String message, String? idOrRoomCode) async {
     final isCallVideo = type == 'CALL_VIDEO';
     final isCanceled = type == 'CANCELED_APPOINTMENT';
+    final isPaid = type == 'PAID_APPOINTMENT';
 
     const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
@@ -141,7 +145,9 @@ class AppInitializer {
           ? '📞 Cuộc gọi Video'
           : isCanceled
               ? '❌ Hủy lịch hẹn'
-              : '✅ Xác nhận lịch hẹn',
+              : isPaid
+                  ? '💰 Đã thanh toán'
+                  : '✅ Xác nhận lịch hẹn',
       message,
       notificationDetails,
       payload: isCallVideo
