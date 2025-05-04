@@ -9,8 +9,9 @@ class WebSocketService {
   StompClient? stompClient;
   final String jwtToken;
   final String userId;
-  late OnMessageReceived onMessageReceived;
-  late OnConnectionChange onConnectionChange;
+
+  final List<OnMessageReceived> _messageListeners = [];
+  final List<OnConnectionChange> _connectionListeners = [];
 
   bool _isConnected = false;
   bool _isReconnecting = false;
@@ -22,9 +23,12 @@ class WebSocketService {
   WebSocketService({
     required this.jwtToken,
     required this.userId,
-    required this.onMessageReceived,
-    required this.onConnectionChange,
-  });
+    required OnMessageReceived onMessageReceived,
+    required OnConnectionChange onConnectionChange,
+  }) {
+    addMessageListener(onMessageReceived);
+    addConnectionListener(onConnectionChange);
+  }
 
   void connect() {
     if (_isConnected) {
@@ -34,7 +38,6 @@ class WebSocketService {
 
     print("⚡ Đang kết nối WebSocket...");
 
-    // Tạo mới mỗi lần kết nối lại
     stompClient?.deactivate();
 
     stompClient = StompClient(
@@ -49,6 +52,18 @@ class WebSocketService {
 
     stompClient!.activate();
   }
+
+  void disconnect() {
+    if (!_isConnected) {
+      print("🟡 WebSocket chưa được kết nối.");
+      return;
+    }
+
+    stompClient?.deactivate();
+    _setConnectionStatus(false);
+  }
+
+  bool get isConnected => _isConnected;
 
   void _onConnect(StompFrame frame) {
     print('🟢 WebSocket đã kết nối!');
@@ -76,25 +91,6 @@ class WebSocketService {
     _retryConnection();
   }
 
-  void disconnect() {
-    if (!_isConnected) {
-      print("🟡 WebSocket chưa được kết nối.");
-      return;
-    }
-
-    stompClient?.deactivate();
-    _setConnectionStatus(false);
-  }
-
-  bool get isConnected => _isConnected;
-
-  void _setConnectionStatus(bool status) {
-    if (_isConnected != status) {
-      _isConnected = status;
-      onConnectionChange(status);
-    }
-  }
-
   void _retryConnection() async {
     if (_isReconnecting || _retryCount >= _maxRetries) {
       print(
@@ -111,8 +107,16 @@ class WebSocketService {
     print("🔁 Đang thử kết nối lại WebSocket lần $_retryCount sau 5 giây...");
     await Future.delayed(Duration(seconds: 5));
 
-    // Quan trọng: phải tạo lại stompClient
     connect();
+  }
+
+  void _setConnectionStatus(bool status) {
+    if (_isConnected != status) {
+      _isConnected = status;
+      for (var listener in _connectionListeners) {
+        listener(status);
+      }
+    }
   }
 
   void _subscribeToUserNotifications(String userId) {
@@ -126,12 +130,37 @@ class WebSocketService {
           try {
             final message = jsonDecode(frame.body!);
             print('📨 Đã nhận thông báo: $message');
-            onMessageReceived(message);
+
+            for (var listener in _messageListeners) {
+              listener(message);
+            }
           } catch (e) {
             print('❌ Lỗi khi parse JSON: $e');
           }
         }
       },
     );
+  }
+
+  // ---------- Public listener APIs ----------
+
+  void addMessageListener(OnMessageReceived listener) {
+    if (!_messageListeners.contains(listener)) {
+      _messageListeners.add(listener);
+    }
+  }
+
+  void removeMessageListener(OnMessageReceived listener) {
+    _messageListeners.remove(listener);
+  }
+
+  void addConnectionListener(OnConnectionChange listener) {
+    if (!_connectionListeners.contains(listener)) {
+      _connectionListeners.add(listener);
+    }
+  }
+
+  void removeConnectionListener(OnConnectionChange listener) {
+    _connectionListeners.remove(listener);
   }
 }
