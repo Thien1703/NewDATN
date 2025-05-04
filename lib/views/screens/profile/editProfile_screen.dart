@@ -113,32 +113,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           });
           widget.onProfileUpdated();
         }
-      }, onTakePhoto: () async {
-        final picker = ImagePicker();
-        final pickedFile = await picker.pickImage(source: ImageSource.camera);
-        if (pickedFile != null) {
-          setState(() {
-            isAvatarLoading = true;
-            _avatarFile = File(pickedFile.path);
-          });
-          if (!mounted) return;
+      },
+      //  onTakePhoto: () async {
+      //   final picker = ImagePicker();
+      //   final pickedFile = await picker.pickImage(source: ImageSource.camera);
+      //   if (pickedFile != null) {
+      //     setState(() {
+      //       isAvatarLoading = true;
+      //       _avatarFile = File(pickedFile.path);
+      //     });
+      //     if (!mounted) return;
 
-          final authViewModel =
-              Provider.of<AuthViewModel>(context, listen: false);
-          await authViewModel.uploadAvatar(context, _avatarFile!);
+      //     final authViewModel =
+      //         Provider.of<AuthViewModel>(context, listen: false);
+      //     await authViewModel.uploadAvatar(context, _avatarFile!);
 
-          // Xoá cache
-          CachedNetworkImage.evictFromCache(_userData?['avatar'] ?? '');
+      //     // Xoá cache
+      //     CachedNetworkImage.evictFromCache(_userData?['avatar'] ?? '');
 
-          // Sau khi upload xong, cập nhật lại thông tin
-          await _loadUserProfile();
-          setState(() {
-            isAvatarLoading = false;
-            _avatarFile = null;
-          });
-          widget.onProfileUpdated();
-        }
-      }
+      //     // Sau khi upload xong, cập nhật lại thông tin
+      //     await _loadUserProfile();
+      //     setState(() {
+      //       isAvatarLoading = false;
+      //       _avatarFile = null;
+      //     });
+      //     widget.onProfileUpdated();
+      //   }
+      // }
 
           // onRemovePhoto: () async {
           //   final authViewModel =
