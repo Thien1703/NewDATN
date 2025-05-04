@@ -270,6 +270,7 @@ class _ShowappointservicedetailState extends State<Showappointservicedetail> {
                           style: Theme.of(context).textTheme.titleMedium),
                       const SizedBox(height: 5),
                       Container(
+                        
                         width: double.infinity,
                         padding: const EdgeInsets.all(16),
                         child: Text(

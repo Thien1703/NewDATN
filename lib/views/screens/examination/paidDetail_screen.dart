@@ -152,7 +152,9 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
                             appointmentServices!.first.appointment.status ==
                                 'ARRIVED' ||
                             appointmentServices!.first.appointment.status ==
-                                'COMPLETED'
+                                'COMPLETED' ||
+                            appointmentServices!.first.appointment.status ==
+                                'ONLINE'
                         ? _buildSelectedSelected()
                         : _buildSelectedCancel()
                   ],
@@ -242,7 +244,8 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
       'CONFIRM': 'Đã xác nhận',
       'ARRIVED': 'Đã tới khám',
       'COMPLETED': 'Đã khám',
-      'CANCELLED': 'Đã hủy'
+      'CANCELLED': 'Đã hủy',
+      'ONLINE': 'Đã thanh toán'
     };
     return statusMap[status] ?? status;
   }
@@ -254,7 +257,8 @@ class _PaidDetailScreenState extends State<PaidDetailScreen> {
       'CONFIRM': Colors.orangeAccent,
       'ARRIVED': Colors.teal,
       'COMPLETED': Colors.green,
-      'CANCELLED': Colors.redAccent
+      'CANCELLED': Colors.redAccent,
+      'ONLINE': Colors.amber,
     };
     return statusColors[status] ?? Colors.black;
   }

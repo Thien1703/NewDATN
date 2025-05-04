@@ -44,7 +44,9 @@ class Customer {
       gender: json["gender"] ?? "Chưa cập nhật",
       cccd: json["cccd"] ?? "Chưa cập nhật",
       email: json["email"] ?? "Chưa cập nhật",
-      address: json["address"] ?? "Chưa cập nhật",
+      address: json["address"]?.toString().isNotEmpty == true
+          ? utf8.decode(json['address'].toString().runes.toList())
+          : "Chưa cập nhật",
       avatar: json["avatar"] ?? "assets/images/iconProfile.jpg",
     );
   }
