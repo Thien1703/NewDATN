@@ -96,51 +96,51 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Lọc theo:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              InkWell(
-                onTap: () async {
-                  final selectedIds = await showModalBottomSheet<List<int>>(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (context) => WidgetFilterspecialty(
-                      selectedIds:
-                          _selectedSpecialtyIds, // Truyền các ID đã chọn vào đây
-                    ),
-                  );
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     const Text(
+          //       'Lọc theo:',
+          //       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          //     ),
+          //     InkWell(
+          //       onTap: () async {
+          //         final selectedIds = await showModalBottomSheet<List<int>>(
+          //           context: context,
+          //           isScrollControlled: true,
+          //           builder: (context) => WidgetFilterspecialty(
+          //             selectedIds:
+          //                 _selectedSpecialtyIds, // Truyền các ID đã chọn vào đây
+          //           ),
+          //         );
 
-                  if (selectedIds != null) {
-                    setState(() {
-                      _selectedSpecialtyIds = selectedIds;
-                    });
-                  }
-                },
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 227, 227, 227),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: const Row(
-                    children: [
-                      Text(
-                        'Chuyên khoa',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w500),
-                      ),
-                      Icon(Icons.keyboard_arrow_down, size: 20),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+          //         if (selectedIds != null) {
+          //           setState(() {
+          //             _selectedSpecialtyIds = selectedIds;
+          //           });
+          //         }
+          //       },
+          //       child: Container(
+          //         padding:
+          //             const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          //         decoration: BoxDecoration(
+          //           color: const Color.fromARGB(255, 227, 227, 227),
+          //           borderRadius: BorderRadius.circular(15),
+          //         ),
+          //         child: const Row(
+          //           children: [
+          //             Text(
+          //               'Chuyên khoa',
+          //               style: TextStyle(
+          //                   fontSize: 16, fontWeight: FontWeight.w500),
+          //             ),
+          //             Icon(Icons.keyboard_arrow_down, size: 20),
+          //           ],
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
           Row(
             children: _selectedSpecialtyIds.map((id) => Text('$id')).toList(),
           ),
