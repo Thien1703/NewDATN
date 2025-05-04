@@ -6,7 +6,7 @@ typedef OnMessageReceived = void Function(Map<String, dynamic> message);
 typedef OnConnectionChange = void Function(bool isConnected);
 
 class WebSocketService {
-  late StompClient stompClient;
+  StompClient? stompClient;
   final String jwtToken;
   final String userId;
   late OnMessageReceived onMessageReceived;
@@ -33,6 +33,10 @@ class WebSocketService {
     }
 
     print("⚡ Đang kết nối WebSocket...");
+
+    // Tạo mới mỗi lần kết nối lại
+    stompClient?.deactivate();
+
     stompClient = StompClient(
       config: WebSocketConfig.createConfig(
         jwtToken: jwtToken,
@@ -43,7 +47,7 @@ class WebSocketService {
       ),
     );
 
-    stompClient.activate();
+    stompClient!.activate();
   }
 
   void _onConnect(StompFrame frame) {
@@ -78,7 +82,7 @@ class WebSocketService {
       return;
     }
 
-    stompClient.deactivate();
+    stompClient?.deactivate();
     _setConnectionStatus(false);
   }
 
@@ -103,14 +107,15 @@ class WebSocketService {
     print("🔁 Đang thử kết nối lại WebSocket lần $_retryCount sau 5 giây...");
     await Future.delayed(Duration(seconds: 5));
 
-    connect(); // gọi lại connect
+    // Quan trọng: phải tạo lại stompClient
+    connect();
   }
 
   void _subscribeToUserNotifications(String userId) {
     final topic = '$USER_TOPIC_PREFIX$userId';
     print('📥 Đăng ký lắng nghe thông báo người dùng: $topic');
 
-    stompClient.subscribe(
+    stompClient?.subscribe(
       destination: topic,
       callback: (frame) {
         if (frame.body != null) {
