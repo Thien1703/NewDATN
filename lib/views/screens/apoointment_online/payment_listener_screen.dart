@@ -55,7 +55,8 @@ class _PaymentListenerScreenState extends State<PaymentListenerScreen> {
       final appointment = message['appointment'];
       final roomCode = appointment['roomCode'];
       final appointmentId = appointment['id'];
-      print('✅ Đã nhận PAID_APPOINTMENT, roomCode: $roomCode, appointmentId: $appointmentId');
+      print(
+          '✅ Đã nhận PAID_APPOINTMENT, roomCode: $roomCode, appointmentId: $appointmentId');
 
       _navigated = true;
 
@@ -101,39 +102,45 @@ class _PaymentListenerScreenState extends State<PaymentListenerScreen> {
           color: AppColors.deepBlue,
           child: Stack(
             children: [
-              Column(
-                children: [
-                  const SizedBox(height: 40),
-                  const Text(
-                    "Vui lòng quét mã QR này để được đặt lịch",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 15, color: Colors.white),
-                  ),
-                  const SizedBox(height: 20),
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
+              Center(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 40),
+                    const Text(
+                      "Vui lòng quét mã QR này để được đặt lịch",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 15, color: Colors.white),
                     ),
-                    child: Column(
-                      children: [
-                        QrImageView(data: widget.qrCode, size: 270),
-                        const SizedBox(height: 10),
-                        const Text(
-                          'HUYNH MINH KHAI',
-                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(height: 2),
-                        const Text(
-                          '0974198371',
-                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
-                        ),
-                      ],
+                    const SizedBox(height: 20),
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        children: [
+                          QrImageView(data: widget.qrCode, size: 270),
+                          const SizedBox(height: 10),
+                          const Text(
+                            'HUYNH MINH KHAI',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          const SizedBox(height: 2),
+                          const Text(
+                            '0974198371',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                ],
+                    const SizedBox(height: 24),
+                  ],
+                ),
               ),
               Align(
                 alignment: Alignment.bottomCenter,
@@ -147,11 +154,15 @@ class _PaymentListenerScreenState extends State<PaymentListenerScreen> {
                   children: [
                     Text(
                       "Phòng khám đa khoa FPT",
-                      style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 14, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                          color: Colors.white.withOpacity(0.5),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500),
                     ),
                     Text(
                       "Ứng dụng đặt khám qua phòng khám \nFPT dành cho gia đình bạn",
-                      style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 11),
+                      style: TextStyle(
+                          color: Colors.white.withOpacity(0.5), fontSize: 11),
                     ),
                   ],
                 ),
