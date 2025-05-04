@@ -12,37 +12,6 @@ import 'package:intl/intl.dart';
 class AppConfig {
   static const String baseUrl = AppEnv.baseUrl;
 
-  static Future<void> connectWebSocketAfterAuth() async {
-    final token = await LocalStorageService.getToken();
-    final userId = (await LocalStorageService.getUserId())?.toString();
-
-    if (token != null && userId != null) {
-      WebSocketManager.getInstance(
-        jwtToken: token,
-        userId: userId,
-        onMessageReceived: (message) async {
-          print("📩 [WebSocket] Nhận thông báo: $message");
-
-          final saved = await LocalStorageService.getSavedNotifications();
-          final notification = {
-            "type": message['type'],
-            "message": message['message'],
-            "appointment": message['appointment'],
-            "time": DateFormat('HH:mm:ss dd/MM/yyyy').format(DateTime.now()),
-          };
-          saved.insert(0, notification);
-          await LocalStorageService.saveNotifications(saved);
-        },
-        onConnectionChange: (isConnected) {
-          print(isConnected
-              ? "🟢 WebSocket đã kết nối sau login/register"
-              : "🔴 WebSocket mất kết nối sau login/register");
-        },
-      ).connect();
-    } else {
-      print("⚠️ Không thể khởi tạo WebSocket (thiếu token hoặc userId)");
-    }
-  }
 
   // Đăng nhập
   static Future<String?> login(String phoneNumber, String password) async {
@@ -69,7 +38,6 @@ class AppConfig {
           await LocalStorageService.saveUserId(userId);
           print("✅ Đã lưu userId: $userId");
           // ✅ Kết nối WebSocket tại đây
-          await connectWebSocketAfterAuth();
           return null;
         } else {
           print("❌ Không lấy được userId");
@@ -208,9 +176,6 @@ class AppConfig {
         if (userId != null) {
           await LocalStorageService.saveUserId(userId);
           print("✅ Xác thực OTP xong, lưu userId: $userId");
-
-          /// 🔥 KẾT NỐI WEBSOCKET ngay sau khi đăng ký thành công
-          await connectWebSocketAfterAuth();
         }
 
         return null;

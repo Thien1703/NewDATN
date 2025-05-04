@@ -24,6 +24,7 @@ class AppointmentService {
   factory AppointmentService.fromJson(Map<String, dynamic> json) {
     try {
       print("Raw JSON: $json"); // In toàn bộ dữ liệu JSON để kiểm tra
+      print("Raw note: ${json['note']}");
 
       return AppointmentService(
         id: json['id'] ?? 0,
@@ -36,9 +37,10 @@ class AppointmentService {
             ? Employee.fromJson(json['employee'])
             : null,
         status: json['status'],
-        note: json['note']?.toString().isNotEmpty == true
-            ? utf8.decode(json['note'].toString().runes.toList())
-            : 'Chưa cập nhật',
+        note:
+            (json['note'] != null && json['note'].toString().trim().isNotEmpty)
+                ? _decodeUtf8(json['note'].toString())
+                : 'Chưa cập nhật',
       );
     } catch (e, stackTrace) {
       print("Error parsing AppointmentService: $e");
@@ -46,6 +48,17 @@ class AppointmentService {
       throw Exception("Failed to parse AppointmentService: $e");
     }
   }
+
+  static String _decodeUtf8(String text) {
+    try {
+      final bytes = latin1.encode(text);
+      return utf8.decode(bytes);
+    } catch (e) {
+      print("Decode UTF-8 failed: $e");
+      return text;
+    }
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

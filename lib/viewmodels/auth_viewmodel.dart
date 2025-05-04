@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:health_care/core/app_initializer.dart';
 import 'package:health_care/viewmodels/toast_helper.dart';
 import 'package:health_care/viewmodels/user_provider.dart';
 import 'package:health_care/views/screens/auth/Login/login_screen.dart';
@@ -38,6 +39,9 @@ class AuthViewModel with ChangeNotifier {
         showToastError("Không thể lấy ID người dùng!");
         return;
       }
+       /// 🔌 GỌI WEBSOCKET TẠI ĐÂY
+      await AppInitializer.connectWebSocketIfNeeded();
+      
       // Chuyển sang màn hình Home
       Navigator.pushReplacement(
         context,
@@ -65,7 +69,7 @@ class AuthViewModel with ChangeNotifier {
     if (errorMessage == null) {
       // Hiển thị thông báo OTP đã gửi
       showToastSuccess("Đăng ký tài khoản thành công!");
-
+      
       // Chuyển sang màn hình Home
       Navigator.pushReplacement(
         context,

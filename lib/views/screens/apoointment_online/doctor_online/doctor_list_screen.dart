@@ -141,9 +141,9 @@ class _DoctorListScreenState extends State<DoctorListScreen> {
           //     ),
           //   ],
           // ),
-          Row(
-            children: _selectedSpecialtyIds.map((id) => Text('$id')).toList(),
-          ),
+          // Row(
+          //   children: _selectedSpecialtyIds.map((id) => Text('$id')).toList(),
+          // ),
         ],
       ),
     );

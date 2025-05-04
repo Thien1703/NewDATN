@@ -6,6 +6,7 @@ import 'package:health_care/views/screens/auth/Login/register_screen.dart';
 import 'package:health_care/views/screens/tools/callvideo/app_data.dart';
 import 'package:health_care/views/screens/tools/callvideo/listDoctorOnline.dart';
 import 'package:health_care/views/screens/tools/callvideo/schedule_call_screen.dart';
+import 'package:health_care/views/screens/tools/callvideo/video_call_screen.dart';
 
 final roomCode = AppData.roomCode;
 
@@ -98,13 +99,26 @@ class chooseCallVideo extends StatelessWidget {
           if (roomCode != null)
             Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
-              child: Text(
-                'Bạn có lịch đặt khám online với mã phòng là: $roomCode',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
+              child: GestureDetector(
+                onTap: () {
+                  // TODO: Thay thế bằng hàm điều hướng đến phòng gọi video của bạn
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => VideoCallScreen(
+                          channelName: roomCode!), // hoặc gọi JoinRoom()
+                    ),
+                  );
+                },
+                child: Text(
+                  '👉 Bạn có lịch đặt khám online với mã phòng là: $roomCode\n(Nhấn để vào phòng)',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.lightBlueAccent,
+                    decoration: TextDecoration.underline,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
           const Text(

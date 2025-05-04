@@ -99,6 +99,9 @@ class WebSocketService {
     if (_isReconnecting || _retryCount >= _maxRetries) {
       print(
           "⛔ Vượt quá số lần thử lại kết nối WebSocket ($_maxRetries lần). Dừng thử lại.");
+
+      print(
+          "⛔ Vượt quá số lần thử lại kết nối WebSocket ($_maxRetries lần). Dừng thử lại.");
       return;
     }
 

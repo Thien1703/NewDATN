@@ -3,12 +3,12 @@ import 'package:health_care/views/widgets/bottomSheet/header_bottomSheet.dart';
 
 class SelectImageOption extends StatelessWidget {
   final VoidCallback onPickFromGallery;
-  final VoidCallback onTakePhoto;
+  // final VoidCallback onTakePhoto;
 
   const SelectImageOption({
     super.key,
     required this.onPickFromGallery,
-    required this.onTakePhoto,
+    // required this.onTakePhoto,
   });
 
   @override
@@ -26,14 +26,14 @@ class SelectImageOption extends StatelessWidget {
               onPickFromGallery();
             },
           ),
-          _buildOption(
-            icon: Icons.camera_alt,
-            text: 'Chụp ảnh mới',
-            onTap: () {
-              Navigator.pop(context);
-              onTakePhoto();
-            },
-          ),
+          // _buildOption(
+          //   icon: Icons.camera_alt,
+          //   text: 'Chụp ảnh mới',
+          //   onTap: () {
+          //     Navigator.pop(context);
+              // onTakePhoto();
+          //   },
+          // ),
           // _buildOption(
           //   icon: Icons.remove_circle,
           //   text: 'Gỡ ảnh hiện tại',

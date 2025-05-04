@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:health_care/viewmodels/auth_viewmodel.dart';
+import 'package:health_care/views/screens/auth/Login/login_screen.dart';
 import 'package:provider/provider.dart';
 
 class LogoutBottomsheet extends StatelessWidget {
@@ -72,10 +73,14 @@ class LogoutBottomsheet extends StatelessWidget {
                       context,
                       listen: false,
                     );
-
                     await authViewModel.signOut(context);
                     // Trả về true để báo hiệu đăng xuất thành công
-                    Navigator.pop(context, true);
+                    if (context.mounted) {
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                        (route) => false,
+                      );
+                    }
                   },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Colors.grey),
